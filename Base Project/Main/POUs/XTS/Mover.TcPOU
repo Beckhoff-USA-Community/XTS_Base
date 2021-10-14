@@ -44,7 +44,7 @@ VAR
 	fbPower					: MC_Power;
 	fbReset					: MC_Reset;
 	fbStop					: MC_Stop;
-	fbMoveAbs				: ARRAY[0..1] OF MC_MoveAbsoluteCA;
+	fbMoveAbsCA				: ARRAY[0..1] OF MC_MoveAbsoluteCA;
 	fbAddToGroup			: MC_AddAxisToGroup;
 	fbGroupStatus			: MC_GroupReadStatus;
 	fbGroupEnable			: MC_GroupEnable;
@@ -73,8 +73,8 @@ CASE State OF
 		Ready	:= FALSE;
 		Busy	:= FALSE;
 
-		fbMoveAbs[0].Execute	:= FALSE;
-		fbMoveAbs[1].Execute	:= FALSE;
+		fbMoveAbsCA[0].Execute	:= FALSE;
+		fbMoveAbsCA[1].Execute	:= FALSE;
 		
 		IF Enable THEN
 			State		:= 10;
@@ -279,22 +279,22 @@ CASE State OF
 			State		:= 120;
 			
 		// Reset all commands issued by method calls
-		ELSIF fbMoveAbs[0].Busy THEN // OR fbMoveAbs.CommandAborted THEN
-			fbMoveAbs[0].Execute		:= FALSE;
-		ELSIF fbMoveAbs[1].Busy THEN
-			fbMoveAbs[1].Execute		:= FALSE;			
+		ELSIF fbMoveAbsCA[0].Busy THEN // OR fbMoveAbs.CommandAborted THEN
+			fbMoveAbsCA[0].Execute		:= FALSE;
+		ELSIF fbMoveAbsCA[1].Busy THEN
+			fbMoveAbsCA[1].Execute		:= FALSE;			
 		ELSIF fbAddToGroup.Done THEN
 			fbAddToGroup.Execute		:= FALSE;
 		ELSIF fbStop.Busy THEN
 			fbStop.Execute				:= FALSE;
 	
 		// And catch all internal function block errors
-		ELSIF fbMoveAbs[0].Error THEN
-			ErrorID					:= fbMoveAbs[0].ErrorID;
+		ELSIF fbMoveAbsCA[0].Error THEN
+			ErrorID					:= fbMoveAbsCA[0].ErrorID;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbMoveAbs[0]' );
 			State					:= 999;
-		ELSIF fbMoveAbs[1].Error THEN
-			ErrorID					:= fbMoveAbs[1].ErrorId;
+		ELSIF fbMoveAbsCA[1].Error THEN
+			ErrorID					:= fbMoveAbsCA[1].ErrorId;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbMoveAbs[1]' );
 			State					:= 999;
 		ELSIF fbAddToGroup.Error THEN
@@ -340,8 +340,8 @@ fbReset( Axis := AxisReference );
 fbAddToGroup( AxesGroup := GroupReference, Axis := AxisReference );
 fbGroupStatus( AxesGroup := GroupReference );
 fbGroupEnable( AxesGroup := GroupReference );
-fbMoveAbs[0]( Axis := AxisReference );
-fbMoveAbs[1]( Axis := AxisReference );
+fbMoveAbsCA[0]( Axis := AxisReference );
+fbMoveAbsCA[1]( Axis := AxisReference );
 fbReadStatus( Enable := TRUE, Axis := AxisReference );
 
 fbReadM1DetectMode();
@@ -440,35 +440,35 @@ IF NOT( Ready ) THEN	// if the mover is not ready & able to accept a moveabs com
 	
 ELSE	// otherwise let 'er rip
 	
-	IF fbMoveAbs[0].Busy = FALSE THEN
+	IF fbMoveAbsCA[0].Busy = FALSE THEN
 		
-		fbMoveAbs[0].Acceleration	:= MoverParameters.Acceleration;
-		fbMoveAbs[0].Deceleration	:= MoverParameters.Deceleration;
-		fbMoveAbs[0].Velocity		:= MoverParameters.Velocity;
-		fbMoveAbs[0].Direction		:= MoverParameters.Direction;
+		fbMoveAbsCA[0].Acceleration	:= MoverParameters.Acceleration;
+		fbMoveAbsCA[0].Deceleration	:= MoverParameters.Deceleration;
+		fbMoveAbsCA[0].Velocity		:= MoverParameters.Velocity;
+		fbMoveAbsCA[0].Direction		:= MoverParameters.Direction;
 		
-		fbMoveAbs[0].Position		:= DestinationPosition;
+		fbMoveAbsCA[0].Position		:= DestinationPosition;
 		
-		fbMoveAbs[0].BufferMode		:= mcAborting;
-		fbMoveAbs[0].Execute		:= TRUE;
+		fbMoveAbsCA[0].BufferMode		:= mcAborting;
+		fbMoveAbsCA[0].Execute		:= TRUE;
 		 
-		fbMoveAbs[0].Execute		:= TRUE;		// execute this block, and...
-		fbMoveAbs[1].Execute		:= FALSE;		// if necessary, interrupt this one
+		fbMoveAbsCA[0].Execute		:= TRUE;		// execute this block, and...
+		fbMoveAbsCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
 		
-	ELSIF fbMoveAbs[1].Busy = FALSE THEN
+	ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
 		
-		fbMoveAbs[1].Acceleration	:= MoverParameters.Acceleration;
-		fbMoveAbs[1].Deceleration	:= MoverParameters.Deceleration;
-		fbMoveAbs[1].Velocity		:= MoverParameters.Velocity;
-		fbMoveAbs[1].Direction		:= MoverParameters.Direction;
+		fbMoveAbsCA[1].Acceleration	:= MoverParameters.Acceleration;
+		fbMoveAbsCA[1].Deceleration	:= MoverParameters.Deceleration;
+		fbMoveAbsCA[1].Velocity		:= MoverParameters.Velocity;
+		fbMoveAbsCA[1].Direction		:= MoverParameters.Direction;
 		
-		fbMoveAbs[1].Position		:= DestinationPosition;
+		fbMoveAbsCA[1].Position		:= DestinationPosition;
 		
-		fbMoveAbs[1].BufferMode		:= mcAborting;
-		fbMoveAbs[1].Execute		:= TRUE;
+		fbMoveAbsCA[1].BufferMode		:= mcAborting;
+		fbMoveAbsCA[1].Execute		:= TRUE;
 		
-		fbMoveAbs[1].Execute		:= TRUE;		// execute this block, and...
-		fbMoveAbs[0].Execute		:= FALSE;		// if necessary, interrupt this one		
+		fbMoveAbsCA[1].Execute		:= TRUE;		// execute this block, and...
+		fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one		
 		 
 	END_IF
 	
@@ -496,35 +496,35 @@ IF NOT( Ready ) AND __ISVALIDREF( DestinationStation ) THEN	// if the mover is n
 	
 ELSE	// otherwise let 'er rip
 	
-	IF fbMoveAbs[0].Busy = FALSE THEN
+	IF fbMoveAbsCA[0].Busy = FALSE THEN
 		
-		fbMoveAbs[0].Acceleration	:= MoverParameters.Acceleration;
-		fbMoveAbs[0].Deceleration	:= MoverParameters.Deceleration;
-		fbMoveAbs[0].Velocity		:= MoverParameters.Velocity;
-		fbMoveAbs[0].Direction		:= MoverParameters.Direction;
+		fbMoveAbsCA[0].Acceleration	:= MoverParameters.Acceleration;
+		fbMoveAbsCA[0].Deceleration	:= MoverParameters.Deceleration;
+		fbMoveAbsCA[0].Velocity		:= MoverParameters.Velocity;
+		fbMoveAbsCA[0].Direction		:= MoverParameters.Direction;
 		
-		fbMoveAbs[0].Position		:= DestinationStation.Position;
+		fbMoveAbsCA[0].Position		:= DestinationStation.Position;
 		
-		fbMoveAbs[0].BufferMode		:= mcAborting;
-		fbMoveAbs[0].Execute		:= TRUE;
+		fbMoveAbsCA[0].BufferMode		:= mcAborting;
+		fbMoveAbsCA[0].Execute		:= TRUE;
 		 
-		fbMoveAbs[0].Execute		:= TRUE;		// execute this block, and...
-		fbMoveAbs[1].Execute		:= FALSE;		// if necessary, interrupt this one
+		fbMoveAbsCA[0].Execute		:= TRUE;		// execute this block, and...
+		fbMoveAbsCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
 		
-	ELSIF fbMoveAbs[1].Busy = FALSE THEN
+	ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
 		
-		fbMoveAbs[1].Acceleration	:= MoverParameters.Acceleration;
-		fbMoveAbs[1].Deceleration	:= MoverParameters.Deceleration;
-		fbMoveAbs[1].Velocity		:= MoverParameters.Velocity;
-		fbMoveAbs[1].Direction		:= MoverParameters.Direction;
+		fbMoveAbsCA[1].Acceleration	:= MoverParameters.Acceleration;
+		fbMoveAbsCA[1].Deceleration	:= MoverParameters.Deceleration;
+		fbMoveAbsCA[1].Velocity		:= MoverParameters.Velocity;
+		fbMoveAbsCA[1].Direction		:= MoverParameters.Direction;
 		
-		fbMoveAbs[1].Position		:= DestinationStation.Position;
+		fbMoveAbsCA[1].Position		:= DestinationStation.Position;
 		
-		fbMoveAbs[1].BufferMode		:= mcAborting;
-		fbMoveAbs[1].Execute		:= TRUE;
+		fbMoveAbsCA[1].BufferMode		:= mcAborting;
+		fbMoveAbsCA[1].Execute		:= TRUE;
 		
-		fbMoveAbs[1].Execute		:= TRUE;		// execute this block, and...
-		fbMoveAbs[0].Execute		:= FALSE;		// if necessary, interrupt this one		
+		fbMoveAbsCA[1].Execute		:= TRUE;		// execute this block, and...
+		fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one		
 		 
 	END_IF
 	
