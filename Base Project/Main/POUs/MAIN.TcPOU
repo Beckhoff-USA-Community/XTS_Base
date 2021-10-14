@@ -1,0 +1,340 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="MAIN" Id="{0790caa7-8a3f-4f91-b0f8-9ebb3db3858d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	
+
+	// helper, state, index variables
+	i						: UINT;
+	n						: UINT;
+	MainState				: UINT;
+	
+	StationTimer			: ARRAY [0..gNUM_STATIONS] OF TON;
+	nextStation				: USINT := 2;
+	
+	bInitialMovement		: BOOL;
+	
+	lowVelocity				: LREAL := 200; // mm/s
+	mediumVelocity			: LREAL := 800;	// mm/s
+	highVelocity			: LREAL := 2000; // mm/s
+	
+	// linked NC handles
+	GroupRef				: AXES_GROUP_REF;
+	Mover					: ARRAY [0..XTS_Constants.gNUM_MOVERS-1] OF Mover;
+	
+	ParameterSet			: MoverParameters_typ;
+	
+	// Objectives & Parameters
+	
+	Station					: ARRAY [0..XTS_Constants.gNUM_STATIONS-1] OF Station	:= 
+			[
+				( Position	:= 250 ),	// Station 0
+				( Position	:= 750 ),	// Station 1
+				( Position	:= 1000 ),	// Station 2
+				( Position	:= 3500 )	// Station 3
+			];
+	
+	PositionTrigger			: ARRAY [0..1] OF PositionTrigger	:=
+		[
+			(	// Position Trigger 0 init
+				ThresholdPosition 		:= 1500,
+				TriggerDirection		:= MC_Positive_Direction,
+				TrackModulo				:= 4000
+			),
+			(	// Position Trigger 1 init
+				ThresholdPosition		:= 2000,
+				TriggerDirection		:= MC_Positive_Direction,
+				TrackModulo				:= 4000
+			)
+		];
+		
+	SpeedTrigger			: ARRAY [0..0] OF SpeedTrigger	:= [( ThresholdVelocity := 1900 (* mm/s *) )];
+	
+	
+	
+	// User commands									
+	bCommandEnable			: BOOL;	
+		
+	// User status
+	bReadyForCommands		: BOOL;
+		
+
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+CASE MainState OF
+	0:	// -------------------------------------------- Idle state
+	
+		bReadyForCommands	:= FALSE;
+	
+		IF bCommandEnable THEN
+			MainState		:= 10;
+		END_IF
+		
+	10:	// -------------------------------------------- Begin Enable all Movers
+	
+		// todo: could make this more parallel
+		Mover[n].Enable		:= TRUE;
+		IF Mover[n].Ready THEN
+			n	:= n+1;
+		END_IF;
+		
+		IF n = XTS_Constants.gNUM_MOVERS THEN
+			n				:= 0;
+			MainState		:= 20;		
+		END_IF
+	
+	20:	// -------------------------------------------- Set all motion parameters
+	
+		FOR i := 0 TO XTS_Constants.gNUM_MOVERS-1 DO
+			ParameterSet.Acceleration			:= 1E4;		// mm/s2
+			ParameterSet.Deceleration			:= 1E4;		// mm/s2
+			ParameterSet.Direction				:= mcDirectionPositive;
+			ParameterSet.Velocity				:= 1E3;		// mm/s
+
+			Mover[i].MotionParameters				:= ParameterSet;
+		END_FOR
+		
+		bInitialMovement	:= TRUE;
+		MainState			:= 30;
+	
+	30:	// -------------------------------------------- Ready for commands
+	
+		bReadyForCommands		:= TRUE;
+		
+			
+		// Move all shuttles to specified stations
+		IF bInitialMovement THEN
+			FOR i := 0 TO XTS_Constants.gNUM_MOVERS-1 DO
+				Mover[i].MoveToStation(Station[3]);
+			END_FOR
+			bInitialMovement	:= FALSE;
+		END_IF
+		
+		// ============================================ Example traffic logic below
+		
+		
+		// Station 0 Logic
+		IF Station[0].MoverInPosition THEN
+			StationTimer[0]( IN := TRUE, PT := T#250MS );
+			
+			IF StationTimer[0].Q THEN
+				Station[0].CurrentMover^.MoveToStation( Station[nextStation] );
+				
+				CASE nextStation OF
+					1:	nextStation	:= 2;
+					2:	nextStation := 1;
+					ELSE ;// uh oh
+				END_CASE
+				
+			END_IF
+		ELSE
+			StationTimer[0]( IN := FALSE );
+		END_IF
+		
+		
+		
+		// Station 1 & 2 Logic
+		IF Station[1].MoverInPosition AND Station[2].MoverInPosition THEN
+			StationTimer[1]( IN := TRUE, PT := T#500MS );
+
+			IF StationTimer[1].Q THEN
+				PositionTrigger[0].RegisterMover( Station[1].CurrentMover );
+				PositionTrigger[0].RegisterMover( Station[2].CurrentMover );
+				
+				Station[1].CurrentMover^.SetVelocity( mediumVelocity );
+				Station[2].CurrentMover^.SetVelocity( mediumVelocity );
+				
+				Station[1].CurrentMover^.MoveToStation( Station[3] );
+				Station[2].CurrentMover^.MoveToStation( Station[3] );
+				
+			END_IF
+		ELSE
+			StationTimer[1]( IN := FALSE );
+		END_IF
+		
+		
+		
+		// Position Trigger 0 Logic
+		IF PositionTrigger[0].MoverPastPosition THEN
+			PositionTrigger[1].RegisterMover( PositionTrigger[0].CurrentMover );	
+		
+			PositionTrigger[0].CurrentMover^.SetVelocity( lowVelocity );
+			PositionTrigger[0].CurrentMover^.MoveToStation( Station[3] );			
+			
+			PositionTrigger[0].UnregisterCurrent();
+		END_IF
+		
+		
+		// Position Trigger 1 Logic
+		IF PositionTrigger[1].MoverPastPosition THEN
+			SpeedTrigger[0].RegisterMover( PositionTrigger[1].CurrentMover );		
+			
+			PositionTrigger[1].CurrentMover^.SetVelocity( highVelocity );
+			PositionTrigger[1].CurrentMover^.MoveToStation( Station[3] );
+			
+			PositionTrigger[1].UnregisterCurrent();
+		END_IF
+		
+		
+		// Speed Trigger 0 Logic
+		IF SpeedTrigger[0].MoverInVelocity THEN
+			
+			SpeedTrigger[0].CurrentMover^.SetVelocity( mediumVelocity );
+			SpeedTrigger[0].CurrentMover^.MoveToStation( Station[3] );
+			
+			SpeedTrigger[0].UnregisterCurrent();
+		END_IF
+		
+		
+		// Station 3 Logic
+		IF Station[3].MoverInPosition THEN
+			StationTimer[3]( IN := TRUE, PT := T#250MS );
+			
+			IF StationTimer[3].Q THEN
+				Station[3].CurrentMover^.MoveToStation( Station[0] );
+			END_IF
+		ELSE
+			StationTimer[3]( IN := FALSE );
+		END_IF
+		
+		
+
+		// todo needs to be test, add groupstop
+		IF bCommandEnable = FALSE THEN
+			MainState			:= 40;
+		END_IF
+		
+	40: // -------------------------------------------- Disabling
+	
+		FOR i := 0 TO XTS_Constants.gNUM_MOVERS-1 DO
+			Mover[i].Enable		:= FALSE;
+		END_FOR 
+		MainState				:= 0;		
+		
+END_CASE;
+
+
+
+// Call all mover function blocks cyclically
+FOR i := 0 TO XTS_Constants.gNUM_MOVERS-1 DO
+	Mover[i]( GroupReference := GroupRef );
+END_FOR;
+
+// Call all station function blocks cyclically
+FOR i := 0 TO XTS_Constants.gNUM_STATIONS-1 DO
+	Station[i]();
+END_FOR
+
+// Call trigger function blocks cyclically
+PositionTrigger[0]();
+PositionTrigger[1]();
+
+SpeedTrigger[0]();
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="2324" Count="0" />
+      <LineId Id="708" Count="3" />
+      <LineId Id="1456" Count="1" />
+      <LineId Id="712" Count="5" />
+      <LineId Id="1436" Count="0" />
+      <LineId Id="718" Count="5" />
+      <LineId Id="1528" Count="0" />
+      <LineId Id="725" Count="5" />
+      <LineId Id="1804" Count="1" />
+      <LineId Id="1433" Count="0" />
+      <LineId Id="1422" Count="0" />
+      <LineId Id="1435" Count="0" />
+      <LineId Id="731" Count="2" />
+      <LineId Id="2537" Count="0" />
+      <LineId Id="734" Count="0" />
+      <LineId Id="743" Count="3" />
+      <LineId Id="2523" Count="0" />
+      <LineId Id="2525" Count="0" />
+      <LineId Id="2527" Count="5" />
+      <LineId Id="2524" Count="0" />
+      <LineId Id="2376" Count="1" />
+      <LineId Id="2385" Count="0" />
+      <LineId Id="2395" Count="0" />
+      <LineId Id="2409" Count="0" />
+      <LineId Id="2386" Count="1" />
+      <LineId Id="2391" Count="2" />
+      <LineId Id="2405" Count="0" />
+      <LineId Id="2400" Count="1" />
+      <LineId Id="2403" Count="1" />
+      <LineId Id="2402" Count="0" />
+      <LineId Id="2406" Count="0" />
+      <LineId Id="2394" Count="0" />
+      <LineId Id="2496" Count="1" />
+      <LineId Id="2388" Count="0" />
+      <LineId Id="2462" Count="0" />
+      <LineId Id="2378" Count="0" />
+      <LineId Id="2410" Count="3" />
+      <LineId Id="2415" Count="0" />
+      <LineId Id="2414" Count="0" />
+      <LineId Id="2416" Count="0" />
+      <LineId Id="2448" Count="2" />
+      <LineId Id="2455" Count="3" />
+      <LineId Id="2492" Count="0" />
+      <LineId Id="2459" Count="0" />
+      <LineId Id="2494" Count="1" />
+      <LineId Id="2460" Count="1" />
+      <LineId Id="2407" Count="0" />
+      <LineId Id="2463" Count="2" />
+      <LineId Id="2472" Count="1" />
+      <LineId Id="2466" Count="0" />
+      <LineId Id="2552" Count="0" />
+      <LineId Id="2554" Count="0" />
+      <LineId Id="2468" Count="0" />
+      <LineId Id="2467" Count="0" />
+      <LineId Id="2408" Count="0" />
+      <LineId Id="2469" Count="1" />
+      <LineId Id="2379" Count="0" />
+      <LineId Id="2474" Count="0" />
+      <LineId Id="2476" Count="1" />
+      <LineId Id="2555" Count="1" />
+      <LineId Id="2478" Count="0" />
+      <LineId Id="2475" Count="0" />
+      <LineId Id="2380" Count="0" />
+      <LineId Id="2479" Count="2" />
+      <LineId Id="2559" Count="0" />
+      <LineId Id="2482" Count="0" />
+      <LineId Id="2557" Count="1" />
+      <LineId Id="2484" Count="0" />
+      <LineId Id="2483" Count="0" />
+      <LineId Id="2381" Count="2" />
+      <LineId Id="2485" Count="1" />
+      <LineId Id="2488" Count="3" />
+      <LineId Id="2498" Count="1" />
+      <LineId Id="2487" Count="0" />
+      <LineId Id="2384" Count="0" />
+      <LineId Id="1908" Count="0" />
+      <LineId Id="1968" Count="0" />
+      <LineId Id="1909" Count="0" />
+      <LineId Id="1415" Count="2" />
+      <LineId Id="758" Count="1" />
+      <LineId Id="1418" Count="0" />
+      <LineId Id="1438" Count="1" />
+      <LineId Id="1455" Count="0" />
+      <LineId Id="1454" Count="0" />
+      <LineId Id="760" Count="1" />
+      <LineId Id="2547" Count="0" />
+      <LineId Id="2546" Count="0" />
+      <LineId Id="763" Count="4" />
+      <LineId Id="2548" Count="0" />
+      <LineId Id="878" Count="1" />
+      <LineId Id="881" Count="1" />
+      <LineId Id="2549" Count="0" />
+      <LineId Id="2538" Count="1" />
+      <LineId Id="2542" Count="0" />
+      <LineId Id="2544" Count="0" />
+      <LineId Id="2543" Count="0" />
+      <LineId Id="592" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

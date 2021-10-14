@@ -1,0 +1,2424 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.17" ClassName="CDevEtherCATDef" SubType="111">
+	<ImageDatas>
+		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000130b0000130b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff8e8582b1a9a5ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc3bebbaea9a659565355524f5755525a58555e5b5862605d6764616d6a6772706d817f7cff00ffff00ffff00ffff00ff7e7875e1dddca1a09e7673707b7875817f7c817f7d85838084827f84817e827e7c52504d777472ff00ffff00ffff00ff4845428b89886a686b7c78769693909a979599959398969497969395918f73706e5e5b595e5b58acaaa7ff00ffff00ff45423f53504d94908dff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff7e7a7764625f989693ff00ffff00ff474441534f4ca5a19eff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff9793915f5c59989592ff00ffff00ff524e4b4d4a484f4d4aff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff565451625f5caaa8a5ff00ffff00ffff00ff464442504e4b55535054524f5653505755525755525655515554515a58555b5956726f6cff00ffff00ffff00ffff00ffff00ff5653504443404946434a48454c49474e4b484e4b49504e4b514e4b757370ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
+	</ImageDatas>
+	<Device Id="1" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="10.12.160.2.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="2">
+		<Name>__FILENAME__</Name>
+		<AddressInfo>
+			<Pnp>
+				<DeviceDesc></DeviceDesc>
+				<DeviceName></DeviceName>
+				<DeviceData>000000000000</DeviceData>
+			</Pnp>
+		</AddressInfo>
+		<Image Id="1" AddrType="9" ImageType="3">
+			<Name>Image</Name>
+		</Image>
+		<Box Id="1" BoxType="9099" BoxFlags="#x00000020">
+			<Name>Term 1 (AT2001-0250)</Name>
+			<ImageId>1000</ImageId>
+			<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x07d15012" RevisionNo="#x001700fa" InfoDataAddr="true" InfoDataDcTimes="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="305" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2001-0250 Motor module with feed 250 mm, 48V" Desc="AT2001-0250" PortABoxInfo="#x00ffffff">
+				<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+				<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+				<SyncMan>001120002400010003000000000000002000001124010000</SyncMan>
+				<SyncMan>801120002000010004000000000000002000801120010000</SyncMan>
+				<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+				<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+				<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+				<BootStrapData>0010f400f410f400</BootStrapData>
+				<DcData>0003000000000000581b00000000000001000000000000000000000000000000</DcData>
+				<DcMode>4443000000000000000000000000000044432d53796e6368726f6e00000000000000000000000000000000000000000000000000581b000000000000000000030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+				<MBoxUserCmdData>004003000a00000000000000030010000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
+				<Pdo Name="CC Inputs" Index="#x1a00" Flags="#x0010" SyncMan="3">
+					<ExcludePdo>#x1a01</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.15" Index="#x6000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Inputs 14 Ch" Index="#x1a01" Flags="#x0010">
+					<ExcludePdo>#x1a00</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs" Index="#x1600" InOut="1" Flags="#x0010" SyncMan="2">
+					<ExcludePdo>#x1601</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.15" Index="#x7000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs 14 Ch" Index="#x1601" InOut="1" Flags="#x0010">
+					<ExcludePdo>#x1600</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<CoeProfile ProfileNo="47190921"/>
+			</EtherCAT>
+			<Box Id="2" BoxType="9099">
+				<Name>Term 2 (AT2001-5250)</Name>
+				<ImageId>1000</ImageId>
+				<EtherCAT SlaveType="1" PdiType="#x0d06" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07d15012" RevisionNo="#x00121482" InfoDataDcTimes="true" PortPhys="3" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2001-5250 Sensor line with feed" Desc="AT2001-5250" PortABoxInfo="#x01000001">
+					<SyncMan>001002004400010003000000000000000100001044010000</SyncMan>
+					<SyncMan>801042000000010004000000000000000100801000010000</SyncMan>
+					<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
+					<Fmmu>0000000000000000801000010100000002000000000000000000000000000000</Fmmu>
+					<DcData>00070000093d0000b4140000440200000000ffff000000000000000000000000</DcData>
+					<DcMode>444353594e4331352e3632357500000044432d53796e6368726f6e2031352e3632352075730000000000000000000000093d0000b414000044020000ffff00070000000000000000000000000000000000000000000000000000000000000000</DcMode>
+					<Pdo Name="FB Inputs" Index="#x1a00" Flags="#x0011" SyncMan="1">
+						<Entry Name="Status" Index="#x6000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+						<Entry Name="Value Channel 01" Index="#x6000" Sub="#x11" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 02" Index="#x6000" Sub="#x12" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 03" Index="#x6000" Sub="#x13" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 04" Index="#x6000" Sub="#x14" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 05" Index="#x6000" Sub="#x15" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 06" Index="#x6000" Sub="#x16" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 07" Index="#x6000" Sub="#x17" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 08" Index="#x6000" Sub="#x18" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 09" Index="#x6000" Sub="#x19" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 10" Index="#x6000" Sub="#x1a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 11" Index="#x6000" Sub="#x1b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 12" Index="#x6000" Sub="#x1c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 13" Index="#x6000" Sub="#x1d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 14" Index="#x6000" Sub="#x1e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 15" Index="#x6000" Sub="#x1f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 16" Index="#x6000" Sub="#x20" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 17" Index="#x6000" Sub="#x21" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 18" Index="#x6000" Sub="#x22" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 19" Index="#x6000" Sub="#x23" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 20" Index="#x6000" Sub="#x24" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 21" Index="#x6000" Sub="#x25" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 22" Index="#x6000" Sub="#x26" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 23" Index="#x6000" Sub="#x27" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 24" Index="#x6000" Sub="#x28" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 25" Index="#x6000" Sub="#x29" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 26" Index="#x6000" Sub="#x2a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 27" Index="#x6000" Sub="#x2b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 28" Index="#x6000" Sub="#x2c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 29" Index="#x6000" Sub="#x2d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 30" Index="#x6000" Sub="#x2e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 31" Index="#x6000" Sub="#x2f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 32" Index="#x6000" Sub="#x30" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+					</Pdo>
+					<Pdo Name="FB Outputs" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+						<Entry Name="Control" Index="#x7000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+					</Pdo>
+				</EtherCAT>
+			</Box>
+		</Box>
+		<Box Id="3" BoxType="9099" BoxFlags="#x00000020">
+			<Name>Term 3 (AT2000-0250)</Name>
+			<ImageId>1000</ImageId>
+			<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x07d05012" RevisionNo="#x001700fa" InfoDataAddr="true" InfoDataDcTimes="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="305" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2000-0250 Motor module 250 mm, 48V" Desc="AT2000-0250" PortABoxInfo="#x02000001">
+				<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+				<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+				<SyncMan>001120002400010003000000000000002000001124010000</SyncMan>
+				<SyncMan>801120002000010004000000000000002000801120010000</SyncMan>
+				<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+				<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+				<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+				<BootStrapData>0010f400f410f400</BootStrapData>
+				<DcData>0003000000000000581b00000000000001000000000000000000000000000000</DcData>
+				<DcMode>4443000000000000000000000000000044432d53796e6368726f6e00000000000000000000000000000000000000000000000000581b000000000000000000030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+				<MBoxUserCmdData>004003000a00000000000000030010000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
+				<Pdo Name="CC Inputs" Index="#x1a00" Flags="#x0010" SyncMan="3">
+					<ExcludePdo>#x1a01</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.15" Index="#x6000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Inputs 14 Ch" Index="#x1a01" Flags="#x0010">
+					<ExcludePdo>#x1a00</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs" Index="#x1600" InOut="1" Flags="#x0010" SyncMan="2">
+					<ExcludePdo>#x1601</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.15" Index="#x7000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs 14 Ch" Index="#x1601" InOut="1" Flags="#x0010">
+					<ExcludePdo>#x1600</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<CoeProfile ProfileNo="47190921"/>
+			</EtherCAT>
+			<Box Id="4" BoxType="9099">
+				<Name>Term 4 (AT2000-5250)</Name>
+				<ImageId>1000</ImageId>
+				<EtherCAT SlaveType="1" PdiType="#x0d06" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07d05012" RevisionNo="#x00121482" InfoDataDcTimes="true" PortPhys="3" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2000-5250 Sensor line" Desc="AT2000-5250" PortABoxInfo="#x01000003">
+					<SyncMan>001002004400010003000000000000000100001044010000</SyncMan>
+					<SyncMan>801042000000010004000000000000000100801000010000</SyncMan>
+					<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
+					<Fmmu>0000000000000000801000010100000002000000000000000000000000000000</Fmmu>
+					<DcData>00070000093d0000b4140000440200000000ffff000000000000000000000000</DcData>
+					<DcMode>444353594e4331352e3632357500000044432d53796e6368726f6e2031352e3632352075730000000000000000000000093d0000b414000044020000ffff00070000000000000000000000000000000000000000000000000000000000000000</DcMode>
+					<Pdo Name="FB Inputs" Index="#x1a00" Flags="#x0011" SyncMan="1">
+						<Entry Name="Status" Index="#x6000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+						<Entry Name="Value Channel 01" Index="#x6000" Sub="#x11" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 02" Index="#x6000" Sub="#x12" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 03" Index="#x6000" Sub="#x13" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 04" Index="#x6000" Sub="#x14" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 05" Index="#x6000" Sub="#x15" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 06" Index="#x6000" Sub="#x16" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 07" Index="#x6000" Sub="#x17" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 08" Index="#x6000" Sub="#x18" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 09" Index="#x6000" Sub="#x19" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 10" Index="#x6000" Sub="#x1a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 11" Index="#x6000" Sub="#x1b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 12" Index="#x6000" Sub="#x1c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 13" Index="#x6000" Sub="#x1d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 14" Index="#x6000" Sub="#x1e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 15" Index="#x6000" Sub="#x1f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 16" Index="#x6000" Sub="#x20" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 17" Index="#x6000" Sub="#x21" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 18" Index="#x6000" Sub="#x22" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 19" Index="#x6000" Sub="#x23" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 20" Index="#x6000" Sub="#x24" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 21" Index="#x6000" Sub="#x25" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 22" Index="#x6000" Sub="#x26" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 23" Index="#x6000" Sub="#x27" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 24" Index="#x6000" Sub="#x28" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 25" Index="#x6000" Sub="#x29" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 26" Index="#x6000" Sub="#x2a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 27" Index="#x6000" Sub="#x2b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 28" Index="#x6000" Sub="#x2c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 29" Index="#x6000" Sub="#x2d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 30" Index="#x6000" Sub="#x2e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 31" Index="#x6000" Sub="#x2f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 32" Index="#x6000" Sub="#x30" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+					</Pdo>
+					<Pdo Name="FB Outputs" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+						<Entry Name="Control" Index="#x7000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+					</Pdo>
+				</EtherCAT>
+			</Box>
+		</Box>
+		<Box Id="5" BoxType="9099" BoxFlags="#x00000020">
+			<Name>Term 5 (AT2000-0250)</Name>
+			<ImageId>1000</ImageId>
+			<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x07d05012" RevisionNo="#x001700fa" InfoDataAddr="true" InfoDataDcTimes="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="305" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2000-0250 Motor module 250 mm, 48V" Desc="AT2000-0250" PortABoxInfo="#x02000003">
+				<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+				<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+				<SyncMan>001120002400010003000000000000002000001124010000</SyncMan>
+				<SyncMan>801120002000010004000000000000002000801120010000</SyncMan>
+				<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+				<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+				<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+				<BootStrapData>0010f400f410f400</BootStrapData>
+				<DcData>0003000000000000581b00000000000001000000000000000000000000000000</DcData>
+				<DcMode>4443000000000000000000000000000044432d53796e6368726f6e00000000000000000000000000000000000000000000000000581b000000000000000000030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+				<MBoxUserCmdData>004003000a00000000000000030010000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
+				<Pdo Name="CC Inputs" Index="#x1a00" Flags="#x0010" SyncMan="3">
+					<ExcludePdo>#x1a01</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.15" Index="#x6000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Inputs 14 Ch" Index="#x1a01" Flags="#x0010">
+					<ExcludePdo>#x1a00</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs" Index="#x1600" InOut="1" Flags="#x0010" SyncMan="2">
+					<ExcludePdo>#x1601</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.15" Index="#x7000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs 14 Ch" Index="#x1601" InOut="1" Flags="#x0010">
+					<ExcludePdo>#x1600</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<CoeProfile ProfileNo="47190921"/>
+			</EtherCAT>
+			<Box Id="6" BoxType="9099">
+				<Name>Term 6 (AT2000-5250)</Name>
+				<ImageId>1000</ImageId>
+				<EtherCAT SlaveType="1" PdiType="#x0d06" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07d05012" RevisionNo="#x00121482" InfoDataDcTimes="true" PortPhys="3" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2000-5250 Sensor line" Desc="AT2000-5250" PortABoxInfo="#x01000005">
+					<SyncMan>001002004400010003000000000000000100001044010000</SyncMan>
+					<SyncMan>801042000000010004000000000000000100801000010000</SyncMan>
+					<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
+					<Fmmu>0000000000000000801000010100000002000000000000000000000000000000</Fmmu>
+					<DcData>00070000093d0000b4140000440200000000ffff000000000000000000000000</DcData>
+					<DcMode>444353594e4331352e3632357500000044432d53796e6368726f6e2031352e3632352075730000000000000000000000093d0000b414000044020000ffff00070000000000000000000000000000000000000000000000000000000000000000</DcMode>
+					<Pdo Name="FB Inputs" Index="#x1a00" Flags="#x0011" SyncMan="1">
+						<Entry Name="Status" Index="#x6000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+						<Entry Name="Value Channel 01" Index="#x6000" Sub="#x11" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 02" Index="#x6000" Sub="#x12" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 03" Index="#x6000" Sub="#x13" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 04" Index="#x6000" Sub="#x14" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 05" Index="#x6000" Sub="#x15" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 06" Index="#x6000" Sub="#x16" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 07" Index="#x6000" Sub="#x17" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 08" Index="#x6000" Sub="#x18" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 09" Index="#x6000" Sub="#x19" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 10" Index="#x6000" Sub="#x1a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 11" Index="#x6000" Sub="#x1b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 12" Index="#x6000" Sub="#x1c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 13" Index="#x6000" Sub="#x1d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 14" Index="#x6000" Sub="#x1e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 15" Index="#x6000" Sub="#x1f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 16" Index="#x6000" Sub="#x20" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 17" Index="#x6000" Sub="#x21" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 18" Index="#x6000" Sub="#x22" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 19" Index="#x6000" Sub="#x23" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 20" Index="#x6000" Sub="#x24" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 21" Index="#x6000" Sub="#x25" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 22" Index="#x6000" Sub="#x26" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 23" Index="#x6000" Sub="#x27" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 24" Index="#x6000" Sub="#x28" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 25" Index="#x6000" Sub="#x29" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 26" Index="#x6000" Sub="#x2a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 27" Index="#x6000" Sub="#x2b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 28" Index="#x6000" Sub="#x2c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 29" Index="#x6000" Sub="#x2d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 30" Index="#x6000" Sub="#x2e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 31" Index="#x6000" Sub="#x2f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 32" Index="#x6000" Sub="#x30" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+					</Pdo>
+					<Pdo Name="FB Outputs" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+						<Entry Name="Control" Index="#x7000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+					</Pdo>
+				</EtherCAT>
+			</Box>
+		</Box>
+		<Box Id="7" BoxType="9099" BoxFlags="#x00000020">
+			<Name>Term 7 (AT2000-0250)</Name>
+			<ImageId>1000</ImageId>
+			<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x07d05012" RevisionNo="#x001700fa" InfoDataAddr="true" InfoDataDcTimes="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="305" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2000-0250 Motor module 250 mm, 48V" Desc="AT2000-0250" PortABoxInfo="#x02000005">
+				<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+				<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+				<SyncMan>001120002400010003000000000000002000001124010000</SyncMan>
+				<SyncMan>801120002000010004000000000000002000801120010000</SyncMan>
+				<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+				<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+				<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+				<BootStrapData>0010f400f410f400</BootStrapData>
+				<DcData>0003000000000000581b00000000000001000000000000000000000000000000</DcData>
+				<DcMode>4443000000000000000000000000000044432d53796e6368726f6e00000000000000000000000000000000000000000000000000581b000000000000000000030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+				<MBoxUserCmdData>004003000a00000000000000030010000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
+				<Pdo Name="CC Inputs" Index="#x1a00" Flags="#x0010" SyncMan="3">
+					<ExcludePdo>#x1a01</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.15" Index="#x6000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Inputs 14 Ch" Index="#x1a01" Flags="#x0010">
+					<ExcludePdo>#x1a00</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs" Index="#x1600" InOut="1" Flags="#x0010" SyncMan="2">
+					<ExcludePdo>#x1601</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.15" Index="#x7000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs 14 Ch" Index="#x1601" InOut="1" Flags="#x0010">
+					<ExcludePdo>#x1600</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<CoeProfile ProfileNo="47190921"/>
+			</EtherCAT>
+			<Box Id="8" BoxType="9099">
+				<Name>Term 8 (AT2000-5250)</Name>
+				<ImageId>1000</ImageId>
+				<EtherCAT SlaveType="1" PdiType="#x0d06" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07d05012" RevisionNo="#x00121482" InfoDataDcTimes="true" PortPhys="3" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2000-5250 Sensor line" Desc="AT2000-5250" PortABoxInfo="#x01000007">
+					<SyncMan>001002004400010003000000000000000100001044010000</SyncMan>
+					<SyncMan>801042000000010004000000000000000100801000010000</SyncMan>
+					<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
+					<Fmmu>0000000000000000801000010100000002000000000000000000000000000000</Fmmu>
+					<DcData>00070000093d0000b4140000440200000000ffff000000000000000000000000</DcData>
+					<DcMode>444353594e4331352e3632357500000044432d53796e6368726f6e2031352e3632352075730000000000000000000000093d0000b414000044020000ffff00070000000000000000000000000000000000000000000000000000000000000000</DcMode>
+					<Pdo Name="FB Inputs" Index="#x1a00" Flags="#x0011" SyncMan="1">
+						<Entry Name="Status" Index="#x6000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+						<Entry Name="Value Channel 01" Index="#x6000" Sub="#x11" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 02" Index="#x6000" Sub="#x12" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 03" Index="#x6000" Sub="#x13" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 04" Index="#x6000" Sub="#x14" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 05" Index="#x6000" Sub="#x15" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 06" Index="#x6000" Sub="#x16" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 07" Index="#x6000" Sub="#x17" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 08" Index="#x6000" Sub="#x18" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 09" Index="#x6000" Sub="#x19" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 10" Index="#x6000" Sub="#x1a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 11" Index="#x6000" Sub="#x1b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 12" Index="#x6000" Sub="#x1c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 13" Index="#x6000" Sub="#x1d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 14" Index="#x6000" Sub="#x1e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 15" Index="#x6000" Sub="#x1f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 16" Index="#x6000" Sub="#x20" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 17" Index="#x6000" Sub="#x21" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 18" Index="#x6000" Sub="#x22" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 19" Index="#x6000" Sub="#x23" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 20" Index="#x6000" Sub="#x24" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 21" Index="#x6000" Sub="#x25" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 22" Index="#x6000" Sub="#x26" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 23" Index="#x6000" Sub="#x27" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 24" Index="#x6000" Sub="#x28" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 25" Index="#x6000" Sub="#x29" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 26" Index="#x6000" Sub="#x2a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 27" Index="#x6000" Sub="#x2b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 28" Index="#x6000" Sub="#x2c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 29" Index="#x6000" Sub="#x2d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 30" Index="#x6000" Sub="#x2e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 31" Index="#x6000" Sub="#x2f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 32" Index="#x6000" Sub="#x30" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+					</Pdo>
+					<Pdo Name="FB Outputs" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+						<Entry Name="Control" Index="#x7000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+					</Pdo>
+				</EtherCAT>
+			</Box>
+		</Box>
+		<Box Id="9" BoxType="9099" BoxFlags="#x00000020">
+			<Name>Term 9 (AT2050-0500)</Name>
+			<ImageId>1000</ImageId>
+			<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x08025012" RevisionNo="#x001701f4" InfoDataAddr="true" InfoDataDcTimes="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="305" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2050-0500 Motor module, 90° clothoid, EtherCAT In, 48V" Desc="AT2050-0500" PortABoxInfo="#x02000007">
+				<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+				<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+				<SyncMan>001120002400010003000000000000002000001124010000</SyncMan>
+				<SyncMan>801120002000010004000000000000002000801120010000</SyncMan>
+				<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+				<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+				<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+				<BootStrapData>0010f400f410f400</BootStrapData>
+				<DcData>0003000000000000581b00000000000001000000000000000000000000000000</DcData>
+				<DcMode>4443000000000000000000000000000044432d53796e6368726f6e00000000000000000000000000000000000000000000000000581b000000000000000000030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+				<MBoxUserCmdData>004003000a00000000000000030010000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
+				<Pdo Name="CC Inputs" Index="#x1a00" Flags="#x0010" SyncMan="3">
+					<ExcludePdo>#x1a01</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.15" Index="#x6000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Inputs 14 Ch" Index="#x1a01" Flags="#x0010">
+					<ExcludePdo>#x1a00</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs" Index="#x1600" InOut="1" Flags="#x0010" SyncMan="2">
+					<ExcludePdo>#x1601</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.15" Index="#x7000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs 14 Ch" Index="#x1601" InOut="1" Flags="#x0010">
+					<ExcludePdo>#x1600</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<CoeProfile ProfileNo="47190921"/>
+			</EtherCAT>
+			<Box Id="10" BoxType="9099">
+				<Name>Term 10 (AT2050-5500)</Name>
+				<ImageId>1000</ImageId>
+				<EtherCAT SlaveType="1" PdiType="#x0d06" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x08025012" RevisionNo="#x0012157c" InfoDataDcTimes="true" PortPhys="3" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2050-5500 Sensor line 90° clothoid, EtherCAT In" Desc="AT2050-5500" PortABoxInfo="#x01000009">
+					<SyncMan>001002004400010003000000000000000100001044010000</SyncMan>
+					<SyncMan>801042000000010004000000000000000100801000010000</SyncMan>
+					<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
+					<Fmmu>0000000000000000801000010100000002000000000000000000000000000000</Fmmu>
+					<DcData>00070000093d0000b4140000440200000000ffff000000000000000000000000</DcData>
+					<DcMode>444353594e4331352e3632357500000044432d53796e6368726f6e2031352e3632352075730000000000000000000000093d0000b414000044020000ffff00070000000000000000000000000000000000000000000000000000000000000000</DcMode>
+					<Pdo Name="FB Inputs" Index="#x1a00" Flags="#x0011" SyncMan="1">
+						<Entry Name="Status" Index="#x6000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+						<Entry Name="Value Channel 01" Index="#x6000" Sub="#x11" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 02" Index="#x6000" Sub="#x12" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 03" Index="#x6000" Sub="#x13" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 04" Index="#x6000" Sub="#x14" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 05" Index="#x6000" Sub="#x15" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 06" Index="#x6000" Sub="#x16" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 07" Index="#x6000" Sub="#x17" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 08" Index="#x6000" Sub="#x18" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 09" Index="#x6000" Sub="#x19" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 10" Index="#x6000" Sub="#x1a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 11" Index="#x6000" Sub="#x1b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 12" Index="#x6000" Sub="#x1c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 13" Index="#x6000" Sub="#x1d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 14" Index="#x6000" Sub="#x1e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 15" Index="#x6000" Sub="#x1f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 16" Index="#x6000" Sub="#x20" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 17" Index="#x6000" Sub="#x21" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 18" Index="#x6000" Sub="#x22" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 19" Index="#x6000" Sub="#x23" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 20" Index="#x6000" Sub="#x24" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 21" Index="#x6000" Sub="#x25" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 22" Index="#x6000" Sub="#x26" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 23" Index="#x6000" Sub="#x27" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 24" Index="#x6000" Sub="#x28" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 25" Index="#x6000" Sub="#x29" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 26" Index="#x6000" Sub="#x2a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 27" Index="#x6000" Sub="#x2b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 28" Index="#x6000" Sub="#x2c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 29" Index="#x6000" Sub="#x2d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 30" Index="#x6000" Sub="#x2e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 31" Index="#x6000" Sub="#x2f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 32" Index="#x6000" Sub="#x30" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+					</Pdo>
+					<Pdo Name="FB Outputs" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+						<Entry Name="Control" Index="#x7000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+					</Pdo>
+				</EtherCAT>
+			</Box>
+		</Box>
+		<Box Id="11" BoxType="9099" BoxFlags="#x00000020">
+			<Name>Term 11 (AT2050-0501)</Name>
+			<ImageId>1000</ImageId>
+			<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x08025012" RevisionNo="#x001701f5" InfoDataAddr="true" InfoDataDcTimes="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="305" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2050-0501 Motor module, 90° clothoid, EtherCAT Out, 48V" Desc="AT2050-0501" PortABoxInfo="#x02000009">
+				<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+				<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+				<SyncMan>001120002400010003000000000000002000001124010000</SyncMan>
+				<SyncMan>801120002000010004000000000000002000801120010000</SyncMan>
+				<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+				<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+				<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+				<BootStrapData>0010f400f410f400</BootStrapData>
+				<DcData>0003000000000000581b00000000000001000000000000000000000000000000</DcData>
+				<DcMode>4443000000000000000000000000000044432d53796e6368726f6e00000000000000000000000000000000000000000000000000581b000000000000000000030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+				<MBoxUserCmdData>004003000a00000000000000030010000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
+				<Pdo Name="CC Inputs" Index="#x1a00" Flags="#x0010" SyncMan="3">
+					<ExcludePdo>#x1a01</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.15" Index="#x6000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Inputs 14 Ch" Index="#x1a01" Flags="#x0010">
+					<ExcludePdo>#x1a00</ExcludePdo>
+					<Entry Name="Status" Index="#x6000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.1" Index="#x6000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.2" Index="#x6000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.3" Index="#x6000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.4" Index="#x6000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.5" Index="#x6000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.6" Index="#x6000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.7" Index="#x6000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.8" Index="#x6000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.9" Index="#x6000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.10" Index="#x6000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.11" Index="#x6000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.12" Index="#x6000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.13" Index="#x6000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current actual value Ch.14" Index="#x6000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs" Index="#x1600" InOut="1" Flags="#x0010" SyncMan="2">
+					<ExcludePdo>#x1601</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.15" Index="#x7000" Sub="#x1f">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<Pdo Name="CC Outputs 14 Ch" Index="#x1601" InOut="1" Flags="#x0010">
+					<ExcludePdo>#x1600</ExcludePdo>
+					<Entry Name="Control" Index="#x7000" Sub="#x01">
+						<Type>UINT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.1" Index="#x7000" Sub="#x11">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.2" Index="#x7000" Sub="#x12">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.3" Index="#x7000" Sub="#x13">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.4" Index="#x7000" Sub="#x14">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.5" Index="#x7000" Sub="#x15">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.6" Index="#x7000" Sub="#x16">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.7" Index="#x7000" Sub="#x17">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.8" Index="#x7000" Sub="#x18">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.9" Index="#x7000" Sub="#x19">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.10" Index="#x7000" Sub="#x1a">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.11" Index="#x7000" Sub="#x1b">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.12" Index="#x7000" Sub="#x1c">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.13" Index="#x7000" Sub="#x1d">
+						<Type>INT</Type>
+					</Entry>
+					<Entry Name="Current setpoint value Ch.14" Index="#x7000" Sub="#x1e">
+						<Type>INT</Type>
+					</Entry>
+				</Pdo>
+				<CoeProfile ProfileNo="47190921"/>
+			</EtherCAT>
+			<Box Id="12" BoxType="9099">
+				<Name>Term 12 (AT2050-5501)</Name>
+				<ImageId>1000</ImageId>
+				<EtherCAT SlaveType="1" PdiType="#x0d06" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x08025012" RevisionNo="#x0012157d" InfoDataDcTimes="true" PortPhys="3" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AT2050-5501 Sensor line 90° clothoid, EtherCAT Out" Desc="AT2050-5501" PortABoxInfo="#x0100000b">
+					<SyncMan>001002004400010003000000000000000100001044010000</SyncMan>
+					<SyncMan>801042000000010004000000000000000100801000010000</SyncMan>
+					<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
+					<Fmmu>0000000000000000801000010100000002000000000000000000000000000000</Fmmu>
+					<DcData>00070000093d0000b4140000440200000000ffff000000000000000000000000</DcData>
+					<DcMode>444353594e4331352e3632357500000044432d53796e6368726f6e2031352e3632352075730000000000000000000000093d0000b414000044020000ffff00070000000000000000000000000000000000000000000000000000000000000000</DcMode>
+					<Pdo Name="FB Inputs" Index="#x1a00" Flags="#x0011" SyncMan="1">
+						<Entry Name="Status" Index="#x6000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+						<Entry Name="Value Channel 01" Index="#x6000" Sub="#x11" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 02" Index="#x6000" Sub="#x12" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 03" Index="#x6000" Sub="#x13" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 04" Index="#x6000" Sub="#x14" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 05" Index="#x6000" Sub="#x15" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 06" Index="#x6000" Sub="#x16" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 07" Index="#x6000" Sub="#x17" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 08" Index="#x6000" Sub="#x18" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 09" Index="#x6000" Sub="#x19" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 10" Index="#x6000" Sub="#x1a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 11" Index="#x6000" Sub="#x1b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 12" Index="#x6000" Sub="#x1c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 13" Index="#x6000" Sub="#x1d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 14" Index="#x6000" Sub="#x1e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 15" Index="#x6000" Sub="#x1f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 16" Index="#x6000" Sub="#x20" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 17" Index="#x6000" Sub="#x21" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 18" Index="#x6000" Sub="#x22" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 19" Index="#x6000" Sub="#x23" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 20" Index="#x6000" Sub="#x24" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 21" Index="#x6000" Sub="#x25" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 22" Index="#x6000" Sub="#x26" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 23" Index="#x6000" Sub="#x27" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 24" Index="#x6000" Sub="#x28" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 25" Index="#x6000" Sub="#x29" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 26" Index="#x6000" Sub="#x2a" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 27" Index="#x6000" Sub="#x2b" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 28" Index="#x6000" Sub="#x2c" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 29" Index="#x6000" Sub="#x2d" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 30" Index="#x6000" Sub="#x2e" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 31" Index="#x6000" Sub="#x2f" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+						<Entry Name="Value Channel 32" Index="#x6000" Sub="#x30" Flags="#x000d0000">
+							<Type>INT</Type>
+						</Entry>
+					</Pdo>
+					<Pdo Name="FB Outputs" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+						<Entry Name="Control" Index="#x7000" Sub="#x01">
+							<Type>UINT</Type>
+						</Entry>
+					</Pdo>
+				</EtherCAT>
+			</Box>
+		</Box>
+		<EtherCAT DcSyncMode="3"/>
+	</Device>
+	<Mappings>
+		<OwnerA>
+			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Part 1^Module 1">
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.10" VarB="Data Pointer^CurrentActualValues[9]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.11" VarB="Data Pointer^CurrentActualValues[10]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.12" VarB="Data Pointer^CurrentActualValues[11]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.13" VarB="Data Pointer^CurrentActualValues[12]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.14" VarB="Data Pointer^CurrentActualValues[13]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.15" VarB="Data Pointer^CurrentActualValues[14]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.2" VarB="Data Pointer^CurrentActualValues[1]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.3" VarB="Data Pointer^CurrentActualValues[2]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.4" VarB="Data Pointer^CurrentActualValues[3]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.5" VarB="Data Pointer^CurrentActualValues[4]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.6" VarB="Data Pointer^CurrentActualValues[5]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.7" VarB="Data Pointer^CurrentActualValues[6]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.8" VarB="Data Pointer^CurrentActualValues[7]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.9" VarB="Data Pointer^CurrentActualValues[8]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Status" VarB="Data Pointer^Status"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Control" VarB="Data Pointer^Control"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.1" VarB="Data Pointer^CurrentSetpointValues[0]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.10" VarB="Data Pointer^CurrentSetpointValues[9]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.11" VarB="Data Pointer^CurrentSetpointValues[10]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.12" VarB="Data Pointer^CurrentSetpointValues[11]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.13" VarB="Data Pointer^CurrentSetpointValues[12]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.14" VarB="Data Pointer^CurrentSetpointValues[13]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.15" VarB="Data Pointer^CurrentSetpointValues[14]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.2" VarB="Data Pointer^CurrentSetpointValues[1]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.3" VarB="Data Pointer^CurrentSetpointValues[2]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.4" VarB="Data Pointer^CurrentSetpointValues[3]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.5" VarB="Data Pointer^CurrentSetpointValues[4]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.6" VarB="Data Pointer^CurrentSetpointValues[5]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.7" VarB="Data Pointer^CurrentSetpointValues[6]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.8" VarB="Data Pointer^CurrentSetpointValues[7]"/>
+				<Link VarA="Term 1 (AT2001-0250)^CC Outputs^Current setpoint value Ch.9" VarB="Data Pointer^CurrentSetpointValues[8]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 01" VarB="Data Pointer^RawPositionValues[0]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 02" VarB="Data Pointer^RawPositionValues[1]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 03" VarB="Data Pointer^RawPositionValues[2]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 04" VarB="Data Pointer^RawPositionValues[3]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 05" VarB="Data Pointer^RawPositionValues[4]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 06" VarB="Data Pointer^RawPositionValues[5]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 07" VarB="Data Pointer^RawPositionValues[6]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 08" VarB="Data Pointer^RawPositionValues[7]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 09" VarB="Data Pointer^RawPositionValues[8]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 10" VarB="Data Pointer^RawPositionValues[9]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 11" VarB="Data Pointer^RawPositionValues[10]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 12" VarB="Data Pointer^RawPositionValues[11]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 13" VarB="Data Pointer^RawPositionValues[12]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 14" VarB="Data Pointer^RawPositionValues[13]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 15" VarB="Data Pointer^RawPositionValues[14]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 16" VarB="Data Pointer^RawPositionValues[15]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 17" VarB="Data Pointer^RawPositionValues[16]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 18" VarB="Data Pointer^RawPositionValues[17]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 19" VarB="Data Pointer^RawPositionValues[18]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 20" VarB="Data Pointer^RawPositionValues[19]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 21" VarB="Data Pointer^RawPositionValues[20]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 22" VarB="Data Pointer^RawPositionValues[21]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 23" VarB="Data Pointer^RawPositionValues[22]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 24" VarB="Data Pointer^RawPositionValues[23]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 25" VarB="Data Pointer^RawPositionValues[24]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 26" VarB="Data Pointer^RawPositionValues[25]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 27" VarB="Data Pointer^RawPositionValues[26]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 28" VarB="Data Pointer^RawPositionValues[27]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 29" VarB="Data Pointer^RawPositionValues[28]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 30" VarB="Data Pointer^RawPositionValues[29]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 31" VarB="Data Pointer^RawPositionValues[30]"/>
+				<Link VarA="Term 1 (AT2001-0250)^Term 2 (AT2001-5250)^FB Inputs^Value Channel 32" VarB="Data Pointer^RawPositionValues[31]"/>
+			</OwnerB>
+			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Part 1^Module 2">
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.10" VarB="Data Pointer^CurrentActualValues[9]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.11" VarB="Data Pointer^CurrentActualValues[10]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.12" VarB="Data Pointer^CurrentActualValues[11]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.13" VarB="Data Pointer^CurrentActualValues[12]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.14" VarB="Data Pointer^CurrentActualValues[13]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.15" VarB="Data Pointer^CurrentActualValues[14]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.2" VarB="Data Pointer^CurrentActualValues[1]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.3" VarB="Data Pointer^CurrentActualValues[2]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.4" VarB="Data Pointer^CurrentActualValues[3]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.5" VarB="Data Pointer^CurrentActualValues[4]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.6" VarB="Data Pointer^CurrentActualValues[5]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.7" VarB="Data Pointer^CurrentActualValues[6]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.8" VarB="Data Pointer^CurrentActualValues[7]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Current actual value Ch.9" VarB="Data Pointer^CurrentActualValues[8]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Inputs^Status" VarB="Data Pointer^Status"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Control" VarB="Data Pointer^Control"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.1" VarB="Data Pointer^CurrentSetpointValues[0]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.10" VarB="Data Pointer^CurrentSetpointValues[9]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.11" VarB="Data Pointer^CurrentSetpointValues[10]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.12" VarB="Data Pointer^CurrentSetpointValues[11]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.13" VarB="Data Pointer^CurrentSetpointValues[12]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.14" VarB="Data Pointer^CurrentSetpointValues[13]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.15" VarB="Data Pointer^CurrentSetpointValues[14]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.2" VarB="Data Pointer^CurrentSetpointValues[1]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.3" VarB="Data Pointer^CurrentSetpointValues[2]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.4" VarB="Data Pointer^CurrentSetpointValues[3]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.5" VarB="Data Pointer^CurrentSetpointValues[4]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.6" VarB="Data Pointer^CurrentSetpointValues[5]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.7" VarB="Data Pointer^CurrentSetpointValues[6]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.8" VarB="Data Pointer^CurrentSetpointValues[7]"/>
+				<Link VarA="Term 3 (AT2000-0250)^CC Outputs^Current setpoint value Ch.9" VarB="Data Pointer^CurrentSetpointValues[8]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 01" VarB="Data Pointer^RawPositionValues[0]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 02" VarB="Data Pointer^RawPositionValues[1]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 03" VarB="Data Pointer^RawPositionValues[2]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 04" VarB="Data Pointer^RawPositionValues[3]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 05" VarB="Data Pointer^RawPositionValues[4]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 06" VarB="Data Pointer^RawPositionValues[5]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 07" VarB="Data Pointer^RawPositionValues[6]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 08" VarB="Data Pointer^RawPositionValues[7]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 09" VarB="Data Pointer^RawPositionValues[8]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 10" VarB="Data Pointer^RawPositionValues[9]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 11" VarB="Data Pointer^RawPositionValues[10]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 12" VarB="Data Pointer^RawPositionValues[11]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 13" VarB="Data Pointer^RawPositionValues[12]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 14" VarB="Data Pointer^RawPositionValues[13]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 15" VarB="Data Pointer^RawPositionValues[14]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 16" VarB="Data Pointer^RawPositionValues[15]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 17" VarB="Data Pointer^RawPositionValues[16]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 18" VarB="Data Pointer^RawPositionValues[17]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 19" VarB="Data Pointer^RawPositionValues[18]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 20" VarB="Data Pointer^RawPositionValues[19]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 21" VarB="Data Pointer^RawPositionValues[20]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 22" VarB="Data Pointer^RawPositionValues[21]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 23" VarB="Data Pointer^RawPositionValues[22]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 24" VarB="Data Pointer^RawPositionValues[23]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 25" VarB="Data Pointer^RawPositionValues[24]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 26" VarB="Data Pointer^RawPositionValues[25]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 27" VarB="Data Pointer^RawPositionValues[26]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 28" VarB="Data Pointer^RawPositionValues[27]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 29" VarB="Data Pointer^RawPositionValues[28]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 30" VarB="Data Pointer^RawPositionValues[29]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 31" VarB="Data Pointer^RawPositionValues[30]"/>
+				<Link VarA="Term 3 (AT2000-0250)^Term 4 (AT2000-5250)^FB Inputs^Value Channel 32" VarB="Data Pointer^RawPositionValues[31]"/>
+			</OwnerB>
+			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Part 1^Module 3">
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.10" VarB="Data Pointer^CurrentActualValues[9]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.11" VarB="Data Pointer^CurrentActualValues[10]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.12" VarB="Data Pointer^CurrentActualValues[11]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.13" VarB="Data Pointer^CurrentActualValues[12]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.14" VarB="Data Pointer^CurrentActualValues[13]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.15" VarB="Data Pointer^CurrentActualValues[14]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.2" VarB="Data Pointer^CurrentActualValues[1]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.3" VarB="Data Pointer^CurrentActualValues[2]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.4" VarB="Data Pointer^CurrentActualValues[3]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.5" VarB="Data Pointer^CurrentActualValues[4]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.6" VarB="Data Pointer^CurrentActualValues[5]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.7" VarB="Data Pointer^CurrentActualValues[6]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.8" VarB="Data Pointer^CurrentActualValues[7]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Current actual value Ch.9" VarB="Data Pointer^CurrentActualValues[8]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Inputs^Status" VarB="Data Pointer^Status"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Control" VarB="Data Pointer^Control"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.1" VarB="Data Pointer^CurrentSetpointValues[0]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.10" VarB="Data Pointer^CurrentSetpointValues[9]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.11" VarB="Data Pointer^CurrentSetpointValues[10]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.12" VarB="Data Pointer^CurrentSetpointValues[11]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.13" VarB="Data Pointer^CurrentSetpointValues[12]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.14" VarB="Data Pointer^CurrentSetpointValues[13]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.15" VarB="Data Pointer^CurrentSetpointValues[14]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.2" VarB="Data Pointer^CurrentSetpointValues[1]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.3" VarB="Data Pointer^CurrentSetpointValues[2]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.4" VarB="Data Pointer^CurrentSetpointValues[3]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.5" VarB="Data Pointer^CurrentSetpointValues[4]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.6" VarB="Data Pointer^CurrentSetpointValues[5]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.7" VarB="Data Pointer^CurrentSetpointValues[6]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.8" VarB="Data Pointer^CurrentSetpointValues[7]"/>
+				<Link VarA="Term 5 (AT2000-0250)^CC Outputs^Current setpoint value Ch.9" VarB="Data Pointer^CurrentSetpointValues[8]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 01" VarB="Data Pointer^RawPositionValues[0]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 02" VarB="Data Pointer^RawPositionValues[1]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 03" VarB="Data Pointer^RawPositionValues[2]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 04" VarB="Data Pointer^RawPositionValues[3]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 05" VarB="Data Pointer^RawPositionValues[4]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 06" VarB="Data Pointer^RawPositionValues[5]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 07" VarB="Data Pointer^RawPositionValues[6]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 08" VarB="Data Pointer^RawPositionValues[7]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 09" VarB="Data Pointer^RawPositionValues[8]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 10" VarB="Data Pointer^RawPositionValues[9]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 11" VarB="Data Pointer^RawPositionValues[10]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 12" VarB="Data Pointer^RawPositionValues[11]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 13" VarB="Data Pointer^RawPositionValues[12]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 14" VarB="Data Pointer^RawPositionValues[13]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 15" VarB="Data Pointer^RawPositionValues[14]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 16" VarB="Data Pointer^RawPositionValues[15]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 17" VarB="Data Pointer^RawPositionValues[16]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 18" VarB="Data Pointer^RawPositionValues[17]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 19" VarB="Data Pointer^RawPositionValues[18]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 20" VarB="Data Pointer^RawPositionValues[19]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 21" VarB="Data Pointer^RawPositionValues[20]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 22" VarB="Data Pointer^RawPositionValues[21]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 23" VarB="Data Pointer^RawPositionValues[22]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 24" VarB="Data Pointer^RawPositionValues[23]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 25" VarB="Data Pointer^RawPositionValues[24]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 26" VarB="Data Pointer^RawPositionValues[25]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 27" VarB="Data Pointer^RawPositionValues[26]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 28" VarB="Data Pointer^RawPositionValues[27]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 29" VarB="Data Pointer^RawPositionValues[28]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 30" VarB="Data Pointer^RawPositionValues[29]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 31" VarB="Data Pointer^RawPositionValues[30]"/>
+				<Link VarA="Term 5 (AT2000-0250)^Term 6 (AT2000-5250)^FB Inputs^Value Channel 32" VarB="Data Pointer^RawPositionValues[31]"/>
+			</OwnerB>
+			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Part 1^Module 4">
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.10" VarB="Data Pointer^CurrentActualValues[9]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.11" VarB="Data Pointer^CurrentActualValues[10]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.12" VarB="Data Pointer^CurrentActualValues[11]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.13" VarB="Data Pointer^CurrentActualValues[12]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.14" VarB="Data Pointer^CurrentActualValues[13]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.15" VarB="Data Pointer^CurrentActualValues[14]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.2" VarB="Data Pointer^CurrentActualValues[1]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.3" VarB="Data Pointer^CurrentActualValues[2]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.4" VarB="Data Pointer^CurrentActualValues[3]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.5" VarB="Data Pointer^CurrentActualValues[4]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.6" VarB="Data Pointer^CurrentActualValues[5]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.7" VarB="Data Pointer^CurrentActualValues[6]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.8" VarB="Data Pointer^CurrentActualValues[7]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Current actual value Ch.9" VarB="Data Pointer^CurrentActualValues[8]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Inputs^Status" VarB="Data Pointer^Status"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Control" VarB="Data Pointer^Control"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.1" VarB="Data Pointer^CurrentSetpointValues[0]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.10" VarB="Data Pointer^CurrentSetpointValues[9]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.11" VarB="Data Pointer^CurrentSetpointValues[10]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.12" VarB="Data Pointer^CurrentSetpointValues[11]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.13" VarB="Data Pointer^CurrentSetpointValues[12]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.14" VarB="Data Pointer^CurrentSetpointValues[13]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.15" VarB="Data Pointer^CurrentSetpointValues[14]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.2" VarB="Data Pointer^CurrentSetpointValues[1]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.3" VarB="Data Pointer^CurrentSetpointValues[2]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.4" VarB="Data Pointer^CurrentSetpointValues[3]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.5" VarB="Data Pointer^CurrentSetpointValues[4]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.6" VarB="Data Pointer^CurrentSetpointValues[5]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.7" VarB="Data Pointer^CurrentSetpointValues[6]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.8" VarB="Data Pointer^CurrentSetpointValues[7]"/>
+				<Link VarA="Term 7 (AT2000-0250)^CC Outputs^Current setpoint value Ch.9" VarB="Data Pointer^CurrentSetpointValues[8]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 01" VarB="Data Pointer^RawPositionValues[0]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 02" VarB="Data Pointer^RawPositionValues[1]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 03" VarB="Data Pointer^RawPositionValues[2]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 04" VarB="Data Pointer^RawPositionValues[3]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 05" VarB="Data Pointer^RawPositionValues[4]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 06" VarB="Data Pointer^RawPositionValues[5]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 07" VarB="Data Pointer^RawPositionValues[6]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 08" VarB="Data Pointer^RawPositionValues[7]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 09" VarB="Data Pointer^RawPositionValues[8]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 10" VarB="Data Pointer^RawPositionValues[9]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 11" VarB="Data Pointer^RawPositionValues[10]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 12" VarB="Data Pointer^RawPositionValues[11]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 13" VarB="Data Pointer^RawPositionValues[12]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 14" VarB="Data Pointer^RawPositionValues[13]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 15" VarB="Data Pointer^RawPositionValues[14]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 16" VarB="Data Pointer^RawPositionValues[15]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 17" VarB="Data Pointer^RawPositionValues[16]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 18" VarB="Data Pointer^RawPositionValues[17]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 19" VarB="Data Pointer^RawPositionValues[18]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 20" VarB="Data Pointer^RawPositionValues[19]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 21" VarB="Data Pointer^RawPositionValues[20]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 22" VarB="Data Pointer^RawPositionValues[21]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 23" VarB="Data Pointer^RawPositionValues[22]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 24" VarB="Data Pointer^RawPositionValues[23]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 25" VarB="Data Pointer^RawPositionValues[24]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 26" VarB="Data Pointer^RawPositionValues[25]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 27" VarB="Data Pointer^RawPositionValues[26]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 28" VarB="Data Pointer^RawPositionValues[27]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 29" VarB="Data Pointer^RawPositionValues[28]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 30" VarB="Data Pointer^RawPositionValues[29]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 31" VarB="Data Pointer^RawPositionValues[30]"/>
+				<Link VarA="Term 7 (AT2000-0250)^Term 8 (AT2000-5250)^FB Inputs^Value Channel 32" VarB="Data Pointer^RawPositionValues[31]"/>
+			</OwnerB>
+			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Part 1^Module 5">
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.10" VarB="Data Pointer^CurrentActualValues[9]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.11" VarB="Data Pointer^CurrentActualValues[10]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.12" VarB="Data Pointer^CurrentActualValues[11]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.13" VarB="Data Pointer^CurrentActualValues[12]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.14" VarB="Data Pointer^CurrentActualValues[13]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.15" VarB="Data Pointer^CurrentActualValues[14]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.2" VarB="Data Pointer^CurrentActualValues[1]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.3" VarB="Data Pointer^CurrentActualValues[2]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.4" VarB="Data Pointer^CurrentActualValues[3]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.5" VarB="Data Pointer^CurrentActualValues[4]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.6" VarB="Data Pointer^CurrentActualValues[5]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.7" VarB="Data Pointer^CurrentActualValues[6]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.8" VarB="Data Pointer^CurrentActualValues[7]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Current actual value Ch.9" VarB="Data Pointer^CurrentActualValues[8]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Inputs^Status" VarB="Data Pointer^Status"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Control" VarB="Data Pointer^Control"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.1" VarB="Data Pointer^CurrentSetpointValues[0]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.10" VarB="Data Pointer^CurrentSetpointValues[9]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.11" VarB="Data Pointer^CurrentSetpointValues[10]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.12" VarB="Data Pointer^CurrentSetpointValues[11]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.13" VarB="Data Pointer^CurrentSetpointValues[12]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.14" VarB="Data Pointer^CurrentSetpointValues[13]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.15" VarB="Data Pointer^CurrentSetpointValues[14]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.2" VarB="Data Pointer^CurrentSetpointValues[1]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.3" VarB="Data Pointer^CurrentSetpointValues[2]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.4" VarB="Data Pointer^CurrentSetpointValues[3]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.5" VarB="Data Pointer^CurrentSetpointValues[4]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.6" VarB="Data Pointer^CurrentSetpointValues[5]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.7" VarB="Data Pointer^CurrentSetpointValues[6]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.8" VarB="Data Pointer^CurrentSetpointValues[7]"/>
+				<Link VarA="Term 9 (AT2050-0500)^CC Outputs^Current setpoint value Ch.9" VarB="Data Pointer^CurrentSetpointValues[8]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 01" VarB="Data Pointer^RawPositionValues[0]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 02" VarB="Data Pointer^RawPositionValues[1]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 03" VarB="Data Pointer^RawPositionValues[2]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 04" VarB="Data Pointer^RawPositionValues[3]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 05" VarB="Data Pointer^RawPositionValues[4]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 06" VarB="Data Pointer^RawPositionValues[5]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 07" VarB="Data Pointer^RawPositionValues[6]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 08" VarB="Data Pointer^RawPositionValues[7]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 09" VarB="Data Pointer^RawPositionValues[8]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 10" VarB="Data Pointer^RawPositionValues[9]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 11" VarB="Data Pointer^RawPositionValues[10]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 12" VarB="Data Pointer^RawPositionValues[11]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 13" VarB="Data Pointer^RawPositionValues[12]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 14" VarB="Data Pointer^RawPositionValues[13]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 15" VarB="Data Pointer^RawPositionValues[14]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 16" VarB="Data Pointer^RawPositionValues[15]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 17" VarB="Data Pointer^RawPositionValues[16]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 18" VarB="Data Pointer^RawPositionValues[17]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 19" VarB="Data Pointer^RawPositionValues[18]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 20" VarB="Data Pointer^RawPositionValues[19]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 21" VarB="Data Pointer^RawPositionValues[20]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 22" VarB="Data Pointer^RawPositionValues[21]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 23" VarB="Data Pointer^RawPositionValues[22]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 24" VarB="Data Pointer^RawPositionValues[23]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 25" VarB="Data Pointer^RawPositionValues[24]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 26" VarB="Data Pointer^RawPositionValues[25]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 27" VarB="Data Pointer^RawPositionValues[26]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 28" VarB="Data Pointer^RawPositionValues[27]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 29" VarB="Data Pointer^RawPositionValues[28]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 30" VarB="Data Pointer^RawPositionValues[29]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 31" VarB="Data Pointer^RawPositionValues[30]"/>
+				<Link VarA="Term 9 (AT2050-0500)^Term 10 (AT2050-5500)^FB Inputs^Value Channel 32" VarB="Data Pointer^RawPositionValues[31]"/>
+			</OwnerB>
+			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Part 1^Module 6">
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.10" VarB="Data Pointer^CurrentActualValues[9]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.11" VarB="Data Pointer^CurrentActualValues[10]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.12" VarB="Data Pointer^CurrentActualValues[11]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.13" VarB="Data Pointer^CurrentActualValues[12]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.14" VarB="Data Pointer^CurrentActualValues[13]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.15" VarB="Data Pointer^CurrentActualValues[14]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.2" VarB="Data Pointer^CurrentActualValues[1]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.3" VarB="Data Pointer^CurrentActualValues[2]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.4" VarB="Data Pointer^CurrentActualValues[3]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.5" VarB="Data Pointer^CurrentActualValues[4]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.6" VarB="Data Pointer^CurrentActualValues[5]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.7" VarB="Data Pointer^CurrentActualValues[6]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.8" VarB="Data Pointer^CurrentActualValues[7]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Current actual value Ch.9" VarB="Data Pointer^CurrentActualValues[8]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Inputs^Status" VarB="Data Pointer^Status"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Control" VarB="Data Pointer^Control"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.1" VarB="Data Pointer^CurrentSetpointValues[0]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.10" VarB="Data Pointer^CurrentSetpointValues[9]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.11" VarB="Data Pointer^CurrentSetpointValues[10]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.12" VarB="Data Pointer^CurrentSetpointValues[11]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.13" VarB="Data Pointer^CurrentSetpointValues[12]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.14" VarB="Data Pointer^CurrentSetpointValues[13]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.15" VarB="Data Pointer^CurrentSetpointValues[14]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.2" VarB="Data Pointer^CurrentSetpointValues[1]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.3" VarB="Data Pointer^CurrentSetpointValues[2]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.4" VarB="Data Pointer^CurrentSetpointValues[3]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.5" VarB="Data Pointer^CurrentSetpointValues[4]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.6" VarB="Data Pointer^CurrentSetpointValues[5]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.7" VarB="Data Pointer^CurrentSetpointValues[6]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.8" VarB="Data Pointer^CurrentSetpointValues[7]"/>
+				<Link VarA="Term 11 (AT2050-0501)^CC Outputs^Current setpoint value Ch.9" VarB="Data Pointer^CurrentSetpointValues[8]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 01" VarB="Data Pointer^RawPositionValues[0]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 02" VarB="Data Pointer^RawPositionValues[1]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 03" VarB="Data Pointer^RawPositionValues[2]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 04" VarB="Data Pointer^RawPositionValues[3]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 05" VarB="Data Pointer^RawPositionValues[4]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 06" VarB="Data Pointer^RawPositionValues[5]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 07" VarB="Data Pointer^RawPositionValues[6]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 08" VarB="Data Pointer^RawPositionValues[7]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 09" VarB="Data Pointer^RawPositionValues[8]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 10" VarB="Data Pointer^RawPositionValues[9]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 11" VarB="Data Pointer^RawPositionValues[10]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 12" VarB="Data Pointer^RawPositionValues[11]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 13" VarB="Data Pointer^RawPositionValues[12]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 14" VarB="Data Pointer^RawPositionValues[13]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 15" VarB="Data Pointer^RawPositionValues[14]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 16" VarB="Data Pointer^RawPositionValues[15]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 17" VarB="Data Pointer^RawPositionValues[16]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 18" VarB="Data Pointer^RawPositionValues[17]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 19" VarB="Data Pointer^RawPositionValues[18]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 20" VarB="Data Pointer^RawPositionValues[19]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 21" VarB="Data Pointer^RawPositionValues[20]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 22" VarB="Data Pointer^RawPositionValues[21]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 23" VarB="Data Pointer^RawPositionValues[22]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 24" VarB="Data Pointer^RawPositionValues[23]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 25" VarB="Data Pointer^RawPositionValues[24]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 26" VarB="Data Pointer^RawPositionValues[25]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 27" VarB="Data Pointer^RawPositionValues[26]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 28" VarB="Data Pointer^RawPositionValues[27]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 29" VarB="Data Pointer^RawPositionValues[28]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 30" VarB="Data Pointer^RawPositionValues[29]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 31" VarB="Data Pointer^RawPositionValues[30]"/>
+				<Link VarA="Term 11 (AT2050-0501)^Term 12 (AT2050-5501)^FB Inputs^Value Channel 32" VarB="Data Pointer^RawPositionValues[31]"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmItem>

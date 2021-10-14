@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Station" Id="{5b67f0b3-4286-49f2-9b21-1e637f521584}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective IMPLEMENTS iObjective
+VAR_INPUT	
+	
+	Position			: LREAL;
+
+END_VAR
+VAR_OUTPUT
+	
+	MoverInPosition		: BOOL;					// A mover from the TrackedMovers list is within the position limits
+
+END_VAR
+VAR_TEMP
+	
+	i					: UINT;
+	someMoverInPos		: BOOL;
+	whichMover			: UINT;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+// Watch Tracked Movers to see if any are no longer destined for the Station
+MonitorTracked();
+
+// Watch Tracked Movers to see if any are In-Position at the station
+MonitorSuccesses();
+]]></ST>
+    </Implementation>
+    <Action Name="MonitorSuccesses" Id="{d193306f-fdc4-4235-a258-d136a66423ae}">
+      <Implementation>
+        <ST><![CDATA[
+
+
+someMoverInPos	:= FALSE;
+whichMover		:= 0;
+
+// If any of the tracked movers have completely arrived at the station, set InPos to true
+FOR i := 0 TO gNUM_MOVERS-1 DO
+
+	// check pointer validity
+	IF TrackedMovers[i] <> 0 THEN
+		
+		// todo: think about how this works on the rollover point?
+		IF ABS( MODABS(TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,4000) - Position ) < 1.0 THEN
+			someMoverInPos		:= TRUE;
+			whichMover			:= i;	
+		END_IF;	
+	
+	END_IF
+
+END_FOR
+
+// todo: are there conditions where multiple movers could occupy this Objective simultaneously?
+IF someMoverInPos THEN
+	MoverInPosition				:= TRUE;
+	CurrentMover				:= TrackedMovers[whichMover];
+ELSE
+	MoverInPosition				:= FALSE;
+	CurrentMover				:= 0;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="MonitorTracked" Id="{d10262e1-988d-4b1f-adf1-61832204de3d}">
+      <Implementation>
+        <ST><![CDATA[
+
+// If any movers are no longer destined for this station, remove them from the Tracked Movers list
+TrackedMoverCount	:= 0;
+
+FOR i := 0 TO gNUM_MOVERS-1 DO
+	// check pointer validity
+	IF TrackedMovers[i] <> 0 THEN
+		
+		TrackedMoverCount		:= TrackedMoverCount + 1;
+		
+		IF TrackedMovers[i]^.CurrentMoveType <> MoverCommandType_enum.MOVETYPE_STATION THEN
+			//ADSLOGSTR(ADSLOG_MSGTYPE_LOG,'Station deregistering mover %s for MoveType',TrackedMovers[i]^.InstancePath);
+			TrackedMovers[i]	:= 0;
+		
+		ELSIF TrackedMovers[i]^.Objective <> InstancePath THEN
+			//ADSLOGSTR(ADSLOG_MSGTYPE_LOG,'Station deregistering mover %s for Destination',TrackedMovers[i]^.InstancePath);
+			TrackedMovers[i]	:= 0;
+		END_IF;
+	
+	END_IF
+END_FOR
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="Station">
+      <LineId Id="276" Count="3" />
+      <LineId Id="253" Count="2" />
+      <LineId Id="221" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.MonitorSuccesses">
+      <LineId Id="2" Count="0" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="3" Count="2" />
+      <LineId Id="74" Count="1" />
+      <LineId Id="77" Count="1" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="88" Count="1" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="71" Count="2" />
+      <LineId Id="48" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.MonitorTracked">
+      <LineId Id="2" Count="2" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

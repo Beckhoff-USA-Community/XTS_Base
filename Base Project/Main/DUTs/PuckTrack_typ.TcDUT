@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="PuckTrack_typ" Id="{792a6d78-119e-4b4e-9266-cc50b03becc5}">
+    <Declaration><![CDATA[TYPE PuckTrack_typ :
+STRUCT
+
+	PuckPresent			: BOOL;
+	ConveyorPosition	: LREAL;
+	YPosition			: LREAL;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

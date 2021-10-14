@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="MoverParameters_typ" Id="{bd3dfc46-8034-4584-b9a8-07f88efb1905}">
+    <Declaration><![CDATA[TYPE MoverParameters_typ :
+STRUCT
+	
+	Acceleration	: LREAL;					// mm/s2
+	Deceleration	: LREAL;					// mm/s2
+	Velocity		: LREAL;					// mm/s
+	Direction		: Tc3_Mc3Definitions.MC_Direction;		// MC_Direction
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

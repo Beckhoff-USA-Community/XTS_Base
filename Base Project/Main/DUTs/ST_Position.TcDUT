@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="ST_Position" Id="{0116a88b-6a32-4c74-8d4d-98675d7b870a}">
+    <Declaration><![CDATA[TYPE ST_Position :
+STRUCT
+	Frame : OTCID;
+	X: LREAL;
+	Y: LREAL;
+	Z: LREAL;
+	Rot1: LREAL;
+	Rot2: LREAL;
+	Rot3: LREAL;	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

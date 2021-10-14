@@ -1,0 +1,1188 @@
+<?xml version="1.0"?>
+<TcEventSources Version="2">
+	<Source>
+		<GUID>{E8BDE4DC-2AA6-4359-9032-6988873E62EF}</GUID>
+		<Event>
+			<Id>9029</Id>
+			<Message LcId="1033">Could not register by {0}.</Message>
+		</Event>
+	</Source>
+	<Source>
+		<GUID>{1FB78BB1-856A-49A6-9BA7-47AE9370A2D0}</GUID>
+		<Event>
+			<Id>9029</Id>
+			<Message LcId="1033">Could not register by {0}.</Message>
+		</Event>
+	</Source>
+	<Source>
+		<GUID>{45CA516B-F760-4F59-84E6-F1037E043FDE}</GUID>
+		<Event>
+			<Id>9029</Id>
+			<Message LcId="1033">Could not register by {0}.</Message>
+		</Event>
+	</Source>
+	<Source>
+		<GUID>{E49B1996-78C5-4E01-B665-26066F475DE8}</GUID>
+		<Event>
+			<Id>9029</Id>
+			<Message LcId="1033">Could not register by {0}.</Message>
+		</Event>
+	</Source>
+	<Source>
+		<GUID>{4B52C4EC-39EA-4401-8F36-6D5F1E88E04E}</GUID>
+		<Event>
+			<Id>9029</Id>
+			<Message LcId="1033">Could not register by {0}.</Message>
+		</Event>
+	</Source>
+	<Source>
+		<GUID>{AAB804B1-26EB-4240-BC7B-2DBE6FE99982}</GUID>
+		<Event>
+			<Id>9029</Id>
+			<Message LcId="1033">Could not register by {0}.</Message>
+		</Event>
+	</Source>
+	<Source>
+		<GUID>{61827435-7B03-4734-A344-F5A75F8060C8}</GUID>
+		<Event>
+			<Id>0</Id>
+			<Message LcId="1033">Version {0} Build date: {1} Build time: {2}</Message>
+		</Event>
+		<Event>
+			<Id>1</Id>
+			<Message LcId="1033">{0} XTS module(s) are loaded.</Message>
+		</Event>
+		<Event>
+			<Id>2</Id>
+			<Message LcId="1033">{0} XTS mover(s) are loaded.</Message>
+		</Event>
+		<Event>
+			<Id>3</Id>
+			<Message LcId="1033">All XTS mover(s) are detected.</Message>
+		</Event>
+		<Event>
+			<Id>4</Id>
+			<Message LcId="1033">Path length is {0} mm.</Message>
+		</Event>
+		<Event>
+			<Id>5</Id>
+			<Message LcId="1033">Path is closed.</Message>
+		</Event>
+		<Event>
+			<Id>6</Id>
+			<Message LcId="1033">Path is open.</Message>
+		</Event>
+		<Event>
+			<Id>7</Id>
+			<Message LcId="1033">Searching of XTS mover(s) is started.</Message>
+		</Event>
+		<Event>
+			<Id>8</Id>
+			<Message LcId="1033">Teaching is complete.</Message>
+		</Event>
+		<Event>
+			<Id>9</Id>
+			<Message LcId="1033">Teaching is started on {0} modules.</Message>
+		</Event>
+		<Event>
+			<Id>10</Id>
+			<Message LcId="1033">Teaching is stopped on {0} modules.</Message>
+		</Event>
+		<Event>
+			<Id>11</Id>
+			<Message LcId="1033">Teaching data is created at {0}.</Message>
+		</Event>
+		<Event>
+			<Id>12</Id>
+			<Message LcId="1033">Teaching data {0} is loaded.</Message>
+		</Event>
+		<Event>
+			<Id>13</Id>
+			<Message LcId="1033">Teaching data {0} is saved.</Message>
+		</Event>
+		<Event>
+			<Id>14</Id>
+			<Message LcId="1033">Teaching data {0} is valid.</Message>
+		</Event>
+		<Event>
+			<Id>15</Id>
+			<Message LcId="1033">All XTS modules are enabled for teaching.</Message>
+		</Event>
+		<Event>
+			<Id>16</Id>
+			<Message LcId="1033">XTS module {0} is enabled for teaching.</Message>
+		</Event>
+		<Event>
+			<Id>17</Id>
+			<Message LcId="1033">XTS module {0} is disabled for teaching.</Message>
+		</Event>
+		<Event>
+			<Id>18</Id>
+			<Message LcId="1033">IO Processing Unit (ID = {0}): EtherCAT is ready now ({1} device(s) are checked).</Message>
+		</Event>
+		<Event>
+			<Id>19</Id>
+			<Message LcId="1033">Writing dump file {0}...</Message>
+		</Event>
+		<Event>
+			<Id>20</Id>
+			<Message LcId="1033">Start up of {0} (0x{1}) is monitored.</Message>
+		</Event>
+		<Event>
+			<Id>21</Id>
+			<Message LcId="1033">No default teaching data is supplied by the hardware. Please teach the system using the TcIoXts driver.</Message>
+		</Event>
+		<Event>
+			<Id>22</Id>
+			<Message LcId="1033">Mover ID is detected.</Message>
+		</Event>
+		<Event>
+			<Id>23</Id>
+			<Message LcId="1033"><![CDATA[Mover ID is detected. {0} mover(s) with ID '1' and {1} mover(s) with ID '-' are detected.]]></Message>
+		</Event>
+		<Event>
+			<Id>24</Id>
+			<Message LcId="1033"><![CDATA[Mover ID detection mode '{0}' is activated.]]></Message>
+		</Event>
+		<Event>
+			<Id>25</Id>
+			<Message LcId="1033">The Mover ID Detection has been triggered.</Message>
+		</Event>
+		<Event>
+			<Id>26</Id>
+			<Message LcId="1033">Synchonization object is created for {0} tasks.</Message>
+		</Event>
+		<Event>
+			<Id>27</Id>
+			<Message LcId="1033">Task (0x{0}) is added to barrier.</Message>
+		</Event>
+		<Event>
+			<Id>28</Id>
+			<Message LcId="1033">Is registered by all tasks as IO driver.</Message>
+		</Event>
+		<Event>
+			<Id>29</Id>
+			<Message LcId="1033">Enable time is set.</Message>
+		</Event>
+		<Event>
+			<Id>30</Id>
+			<Message LcId="1033">Disable time is elapsed.</Message>
+		</Event>
+		<Event>
+			<Id>31</Id>
+			<Message LcId="1033">{0} DataPointers are initialized.</Message>
+		</Event>
+		<Event>
+			<Id>32</Id>
+			<Message LcId="1033">{0} modules will be initialized...</Message>
+		</Event>
+		<Event>
+			<Id>33</Id>
+			<Message LcId="1033">Record will be written. File: {0}</Message>
+		</Event>
+		<Event>
+			<Id>34</Id>
+			<Message LcId="1033">Index range = [{0}, {1}].</Message>
+		</Event>
+		<Event>
+			<Id>35</Id>
+			<Message LcId="1033">Module identity check for teaching is passed successfully.</Message>
+		</Event>
+		<Event>
+			<Id>36</Id>
+			<Message LcId="1033">Teaching data plausibility check is passed successfully.</Message>
+		</Event>
+		<Event>
+			<Id>37</Id>
+			<Message LcId="1033">Teaching check sum check is passed successfully.</Message>
+		</Event>
+		<Event>
+			<Id>38</Id>
+			<Message LcId="1033">Redetection is triggered.</Message>
+		</Event>
+		<Event>
+			<Id>39</Id>
+			<Message LcId="1033"><![CDATA[Mover ID is detected. {0} mover(s) with ID '{1}' and {2} mover(s) with ID '{3}' are detected.]]></Message>
+		</Event>
+		<Event>
+			<Id>40</Id>
+			<Message LcId="1033">Inputs check is valid.</Message>
+		</Event>
+		<Event>
+			<Id>41</Id>
+			<Message LcId="1033">Teaching file format can be updated. To do so, trigger corresponding XPU parameter.</Message>
+		</Event>
+		<Event>
+			<Id>42</Id>
+			<Message LcId="1033">DumpWriter entering fallback mode, using router memory.</Message>
+		</Event>
+		<Event>
+			<Id>5000</Id>
+			<Message LcId="1033">The XTS is designed to run with a cycle time of 250 us. Other cycle times may be used with care.</Message>
+		</Event>
+		<Event>
+			<Id>5001</Id>
+			<Message LcId="1033">Too few movers are detected. Expected = {0}, Detected = {1}</Message>
+		</Event>
+		<Event>
+			<Id>5002</Id>
+			<Message LcId="1033">Too many movers are detected. Expected = {0}, Detected = {1}</Message>
+		</Event>
+		<Event>
+			<Id>5003</Id>
+			<Message LcId="1033">Teaching data {0} is missing.</Message>
+		</Event>
+		<Event>
+			<Id>5004</Id>
+			<Message LcId="1033">Teaching data of XTS module {0} is invalid.</Message>
+		</Event>
+		<Event>
+			<Id>5005</Id>
+			<Message LcId="1033">Abnormal behavior is detected. All teaching values of XTS module {0} are zero.</Message>
+		</Event>
+		<Event>
+			<Id>5006</Id>
+			<Message LcId="1033">Abnormal behavior is detected. All teaching values of XTS module {0} are negative.</Message>
+		</Event>
+		<Event>
+			<Id>5007</Id>
+			<Message LcId="1033">Abnormal behavior is detected. All teaching values of XTS module {0} are positive.</Message>
+		</Event>
+		<Event>
+			<Id>5008</Id>
+			<Message LcId="1033">Abnormal behavior is detected. Some teaching values of XTS module {0} are not in the expected range ({1}, {2}).</Message>
+		</Event>
+		<Event>
+			<Id>5009</Id>
+			<Message LcId="1033">IO Processing Unit (ID = {0}) is waiting for {1} (0x{2}) to start up.</Message>
+		</Event>
+		<Event>
+			<Id>5010</Id>
+			<Message LcId="1033">Mover {0} is frozen at position {1} mm.</Message>
+		</Event>
+		<Event>
+			<Id>5011</Id>
+			<Message LcId="1033">The Mover ID Detection has already been started. Do not start it again.</Message>
+		</Event>
+		<Event>
+			<Id>5012</Id>
+			<Message LcId="1033">Wait until the mover detection is finished before starting the mover ID detection.</Message>
+		</Event>
+		<Event>
+			<Id>5013</Id>
+			<Message LcId="1033">The system is waiting for triggering the Mover ID Detection (via PLC or manually).</Message>
+		</Event>
+		<Event>
+			<Id>5014</Id>
+			<Message LcId="1033"><![CDATA[The parameter 'DelayBetweenMoverPacks' should be between 0.001s and 1s.]]></Message>
+		</Event>
+		<Event>
+			<Id>5015</Id>
+			<Message LcId="1033"><![CDATA[Changes to parameter 'DelayBetweenMoverPacks' are ignored because the detection is running.]]></Message>
+		</Event>
+		<Event>
+			<Id>5016</Id>
+			<Message LcId="1033"><![CDATA[The parameter 'DelayBetweenMoversInPack' should be between 0.005s and 1s.]]></Message>
+		</Event>
+		<Event>
+			<Id>5017</Id>
+			<Message LcId="1033"><![CDATA[Changes to parameter 'DelayBetweenMoversInPack' are ignored because the detection is running.]]></Message>
+		</Event>
+		<Event>
+			<Id>5018</Id>
+			<Message LcId="1033"><![CDATA[The parameter 'GapToDefineMoverPack' should be between 49mm and 1000mm dependend on your mechanical tool.]]></Message>
+		</Event>
+		<Event>
+			<Id>5019</Id>
+			<Message LcId="1033"><![CDATA[Changes to parameter 'GapToDefineMoverPack' are ignored because the detection is running.]]></Message>
+		</Event>
+		<Event>
+			<Id>5020</Id>
+			<Message LcId="1033"><![CDATA[Changes to parameter 'MoverIdPositionAssignment' are ignored because the detection is running.]]></Message>
+		</Event>
+		<Event>
+			<Id>5021</Id>
+			<Message LcId="1033">The Mover ID Detection is valid. Do not trigger the Mover ID Detection once again.</Message>
+		</Event>
+		<Event>
+			<Id>5022</Id>
+			<Message LcId="1033"><![CDATA[Teaching data for module '{0}' is skipped because it is not found in the current teaching file.]]></Message>
+		</Event>
+		<Event>
+			<Id>5023</Id>
+			<Message LcId="1033">File access service could not be intiailized. ({0} / Error = {1}).</Message>
+		</Event>
+		<Event>
+			<Id>5024</Id>
+			<Message LcId="1033">Module count of part is zero.</Message>
+		</Event>
+		<Event>
+			<Id>5025</Id>
+			<Message LcId="1033">StandStillTeaching is not appropriate for hygienic XTS.</Message>
+		</Event>
+		<Event>
+			<Id>5026</Id>
+			<Message LcId="1033">MovementTeaching is only appropriate for hygienic XTS.</Message>
+		</Event>
+		<Event>
+			<Id>5027</Id>
+			<Message LcId="1033">The check sum does not match with the given teaching file! File is ignored and defaults will be used.</Message>
+		</Event>
+		<Event>
+			<Id>5028</Id>
+			<Message LcId="1033">Online identities of teaching file do not match with online identities of modules.</Message>
+		</Event>
+		<Event>
+			<Id>5029</Id>
+			<Message LcId="1033">Teaching file will be ignored because of inconsistencies. Default teaching is used instead.</Message>
+		</Event>
+		<Event>
+			<Id>5030</Id>
+			<Message LcId="1033">Abnormal behavior is detected. All teaching values of XTS module {0} are one.</Message>
+		</Event>
+		<Event>
+			<Id>5031</Id>
+			<Message LcId="1033">No teaching data for module with object ID 0x{0} could be found - revert back to use default teaching.</Message>
+		</Event>
+		<Event>
+			<Id>5032</Id>
+			<Message LcId="1033"><![CDATA[The XTS is designed to run with a cycle time of 250 us but task '{0}' has a cycle time of {1} us. Use other cycle times with care.]]></Message>
+		</Event>
+		<Event>
+			<Id>5033</Id>
+			<Message LcId="1033"><![CDATA[Mover '{0}' is frozen at position {1} mm (Default Track = 0x{2}).]]></Message>
+		</Event>
+		<Event>
+			<Id>5034</Id>
+			<Message LcId="1033"><![CDATA[On '{0}' the input channel(s) '{1}' exceed the min/max limit! Please check a hardware fault and make sure that there is no movement during mover detection process.]]></Message>
+		</Event>
+		<Event>
+			<Id>5035</Id>
+			<Message LcId="1033">No tracks are included in detection. Include track to be able to start detection.</Message>
+		</Event>
+		<Event>
+			<Id>5036</Id>
+			<Message LcId="1033"><![CDATA[On '{0}' the input channel(s) '{1}' exceed the noise limit! Please check a hardware fault and make sure that there is no movement during mover detection process.]]></Message>
+		</Event>
+		<Event>
+			<Id>5037</Id>
+			<Message LcId="1033"><![CDATA[The parameter 'MountingOffset' is greater than the max supported value of 3.0mm. Please adapt this value!]]></Message>
+		</Event>
+		<Event>
+			<Id>5038</Id>
+			<Message LcId="1033"><![CDATA[The parameter 'UserLength' is greater than 3.0mm of hardware length. Please adapt this value!]]></Message>
+		</Event>
+		<Event>
+			<Id>5039</Id>
+			<Message LcId="1033"><![CDATA[On '{0}' the input Channel(s) '{1}' are frozen! Please check a hardware fault.]]></Message>
+		</Event>
+		<Event>
+			<Id>5040</Id>
+			<Message LcId="1033"><![CDATA[No teaching data for module with btn '{0}' could be found - revert back to use default teaching.]]></Message>
+		</Event>
+		<Event>
+			<Id>5041</Id>
+			<Message LcId="1033">Dump writing failed due to insufficient buffer memory. Trying to enter DumpWriterFallbackMode, if enabled...</Message>
+		</Event>
+		<Event>
+			<Id>9000</Id>
+			<Message LcId="1033">XTS task cannot be accessed. Is the context of the TcIoXts driver set correctly?</Message>
+		</Event>
+		<Event>
+			<Id>9001</Id>
+			<Message LcId="1033">Cycle time {0} us of XTS task is not supported! Set cycle time to 250 us.</Message>
+		</Event>
+		<Event>
+			<Id>9002</Id>
+			<Message LcId="1033">A XTS mover is lost at {0} mm. Please restart TwinCAT to perform a new detection.</Message>
+		</Event>
+		<Event>
+			<Id>9003</Id>
+			<Message LcId="1033">The motor terminal {0} with name {1} has an error.</Message>
+		</Event>
+		<Event>
+			<Id>9004</Id>
+			<Message LcId="1033">Out of memory. XTS mover count is not supported.</Message>
+		</Event>
+		<Event>
+			<Id>9005</Id>
+			<Message LcId="1033">TcIoXts driver has failed to start up. Please check the configuration and bootdata files!</Message>
+		</Event>
+		<Event>
+			<Id>9006</Id>
+			<Message LcId="1033">Teaching data is invalid. {0}</Message>
+		</Event>
+		<Event>
+			<Id>9007</Id>
+			<Message LcId="1033">Teaching data file {0} is corrupted.</Message>
+		</Event>
+		<Event>
+			<Id>9008</Id>
+			<Message LcId="1033">Teaching data of XTS module {0} is invalid.</Message>
+		</Event>
+		<Event>
+			<Id>9009</Id>
+			<Message LcId="1033">Saving of teaching data {0} has failed.</Message>
+		</Event>
+		<Event>
+			<Id>9010</Id>
+			<Message LcId="1033">Mover {0} is frozen at position {1} mm.</Message>
+		</Event>
+		<Event>
+			<Id>9011</Id>
+			<Message LcId="1033"><![CDATA[File '{0}' cannot be loaded. Please check that the installation is correct.]]></Message>
+		</Event>
+		<Event>
+			<Id>9012</Id>
+			<Message LcId="1033">Mover ID Detection failed. A general error occurs on mover {0}.</Message>
+		</Event>
+		<Event>
+			<Id>9013</Id>
+			<Message LcId="1033">The SoftDrive {0} is not responding. Please check the axis configuration and the SoftDrive version.</Message>
+		</Event>
+		<Event>
+			<Id>9014</Id>
+			<Message LcId="1033">No Mover ID has been detected! Check if there is a mover with a special magnet plate set on the system and restart the ID Detection.</Message>
+		</Event>
+		<Event>
+			<Id>9015</Id>
+			<Message LcId="1033">Too many ({0}) mover IDs has been detected! Make sure that there is only one Mover 1 - with special magnet plate - installed on the system.</Message>
+		</Event>
+		<Event>
+			<Id>9016</Id>
+			<Message LcId="1033"><![CDATA[The axis {0} gets an enable command before Mover ID Detection is processed. If there is no Mover 1 - with special magnet plate - installed then set 'MoverIdDetectionMode' to 'Standard'.]]></Message>
+		</Event>
+		<Event>
+			<Id>9017</Id>
+			<Message LcId="1033"><![CDATA[Mover ID Detection was interrupted by changing the 'MoverIdDetectionMode'.]]></Message>
+		</Event>
+		<Event>
+			<Id>9018</Id>
+			<Message LcId="1033">Mover ID detection cannot start because no track is defined to run the detection.</Message>
+		</Event>
+		<Event>
+			<Id>9019</Id>
+			<Message LcId="1033"><![CDATA[Mover ID detection is disabled in 'Standard' mode.]]></Message>
+		</Event>
+		<Event>
+			<Id>9020</Id>
+			<Message LcId="1033">Start teaching command is invalid. Please check the selection string if it contains only valid numbers and/or ranges (Example: 1, 2, 5 - 10).</Message>
+		</Event>
+		<Event>
+			<Id>9021</Id>
+			<Message LcId="1033"><![CDATA[Mover ID detection mode 'Mover1' is only supported for systems consisting of one track.]]></Message>
+		</Event>
+		<Event>
+			<Id>9022</Id>
+			<Message LcId="1033">Too many Mover 1 are detected. Expected = {0}, Detected = {1}.</Message>
+		</Event>
+		<Event>
+			<Id>9023</Id>
+			<Message LcId="1033"><![CDATA[Version of teaching data file '{0}' (Version {1}) is not supported. Please create a new teaching file (Version {2}) with the current driver.]]></Message>
+		</Event>
+		<Event>
+			<Id>9024</Id>
+			<Message LcId="1033">Too few Mover 1 are detected. Expected = {0}, Detected = {1}.</Message>
+		</Event>
+		<Event>
+			<Id>9025</Id>
+			<Message LcId="1033">Too many Mover 1 expected. Expected = {0}, Total mover count = {1}.</Message>
+		</Event>
+		<Event>
+			<Id>9026</Id>
+			<Message LcId="1033">Configuration of expected mover IDs does not match the count of included movers.</Message>
+		</Event>
+		<Event>
+			<Id>9027</Id>
+			<Message LcId="1033"><![CDATA[ID detection has failed - expected ID '{0}' count is {1} but {2} have been detected.]]></Message>
+		</Event>
+		<Event>
+			<Id>9028</Id>
+			<Message LcId="1033">Configuration of expected mover IDs has invalid notation.</Message>
+		</Event>
+		<Event>
+			<Id>9029</Id>
+			<Message LcId="1033">Could not register by {0}.</Message>
+		</Event>
+		<Event>
+			<Id>9030</Id>
+			<Message LcId="1033">Could not initialize {0}.</Message>
+		</Event>
+		<Event>
+			<Id>9031</Id>
+			<Message LcId="1033"><![CDATA[Could not set '{0}' in PRE-OP state.]]></Message>
+		</Event>
+		<Event>
+			<Id>9032</Id>
+			<Message LcId="1033"><![CDATA[Could not set '{0}' in SAFE-OP state.]]></Message>
+		</Event>
+		<Event>
+			<Id>9033</Id>
+			<Message LcId="1033"><![CDATA[Could not set '{0}' in OP state.]]></Message>
+		</Event>
+		<Event>
+			<Id>9034</Id>
+			<Message LcId="1033">Registration of {0} has failed. Error = {1}.</Message>
+		</Event>
+		<Event>
+			<Id>9035</Id>
+			<Message LcId="1033"><![CDATA[List of modules in part {0} are not consistent regarding the module's PositionIndex parameters.]]></Message>
+		</Event>
+		<Event>
+			<Id>9036</Id>
+			<Message LcId="1033">Could not register as IO driver by Task (0x{0}).</Message>
+		</Event>
+		<Event>
+			<Id>9037</Id>
+			<Message LcId="1033">Task (0x{0}) could not be added to barrier.</Message>
+		</Event>
+		<Event>
+			<Id>9038</Id>
+			<Message LcId="1033">No license server available. Start up is aborted.</Message>
+		</Event>
+		<Event>
+			<Id>9039</Id>
+			<Message LcId="1033">Not all modules of part could be added! (Added {0} from {1}).</Message>
+		</Event>
+		<Event>
+			<Id>9040</Id>
+			<Message LcId="1033">Could not load current table.</Message>
+		</Event>
+		<Event>
+			<Id>9041</Id>
+			<Message LcId="1033">Could not get interface of task (Object ID = 0x{0}, Error = {1}).</Message>
+		</Event>
+		<Event>
+			<Id>9042</Id>
+			<Message LcId="1033">Could not get RT-interface of task (Object ID = 0x{0}, Error = {1}).</Message>
+		</Event>
+		<Event>
+			<Id>9043</Id>
+			<Message LcId="1033">EtherCAT info service could not be initialized. ERROR = {0}.</Message>
+		</Event>
+		<Event>
+			<Id>9044</Id>
+			<Message LcId="1033">Could not initialize {0} DataPointers.</Message>
+		</Event>
+		<Event>
+			<Id>9045</Id>
+			<Message LcId="1033">No modules have been registered.</Message>
+		</Event>
+		<Event>
+			<Id>9046</Id>
+			<Message LcId="1033">Cannot access part with object ID 0x{0}.</Message>
+		</Event>
+		<Event>
+			<Id>9047</Id>
+			<Message LcId="1033"><![CDATA[The cylce time of {0} us of task '{1}' does not match the cylce time of task '{2}' which uses {3} us. Ensure that each task used by the processing unit executes with the same cycle time.]]></Message>
+		</Event>
+		<Event>
+			<Id>9048</Id>
+			<Message LcId="1033">The CPU with ID {0} is used by {1} tasks. Ensure that each task used by the processing unit has its own cpu.</Message>
+		</Event>
+		<Event>
+			<Id>9049</Id>
+			<Message LcId="1033"><![CDATA[Mover '{0}' is frozen at track position {1} mm (Track = 0x{2}).]]></Message>
+		</Event>
+		<Event>
+			<Id>9050</Id>
+			<Message LcId="1033"><![CDATA[The teaching file number '{0}' is already used by '{1}'. Please choose a different one for either instance.]]></Message>
+		</Event>
+		<Event>
+			<Id>9051</Id>
+			<Message LcId="1033"><![CDATA[The part '{0}' (0x{1}) has no modules. Please add modules to the part or delete/deactivate the part itself.]]></Message>
+		</Event>
+		<Event>
+			<Id>9052</Id>
+			<Message LcId="1033"><![CDATA[The parameter '{0}' is not set to a valid value ({1}).]]></Message>
+		</Event>
+		<Event>
+			<Id>9053</Id>
+			<Message LcId="1033"><![CDATA[Cannot start up, because required data pointers of '{0}' are not valid. Please check Data Pointer links and IO Devices.]]></Message>
+		</Event>
+		<Event>
+			<Id>9054</Id>
+			<Message LcId="1033">DumpWriter could not enter fallback mode, so dump could not be written. Please enable DumpWriterFallbackMode.</Message>
+		</Event>
+		<Event>
+			<Id>9055</Id>
+			<Message LcId="1033">The needed buffer size of dumpWriter was greater than worst case estimation used for initialization! Estimation was {0} bytes, buffer had a size of {1} bytes (10 percent extra safety margin to estimation) and dumpWriter needed {2} bytes.</Message>
+		</Event>
+		<Event>
+			<Id>15000</Id>
+			<Message LcId="1033"><![CDATA[DEBUG-MSG: '{0}', '{1}', '{2}', '{3}']]></Message>
+		</Event>
+	</Source>
+	<Source>
+		<GUID>{EE6ED7C0-412A-C54C-650C-7CD088201C21}</GUID>
+		<Name LcId="1033">XtsEventClass</Name>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Version {0} Build date: {1} Build time: {2}</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">{0} XTS module(s) are loaded.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">{0} XTS mover(s) are loaded.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">All XTS mover(s) are detected.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Path length is {0} mm.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Path is closed.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Path is open.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Searching of XTS mover(s) is started.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching is complete.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching is started on {0} modules.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching is stopped on {0} modules.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching data is created at {0}.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching data {0} is loaded.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching data {0} is saved.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching data {0} is valid.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">All XTS modules are enabled for teaching.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">XTS module {0} is enabled for teaching.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">XTS module {0} is disabled for teaching.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">IO Processing Unit (ID = {0}): EtherCAT is ready now ({1} device(s) are checked).</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Writing dump file {0}...</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Start up of {0} (0x{1}) is monitored.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">No default teaching data is supplied by the hardware. Please teach the system using the TcIoXts driver.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Mover ID is detected.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Mover ID is detected. {0} mover(s) with ID '1' and {1} mover(s) with ID '-' are detected.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Mover ID detection mode '{0}' is activated.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">The Mover ID Detection has been triggered.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Synchonization object is created for {0} tasks.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Task (0x{0}) is added to barrier.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Is registered by all tasks as IO driver.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Enable time is set.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Disable time is elapsed.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">{0} DataPointers are initialized.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">{0} modules will be initialized...</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Record will be written. File: {0}</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Index range = [{0}, {1}].</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Module identity check for teaching is passed successfully.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching data plausibility check is passed successfully.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching check sum check is passed successfully.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Redetection is triggered.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Mover ID is detected. {0} mover(s) with ID '{1}' and {2} mover(s) with ID '{3}' are detected.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Inputs check is valid.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching file format can be updated. To do so, trigger corresponding XPU parameter.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">DumpWriter entering fallback mode, using router memory.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">The XTS is designed to run with a cycle time of 250 us. Other cycle times may be used with care.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Too few movers are detected. Expected = {0}, Detected = {1}</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Too many movers are detected. Expected = {0}, Detected = {1}</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching data {0} is missing.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching data of XTS module {0} is invalid.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Abnormal behavior is detected. All teaching values of XTS module {0} are zero.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Abnormal behavior is detected. All teaching values of XTS module {0} are negative.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Abnormal behavior is detected. All teaching values of XTS module {0} are positive.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Abnormal behavior is detected. Some teaching values of XTS module {0} are not in the expected range ({1}, {2}).</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">IO Processing Unit (ID = {0}) is waiting for {1} (0x{2}) to start up.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Mover {0} is frozen at position {1} mm.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">The Mover ID Detection has already been started. Do not start it again.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Wait until the mover detection is finished before starting the mover ID detection.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">The system is waiting for triggering the Mover ID Detection (via PLC or manually).</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The parameter 'DelayBetweenMoverPacks' should be between 0.001s and 1s.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Changes to parameter 'DelayBetweenMoverPacks' are ignored because the detection is running.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The parameter 'DelayBetweenMoversInPack' should be between 0.005s and 1s.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Changes to parameter 'DelayBetweenMoversInPack' are ignored because the detection is running.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The parameter 'GapToDefineMoverPack' should be between 49mm and 1000mm dependend on your mechanical tool.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Changes to parameter 'GapToDefineMoverPack' are ignored because the detection is running.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Changes to parameter 'MoverIdPositionAssignment' are ignored because the detection is running.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">The Mover ID Detection is valid. Do not trigger the Mover ID Detection once again.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Teaching data for module '{0}' is skipped because it is not found in the current teaching file.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">File access service could not be intiailized. ({0} / Error = {1}).</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Module count of part is zero.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">StandStillTeaching is not appropriate for hygienic XTS.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">MovementTeaching is only appropriate for hygienic XTS.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">The check sum does not match with the given teaching file! File is ignored and defaults will be used.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Online identities of teaching file do not match with online identities of modules.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching file will be ignored because of inconsistencies. Default teaching is used instead.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Abnormal behavior is detected. All teaching values of XTS module {0} are one.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">No teaching data for module with object ID 0x{0} could be found - revert back to use default teaching.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The XTS is designed to run with a cycle time of 250 us but task '{0}' has a cycle time of {1} us. Use other cycle times with care.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Mover '{0}' is frozen at position {1} mm (Default Track = 0x{2}).]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[On '{0}' the input channel(s) '{1}' exceed the min/max limit! Please check a hardware fault and make sure that there is no movement during mover detection process.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">No tracks are included in detection. Include track to be able to start detection.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[On '{0}' the input channel(s) '{1}' exceed the noise limit! Please check a hardware fault and make sure that there is no movement during mover detection process.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The parameter 'MountingOffset' is greater than the max supported value of 3.0mm. Please adapt this value!]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The parameter 'UserLength' is greater than 3.0mm of hardware length. Please adapt this value!]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[On '{0}' the input Channel(s) '{1}' are frozen! Please check a hardware fault.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[No teaching data for module with btn '{0}' could be found - revert back to use default teaching.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Dump writing failed due to insufficient buffer memory. Trying to enter DumpWriterFallbackMode, if enabled...</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">XTS task cannot be accessed. Is the context of the TcIoXts driver set correctly?</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Cycle time {0} us of XTS task is not supported! Set cycle time to 250 us.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">A XTS mover is lost at {0} mm. Please restart TwinCAT to perform a new detection.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">The motor terminal {0} with name {1} has an error.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Out of memory. XTS mover count is not supported.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">TcIoXts driver has failed to start up. Please check the configuration and bootdata files!</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching data is invalid. {0}</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching data file {0} is corrupted.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Teaching data of XTS module {0} is invalid.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Saving of teaching data {0} has failed.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Mover {0} is frozen at position {1} mm.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[File '{0}' cannot be loaded. Please check that the installation is correct.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Mover ID Detection failed. A general error occurs on mover {0}.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">The SoftDrive {0} is not responding. Please check the axis configuration and the SoftDrive version.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">No Mover ID has been detected! Check if there is a mover with a special magnet plate set on the system and restart the ID Detection.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Too many ({0}) mover IDs has been detected! Make sure that there is only one Mover 1 - with special magnet plate - installed on the system.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The axis {0} gets an enable command before Mover ID Detection is processed. If there is no Mover 1 - with special magnet plate - installed then set 'MoverIdDetectionMode' to 'Standard'.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Mover ID Detection was interrupted by changing the 'MoverIdDetectionMode'.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Mover ID detection cannot start because no track is defined to run the detection.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Mover ID detection is disabled in 'Standard' mode.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Start teaching command is invalid. Please check the selection string if it contains only valid numbers and/or ranges (Example: 1, 2, 5 - 10).</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Mover ID detection mode 'Mover1' is only supported for systems consisting of one track.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Too many Mover 1 are detected. Expected = {0}, Detected = {1}.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Version of teaching data file '{0}' (Version {1}) is not supported. Please create a new teaching file (Version {2}) with the current driver.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Too few Mover 1 are detected. Expected = {0}, Detected = {1}.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Too many Mover 1 expected. Expected = {0}, Total mover count = {1}.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Configuration of expected mover IDs does not match the count of included movers.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[ID detection has failed - expected ID '{0}' count is {1} but {2} have been detected.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Configuration of expected mover IDs has invalid notation.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Could not register by {0}.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Could not initialize {0}.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Could not set '{0}' in PRE-OP state.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Could not set '{0}' in SAFE-OP state.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Could not set '{0}' in OP state.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Registration of {0} has failed. Error = {1}.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[List of modules in part {0} are not consistent regarding the module's PositionIndex parameters.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Could not register as IO driver by Task (0x{0}).</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Task (0x{0}) could not be added to barrier.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">No license server available. Start up is aborted.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Not all modules of part could be added! (Added {0} from {1}).</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Could not load current table.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Could not get interface of task (Object ID = 0x{0}, Error = {1}).</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Could not get RT-interface of task (Object ID = 0x{0}, Error = {1}).</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">EtherCAT info service could not be initialized. ERROR = {0}.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Could not initialize {0} DataPointers.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">No modules have been registered.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">Cannot access part with object ID 0x{0}.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The cylce time of {0} us of task '{1}' does not match the cylce time of task '{2}' which uses {3} us. Ensure that each task used by the processing unit executes with the same cycle time.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">The CPU with ID {0} is used by {1} tasks. Ensure that each task used by the processing unit has its own cpu.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Mover '{0}' is frozen at track position {1} mm (Track = 0x{2}).]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The teaching file number '{0}' is already used by '{1}'. Please choose a different one for either instance.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The part '{0}' (0x{1}) has no modules. Please add modules to the part or delete/deactivate the part itself.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[The parameter '{0}' is not set to a valid value ({1}).]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[Cannot start up, because required data pointers of '{0}' are not valid. Please check Data Pointer links and IO Devices.]]></Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">DumpWriter could not enter fallback mode, so dump could not be written. Please enable DumpWriterFallbackMode.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033">The needed buffer size of dumpWriter was greater than worst case estimation used for initialization! Estimation was {0} bytes, buffer had a size of {1} bytes (10 percent extra safety margin to estimation) and dumpWriter needed {2} bytes.</Message>
+		</Event>
+		<Event>
+			<Id></Id>
+			<Message LcId="1033"><![CDATA[DEBUG-MSG: '{0}', '{1}', '{2}', '{3}']]></Message>
+		</Event>
+	</Source>
+</TcEventSources>

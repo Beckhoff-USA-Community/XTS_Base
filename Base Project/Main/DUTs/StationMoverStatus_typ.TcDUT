@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="StationMoverStatus_typ" Id="{5d1ddf1f-d2d6-4b80-9be6-194b46fbea89}">
+    <Declaration><![CDATA[TYPE StationMoverStatus_typ :
+STRUCT
+	
+	IsPresent	: BOOL;		// A mover is currently parked at this station
+	Index		: UINT;		// The current ID of the parked mover, if IsPresent is TRUE	
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

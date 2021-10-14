@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Objective" Id="{72371872-54aa-4f25-a82d-ba585015a7c5}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'reflection'}
+FUNCTION_BLOCK ABSTRACT Objective IMPLEMENTS iObjective
+VAR_INPUT
+END_VAR
+VAR
+	
+	TrackedMovers		: ARRAY [0..gNUM_MOVERS-1] OF POINTER TO Mover;
+	TrackedMoverCount	: UINT;	
+
+END_VAR
+VAR_OUTPUT
+	
+	CurrentMover		: POINTER TO Mover;		// Pointer to the current mover within the objective limits
+	
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	InstancePath		: STRING;		// Unique variable path of the instance
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Action Name="MonitorSuccesses" Id="{7fedd9cd-6cb8-4a86-83e2-9d67058f7e09}">
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="RegisterMover" Id="{8354cf16-6187-4fe4-976a-42e2fe3b8399}">
+      <Declaration><![CDATA[METHOD RegisterMover : BOOL
+VAR_INPUT	
+	NewMover		: POINTER TO Mover;
+END_VAR
+
+VAR
+	i				: USINT;
+	duplicateFound	: BOOL;
+	emptyIDX		: USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+(*
+	Add a mover to a list of movers tracked by the objective.
+	Movers can't be added multiple times, so check for duplicates
+	Movers can't overwrite others in the list, so check that the array element is clear
+*)
+
+IF NewMover <> 0 THEN				// validate pointer
+	
+	duplicateFound		:= FALSE;		// default to false, counterexample below
+	TrackedMoverCount	:= 0;			// reset to zero, incremented below
+
+	FOR i := 0 TO SIZEOF(TrackedMovers)/SIZEOF(TrackedMovers[i])-1 DO
+		IF TrackedMovers[i] <> 0 THEN			
+			IF NewMover = TrackedMovers[i] THEN
+				duplicateFound	:= TRUE;				// this mover already tracked
+			END_IF			
+			TrackedMoverCount	:= TrackedMoverCount + 1;
+		ELSE
+			emptyIDX			:= i;					// confirmed open array element
+		END_IF
+	END_FOR
+
+	IF duplicateFound = FALSE THEN
+		TrackedMovers[emptyIDX]		:= NewMover;		// new mover goes into open array element
+		TrackedMoverCount			:= TrackedMoverCount + 1;
+	END_IF
+
+ELSE
+	ADSLOGSTR(ADSLOG_MSGTYPE_LOG,'Error: Mover input is invalid','');
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UnregisterMover" Id="{18c8f6fd-1567-45b0-85d6-dc2464792b83}">
+      <Declaration><![CDATA[METHOD UnregisterMover : BOOL
+VAR_INPUT
+	RemovingMover		: POINTER TO Mover;
+END_VAR
+VAR
+	i					: USINT;
+	duplicateFound		: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+(*
+	Remove a mover to a list of movers tracked by the objective.
+	Only movers in the list can be removed, otherwise nothing happens
+*)
+
+
+IF RemovingMover <> 0 THEN			// validate pointer
+	
+	TrackedMoverCount	:= 0;
+	
+	FOR i := 0 TO SIZEOF( TrackedMovers )/SIZEOF( TrackedMovers[0] )-1 DO
+		IF TrackedMovers[i] <> 0 THEN	// validate pointer
+					
+			TrackedMoverCount		:= TrackedMoverCount + 1;
+			
+			IF RemovingMover = TrackedMovers[i] THEN
+				TrackedMovers[i]	:= 0;		// remove the pointer
+				TrackedMoverCount	:= TrackedMoverCount - 1;
+			END_IF
+		
+		END_IF
+	END_FOR
+
+ELSE
+	ADSLOGSTR(ADSLOG_MSGTYPE_LOG,'Error: Mover input is invalid','');
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Objective">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Objective.MonitorSuccesses">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Objective.RegisterMover">
+      <LineId Id="54" Count="4" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="44" Count="3" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="Objective.UnregisterMover">
+      <LineId Id="31" Count="0" />
+      <LineId Id="34" Count="2" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="2" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
