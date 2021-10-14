@@ -1,9 +1,15 @@
 
-## XTS Base Code
+# XTS Base Code
 
+The goal of this repository is to provide a minimal Starter Project for [Beckhoff XTS](https://www.beckhoff.com/en-en/products/motion/xts-linear-product-transport/?pk_campaign=AdWords-AdWordsSearch-XTS_EN&pk_kwd=xts&gclid=Cj0KCQjwqp-LBhDQARIsAO0a6aJsNGgetwo4ur4_Xtr1ndGf5e2lnI9EKZHnQzBE3XHpt7mB6rVKqOIaAnGLEALw_wcB) applications.
+
+## Project Organization
+
+1. Repo structure should largely follow Vincent Driessen's [Gitflow](https://nvie.com/posts/a-successful-git-branching-model/)
+2. Bugs & conventions are managed in the Issues tab within Github
 
 ---
-## Mover
+### Mover
 
 The Mover function block is the heart of the solution. It contains essential functionality, including:
 - Basic administrative commands like enabling & resetting
@@ -44,7 +50,7 @@ Mover[1].MoveToPosition( adjacentPosition );
 
 ---
 
-## Station
+### Station
 
 A Station is a defined track position for the Mover to stop and wait until it is released. Stations are objects that actively monitor all of the *Movers* that are **currently destined for that particular Station**. When any of those monitored Movers are stopped at the Station, the Station reports that it has a *Mover In Position* and provides a Pointer to that mover.
 
@@ -79,7 +85,7 @@ Mover[2].MoveToStation( Station[1] );
 // Station[1].RegisterMover(Mover[2]) called implicitly
 ```
 ---
-## Abstracting the Concept
+### Abstracting the Concept
 
 In a sense, a Station represents a *goal* or *objective* for the Mover to achieve: The mover receives a command to try an accomplish the goal, and the Station object monitors until the Mover is *successful* (i.e. In Positionn).
 
@@ -87,7 +93,7 @@ In the objects defined below, we extend this idea to include other types of obje
 
 ---
 
-## Speed Trigger
+### Speed Trigger
 
 Like Station objects, Movers must be *registered* with a Speed Trigger for the trigger object to actively monitor it. Multiple movers can be registered with the same Speed Trigger.
 
@@ -108,7 +114,7 @@ END_IF
 ```
 
 ---
-## Position Trigger
+### Position Trigger
 
 Position Triggers become active if a Mover has crossed over the Threshold position *since being registered*. They are operated in a nearly identical fashion to Speed Triggers:
 
@@ -125,12 +131,12 @@ END_IF
 ```
 ---
 
-## Force Trigger
+### Force Trigger
 
 > Under construction
 
 ---
 
-## Zone Triggers
+### Zone Triggers
 
 > Under construction
