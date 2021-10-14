@@ -1,57 +1,6 @@
 
 ## XTS Base Code
 
----
-
-#### Class Overview
-```mermaid
-
-classDiagram
-
-	class Mover{
-		CurrentMoveType
-		DestinationPosition
-		MotionParameters
-		Objective
-		Payload
-		MoveToPosition()
-		MoveToStation()
-		SetAcceleration()
-		SetDeceleration()
-		SetVelocity()
-		Stop()		
-	}
-
-	class Objective{
-		CurrentMover : Mover
-		RegisterMover(Mover)
-		UnregisterMover(Mover)
-		UnregisterCurrent()
-	}
-
-	class Station{
-		MoverInPosition : BOOL
-		Position : LREAL
-	}
-
-	class PositionTrigger{
-		MoverPastPosition : BOOL
-		ThresholdPosition : LREAL
-		TriggerDirection : MC_Direction
-	}
-
-	class SpeedTrigger{
-		MoverExceedsVelocity : BOOL
-		ThresholdVelocity : LREAL
-		TriggerDirection : MC_Direction
-	}
-
-
-		Objective <|-- Station
-		Objective <|-- PositionTrigger
-		Objective <|-- SpeedTrigger
-
-```
 
 ---
 ## Mover
