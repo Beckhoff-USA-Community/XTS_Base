@@ -7,7 +7,7 @@ VAR_INPUT
 END_VAR
 VAR
 	
-	TrackedMovers		: ARRAY [0..gNUM_MOVERS-1] OF POINTER TO Mover;
+	TrackedMovers		: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover;
 	TrackedMoverCount	: UINT;	
 
 END_VAR

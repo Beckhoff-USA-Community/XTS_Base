@@ -28,7 +28,7 @@ MonitorSuccesses();]]></ST>
 someMoverInVelo		:= FALSE;
 whichMover			:= 0;
 
-FOR i := 0 TO gNUM_MOVERS-1 DO
+FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 	
 	IF TrackedMovers[i] <> 0 THEN
 		

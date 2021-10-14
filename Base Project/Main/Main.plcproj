@@ -35,7 +35,7 @@
     <Compile Include="DUTs\ST_Position.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\GVL_CONSTANT.TcGVL">
+    <Compile Include="GVLs\GVL.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -65,10 +65,6 @@
     </Compile>
     <Compile Include="POUs\XTS\XTSCommands_typ.TcDUT">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\XTS_Constants.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
     </Compile>
   </ItemGroup>
   <ItemGroup>

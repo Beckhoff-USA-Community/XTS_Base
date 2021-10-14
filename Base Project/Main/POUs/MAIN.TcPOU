@@ -10,7 +10,7 @@ VAR
 	n						: UINT;
 	MainState				: UINT;
 	
-	StationTimer			: ARRAY [0..gNUM_STATIONS] OF TON;
+	StationTimer			: ARRAY [0..GVL.NUM_STATIONS] OF TON;
 	nextStation				: USINT := 2;
 	
 	bInitialMovement		: BOOL;
@@ -21,13 +21,13 @@ VAR
 	
 	// linked NC handles
 	GroupRef				: AXES_GROUP_REF;
-	Mover					: ARRAY [0..XTS_Constants.gNUM_MOVERS-1] OF Mover;
+	Mover					: ARRAY [0..GVL.NUM_MOVERS-1] OF Mover;
 	
 	ParameterSet			: MoverParameters_typ;
 	
 	// Objectives & Parameters
 	
-	Station					: ARRAY [0..XTS_Constants.gNUM_STATIONS-1] OF Station	:= 
+	Station					: ARRAY [0..GVL.NUM_STATIONS-1] OF Station	:= 
 			[
 				( Position	:= 250 ),	// Station 0
 				( Position	:= 750 ),	// Station 1
@@ -83,14 +83,14 @@ CASE MainState OF
 			n	:= n+1;
 		END_IF;
 		
-		IF n = XTS_Constants.gNUM_MOVERS THEN
+		IF n = GVL.NUM_MOVERS THEN
 			n				:= 0;
 			MainState		:= 20;		
 		END_IF
 	
 	20:	// -------------------------------------------- Set all motion parameters
 	
-		FOR i := 0 TO XTS_Constants.gNUM_MOVERS-1 DO
+		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 			ParameterSet.Acceleration			:= 1E4;		// mm/s2
 			ParameterSet.Deceleration			:= 1E4;		// mm/s2
 			ParameterSet.Direction				:= mcDirectionPositive;
@@ -109,7 +109,7 @@ CASE MainState OF
 			
 		// Move all shuttles to specified stations
 		IF bInitialMovement THEN
-			FOR i := 0 TO XTS_Constants.gNUM_MOVERS-1 DO
+			FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 				Mover[i].MoveToStation(Station[3]);
 			END_FOR
 			bInitialMovement	:= FALSE;
@@ -211,7 +211,7 @@ CASE MainState OF
 		
 	40: // -------------------------------------------- Disabling
 	
-		FOR i := 0 TO XTS_Constants.gNUM_MOVERS-1 DO
+		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 			Mover[i].Enable		:= FALSE;
 		END_FOR 
 		MainState				:= 0;		
@@ -221,12 +221,12 @@ END_CASE;
 
 
 // Call all mover function blocks cyclically
-FOR i := 0 TO XTS_Constants.gNUM_MOVERS-1 DO
+FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 	Mover[i]( GroupReference := GroupRef );
 END_FOR;
 
 // Call all station function blocks cyclically
-FOR i := 0 TO XTS_Constants.gNUM_STATIONS-1 DO
+FOR i := 0 TO GVL.NUM_STATIONS-1 DO
 	Station[i]();
 END_FOR
 

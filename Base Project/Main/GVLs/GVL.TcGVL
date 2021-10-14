@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
-  <GVL Name="GVL_CONSTANT" Id="{7419296d-3549-414c-8cb8-622088338c3b}">
-    <Declaration><![CDATA[
+  <GVL Name="GVL" Id="{ba655886-9947-4787-bd10-a16d0603440f}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
 	
-
+	NUM_MOVERS		: USINT := 6;
+	NUM_STATIONS	: USINT := 4;
 
 END_VAR]]></Declaration>
   </GVL>
