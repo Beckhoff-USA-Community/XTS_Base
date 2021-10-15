@@ -123,7 +123,7 @@ CASE MainState OF
 			StationTimer[0]( IN := TRUE, PT := T#250MS );
 			
 			IF StationTimer[0].Q THEN
-				Station[0].CurrentMover^.MoveToStation( Station[nextStation] );
+				Station[0].CurrentMover.MoveToStation( Station[nextStation] );
 				
 				CASE nextStation OF
 					1:	nextStation	:= 2;
@@ -146,11 +146,11 @@ CASE MainState OF
 				PositionTrigger[0].RegisterMover( Station[1].CurrentMover );
 				PositionTrigger[0].RegisterMover( Station[2].CurrentMover );
 				
-				Station[1].CurrentMover^.SetVelocity( mediumVelocity );
-				Station[2].CurrentMover^.SetVelocity( mediumVelocity );
+				Station[1].CurrentMover.SetVelocity( mediumVelocity );
+				Station[2].CurrentMover.SetVelocity( mediumVelocity );
 				
-				Station[1].CurrentMover^.MoveToStation( Station[3] );
-				Station[2].CurrentMover^.MoveToStation( Station[3] );
+				Station[1].CurrentMover.MoveToStation( Station[3] );
+				Station[2].CurrentMover.MoveToStation( Station[3] );
 				
 			END_IF
 		ELSE
@@ -163,8 +163,8 @@ CASE MainState OF
 		IF PositionTrigger[0].MoverPastPosition THEN
 			PositionTrigger[1].RegisterMover( PositionTrigger[0].CurrentMover );	
 		
-			PositionTrigger[0].CurrentMover^.SetVelocity( lowVelocity );
-			PositionTrigger[0].CurrentMover^.MoveToStation( Station[3] );			
+			PositionTrigger[0].CurrentMover.SetVelocity( lowVelocity );
+			PositionTrigger[0].CurrentMover.MoveToStation( Station[3] );			
 			
 			PositionTrigger[0].UnregisterCurrent();
 		END_IF
@@ -174,8 +174,8 @@ CASE MainState OF
 		IF PositionTrigger[1].MoverPastPosition THEN
 			SpeedTrigger[0].RegisterMover( PositionTrigger[1].CurrentMover );		
 			
-			PositionTrigger[1].CurrentMover^.SetVelocity( highVelocity );
-			PositionTrigger[1].CurrentMover^.MoveToStation( Station[3] );
+			PositionTrigger[1].CurrentMover.SetVelocity( highVelocity );
+			PositionTrigger[1].CurrentMover.MoveToStation( Station[3] );
 			
 			PositionTrigger[1].UnregisterCurrent();
 		END_IF
@@ -184,8 +184,8 @@ CASE MainState OF
 		// Speed Trigger 0 Logic
 		IF SpeedTrigger[0].MoverInVelocity THEN
 			
-			SpeedTrigger[0].CurrentMover^.SetVelocity( mediumVelocity );
-			SpeedTrigger[0].CurrentMover^.MoveToStation( Station[3] );
+			SpeedTrigger[0].CurrentMover.SetVelocity( mediumVelocity );
+			SpeedTrigger[0].CurrentMover.MoveToStation( Station[3] );
 			
 			SpeedTrigger[0].UnregisterCurrent();
 		END_IF
@@ -196,7 +196,7 @@ CASE MainState OF
 			StationTimer[3]( IN := TRUE, PT := T#250MS );
 			
 			IF StationTimer[3].Q THEN
-				Station[3].CurrentMover^.MoveToStation( Station[0] );
+				Station[3].CurrentMover.MoveToStation( Station[0] );
 			END_IF
 		ELSE
 			StationTimer[3]( IN := FALSE );

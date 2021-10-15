@@ -35,12 +35,12 @@
     <Compile Include="DUTs\ST_Position.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\XTSCommands_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GVLs\GVL.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="ITFs\iObjective.TcIO">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
@@ -49,9 +49,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\Mover.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\Objective.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\PositionTrigger.TcPOU">
@@ -63,16 +60,19 @@
     <Compile Include="POUs\XTS\Station.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\XTS\XTSCommands_typ.TcDUT">
+    <Compile Include="POUs\XTS\Objective.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ITFs\iObjective.TcIO">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
-    <Folder Include="ITFs" />
     <Folder Include="POUs\XTS" />
     <Folder Include="VISUs" />
+    <Folder Include="ITFs" />
     <Folder Include="POUs" />
   </ItemGroup>
   <ItemGroup>

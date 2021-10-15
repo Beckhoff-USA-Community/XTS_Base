@@ -6,140 +6,193 @@ VAR_INPUT
 	
 	Position			: LREAL;
 
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{b783a2bf-4b7a-4aa5-9ae9-11ae8e9caf95}" />
+    <Folder Name="Properties" Id="{a0c9a439-1ed2-41be-8a26-9d0fb905bf29}" />
+    <Property Name="CurrentMover" Id="{4e639a8f-b6e4-4381-9171-31b76bf41c77}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
+      <Get Name="Get" Id="{590174cc-2a32-4e82-86cf-1c2eff136812}">
+        <Declaration><![CDATA[VAR
+	i: USINT;
 END_VAR
-VAR_OUTPUT
-	
-	MoverInPosition		: BOOL;					// A mover from the TrackedMovers list is within the position limits
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+// default to unassigned
+CurrentMover REF= 0;
 
-END_VAR
-VAR_TEMP
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 	
-	i					: UINT;
-	someMoverInPos		: BOOL;
-	whichMover			: UINT;
+	// Todo: Make In-Position tolerance window adjustable. Possibly add condition that mover is Stopped
+	IF TrackedMovers[i] <> 0 AND_THEN ABS( MODABS( TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH) - THIS^.TrackPosition ) < 1.0 THEN
+		
+		CurrentMover	REF= TrackedMovers[i]^;
+	
+	END_IF
+
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Cyclic" Id="{b1387964-723e-4a2a-a4b6-2d82b2e2e3a7}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Cyclic : BOOL
+
+VAR
+	i: USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+	
+	// This mover is no longer destined for any station
+	IF TrackedMovers[i] <> 0 AND_THEN TrackedMovers[i]^.CurrentMoveType <> MoverCommandType_enum.MOVETYPE_STATION THEN
+		TrackedMovers[i]	:= 0;
+	// This mover is no longer destined for this specific station. Comparing instance path seems to be the best way to do this comparison?
+	ELSIF TrackedMovers[i] <> 0 AND_THEN TrackedMovers[i]^.Objective <> InstancePath THEN
+		TrackedMovers[i]	:= 0;
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="MoverInPosition" Id="{7b7104e7-1816-4b78-b1aa-ded30e5ff809}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY MoverInPosition : BOOL]]></Declaration>
+      <Get Name="Get" Id="{11118b5e-d8b3-4427-a8f3-470e1381cae5}">
+        <Declaration><![CDATA[VAR
+	
+	i		: USINT;
 	
 END_VAR
 ]]></Declaration>
-    <Implementation>
-      <ST><![CDATA[
+        <Implementation>
+          <ST><![CDATA[
+// default to false
+MoverInPosition		:= FALSE;
 
-// Watch Tracked Movers to see if any are no longer destined for the Station
-MonitorTracked();
-
-// Watch Tracked Movers to see if any are In-Position at the station
-MonitorSuccesses();
-]]></ST>
-    </Implementation>
-    <Action Name="MonitorSuccesses" Id="{d193306f-fdc4-4235-a258-d136a66423ae}">
-      <Implementation>
-        <ST><![CDATA[
-
-
-someMoverInPos	:= FALSE;
-whichMover		:= 0;
-
-// If any of the tracked movers have completely arrived at the station, set InPos to true
-FOR i := 0 TO GVL.NUM_MOVERS-1 DO
-
-	// check pointer validity
-	IF TrackedMovers[i] <> 0 THEN
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 		
-		// todo: think about how this works on the rollover point?
-		IF ABS( MODABS(TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,4000) - Position ) < 1.0 THEN
-			someMoverInPos		:= TRUE;
-			whichMover			:= i;	
-		END_IF;	
+	// Todo: make in-position tolerance adjustable. Add condition that mover is stopped?
+	IF TrackedMovers[i] <> 0 AND_THEN ABS( MODABS(TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH) - THIS^.TrackPosition ) < 1.0 THEN
+
+		MoverInPosition		:= TRUE;
 	
 	END_IF
 
-END_FOR
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="TrackedMoverCount" Id="{a3d4b14b-874d-4d5d-85d0-23050edba6b1}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TrackedMoverCount : USINT]]></Declaration>
+      <Get Name="Get" Id="{614e0d3b-b39f-43df-b52b-6cf3ea9d51dd}">
+        <Declaration><![CDATA[VAR
+	i: INT;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+TrackedMoverCount		:= 0;
 
-// todo: are there conditions where multiple movers could occupy this Objective simultaneously?
-IF someMoverInPos THEN
-	MoverInPosition				:= TRUE;
-	CurrentMover				:= TrackedMovers[whichMover];
-ELSE
-	MoverInPosition				:= FALSE;
-	CurrentMover				:= 0;
-END_IF]]></ST>
-      </Implementation>
-    </Action>
-    <Action Name="MonitorTracked" Id="{d10262e1-988d-4b1f-adf1-61832204de3d}">
-      <Implementation>
-        <ST><![CDATA[
-
-// If any movers are no longer destined for this station, remove them from the Tracked Movers list
-TrackedMoverCount	:= 0;
-
-FOR i := 0 TO GVL.NUM_MOVERS-1 DO
-	// check pointer validity
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+	
 	IF TrackedMovers[i] <> 0 THEN
-		
 		TrackedMoverCount		:= TrackedMoverCount + 1;
-		
-		IF TrackedMovers[i]^.CurrentMoveType <> MoverCommandType_enum.MOVETYPE_STATION THEN
-			//ADSLOGSTR(ADSLOG_MSGTYPE_LOG,'Station deregistering mover %s for MoveType',TrackedMovers[i]^.InstancePath);
-			TrackedMovers[i]	:= 0;
-		
-		ELSIF TrackedMovers[i]^.Objective <> InstancePath THEN
-			//ADSLOGSTR(ADSLOG_MSGTYPE_LOG,'Station deregistering mover %s for Destination',TrackedMovers[i]^.InstancePath);
-			TrackedMovers[i]	:= 0;
-		END_IF;
-	
 	END_IF
-END_FOR
-]]></ST>
-      </Implementation>
-    </Action>
+
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="TrackPosition" Id="{a036a85b-a6ff-4e53-924d-8183c40c2111}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TrackPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{9b1fb402-d994-4b37-826c-4ff94e3f9cbc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+	TrackPosition		:= Position;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{6983000b-95aa-45e5-9d08-48de77decd80}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+	Position		:= TrackPosition;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <LineIds Name="Station">
-      <LineId Id="276" Count="3" />
-      <LineId Id="253" Count="2" />
       <LineId Id="221" Count="0" />
     </LineIds>
-    <LineIds Name="Station.MonitorSuccesses">
+    <LineIds Name="Station.CurrentMover.Get">
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
       <LineId Id="2" Count="0" />
-      <LineId Id="35" Count="2" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="3" Count="2" />
-      <LineId Id="74" Count="1" />
-      <LineId Id="77" Count="1" />
-      <LineId Id="84" Count="0" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="88" Count="1" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="79" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
       <LineId Id="18" Count="0" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="90" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="71" Count="2" />
-      <LineId Id="48" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
     </LineIds>
-    <LineIds Name="Station.MonitorTracked">
-      <LineId Id="2" Count="2" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="33" Count="1" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="1" Count="0" />
+    <LineIds Name="Station.Cyclic">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.MoverInPosition.Get">
+      <LineId Id="5" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.TrackedMoverCount.Get">
+      <LineId Id="5" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="12" Count="2" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.TrackPosition.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.TrackPosition.Set">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

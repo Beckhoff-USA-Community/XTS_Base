@@ -6,6 +6,7 @@ VAR_GLOBAL CONSTANT
 	
 	NUM_MOVERS		: USINT := 6;
 	NUM_STATIONS	: USINT := 4;
+	TRACK_LENGTH	: LREAL := 4000;
 
 END_VAR]]></Declaration>
   </GVL>

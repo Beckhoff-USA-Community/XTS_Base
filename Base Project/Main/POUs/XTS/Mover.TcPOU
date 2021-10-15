@@ -536,7 +536,7 @@ CurrentDestObjective			:= SEL( __ISVALIDREF( DestinationStation ), '', Destinati
 MoverCurrentMoveType			:= MoverCommandType_enum.MOVETYPE_STATION;
 
 // Register this mover with the station, so the station knows this mover is incoming
-DestinationStation.RegisterMover( THIS );
+DestinationStation.RegisterMover( THIS^ );
 ]]></ST>
       </Implementation>
     </Method>
