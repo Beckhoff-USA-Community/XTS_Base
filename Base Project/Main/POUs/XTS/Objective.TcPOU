@@ -8,6 +8,8 @@ END_VAR
 VAR
 	
 	TrackedMovers				: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover;
+	
+	{attribute 'hide'}
 	internalTrackedMoverCount	: USINT;
 
 END_VAR
@@ -17,6 +19,7 @@ VAR_OUTPUT
 	
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
+	{attribute 'hide'}
 	InstancePath		: STRING;		// Unique variable path of the instance
 	
 END_VAR
@@ -27,7 +30,8 @@ END_VAR
     <Folder Name="Methods" Id="{4ed72c29-121a-4b01-8ee9-80f4e3e37fcf}" />
     <Folder Name="Properties" Id="{a322a947-e1f7-42e0-b1f3-cb1cbcbf3e25}" />
     <Property Name="CurrentMover" Id="{4feba114-ceeb-415c-98a7-1402e575faa6}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentMover : Reference TO Mover]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{96570177-6e74-4914-9114-5f2abd4c76ad}">
         <Declaration><![CDATA[
 VAR

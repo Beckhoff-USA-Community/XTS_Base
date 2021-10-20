@@ -34,6 +34,7 @@ VAR
 				( Position	:= 1000 ),	// Station 2
 				( Position	:= 3500 )	// Station 3
 			];
+		
 	
 	PositionTrigger			: ARRAY [0..1] OF PositionTrigger	:=
 		[

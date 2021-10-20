@@ -2,8 +2,9 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Station" Id="{5b67f0b3-4286-49f2-9b21-1e637f521584}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective IMPLEMENTS iObjective
-VAR_INPUT	
+VAR
 	
+	{attribute 'hide'}
 	Position			: LREAL;
 
 END_VAR]]></Declaration>
@@ -113,7 +114,8 @@ END_FOR]]></ST>
       </Get>
     </Property>
     <Property Name="TrackPosition" Id="{a036a85b-a6ff-4e53-924d-8183c40c2111}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TrackPosition : LREAL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TrackPosition : LREAL]]></Declaration>
       <Get Name="Get" Id="{9b1fb402-d994-4b37-826c-4ff94e3f9cbc}">
         <Declaration><![CDATA[VAR
 END_VAR
