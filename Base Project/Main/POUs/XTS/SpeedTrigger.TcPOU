@@ -2,12 +2,11 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="SpeedTrigger" Id="{ceb84e98-9bb3-44af-9526-f95d6c0344e5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK SpeedTrigger EXTENDS Objective
-VAR_INPUT
-
-	ThresholdVelocity	: LREAL;
-
-END_VAR
 VAR
+
+	{attribute 'hide'}
+	internalThresholdVelocity	: LREAL;	
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -59,6 +58,30 @@ END_FOR]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Property Name="ThresholdVelocity" Id="{1f1a632c-f4e8-446f-9260-5f7e4c9c9017}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY ThresholdVelocity : LREAL]]></Declaration>
+      <Get Name="Get" Id="{02cc51fd-1552-49da-a92a-6edba1c95096}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+	ThresholdVelocity		:= internalThresholdVelocity;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{dfd5cdd4-fa57-4379-b145-1e679363cb0e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+
+	internalThresholdVelocity		:= ThresholdVelocity;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <LineIds Name="SpeedTrigger">
       <LineId Id="9" Count="0" />
     </LineIds>
@@ -80,6 +103,14 @@ END_FOR]]></ST>
       <LineId Id="14" Count="0" />
       <LineId Id="12" Count="1" />
       <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="SpeedTrigger.ThresholdVelocity.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="SpeedTrigger.ThresholdVelocity.Set">
+      <LineId Id="5" Count="2" />
+      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
