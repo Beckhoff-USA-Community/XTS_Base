@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="XTSCommands_typ" Id="{3a03dc53-d741-453d-8e7e-39d1639d2aa6}">
+    <Declaration><![CDATA[TYPE XTSCommands_typ :
+STRUCT
+	
+	MoveAllToPosition		: BOOL;		// Commands all movers to a specific location on track, set in the visu
+	MoveAllToStation		: BOOL;		// Commands all movers to a specific station, set in the visu
+	
+	ParkInQueue				: BOOL;		// Park all shuttles in the queue. Sets MoveAllToPosition with a specific location
+	ReadyAtDelta			: BOOL;		// Sends shuttles to the queue station automatically to ready for the delta place
+	ParkOnTop				: BOOL;		// Sends all shuttles to the top of the track for loading pucks or whatever
+	
+	ReleaseRedPuck			: BOOL;		// Releases a puck from the Delta place location with Red puck set
+	ReleaseBlackPuck		: BOOL;		// Releasea a puck from the Delta place location with Black puck set	
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
