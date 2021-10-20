@@ -227,12 +227,12 @@ END_FOR;
 
 // Call all station function blocks cyclically
 FOR i := 0 TO GVL.NUM_STATIONS-1 DO
-	Station[i]();
+	Station[i].Cyclic();
 END_FOR
 
 // Call trigger function blocks cyclically
-PositionTrigger[0]();
-PositionTrigger[1]();
+PositionTrigger[0].Cyclic();
+PositionTrigger[1].Cyclic();
 
 SpeedTrigger[0]();
 ]]></ST>

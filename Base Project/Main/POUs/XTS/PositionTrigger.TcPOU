@@ -27,13 +27,15 @@ END_VAR]]></Declaration>
     <Folder Name="Methods" Id="{5543ded2-7a48-48d8-8a29-b553779a4150}" />
     <Folder Name="Properties" Id="{8d51ba54-c5eb-42a0-ba8e-ec7acb9ee6ae}" />
     <Property Name="CurrentMover" Id="{08e03357-929c-40a3-8446-c462dfedb470}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentMover : Reference TO Mover]]></Declaration>
+      <Declaration><![CDATA[PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{d772a5d5-0e79-4d5f-ad7a-159060b39ae3}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[
+
+	CurrentMover	REF= internalCurrentMover^;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -142,7 +144,8 @@ END_IF]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[
+	MoverPastPosition	:= internalMoverPastPosition;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -150,6 +153,7 @@ END_VAR
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.CurrentMover.Get">
+      <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.Cyclic">
@@ -157,6 +161,7 @@ END_VAR
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.MoverPastPosition.Get">
+      <LineId Id="5" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

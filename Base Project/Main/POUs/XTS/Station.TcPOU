@@ -13,10 +13,13 @@ END_VAR]]></Declaration>
     <Folder Name="Methods" Id="{b783a2bf-4b7a-4aa5-9ae9-11ae8e9caf95}" />
     <Folder Name="Properties" Id="{a0c9a439-1ed2-41be-8a26-9d0fb905bf29}" />
     <Property Name="CurrentMover" Id="{4e639a8f-b6e4-4381-9171-31b76bf41c77}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{590174cc-2a32-4e82-86cf-1c2eff136812}">
         <Declaration><![CDATA[VAR
+	
 	i: USINT;
+	
 END_VAR
 ]]></Declaration>
         <Implementation>
@@ -60,7 +63,8 @@ END_FOR]]></ST>
       </Implementation>
     </Method>
     <Property Name="MoverInPosition" Id="{7b7104e7-1816-4b78-b1aa-ded30e5ff809}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY MoverInPosition : BOOL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY MoverInPosition : BOOL]]></Declaration>
       <Get Name="Get" Id="{11118b5e-d8b3-4427-a8f3-470e1381cae5}">
         <Declaration><![CDATA[VAR
 	
@@ -87,7 +91,8 @@ END_FOR]]></ST>
       </Get>
     </Property>
     <Property Name="TrackedMoverCount" Id="{a3d4b14b-874d-4d5d-85d0-23050edba6b1}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TrackedMoverCount : USINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY TrackedMoverCount : USINT]]></Declaration>
       <Get Name="Get" Id="{614e0d3b-b39f-43df-b52b-6cf3ea9d51dd}">
         <Declaration><![CDATA[VAR
 	i: INT;
