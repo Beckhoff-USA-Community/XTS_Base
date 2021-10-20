@@ -14,9 +14,7 @@ VAR
 
 END_VAR
 VAR_OUTPUT
-	
-	//CurrentMover		: POINTER TO Mover;		// Pointer to the current mover within the objective limits
-	
+		
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
 	{attribute 'hide'}

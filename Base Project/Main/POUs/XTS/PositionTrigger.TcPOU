@@ -1,16 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="PositionTrigger" Id="{2be242dd-21c3-49cc-ab16-707ac1bbd2e6}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK PositionTrigger EXTENDS Objective IMPLEMENTS iObjective
-VAR_INPUT
-
-	ThresholdPosition	: LREAL;
-	TriggerDirection	: Tc2_MC2.MC_Direction;
-	TrackModulo			: LREAL;
-
-END_VAR
+    <Declaration><![CDATA[{attribute 'hide_all_locals'}
+FUNCTION_BLOCK PositionTrigger EXTENDS Objective IMPLEMENTS iObjective
 
 VAR
+	internalTrackPosition		: LREAL;
+	internalTriggerDirection	: Tc2_MC2.MC_Direction;
 	internalMoverPastPosition	: BOOL;
 	internalCurrentMover		: POINTER TO Mover;
 	someMoverPast				: BOOL;
@@ -27,7 +23,8 @@ END_VAR]]></Declaration>
     <Folder Name="Methods" Id="{5543ded2-7a48-48d8-8a29-b553779a4150}" />
     <Folder Name="Properties" Id="{8d51ba54-c5eb-42a0-ba8e-ec7acb9ee6ae}" />
     <Property Name="CurrentMover" Id="{08e03357-929c-40a3-8446-c462dfedb470}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{d772a5d5-0e79-4d5f-ad7a-159060b39ae3}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -73,9 +70,9 @@ FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 		
 		// Can combine with above stanza
 		IF positiveRolloverDetected THEN
-			moverLastPos[i]		:= moverLastPos[i] - TrackModulo;
+			moverLastPos[i]		:= moverLastPos[i] - GVL.TRACK_LENGTH;
 		ELSIF negativeRolloverDetected THEN
-			moverLastPos[i]		:= moverLastPos[i] + TrackModulo;				
+			moverLastPos[i]		:= moverLastPos[i] + GVL.TRACK_LENGTH;				
 		END_IF
 		
 		
@@ -86,8 +83,8 @@ FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 		// Watch for movers crossing the threshold position
 		IF TriggerDirection = MC_Positive_Direction THEN
 			
-			IF moverLastPos[i] < ThresholdPosition AND
-				TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos >= ThresholdPosition THEN
+			IF moverLastPos[i] < internalTrackPosition AND
+				TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos >= internalTrackPosition THEN
 				// Position trigger event detected
 				someMoverPast	:= TRUE;
 				whichMover		:= i;
@@ -95,8 +92,8 @@ FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 			
 		ELSIF TriggerDirection = MC_Negative_Direction THEN
 			
-			IF moverLastPos[i] > ThresholdPosition AND
-				TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos <= ThresholdPosition THEN
+			IF moverLastPos[i] > internalTrackPosition AND
+				TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos <= internalTrackPosition THEN
 				// Position trigger event detected
 				someMoverPast	:= TRUE;
 				whichMover		:= i;
@@ -137,17 +134,63 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Property Name="MoverPastPosition" Id="{6ef1f07f-a5fa-461a-8898-d87506fab1a7}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY MoverPastPosition : BOOL]]></Declaration>
+    <Property Name="MoverPassedPosition" Id="{6ef1f07f-a5fa-461a-8898-d87506fab1a7}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY MoverPassedPosition : BOOL]]></Declaration>
       <Get Name="Get" Id="{a91db2b1-564e-4fdf-92fa-febfe2148c87}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[
-	MoverPastPosition	:= internalMoverPastPosition;]]></ST>
+	MoverPassedPosition	:= internalMoverPastPosition;]]></ST>
         </Implementation>
       </Get>
+    </Property>
+    <Property Name="TrackPosition" Id="{ec302377-0190-40b3-b726-4713ec7a403b}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TrackPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{ff32a52e-c366-4283-94bb-898d1069bf0a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+	TrackPosition	:= internalTrackPosition;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b77ff2fd-1ee8-41cd-8d5f-9b4c152df435}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+	// todo maybe do a limits check here?
+	internalTrackPosition	:= TrackPosition;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TriggerDirection" Id="{da3896fd-b18b-47dc-bafd-92a621ffa675}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TriggerDirection : Tc2_MC2.MC_Direction]]></Declaration>
+      <Get Name="Get" Id="{423fc284-e969-4051-9911-5a30b9185b1a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{f583cf2c-e716-4e32-994c-ff6c210917d6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
     </Property>
     <LineIds Name="PositionTrigger">
       <LineId Id="9" Count="0" />
@@ -160,8 +203,24 @@ END_VAR
       <LineId Id="6" Count="88" />
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="PositionTrigger.MoverPastPosition.Get">
+    <LineIds Name="PositionTrigger.MoverPassedPosition.Get">
       <LineId Id="5" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.TrackPosition.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.TrackPosition.Set">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.TriggerDirection.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.TriggerDirection.Set">
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

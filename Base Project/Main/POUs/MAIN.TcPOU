@@ -27,28 +27,9 @@ VAR
 	
 	// Objectives & Parameters
 	
-	Station					: ARRAY [0..GVL.NUM_STATIONS-1] OF Station	:= 
-			[
-				( Position	:= 250 ),	// Station 0
-				( Position	:= 750 ),	// Station 1
-				( Position	:= 1000 ),	// Station 2
-				( Position	:= 3500 )	// Station 3
-			];
-		
-	
-	PositionTrigger			: ARRAY [0..1] OF PositionTrigger	:=
-		[
-			(	// Position Trigger 0 init
-				ThresholdPosition 		:= 1500,
-				TriggerDirection		:= MC_Positive_Direction,
-				TrackModulo				:= 4000
-			),
-			(	// Position Trigger 1 init
-				ThresholdPosition		:= 2000,
-				TriggerDirection		:= MC_Positive_Direction,
-				TrackModulo				:= 4000
-			)
-		];
+	// Todo initialize this in the code with the prop Setter, not by addressing an internal variable
+	Station					: ARRAY [0..GVL.NUM_STATIONS-1] OF Station;	
+	PositionTrigger			: ARRAY [0..1] OF PositionTrigger;
 		
 	SpeedTrigger			: ARRAY [0..0] OF SpeedTrigger	:= [( ThresholdVelocity := 1900 (* mm/s *) )];
 	
@@ -57,11 +38,6 @@ VAR
 	// User commands									
 	bCommandEnable			: BOOL;	
 		
-	// User status
-	bReadyForCommands		: BOOL;
-		
-
-	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -70,13 +46,26 @@ END_VAR
 CASE MainState OF
 	0:	// -------------------------------------------- Idle state
 	
-		bReadyForCommands	:= FALSE;
-	
 		IF bCommandEnable THEN
 			MainState		:= 10;
 		END_IF
 		
-	10:	// -------------------------------------------- Begin Enable all Movers
+	10: // -------------------------------------------- Init Stations, Position Triggers
+	
+		Station[0].TrackPosition			:= 250;
+		Station[1].TrackPosition			:= 750;
+		Station[2].TrackPosition			:= 1000;
+		Station[3].TrackPosition			:= 3500;
+		
+		PositionTrigger[0].TrackPosition	:= 1500;
+		PositionTrigger[0].TriggerDirection	:= mcDirectionPositive;
+		
+		PositionTrigger[1].TrackPosition	:= 2000;
+		PositionTrigger[1].TriggerDirection := mcDirectionPositive;
+		
+		MainState		:= 20;
+		
+	20:	// -------------------------------------------- Begin Enable all Movers
 	
 		// todo: could make this more parallel
 		Mover[n].Enable		:= TRUE;
@@ -86,10 +75,10 @@ CASE MainState OF
 		
 		IF n = GVL.NUM_MOVERS THEN
 			n				:= 0;
-			MainState		:= 20;		
+			MainState		:= 30;		
 		END_IF
 	
-	20:	// -------------------------------------------- Set all motion parameters
+	30:	// -------------------------------------------- Set all motion parameters
 	
 		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 			ParameterSet.Acceleration			:= 1E4;		// mm/s2
@@ -97,17 +86,14 @@ CASE MainState OF
 			ParameterSet.Direction				:= mcDirectionPositive;
 			ParameterSet.Velocity				:= 1E3;		// mm/s
 
-			Mover[i].MotionParameters				:= ParameterSet;
+			Mover[i].MotionParameters			:= ParameterSet;
 		END_FOR
 		
 		bInitialMovement	:= TRUE;
-		MainState			:= 30;
+		MainState			:= 40;
 	
-	30:	// -------------------------------------------- Ready for commands
+	40:	// -------------------------------------------- Ready for commands
 	
-		bReadyForCommands		:= TRUE;
-		
-			
 		// Move all shuttles to specified stations
 		IF bInitialMovement THEN
 			FOR i := 0 TO GVL.NUM_MOVERS-1 DO
@@ -161,7 +147,7 @@ CASE MainState OF
 		
 		
 		// Position Trigger 0 Logic
-		IF PositionTrigger[0].MoverPastPosition THEN
+		IF PositionTrigger[0].MoverPassedPosition THEN
 			PositionTrigger[1].RegisterMover( PositionTrigger[0].CurrentMover );	
 		
 			PositionTrigger[0].CurrentMover.SetVelocity( lowVelocity );
@@ -172,7 +158,7 @@ CASE MainState OF
 		
 		
 		// Position Trigger 1 Logic
-		IF PositionTrigger[1].MoverPastPosition THEN
+		IF PositionTrigger[1].MoverPassedPosition THEN
 			SpeedTrigger[0].RegisterMover( PositionTrigger[1].CurrentMover );		
 			
 			PositionTrigger[1].CurrentMover.SetVelocity( highVelocity );
@@ -207,10 +193,10 @@ CASE MainState OF
 
 		// todo needs to be test, add groupstop
 		IF bCommandEnable = FALSE THEN
-			MainState			:= 40;
+			MainState			:= 50;
 		END_IF
 		
-	40: // -------------------------------------------- Disabling
+	50: // -------------------------------------------- Disabling
 	
 		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 			Mover[i].Enable		:= FALSE;
@@ -240,9 +226,16 @@ SpeedTrigger[0]();
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="2324" Count="0" />
-      <LineId Id="708" Count="3" />
-      <LineId Id="1456" Count="1" />
-      <LineId Id="712" Count="5" />
+      <LineId Id="708" Count="2" />
+      <LineId Id="1457" Count="0" />
+      <LineId Id="712" Count="2" />
+      <LineId Id="2624" Count="6" />
+      <LineId Id="2633" Count="1" />
+      <LineId Id="2636" Count="1" />
+      <LineId Id="2635" Count="0" />
+      <LineId Id="2638" Count="0" />
+      <LineId Id="2631" Count="1" />
+      <LineId Id="715" Count="2" />
       <LineId Id="1436" Count="0" />
       <LineId Id="718" Count="5" />
       <LineId Id="1528" Count="0" />
@@ -254,8 +247,7 @@ SpeedTrigger[0]();
       <LineId Id="731" Count="2" />
       <LineId Id="2537" Count="0" />
       <LineId Id="734" Count="0" />
-      <LineId Id="743" Count="3" />
-      <LineId Id="2523" Count="0" />
+      <LineId Id="743" Count="1" />
       <LineId Id="2525" Count="0" />
       <LineId Id="2527" Count="5" />
       <LineId Id="2524" Count="0" />
