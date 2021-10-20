@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Objective" Id="{72371872-54aa-4f25-a82d-ba585015a7c5}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-FUNCTION_BLOCK ABSTRACT Objective IMPLEMENTS iObjective
+FUNCTION_BLOCK ABSTRACT Objective
 VAR_INPUT
 END_VAR
 VAR
@@ -27,12 +27,10 @@ END_VAR
     </Implementation>
     <Folder Name="Methods" Id="{4ed72c29-121a-4b01-8ee9-80f4e3e37fcf}" />
     <Folder Name="Properties" Id="{a322a947-e1f7-42e0-b1f3-cb1cbcbf3e25}" />
-    <Property Name="CurrentMover" Id="{4feba114-ceeb-415c-98a7-1402e575faa6}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
-PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
-      <Get Name="Get" Id="{96570177-6e74-4914-9114-5f2abd4c76ad}">
-        <Declaration><![CDATA[
-VAR
+    <Property Name="CurrentMover" Id="{99a54d83-41c7-49ce-a206-e4c6b3a981c8}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentMover : Reference to Mover]]></Declaration>
+      <Get Name="Get" Id="{8bd4cff1-d1fd-42f7-b813-8805845e8ad0}">
+        <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
@@ -86,6 +84,38 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="TrackedMoverCount" Id="{610e1915-c97a-4bca-998c-120d922f3eee}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TrackedMoverCount : USINT]]></Declaration>
+      <Get Name="Get" Id="{7832ece5-c334-41ff-a04f-4af0717e7184}">
+        <Declaration><![CDATA[VAR
+	i: INT;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+
+TrackedMoverCount		:= 0;
+
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+	
+	IF TrackedMovers[i] <> 0 THEN
+		TrackedMoverCount		:= TrackedMoverCount + 1;
+	END_IF
+
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ed374664-1bd2-45a2-9b20-92cf4e23d17d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="UnregisterCurrent" Id="{f5252866-1ebe-4ec3-aeab-827236ab79ab}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD UnregisterCurrent : BOOL
 VAR_INPUT
@@ -168,6 +198,13 @@ END_IF]]></ST>
       <LineId Id="22" Count="0" />
       <LineId Id="52" Count="0" />
       <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="Objective.TrackedMoverCount.Get">
+      <LineId Id="5" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Objective.TrackedMoverCount.Set">
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Objective.UnregisterCurrent">
       <LineId Id="6" Count="0" />

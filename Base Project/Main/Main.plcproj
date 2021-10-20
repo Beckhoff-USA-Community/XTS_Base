@@ -63,16 +63,12 @@
     <Compile Include="POUs\XTS\Objective.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ITFs\iObjective.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\XTS" />
     <Folder Include="VISUs" />
-    <Folder Include="ITFs" />
     <Folder Include="POUs" />
   </ItemGroup>
   <ItemGroup>

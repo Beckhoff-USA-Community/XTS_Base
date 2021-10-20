@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Station" Id="{5b67f0b3-4286-49f2-9b21-1e637f521584}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective IMPLEMENTS iObjective
+    <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective
 VAR
 	
 	{attribute 'hide'}
@@ -91,28 +91,6 @@ END_FOR]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <Property Name="TrackedMoverCount" Id="{a3d4b14b-874d-4d5d-85d0-23050edba6b1}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
-PROPERTY TrackedMoverCount : USINT]]></Declaration>
-      <Get Name="Get" Id="{614e0d3b-b39f-43df-b52b-6cf3ea9d51dd}">
-        <Declaration><![CDATA[VAR
-	i: INT;
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[
-TrackedMoverCount		:= 0;
-
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-	
-	IF TrackedMovers[i] <> 0 THEN
-		TrackedMoverCount		:= TrackedMoverCount + 1;
-	END_IF
-
-END_FOR]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="TrackPosition" Id="{a036a85b-a6ff-4e53-924d-8183c40c2111}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY TrackPosition : LREAL]]></Declaration>
@@ -182,16 +160,6 @@ END_VAR
       <LineId Id="10" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.TrackedMoverCount.Get">
-      <LineId Id="5" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="12" Count="2" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="Station.TrackPosition.Get">
       <LineId Id="5" Count="1" />

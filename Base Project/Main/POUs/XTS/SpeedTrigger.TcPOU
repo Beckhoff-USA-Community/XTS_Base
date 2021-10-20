@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="SpeedTrigger" Id="{ceb84e98-9bb3-44af-9526-f95d6c0344e5}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK SpeedTrigger EXTENDS Objective IMPLEMENTS iObjective
+    <Declaration><![CDATA[FUNCTION_BLOCK SpeedTrigger EXTENDS Objective
 VAR_INPUT
 
 	ThresholdVelocity	: LREAL;
@@ -16,7 +16,8 @@ END_VAR
     <Folder Name="Methods" Id="{509b1e5d-b79a-449e-ba49-e162eb42b6fc}" />
     <Folder Name="Properties" Id="{dbd68162-6541-404e-b05a-0fec2a8ff4c5}" />
     <Property Name="CurrentMover" Id="{7f0937a7-bed5-48ff-acf8-6553ecfccecb}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{579026c0-dbc9-45df-a0d9-58debaf1382a}">
         <Declaration><![CDATA[VAR
 	i	: USINT;
@@ -37,7 +38,8 @@ END_FOR]]></ST>
       </Get>
     </Property>
     <Property Name="MoverInVelocity" Id="{7c83a599-b5f9-45c9-9131-e8a02b23529a}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY MoverInVelocity : BOOL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
+PROPERTY MoverInVelocity : BOOL]]></Declaration>
       <Get Name="Get" Id="{2ea072c0-2f9e-44bb-b822-47a0341f43bf}">
         <Declaration><![CDATA[VAR
 	i	: USINT;
