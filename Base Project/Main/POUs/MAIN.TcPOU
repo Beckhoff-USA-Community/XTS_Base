@@ -61,9 +61,7 @@ CASE MainState OF
 		
 		PositionTrigger[1].TrackPosition	:= 2000;
 		PositionTrigger[1].TriggerDirection := mcDirectionPositive;
-		
-		
-		
+			
 		MainState		:= 20;
 		
 	20:	// -------------------------------------------- Begin Enable all Movers
@@ -235,8 +233,8 @@ SpeedTrigger[0]();
       <LineId Id="2636" Count="1" />
       <LineId Id="2635" Count="0" />
       <LineId Id="2638" Count="0" />
-      <LineId Id="2680" Count="1" />
-      <LineId Id="2631" Count="1" />
+      <LineId Id="2680" Count="0" />
+      <LineId Id="2632" Count="0" />
       <LineId Id="715" Count="2" />
       <LineId Id="1436" Count="0" />
       <LineId Id="718" Count="5" />
