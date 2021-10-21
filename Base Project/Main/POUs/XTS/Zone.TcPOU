@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Zone" Id="{de9b5dde-c203-4f4d-abe0-431568995536}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'hide_all_local'}
+FUNCTION_BLOCK Zone EXTENDS Objective
+VAR
+	
+	internalStartPosition	: LREAL;
+	internalEndPosition		: LREAL;
+	internalDirection		: Tc2_MC2.MC_Direction;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{c12d9132-64a8-40b2-b1d9-3d115c20d531}" />
+    <Folder Name="Properties" Id="{90c52b3d-9a13-4439-896a-3c5f735e1216}" />
+    <Property Name="CurrentMovers" Id="{738ea792-3959-45c8-9e25-6e9b064cb4f3}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentMovers : ARRAY [0..GVL.NUM_MOVERS-1] OF Pointer to Mover]]></Declaration>
+      <Get Name="Get" Id="{18617649-f1b3-4aac-a49e-e1d5061fbb24}">
+        <Declaration><![CDATA[VAR
+	i: INT;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+	
+
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Direction" Id="{3f08dc45-b1f1-40ce-b51a-e3e812ec3183}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Direction : Tc2_MC2.MC_Direction]]></Declaration>
+      <Get Name="Get" Id="{24abb91b-764d-45ec-89d1-a5f26d2e7d64}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+Direction	:= internalDirection;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c86d649c-9a25-46a0-9897-240dc34a20ce}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+internalDirection	:= Direction;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="EndPosition" Id="{0a5f097e-96c3-43a1-b536-04f368f24ca3}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY EndPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{a512e404-14bd-4b1c-9731-3bba7de351df}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+EndPosition		:= internalEndPosition;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{5303700b-9c9b-41e5-8b19-d6050a760e26}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+// todo add limit checks?
+internalEndPosition		:= EndPosition;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="StartPosition" Id="{aacc7e02-3b0c-44c1-b85c-a6193164623c}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY StartPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{3c066f4a-ee41-4a60-96e5-d5b56be91452}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+StartPosition	:= internalStartPosition;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c038cebd-9252-42ab-8a7b-34fa884ebed1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+// Todo add limit checks?
+internalStartPosition	:= StartPosition;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ZoneLength" Id="{cc1fdc68-29d3-4f91-948b-3fe78f7d05d8}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY ZoneLength : LREAL]]></Declaration>
+      <Get Name="Get" Id="{6d92c621-884a-4d2c-8ab0-83911c1e9108}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="Zone">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.CurrentMovers.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.Direction.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.Direction.Set">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.EndPosition.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.EndPosition.Set">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.StartPosition.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.StartPosition.Set">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.ZoneLength.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

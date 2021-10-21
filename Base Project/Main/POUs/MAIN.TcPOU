@@ -30,7 +30,7 @@ VAR
 	// Todo initialize this in the code with the prop Setter, not by addressing an internal variable
 	Station					: ARRAY [0..GVL.NUM_STATIONS-1] OF Station;		
 	PositionTrigger			: ARRAY [0..1] OF PositionTrigger;		
-	SpeedTrigger			: ARRAY [0..0] OF SpeedTrigger	:= [( ThresholdVelocity := 1900 (* mm/s *) )];
+	SpeedTrigger			: ARRAY [0..0] OF SpeedTrigger;
 	
 	
 	
@@ -61,6 +61,8 @@ CASE MainState OF
 		
 		PositionTrigger[1].TrackPosition	:= 2000;
 		PositionTrigger[1].TriggerDirection := mcDirectionPositive;
+		
+		SpeedTrigger[0].ThresholdVelocity	:= 1900;
 			
 		MainState		:= 20;
 		
@@ -224,7 +226,7 @@ SpeedTrigger[0]();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="2324" Count="0" />
+      <LineId Id="2725" Count="0" />
       <LineId Id="708" Count="2" />
       <LineId Id="1457" Count="0" />
       <LineId Id="712" Count="2" />
@@ -233,6 +235,7 @@ SpeedTrigger[0]();
       <LineId Id="2636" Count="1" />
       <LineId Id="2635" Count="0" />
       <LineId Id="2638" Count="0" />
+      <LineId Id="2766" Count="1" />
       <LineId Id="2680" Count="0" />
       <LineId Id="2632" Count="0" />
       <LineId Id="715" Count="2" />

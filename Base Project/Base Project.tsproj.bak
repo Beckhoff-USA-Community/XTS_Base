@@ -41995,8 +41995,6 @@ and will return to Group State Standby when the situation permits.
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{08502001-0010-0500-0020-500810001205}" Id="#x02030020" Watchdog="08000000040000000400000004000000"/>
-		<MappingInfo Identifier="{08502001-0010-0500-0020-500850000403}" Id="#x02030010" Watchdog="08000000040000000400000004000000"/>
 		<OwnerA Name="TINC^NC SAF^Axes^Mover Axis 1">
 			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Mover 1">
 				<Link VarA="SoftDrive 1^Data Pointer^InputPointer1" VarB="Inputs^SoftDriveInput"/>
