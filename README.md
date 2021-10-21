@@ -28,6 +28,6 @@
 ## Development
 
 You can contribute by:
-- Submitting bug reports
-- Submitting pull requests
+- Submitting [bug reports](https://github.com/pswift066/XTS_Base/issues)
+- Submitting [pull requests](https://github.com/pswift066/XTS_Base/pulls)
 - Joining the discussion
