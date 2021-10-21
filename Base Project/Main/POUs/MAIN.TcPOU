@@ -51,7 +51,7 @@ CASE MainState OF
 		
 	10: // -------------------------------------------- Init Stations, Position Triggers
 	
-		Station[0].TrackPosition			:= 250;
+		Station[0].TrackPosition			:= 0;
 		Station[1].TrackPosition			:= 750;
 		Station[2].TrackPosition			:= 1000;
 		Station[3].TrackPosition			:= 3500;
