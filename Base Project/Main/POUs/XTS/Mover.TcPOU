@@ -218,11 +218,13 @@ CASE State OF
 		ErrorID	:= 0;
 		
 		fbAddToGroup.Execute			:= TRUE;
-		fbAddToGroup.IdentInGroup		:= UDINT_TO_IDENTINGROUP( GroupReference.NcToPlc.Common.GroupAxesCount );
+		// fbAddToGroup.IdentInGroup		:= UDINT_TO_IDENTINGROUP( GroupReference.NcToPlc.Common.GroupAxesCount );
+		fbAddToGroup.IdentInGroup		:= UDINT_TO_IDENTINGROUP( AxisReference.NcToPlc.AxisId - 1 );
 		
 		IF fbAddToGroup.Done THEN
 			InGroup						:= TRUE;
-			IdentInGroup				:= GroupReference.NcToPlc.Common.GroupAxesCount;
+			//IdentInGroup				:= GroupReference.NcToPlc.Common.GroupAxesCount;
+			IdentInGroup				:= AxisReference.NcToPlc.AxisId - 1;
 			fbAddToGroup.Execute		:= FALSE;
 			State						:= 90;
 		ELSIF fbAddToGroup.Error THEN
@@ -703,10 +705,13 @@ END_IF;]]></ST>
       <LineId Id="613" Count="0" />
       <LineId Id="379" Count="0" />
       <LineId Id="376" Count="0" />
-      <LineId Id="395" Count="10" />
+      <LineId Id="395" Count="9" />
+      <LineId Id="1291" Count="0" />
+      <LineId Id="405" Count="0" />
       <LineId Id="407" Count="0" />
       <LineId Id="414" Count="0" />
       <LineId Id="413" Count="0" />
+      <LineId Id="1293" Count="0" />
       <LineId Id="408" Count="0" />
       <LineId Id="417" Count="0" />
       <LineId Id="459" Count="1" />

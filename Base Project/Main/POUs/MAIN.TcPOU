@@ -37,10 +37,12 @@ VAR
 	// User commands									
 	bCommandEnable			: BOOL;	
 		
+	allMoversEnabled: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
+
 
 CASE MainState OF
 	0:	// -------------------------------------------- Idle state
@@ -66,18 +68,22 @@ CASE MainState OF
 			
 		MainState		:= 20;
 		
-	20:	// -------------------------------------------- Begin Enable all Movers
-	
-		// todo: could make this more parallel
-		Mover[n].Enable		:= TRUE;
-		IF Mover[n].Ready THEN
-			n	:= n+1;
-		END_IF;
+	20: // -------------------------------------------- Test enable state
 		
-		IF n = GVL.NUM_MOVERS THEN
-			n				:= 0;
-			MainState		:= 30;		
-		END_IF
+		allMoversEnabled		:= TRUE; // default ...
+		
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+			Mover[i].Enable		:= TRUE;
+			
+			IF Mover[i].Ready = FALSE THEN
+				allMoversEnabled	:= FALSE;
+			END_IF
+		END_FOR
+		
+		IF allMoversEnabled THEN
+			MainState		:= 30;
+		END_IF			
+	
 	
 	30:	// -------------------------------------------- Set all motion parameters
 	
@@ -226,7 +232,8 @@ SpeedTrigger[0]();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="2725" Count="0" />
+      <LineId Id="2821" Count="0" />
+      <LineId Id="2812" Count="0" />
       <LineId Id="708" Count="2" />
       <LineId Id="1457" Count="0" />
       <LineId Id="712" Count="2" />
@@ -238,11 +245,18 @@ SpeedTrigger[0]();
       <LineId Id="2766" Count="1" />
       <LineId Id="2680" Count="0" />
       <LineId Id="2632" Count="0" />
-      <LineId Id="715" Count="2" />
-      <LineId Id="1436" Count="0" />
-      <LineId Id="718" Count="5" />
-      <LineId Id="1528" Count="0" />
-      <LineId Id="725" Count="5" />
+      <LineId Id="2824" Count="2" />
+      <LineId Id="2837" Count="0" />
+      <LineId Id="2836" Count="0" />
+      <LineId Id="2839" Count="0" />
+      <LineId Id="2828" Count="0" />
+      <LineId Id="2841" Count="3" />
+      <LineId Id="2829" Count="0" />
+      <LineId Id="2834" Count="0" />
+      <LineId Id="2830" Count="1" />
+      <LineId Id="2845" Count="0" />
+      <LineId Id="2806" Count="0" />
+      <LineId Id="727" Count="3" />
       <LineId Id="1804" Count="1" />
       <LineId Id="1433" Count="0" />
       <LineId Id="1422" Count="0" />

@@ -4,7 +4,7 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
 	
-	NUM_MOVERS		: USINT := 6;
+	NUM_MOVERS		: USINT := 8;
 	NUM_STATIONS	: USINT := 4;
 	TRACK_LENGTH	: LREAL := 4000;
 
