@@ -36,7 +36,8 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 
 	IF TrackedMovers[i] <> 0 THEN
 		
-		difference	:= ABS( MODABS( TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH ) - THIS^.TrackPosition );
+		// difference	:= ABS( MODABS( TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH ) - THIS^.TrackPosition );
+		difference	:= ABS( TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos - TrackPosition );
 		
 		IF MIN( difference, GVL.TRACK_LENGTH - difference ) < 1.0 THEN
 			CurrentMover	REF= TrackedMovers[i]^;
@@ -142,6 +143,7 @@ END_VAR
       <LineId Id="35" Count="0" />
       <LineId Id="25" Count="1" />
       <LineId Id="40" Count="0" />
+      <LineId Id="47" Count="0" />
       <LineId Id="30" Count="0" />
       <LineId Id="32" Count="2" />
       <LineId Id="27" Count="0" />

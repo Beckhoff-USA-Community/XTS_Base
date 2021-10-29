@@ -1441,6 +1441,14 @@ External Setpoint Generation:
 				<Link VarA="PlcTask Inputs^MAIN.Mover[5].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^MAIN.Mover[5].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 7">
+				<Link VarA="PlcTask Inputs^MAIN.Mover[6].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.Mover[6].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 8">
+				<Link VarA="PlcTask Inputs^MAIN.Mover[7].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.Mover[7].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
 			<OwnerB Name="TINC^NC SAF^Objects^Collision Avoidance (CA Group)">
 				<Link VarA="PlcTask Inputs^MAIN.GroupRef.NcToPlc^CA" VarB="Group Outputs^ToPLC"/>
 				<Link VarA="PlcTask Outputs^MAIN.GroupRef.PlcToNc^CA" VarB="Group Inputs^FromPLC"/>

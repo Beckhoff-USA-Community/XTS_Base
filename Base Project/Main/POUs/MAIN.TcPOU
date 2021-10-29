@@ -28,6 +28,12 @@ VAR
 	// Objectives & Parameters
 	
 	// Todo initialize this in the code with the prop Setter, not by addressing an internal variable
+	
+	Q1			: Zone;
+	Q2			: Zone;
+	Q3			: Zone;
+	Q4			: Zone;
+	
 	Station					: ARRAY [0..GVL.NUM_STATIONS-1] OF Station;		
 	PositionTrigger			: ARRAY [0..1] OF PositionTrigger;		
 	SpeedTrigger			: ARRAY [0..0] OF SpeedTrigger;
@@ -38,10 +44,50 @@ VAR
 	bCommandEnable			: BOOL;	
 		
 	allMoversEnabled: BOOL;
+	myTrig: BOOL;
+	myTrig2: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
+
+
+
+
+IF myTrig THEN
+
+	Q1.StartPosition	:= 3750;
+	Q1.EndPosition		:= 750;
+	
+	Q2.StartPosition	:= 750;
+	Q2.EndPosition		:= 1750;
+	
+	Q3.StartPosition	:= 1750;
+	Q3.EndPosition		:= 2750;
+	
+	Q4.StartPosition	:= 2750;
+	Q4.EndPosition		:= 3750;
+
+	FOR i := 0 TO GVL.NUM_MOVERS -1 DO
+
+		Q1.RegisterMover( Mover[i] );
+		Q2.RegisterMover( Mover[i] );
+		Q3.RegisterMover( Mover[i] );
+		Q4.RegisterMover( Mover[i] );
+	
+	END_FOR;	
+	myTrig	:= FALSE;
+END_IF
+
+
+IF myTrig2 THEN
+	IF __ISVALIDREF( Q1.CurrentMover ) THEN
+		Q1.CurrentMover.MoveToPosition( 750 );
+	END_IF	
+
+	myTrig2	:= FALSE;
+END_IF
+
 
 
 CASE MainState OF
@@ -96,7 +142,7 @@ CASE MainState OF
 			Mover[i].MotionParameters			:= ParameterSet;
 		END_FOR
 		
-		bInitialMovement	:= TRUE;
+		//bInitialMovement	:= TRUE;
 		MainState			:= 40;
 	
 	40:	// -------------------------------------------- Ready for commands
@@ -232,8 +278,33 @@ SpeedTrigger[0]();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="2821" Count="0" />
-      <LineId Id="2812" Count="0" />
+      <LineId Id="2899" Count="0" />
+      <LineId Id="2937" Count="2" />
+      <LineId Id="2900" Count="0" />
+      <LineId Id="2897" Count="0" />
+      <LineId Id="2944" Count="0" />
+      <LineId Id="2940" Count="0" />
+      <LineId Id="2945" Count="6" />
+      <LineId Id="2953" Count="0" />
+      <LineId Id="2941" Count="0" />
+      <LineId Id="2954" Count="0" />
+      <LineId Id="2943" Count="0" />
+      <LineId Id="2913" Count="0" />
+      <LineId Id="2918" Count="0" />
+      <LineId Id="2917" Count="0" />
+      <LineId Id="2920" Count="2" />
+      <LineId Id="2919" Count="0" />
+      <LineId Id="2916" Count="0" />
+      <LineId Id="2907" Count="0" />
+      <LineId Id="2902" Count="0" />
+      <LineId Id="2925" Count="1" />
+      <LineId Id="2924" Count="0" />
+      <LineId Id="2934" Count="2" />
+      <LineId Id="2932" Count="0" />
+      <LineId Id="2931" Count="0" />
+      <LineId Id="2929" Count="0" />
+      <LineId Id="2898" Count="0" />
+      <LineId Id="2894" Count="0" />
       <LineId Id="708" Count="2" />
       <LineId Id="1457" Count="0" />
       <LineId Id="712" Count="2" />
