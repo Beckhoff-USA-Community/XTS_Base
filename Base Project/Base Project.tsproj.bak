@@ -5240,7 +5240,7 @@ and will return to Group State Standby when the situation permits.
 							</Value>
 							<Value>
 								<Name>RandomStartUpBandwidth</Name>
-								<Value>10</Value>
+								<Value>500</Value>
 							</Value>
 							<Value>
 								<Name>PositionStartUpSimulationMode</Name>

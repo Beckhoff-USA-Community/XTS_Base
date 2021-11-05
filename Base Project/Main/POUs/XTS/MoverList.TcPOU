@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="MoverList" Id="{6a6492c3-5dac-4c49-8708-8eab34cf4a1d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK MoverList EXTENDS Objective
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{f0610894-1931-4d0e-a817-1d1b4c8212b1}" />
+    <Folder Name="Properties" Id="{3fdda14a-1516-48f6-a734-917962304085}" />
+    <Method Name="MoveAllToPosition" Id="{bd912cae-8475-45f4-9366-6d4e3f45dbfd}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD MoveAllToPosition : MoverList
+VAR_INPUT
+
+	DestinationPosition		: LREAL;		// position on track for all shuttles to move towards	
+
+END_VAR
+
+VAR
+	i: USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// For every valid mover in the list, pass it a MoveToPosition command
+FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+	
+	IF THIS^.TrackedMovers[i] <> 0 THEN
+		THIS^.TrackedMovers[i]^.MoveToPosition( DestinationPosition );
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAllToStation" Id="{7e8649c5-afae-438c-9d7c-0849d9778d85}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD MoveAllToStation : MoverList
+VAR_INPUT
+	
+	DestinationStation	: REFERENCE TO Station;
+
+END_VAR
+
+VAR
+	i : USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// For every valid mover in the list, pass it a MoveToStation command
+FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+	
+	IF THIS^.TrackedMovers[i] <> 0 THEN
+		THIS^.TrackedMovers[i]^.MoveToStation( DestinationStation ) ;
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetAllAcceleration" Id="{e13ce26b-c052-44c4-b781-edc2323e6bd8}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetAllAcceleration : MoverList
+VAR_INPUT
+	
+	Acceleration		: LREAL;
+
+END_VAR
+
+VAR
+	i	: USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// For every valid mover in the list, set the Acceleration values
+FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+	
+	IF THIS^.TrackedMovers[i] <> 0 THEN
+		THIS^.TrackedMovers[i]^.SetAcceleration( Acceleration );
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetAllDeceleration" Id="{b4a74589-da0f-40fe-9d74-9df176d68d9e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetAllDeceleration : MoverList
+VAR_INPUT
+	
+	Deceleration		: LREAL;
+	
+END_VAR
+VAR
+	i	: USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// For every valid mover in the list, set the Deceleration values
+FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+	
+	IF THIS^.TrackedMovers[i] <> 0 THEN
+		THIS^.TrackedMovers[i]^.SetDeceleration( Deceleration );
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetAllVelocity" Id="{cee9569c-3982-4955-90f1-8e5baf09c135}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetAllVelocity : MoverList
+VAR_INPUT
+	
+	Velocity	: LREAL;	
+
+END_VAR
+VAR
+	i	: USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// For every valid mover in the list, set the Velocity values
+FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+	
+	IF THIS^.TrackedMovers[i] <> 0 THEN
+		THIS^.TrackedMovers[i]^.SetVelocity( Velocity );
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StopAll" Id="{52e8beec-48ea-4912-8399-13b65c4fd5d8}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD StopAll : MoverList
+VAR_INPUT
+END_VAR
+
+VAR
+	i	: USINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// Stop all valid movers in the list
+FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+	
+	IF THIS^.TrackedMovers[i] <> 0 THEN
+		THIS^.TrackedMovers[i]^.Stop();
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UnregisterAll" Id="{9f7a3d8e-3975-4fa4-8579-c54f77146104}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD UnregisterAll : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	i	: USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+	IF THIS^.TrackedMovers[i] <> 0 THEN
+		THIS^.UnregisterMover( THIS^.TrackedMovers[i]^ );
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="MoverList">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.MoveAllToPosition">
+      <LineId Id="20" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.MoveAllToStation">
+      <LineId Id="9" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllAcceleration">
+      <LineId Id="9" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllDeceleration">
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllVelocity">
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.StopAll">
+      <LineId Id="12" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.UnregisterAll">
+      <LineId Id="9" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -123,7 +123,6 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-
 THIS^.UnregisterMover( CurrentMover );]]></ST>
       </Implementation>
     </Method>
@@ -207,7 +206,6 @@ END_IF]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Objective.UnregisterCurrent">
-      <LineId Id="6" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>

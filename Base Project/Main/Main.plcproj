@@ -51,6 +51,9 @@
     <Compile Include="POUs\XTS\Mover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\XTS\MoverList.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\XTS\PositionTrigger.TcPOU">
       <SubType>Code</SubType>
     </Compile>

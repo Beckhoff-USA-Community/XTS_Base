@@ -23,6 +23,8 @@ VAR
 	GroupRef				: AXES_GROUP_REF;
 	Mover					: ARRAY [0..GVL.NUM_MOVERS-1] OF Mover;
 	
+	MoverList				: MoverList;
+	
 	ParameterSet			: MoverParameters_typ;
 	
 	// Objectives & Parameters
@@ -53,40 +55,6 @@ END_VAR
 
 
 
-
-IF myTrig THEN
-
-	Q1.StartPosition	:= 3750;
-	Q1.EndPosition		:= 750;
-	
-	Q2.StartPosition	:= 750;
-	Q2.EndPosition		:= 1750;
-	
-	Q3.StartPosition	:= 1750;
-	Q3.EndPosition		:= 2750;
-	
-	Q4.StartPosition	:= 2750;
-	Q4.EndPosition		:= 3750;
-
-	FOR i := 0 TO GVL.NUM_MOVERS -1 DO
-
-		Q1.RegisterMover( Mover[i] );
-		Q2.RegisterMover( Mover[i] );
-		Q3.RegisterMover( Mover[i] );
-		Q4.RegisterMover( Mover[i] );
-	
-	END_FOR;	
-	myTrig	:= FALSE;
-END_IF
-
-
-IF myTrig2 THEN
-	IF __ISVALIDREF( Q1.CurrentMover ) THEN
-		Q1.CurrentMover.MoveToPosition( 750 );
-	END_IF	
-
-	myTrig2	:= FALSE;
-END_IF
 
 
 
@@ -181,17 +149,19 @@ CASE MainState OF
 		// Station 1 & 2 Logic
 		IF Station[1].MoverInPosition AND Station[2].MoverInPosition THEN
 			StationTimer[1]( IN := TRUE, PT := T#500MS );
+			
+			MoverList.RegisterMover( Station[1].CurrentMover );
+			MoverList.RegisterMover( Station[2].CurrentMover );
 
 			IF StationTimer[1].Q THEN
+				
 				PositionTrigger[0].RegisterMover( Station[1].CurrentMover );
 				PositionTrigger[0].RegisterMover( Station[2].CurrentMover );
 				
-				Station[1].CurrentMover.SetVelocity( mediumVelocity );
-				Station[2].CurrentMover.SetVelocity( mediumVelocity );
-				
-				Station[1].CurrentMover.MoveToStation( Station[3] );
-				Station[2].CurrentMover.MoveToStation( Station[3] );
-				
+				MoverList.SetAllVelocity( mediumVelocity );
+				MoverList.MoveAllToStation( Station[3] );
+
+				MoverList.UnregisterAll();				
 			END_IF
 		ELSE
 			StationTimer[1]( IN := FALSE );
@@ -278,32 +248,7 @@ SpeedTrigger[0]();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="2899" Count="0" />
-      <LineId Id="2937" Count="2" />
-      <LineId Id="2900" Count="0" />
-      <LineId Id="2897" Count="0" />
-      <LineId Id="2944" Count="0" />
-      <LineId Id="2940" Count="0" />
-      <LineId Id="2945" Count="6" />
-      <LineId Id="2953" Count="0" />
-      <LineId Id="2941" Count="0" />
-      <LineId Id="2954" Count="0" />
-      <LineId Id="2943" Count="0" />
-      <LineId Id="2913" Count="0" />
-      <LineId Id="2918" Count="0" />
-      <LineId Id="2917" Count="0" />
-      <LineId Id="2920" Count="2" />
-      <LineId Id="2919" Count="0" />
-      <LineId Id="2916" Count="0" />
-      <LineId Id="2907" Count="0" />
-      <LineId Id="2902" Count="0" />
-      <LineId Id="2925" Count="1" />
-      <LineId Id="2924" Count="0" />
-      <LineId Id="2934" Count="2" />
-      <LineId Id="2932" Count="0" />
-      <LineId Id="2931" Count="0" />
-      <LineId Id="2929" Count="0" />
-      <LineId Id="2898" Count="0" />
+      <LineId Id="3018" Count="4" />
       <LineId Id="2894" Count="0" />
       <LineId Id="708" Count="2" />
       <LineId Id="1457" Count="0" />
@@ -356,12 +301,16 @@ SpeedTrigger[0]();
       <LineId Id="2462" Count="0" />
       <LineId Id="2378" Count="0" />
       <LineId Id="2410" Count="3" />
+      <LineId Id="3040" Count="2" />
       <LineId Id="2415" Count="0" />
       <LineId Id="2414" Count="0" />
-      <LineId Id="2416" Count="0" />
-      <LineId Id="2448" Count="2" />
-      <LineId Id="2455" Count="3" />
-      <LineId Id="2492" Count="0" />
+      <LineId Id="3043" Count="0" />
+      <LineId Id="3045" Count="0" />
+      <LineId Id="2448" Count="1" />
+      <LineId Id="3046" Count="0" />
+      <LineId Id="2458" Count="0" />
+      <LineId Id="3052" Count="0" />
+      <LineId Id="3051" Count="0" />
       <LineId Id="2459" Count="0" />
       <LineId Id="2494" Count="1" />
       <LineId Id="2460" Count="1" />
