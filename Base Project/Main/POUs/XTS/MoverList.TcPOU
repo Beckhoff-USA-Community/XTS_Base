@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="MoverList" Id="{6a6492c3-5dac-4c49-8708-8eab34cf4a1d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK MoverList EXTENDS Objective
+    <Declaration><![CDATA[FUNCTION_BLOCK MoverList EXTENDS Objective IMPLEMENTS Test_interface
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -15,7 +15,7 @@ END_VAR
     <Folder Name="Methods" Id="{f0610894-1931-4d0e-a817-1d1b4c8212b1}" />
     <Folder Name="Properties" Id="{3fdda14a-1516-48f6-a734-917962304085}" />
     <Method Name="MoveAllToPosition" Id="{bd912cae-8475-45f4-9366-6d4e3f45dbfd}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD MoveAllToPosition : MoverList
+      <Declaration><![CDATA[METHOD MoveAllToPosition : Test_interface
 VAR_INPUT
 
 	DestinationPosition		: LREAL;		// position on track for all shuttles to move towards	

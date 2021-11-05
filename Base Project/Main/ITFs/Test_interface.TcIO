@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <Itf Name="Test_interface" Id="{9cc4a2ad-2506-4bdd-acf3-bfbfde25ab77}">
+    <Declaration><![CDATA[INTERFACE Test_interface
+]]></Declaration>
+    <Method Name="MoveAllToPosition" Id="{745a52d9-fa71-49ff-868a-52a3293e2e2d}">
+      <Declaration><![CDATA[METHOD MoveAllToPosition : Test_interface
+VAR_INPUT
+
+	DestinationPosition		: LREAL;		// position on track for all shuttles to move towards	
+
+END_VAR]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>
