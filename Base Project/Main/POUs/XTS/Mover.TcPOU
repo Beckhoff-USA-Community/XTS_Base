@@ -3,7 +3,7 @@
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 {attribute 'hide_all_locals'}
-FUNCTION_BLOCK Mover
+FUNCTION_BLOCK Mover IMPLEMENTS iMover;
 VAR_INPUT
 	
 	Enable			: BOOL;			// moves the axis from Disabled to Standstill
@@ -49,6 +49,7 @@ VAR
 	fbGroupStatus			: MC_GroupReadStatus;
 	fbGroupEnable			: MC_GroupEnable;
 	fbReadStatus			: MC_ReadStatus;
+	fbMoveRelCA				: ARRAY[0..1] OF MC_MoveRelativeCA;
 	
 	fbReadM1DetectMode		: ADSREAD;
 	fbReadM1DetectValid		: ADSREAD;
@@ -75,6 +76,8 @@ CASE State OF
 
 		fbMoveAbsCA[0].Execute	:= FALSE;
 		fbMoveAbsCA[1].Execute	:= FALSE;
+		fbMoveRelCA[0].Execute	:= FALSE;
+		fbMoveRelCA[1].Execute	:= FALSE;
 		
 		IF Enable THEN
 			State		:= 10;
@@ -289,6 +292,11 @@ CASE State OF
 			fbAddToGroup.Execute		:= FALSE;
 		ELSIF fbStop.Busy THEN
 			fbStop.Execute				:= FALSE;
+		ELSIF fbMoveRelCA[0].Busy THEN
+			fbMoveRelCA[0].Execute		:=FALSE;
+		ELSIF fbMoveRelCA[1].Busy THEN
+			fbMoveRelCA[1].Execute		:=FALSE;
+		
 	
 		// And catch all internal function block errors
 		ELSIF fbMoveAbsCA[0].Error THEN
@@ -306,6 +314,14 @@ CASE State OF
 		ELSIF fbStop.Error THEN
 			ErrorID					:= fbStop.ErrorID;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbStop' );
+			State					:= 999;
+		ELSIF fbMoveRelCA[0].Error THEN
+			ErrorID					:= fbStop.ErrorID;
+			ErrorOrigin 			:= CONCAT ( InstancePath, '.fbMoveRelCA[0]');
+			State					:= 999;
+		ELSIF fbMoveRelCA[1].Error THEN
+			ErrorID					:= fbStop.ErrorID;
+			ErrorOrigin 			:= CONCAT ( InstancePath, '.fbMoveRelCA[1]');
 			State					:= 999;
 		END_IF
 	
@@ -345,6 +361,8 @@ fbGroupEnable( AxesGroup := GroupReference );
 fbMoveAbsCA[0]( Axis := AxisReference );
 fbMoveAbsCA[1]( Axis := AxisReference );
 fbReadStatus( Enable := TRUE, Axis := AxisReference );
+fbMoveRelCA[0] (axis :=AxisReference);
+fbMoveRelCA[1] (axis :=AxisReference);
 
 fbReadM1DetectMode();
 fbReadM1DetectValid();
@@ -425,8 +443,8 @@ END_IF]]></ST>
         </Implementation>
       </Set>
     </Property>
-    <Method Name="MoveToPosition" Id="{fa224fdd-1f94-4da8-9995-83f4c5355ce6}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : BOOL
+    <Method Name="MoveToPosition" Id="{c28d081f-5f21-4357-8651-768a8cf4ef0e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
 VAR_INPUT
 	
 	DestinationPosition		: LREAL;	// position on track for a shuttle to move towards
@@ -483,7 +501,7 @@ memset( ADR( CurrentDestObjective ), 0, SIZEOF( CurrentDestObjective ));
       </Implementation>
     </Method>
     <Method Name="MoveToStation" Id="{73370b80-491c-4017-a420-f08c462d830e}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD MoveToStation : Station
+      <Declaration><![CDATA[METHOD MoveToStation : iMover
 VAR_INPUT
 	DestinationStation	: REFERENCE TO Station;	
 END_VAR
@@ -542,6 +560,59 @@ DestinationStation.RegisterMover( THIS^ );
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="MoveVelocity" Id="{b843a8f8-3644-434c-aaf5-7e88053f31b1}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD MoveVelocity : iMover
+VAR_INPUT
+	DesiredVelocity : LREAL;		//The velocity to be commanded [mm/s]
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT ( ready ) THEN
+	
+	State := 999;	// set error true
+	ErrorID := 902;
+	
+ELSE
+	
+	MoverParameters.Velocity		:= DesiredVelocity;
+	
+	IF fbMoveRelCA[0].Busy = FALSE THEN
+		
+		fbMoverelCA[0].Acceleration	:= MoverParameters.Acceleration;
+		fbMoverelCA[0].Deceleration	:= MoverParameters.Deceleration;
+		fbMoverelCA[0].Velocity		:= MoverParameters.Velocity;
+		
+		fbMoverelCA[0].distance		:= 1E300;
+		      
+		fbMoverelCA[0].BufferMode		:= mcAborting;
+		fbMoverelCA[0].Execute		:= TRUE;
+		      
+		fbMoverelCA[0].Execute		:= TRUE;		// execute this block, and...
+		fbMoverelCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
+		
+	ELSIF fbMoverelCA[1].Busy = FALSE THEN
+		
+		fbMoveRelCA[1].Acceleration	:= MoverParameters.Acceleration;
+		fbMoveRelCA[1].Deceleration	:= MoverParameters.Deceleration;
+		fbMoveRelCA[1].Velocity		:= MoverParameters.Velocity;
+		      
+		fbMoveRelCA[1].distance		:= 1E300;
+		      
+		fbMoveRelCA[1].BufferMode		:= mcAborting;
+		fbMoveRelCA[1].Execute		:= TRUE;
+		      
+		fbMoveRelCA[1].Execute		:= TRUE;		// execute this block, and...
+		fbMoveRelCA[0].Execute		:= FALSE;		// if necessary, interrupt this one		
+
+		END_IF
+
+END_IF
+
+MoverCurrentMoveType		:= MoverCommandType_enum.MOVETYPE_VELOCITY;
+CurrentDestPosition			:= 1E300;
+memset( ADR( CurrentDestObjective ), 0, SIZEOF( CurrentDestObjective ));]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Objective" Id="{b06cf2ff-b1dd-4afb-af24-76820a9809f8}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Objective : String]]></Declaration>
       <Get Name="Get" Id="{39f22891-e1d0-4fbf-9032-2bbc45b18310}">
@@ -580,7 +651,7 @@ PayloadType	:= Payload;]]></ST>
       </Set>
     </Property>
     <Method Name="SetAcceleration" Id="{6c3e67ff-faff-4c11-8768-1de83c7995e4}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD SetAcceleration : BOOL
+      <Declaration><![CDATA[METHOD SetAcceleration : iMover
 VAR_INPUT
 	Acceleration	: LREAL;
 END_VAR
@@ -593,7 +664,7 @@ MoverParameters.Acceleration		:= Acceleration;
       </Implementation>
     </Method>
     <Method Name="SetDeceleration" Id="{05a8542e-78cf-4f19-864b-98da64430703}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD SetDeceleration : BOOL
+      <Declaration><![CDATA[METHOD SetDeceleration : iMover
 VAR_INPUT
 	Deceleration	: LREAL;
 END_VAR
@@ -606,7 +677,7 @@ MoverParameters.Deceleration	:= Deceleration;
       </Implementation>
     </Method>
     <Method Name="SetVelocity" Id="{530483ab-165f-437b-baf5-2db027b7f044}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD SetVelocity : BOOL
+      <Declaration><![CDATA[METHOD SetVelocity : iMover
 VAR_INPUT
 	Velocity		: LREAL;
 END_VAR
@@ -620,7 +691,7 @@ MoverParameters.Velocity	:= Velocity;
       </Implementation>
     </Method>
     <Method Name="Stop" Id="{a265830d-bb39-4101-acde-4a318a134b52}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD Stop : BOOL
+      <Declaration><![CDATA[METHOD Stop : iMover
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -654,6 +725,7 @@ END_IF;]]></ST>
       <LineId Id="1021" Count="0" />
       <LineId Id="216" Count="0" />
       <LineId Id="472" Count="0" />
+      <LineId Id="1380" Count="1" />
       <LineId Id="363" Count="0" />
       <LineId Id="489" Count="0" />
       <LineId Id="365" Count="1" />
@@ -743,6 +815,8 @@ END_IF;]]></ST>
       <LineId Id="383" Count="0" />
       <LineId Id="380" Count="0" />
       <LineId Id="961" Count="1" />
+      <LineId Id="1365" Count="3" />
+      <LineId Id="1364" Count="0" />
       <LineId Id="844" Count="0" />
       <LineId Id="291" Count="2" />
       <LineId Id="617" Count="0" />
@@ -754,6 +828,10 @@ END_IF;]]></ST>
       <LineId Id="619" Count="0" />
       <LineId Id="389" Count="0" />
       <LineId Id="964" Count="3" />
+      <LineId Id="1373" Count="3" />
+      <LineId Id="1379" Count="0" />
+      <LineId Id="1377" Count="1" />
+      <LineId Id="1372" Count="0" />
       <LineId Id="782" Count="0" />
       <LineId Id="83" Count="0" />
       <LineId Id="187" Count="12" />
@@ -775,6 +853,7 @@ END_IF;]]></ST>
       <LineId Id="111" Count="0" />
       <LineId Id="471" Count="0" />
       <LineId Id="356" Count="0" />
+      <LineId Id="1360" Count="1" />
       <LineId Id="1092" Count="0" />
       <LineId Id="1091" Count="0" />
       <LineId Id="1226" Count="1" />
@@ -851,6 +930,24 @@ END_IF;]]></ST>
       <LineId Id="199" Count="0" />
       <LineId Id="179" Count="1" />
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveVelocity">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="2" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="17" Count="3" />
+      <LineId Id="22" Count="13" />
+      <LineId Id="37" Count="7" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="45" Count="3" />
     </LineIds>
     <LineIds Name="Mover.Objective.Get">
       <LineId Id="5" Count="1" />

@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <Itf Name="iMover" Id="{30ffe45f-c01a-49ae-9d19-23395eddd7e8}">
+    <Declaration><![CDATA[INTERFACE iMover]]></Declaration>
+    <Folder Name="Methods" Id="{1b23c83c-1258-4c4f-a9ad-a029b20875d0}" />
+    <Folder Name="Properties" Id="{73a4fa43-0d07-4dea-a761-2d7dc373ee4f}" />
+    <Property Name="CurrentMoveType" Id="{f31956ff-9981-42ba-a963-53182be5a6a1}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentMoveType : MoverCommandType_enum]]></Declaration>
+      <Get Name="Get" Id="{4f4d6df0-727b-4d83-aa6a-31cf10efdd21}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="DestinationPosition" Id="{fd336655-1b12-4c85-8800-888e616a0190}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY DestinationPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{3855cb66-22eb-461a-b098-b3ca2fe0f4f3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MotionParameters" Id="{54e0be71-d3bc-452c-b6a4-43e2a6665d79}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY PUBLIC MotionParameters : MoverParameters_typ]]></Declaration>
+      <Get Name="Get" Id="{654efe72-5d86-4ed2-99d7-31579760d7f7}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{82b894a8-be13-4598-8eda-da63ea5eb622}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="MoveToPosition" Id="{fa224fdd-1f94-4da8-9995-83f4c5355ce6}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
+VAR_INPUT
+	
+	DestinationPosition		: LREAL;	// position on track for a shuttle to move towards
+
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="MoveToStation" Id="{7f840f3e-0d70-4fa2-9f21-61b88c80609b}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD MoveToStation : iMover
+VAR_INPUT
+	DestinationStation	: REFERENCE TO Station;	
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="MoveVelocity" Id="{e88192ae-3a29-4fd6-aec5-10ce1d652475}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD MoveVelocity : iMover
+VAR_INPUT
+	DesiredVelocity : LREAL;		//The velocity to be commanded [mm/s]
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Objective" Id="{8ebf7eff-2b0b-45f9-8604-dc48a6c2dec6}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Objective : String]]></Declaration>
+      <Get Name="Get" Id="{1c8cee4d-d0d3-4396-aef2-3ace7cdfef3e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Payload" Id="{8debfc3a-ede6-452a-8f81-b4825ce39b3b}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Payload : USINT]]></Declaration>
+      <Get Name="Get" Id="{80534c46-bb57-4e05-bca0-e1e88d880aac}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{f79463b1-b92f-424b-a739-aa6b1256efa9}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="SetAcceleration" Id="{0785963c-474d-4519-8a82-c9be1563abde}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetAcceleration : iMover
+VAR_INPUT
+	Acceleration	: LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="SetDeceleration" Id="{3a8c5417-117f-4365-ab34-ed9eac0e59cf}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetDeceleration : iMover
+VAR_INPUT
+	Deceleration	: LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="SetVelocity" Id="{2fcdbb3f-b4b0-498b-8f3a-47dde1a6be1a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetVelocity : iMover
+VAR_INPUT
+	Velocity		: LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Stop" Id="{506b706a-4769-4a5b-b463-1b5f6a7aae4a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Stop : iMover
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>
