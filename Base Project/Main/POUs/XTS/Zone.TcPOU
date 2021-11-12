@@ -18,83 +18,6 @@ END_VAR
     </Implementation>
     <Folder Name="Methods" Id="{c12d9132-64a8-40b2-b1d9-3d115c20d531}" />
     <Folder Name="Properties" Id="{90c52b3d-9a13-4439-896a-3c5f735e1216}" />
-    <Property Name="CurrentMover" Id="{738ea792-3959-45c8-9e25-6e9b064cb4f3}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY CurrentMover : REFERENCE TO Mover
-//PROPERTY CurrentMovers : ARRAY [0..GVL.NUM_MOVERS-1] OF MoverAlias]]></Declaration>
-      <Get Name="Get" Id="{18617649-f1b3-4aac-a49e-e1d5061fbb24}">
-        <Declaration><![CDATA[VAR
-	i: INT;
-	n: INT;
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[
-(*
-Worth noting here: the compiler does not allow Arrays of Reference variables.
-However, you can Alias the reference variable, and then make an Array of the Alias.
-So far as I can tell, this is functionally identical. 
-I've done that here with the CurrentMovers[n] list.
-Oddly enough, Arrays of Pointers are completely acceptable. Weird limitation = weird workaround.
-*)
-
-(*
-FOR n := 0 TO GVL.NUM_MOVERS - 1 DO
-	CurrentMovers[n]	REF= 0;	// clear current mover list to be refilled
-END_FOR
-n	:= 0;	// reset the counter
-*)
-
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO	
-	IF TrackedMovers[i] <> 0 THEN
-
-
-		IF internalStartPosition < internalEndPosition AND
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition AND
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
-		// Zone does NOT contain the rollover point, and DOES contain the mover
-			CurrentMover	REF= TrackedMovers[i]^;	
-
-		ELSIF StartPosition > EndPosition AND
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition OR
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
-		// Zone DOES contain the rollover point, and DOES contain the mover
-			CurrentMover	REF= TrackedMovers[i]^;
-		ELSE
-			// Either the zone doesn't contain this mover,
-			// Or the StartPosition and EndPosition is coincident. Either way, add no movers		
-		END_IF
-		
-		
-		
-	END_IF
-END_FOR]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="Direction" Id="{3f08dc45-b1f1-40ce-b51a-e3e812ec3183}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Direction : Tc2_MC2.MC_Direction]]></Declaration>
-      <Get Name="Get" Id="{24abb91b-764d-45ec-89d1-a5f26d2e7d64}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[
-
-Direction	:= internalDirection;]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{c86d649c-9a25-46a0-9897-240dc34a20ce}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[
-
-internalDirection	:= Direction;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Property Name="EndPosition" Id="{0a5f097e-96c3-43a1-b536-04f368f24ca3}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY EndPosition : LREAL]]></Declaration>
       <Get Name="Get" Id="{a512e404-14bd-4b1c-9731-3bba7de351df}">
@@ -120,7 +43,7 @@ internalEndPosition		:= EndPosition;]]></ST>
       </Set>
     </Property>
     <Method Name="GetMoverList" Id="{5ed7b86f-db74-48a1-b0d9-71e0559bd125}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD GetMoverList : Test_interface
+      <Declaration><![CDATA[METHOD GetMoverList : iMoverList
 VAR_INPUT
 END_VAR
 
@@ -136,16 +59,19 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 	IF TrackedMovers[i] <> 0 THEN
 		
 		IF internalStartPosition < internalEndPosition AND
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition AND
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
-		// Zone does NOT contain the rollover point, and DOES contain the mover
+			TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition AND
+			TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
+			// Zone does NOT contain the rollover point, and DOES contain the mover	
+	
 			internalMoverList.RegisterMover( TrackedMovers[i]^ );
-
+			
 		ELSIF internalStartPosition > internalEndPosition AND
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition OR
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
-		// Zone DOES contain the rollover point, and DOES contain the mover
+			( TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition OR
+			TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition ) THEN
+			// Zone DOES contain the rollover point, and DOES contain the mover	
+						
 			internalMoverList.RegisterMover( TrackedMovers[i]^ );
+			
 		ELSE
 			// Either the zone doesn't contain this mover,
 			// Or the StartPosition and EndPosition are coincident. Either way, add no movers
@@ -159,43 +85,6 @@ END_FOR
 GetMoverList	:= internalMoverList;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="MoverList" Id="{44629960-c00b-47ed-8e27-2d725d700f96}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY MoverList : MoverList]]></Declaration>
-      <Get Name="Get" Id="{d68c4e04-c8c0-4a1a-afff-48941f85be69}">
-        <Declaration><![CDATA[VAR
-	i: USINT;
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[
-
-MoverList.UnregisterAll();
-
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO	
-	IF TrackedMovers[i] <> 0 THEN
-		
-		IF internalStartPosition < internalEndPosition AND
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition AND
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
-		// Zone does NOT contain the rollover point, and DOES contain the mover
-			MoverList.RegisterMover( TrackedMovers[i]^ );
-
-		ELSIF internalStartPosition > internalEndPosition AND
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition OR
-		TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
-		// Zone DOES contain the rollover point, and DOES contain the mover
-			MoverList.RegisterMover( TrackedMovers[i]^ );
-		ELSE
-			// Either the zone doesn't contain this mover,
-			// Or the StartPosition and EndPosition are coincident. Either way, add no movers
-		END_IF
-	
-	
-	END_IF	
-END_FOR]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="StartPosition" Id="{aacc7e02-3b0c-44c1-b85c-a6193164623c}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY StartPosition : LREAL]]></Declaration>
       <Get Name="Get" Id="{3c066f4a-ee41-4a60-96e5-d5b56be91452}">
@@ -221,52 +110,29 @@ internalStartPosition	:= StartPosition;
       </Set>
     </Property>
     <Property Name="ZoneLength" Id="{cc1fdc68-29d3-4f91-948b-3fe78f7d05d8}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY ZoneLength : LREAL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY ZoneLength : LREAL]]></Declaration>
       <Get Name="Get" Id="{6d92c621-884a-4d2c-8ab0-83911c1e9108}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
+        <Declaration><![CDATA[]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[
+
+
+IF internalStartPosition < internalEndPosition THEN
+	// Zone does NOT include the rollover point
+	ZoneLength 		:= internalEndPosition - internalStartPosition;
+ELSIF internalStartPosition > internalEndPosition THEN
+	// Zone DOES include the rollover point
+	ZoneLength		:= internalEndPosition + ( internalEndPosition + GVL.TRACK_LENGTH - internalStartPosition );
+ELSE
+	// Start and end position are coincident, ZL is 0
+	ZoneLength	:= 0;	
+END_IF]]></ST>
         </Implementation>
       </Get>
     </Property>
     <LineIds Name="Zone">
       <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.CurrentMover.Get">
-      <LineId Id="48" Count="1" />
-      <LineId Id="51" Count="3" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="89" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="55" Count="1" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="90" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="66" Count="2" />
-      <LineId Id="70" Count="0" />
-      <LineId Id="73" Count="2" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="78" Count="6" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="87" Count="1" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="24" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.Direction.Get">
-      <LineId Id="5" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.Direction.Set">
-      <LineId Id="5" Count="1" />
-      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Zone.EndPosition.Get">
       <LineId Id="5" Count="1" />
@@ -279,14 +145,19 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Zone.GetMoverList">
-      <LineId Id="6" Count="24" />
+      <LineId Id="6" Count="7" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="19" Count="3" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="24" Count="6" />
       <LineId Id="5" Count="0" />
       <LineId Id="35" Count="1" />
       <LineId Id="34" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.MoverList.Get">
-      <LineId Id="5" Count="24" />
-      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Zone.StartPosition.Get">
       <LineId Id="5" Count="1" />
@@ -299,7 +170,15 @@ END_VAR
       <LineId Id="6" Count="0" />
     </LineIds>
     <LineIds Name="Zone.ZoneLength.Get">
+      <LineId Id="6" Count="2" />
       <LineId Id="2" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="10" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

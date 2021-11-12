@@ -30,60 +30,22 @@ VAR
 	// Objectives & Parameters
 	
 	// Todo initialize this in the code with the prop Setter, not by addressing an internal variable
-	
-	Zone1		: Zone;
-	
+		
 	Station					: ARRAY [0..GVL.NUM_STATIONS-1] OF Station;		
 	PositionTrigger			: ARRAY [0..1] OF PositionTrigger;		
 	SpeedTrigger			: ARRAY [0..0] OF SpeedTrigger;
-	
-	
+	Zone					: ARRAY [0..3] OF Zone;	
 	
 	// User commands									
 	bCommandEnable			: BOOL;	
 		
 	allMoversEnabled: BOOL;
-	myTrig: BOOL;
-	myTrig2: BOOL;
-	exampleState: INT;
-	xRecoverArea: BOOL;
+	
+	MoveToStation: INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-
-
-
-
-
-
-
-
-
-IF myTrig THEN
-	FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-		Zone1.RegisterMover( Mover[i] );
-	END_FOR;
-
-	Zone1.StartPosition		:= 3750;
-	Zone1.EndPosition			:= 1750;
-	
-	myTrig	:= FALSE;
-END_IF
-
-
-
-
-
-Zone1.StartPosition		:= 1000;
-Zone1.EndPosition		:= 1750;
-
-IF xRecoverArea THEN	
-	Zone1.GetMoverList().MoveAllToPosition( 2750 );	
-	xRecoverArea	:= FALSE;
-END_IF
-
-
 
 CASE MainState OF
 	0:	// -------------------------------------------- Idle state
@@ -106,7 +68,19 @@ CASE MainState OF
 		PositionTrigger[1].TriggerDirection := mcDirectionPositive;
 		
 		SpeedTrigger[0].ThresholdVelocity	:= 1900;
-			
+		
+		Zone[0].StartPosition				:= 3750;
+		Zone[0].EndPosition					:= 750;
+		
+		Zone[1].StartPosition				:= 750;
+		Zone[1].EndPosition					:= 1750;
+		
+		Zone[2].StartPosition				:= 1750;
+		Zone[2].EndPosition					:= 2750;
+		
+		Zone[3].StartPosition				:= 2750;
+		Zone[3].EndPosition					:= 3750;
+					
 		MainState		:= 20;
 		
 	20: // -------------------------------------------- Test enable state
@@ -144,9 +118,20 @@ CASE MainState OF
 	
 		// Move all shuttles to specified stations
 		IF bInitialMovement THEN
-			FOR i := 0 TO GVL.NUM_MOVERS-1 DO
-				Mover[i].MoveToStation(Station[3]);
+			
+			FOR i := 0 TO GVL.NUM_MOVERS - 1 DO				
+				Zone[0].RegisterMover( Mover[i] );
+				Zone[1].RegisterMover( Mover[i] );
+				Zone[2].RegisterMover( Mover[i] );
+				Zone[3].RegisterMover( Mover[i] );			
 			END_FOR
+			
+			Zone[0].GetMoverList().MoveAllToStation( Station[3] );
+			Zone[1].GetMoverList().MoveAllToStation( Station[3] );
+			
+			Zone[2].GetMoverList().MoveAllToStation( Station[0] );
+			Zone[3].GetMoverList().MoveAllToStation( Station[0] );
+		
 			bInitialMovement	:= FALSE;
 		END_IF
 		
@@ -275,25 +260,6 @@ SpeedTrigger[0]();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="3228" Count="7" />
-      <LineId Id="3101" Count="1" />
-      <LineId Id="3019" Count="0" />
-      <LineId Id="3160" Count="0" />
-      <LineId Id="3163" Count="1" />
-      <LineId Id="3161" Count="0" />
-      <LineId Id="3103" Count="0" />
-      <LineId Id="3105" Count="2" />
-      <LineId Id="3104" Count="0" />
-      <LineId Id="3262" Count="2" />
-      <LineId Id="3258" Count="1" />
-      <LineId Id="3257" Count="0" />
-      <LineId Id="3260" Count="0" />
-      <LineId Id="3157" Count="0" />
-      <LineId Id="3156" Count="0" />
-      <LineId Id="3166" Count="0" />
-      <LineId Id="3255" Count="0" />
-      <LineId Id="3261" Count="0" />
-      <LineId Id="3022" Count="0" />
       <LineId Id="2894" Count="0" />
       <LineId Id="708" Count="2" />
       <LineId Id="1457" Count="0" />
@@ -304,7 +270,8 @@ SpeedTrigger[0]();
       <LineId Id="2635" Count="0" />
       <LineId Id="2638" Count="0" />
       <LineId Id="2766" Count="1" />
-      <LineId Id="2680" Count="0" />
+      <LineId Id="3385" Count="11" />
+      <LineId Id="3413" Count="0" />
       <LineId Id="2632" Count="0" />
       <LineId Id="2824" Count="2" />
       <LineId Id="2837" Count="0" />
@@ -327,7 +294,14 @@ SpeedTrigger[0]();
       <LineId Id="734" Count="0" />
       <LineId Id="743" Count="1" />
       <LineId Id="2525" Count="0" />
-      <LineId Id="2527" Count="5" />
+      <LineId Id="2527" Count="1" />
+      <LineId Id="3397" Count="1" />
+      <LineId Id="3404" Count="0" />
+      <LineId Id="3406" Count="2" />
+      <LineId Id="3403" Count="0" />
+      <LineId Id="3399" Count="1" />
+      <LineId Id="3409" Count="3" />
+      <LineId Id="2531" Count="1" />
       <LineId Id="2524" Count="0" />
       <LineId Id="2376" Count="1" />
       <LineId Id="2385" Count="0" />

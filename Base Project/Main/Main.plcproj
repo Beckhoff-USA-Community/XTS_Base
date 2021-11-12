@@ -42,7 +42,7 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="ITFs\Test_interface.TcIO">
+    <Compile Include="ITFs\iMoverList.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
@@ -67,6 +67,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\Objective.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\XTS\Track.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\Zone.TcPOU">
@@ -109,6 +112,10 @@
     <PlaceholderReference Include="Tc3_Module">
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_XTS_Utility">
+      <DefaultResolution>Tc3_XTS_Utility, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_XTS_Utility</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <Itf Name="iMoverList" Id="{9cc4a2ad-2506-4bdd-acf3-bfbfde25ab77}">
+    <Declaration><![CDATA[INTERFACE iMoverList
+]]></Declaration>
+    <Method Name="MoveAllToPosition" Id="{745a52d9-fa71-49ff-868a-52a3293e2e2d}">
+      <Declaration><![CDATA[METHOD MoveAllToPosition : iMoverList
+VAR_INPUT
+
+	DestinationPosition		: LREAL;		// position on track for all shuttles to move towards	
+
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="MoveAllToStation" Id="{371362e2-fc11-40b6-a0e6-d17b876d5e78}">
+      <Declaration><![CDATA[METHOD MoveAllToStation : MoverList
+VAR_INPUT
+	
+	DestinationStation	: REFERENCE TO Station;
+
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="SetAllAcceleration" Id="{455895b5-97e6-495e-9cb5-6646f55e97b6}">
+      <Declaration><![CDATA[METHOD SetAllAcceleration : MoverList
+VAR_INPUT
+	
+	Acceleration		: LREAL;
+
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="SetAllDeceleration" Id="{d14e387e-79be-456d-9c0b-e3f03ddf19f2}">
+      <Declaration><![CDATA[METHOD SetAllDeceleration : MoverList
+VAR_INPUT
+	
+	Deceleration		: LREAL;
+	
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="SetAllVelocity" Id="{2027ef8a-c9a4-4e95-be1e-4ccdc273c80d}">
+      <Declaration><![CDATA[METHOD SetAllVelocity : MoverList
+VAR_INPUT
+	
+	Velocity	: LREAL;	
+
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="StopAll" Id="{e6f2dc09-c368-4204-99d6-941b7308ec6a}">
+      <Declaration><![CDATA[METHOD StopAll : MoverList
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="UnregisterAll" Id="{77dd6571-5452-49cc-817d-10e46daccff7}">
+      <Declaration><![CDATA[METHOD UnregisterAll : BOOL
+VAR_INPUT
+END_VAR]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>
