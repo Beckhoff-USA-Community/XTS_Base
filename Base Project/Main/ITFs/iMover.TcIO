@@ -18,6 +18,11 @@ PROPERTY DestinationPosition : LREAL]]></Declaration>
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="GroupStop" Id="{28fb3a93-27f0-4894-8730-4c9752958815}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD GroupStop : iMover
+VAR_INPUT
+END_VAR]]></Declaration>
+    </Method>
     <Property Name="MotionParameters" Id="{54e0be71-d3bc-452c-b6a4-43e2a6665d79}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY PUBLIC MotionParameters : MoverParameters_typ]]></Declaration>
@@ -81,16 +86,17 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="SetJerk" Id="{24979a1d-e480-47b1-9bd4-1285fd9fc50c}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetJerk : iMover
+VAR_INPUT
+	Jerk		: LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="SetVelocity" Id="{2fcdbb3f-b4b0-498b-8f3a-47dde1a6be1a}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetVelocity : iMover
 VAR_INPUT
 	Velocity		: LREAL;
-END_VAR
-]]></Declaration>
-    </Method>
-    <Method Name="Stop" Id="{506b706a-4769-4a5b-b463-1b5f6a7aae4a}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD Stop : iMover
-VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>

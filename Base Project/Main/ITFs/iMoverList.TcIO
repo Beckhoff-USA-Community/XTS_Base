@@ -12,7 +12,7 @@ VAR_INPUT
 END_VAR]]></Declaration>
     </Method>
     <Method Name="MoveAllToStation" Id="{371362e2-fc11-40b6-a0e6-d17b876d5e78}">
-      <Declaration><![CDATA[METHOD MoveAllToStation : MoverList
+      <Declaration><![CDATA[METHOD MoveAllToStation : iMoverList
 VAR_INPUT
 	
 	DestinationStation	: REFERENCE TO Station;
@@ -20,7 +20,7 @@ VAR_INPUT
 END_VAR]]></Declaration>
     </Method>
     <Method Name="SetAllAcceleration" Id="{455895b5-97e6-495e-9cb5-6646f55e97b6}">
-      <Declaration><![CDATA[METHOD SetAllAcceleration : MoverList
+      <Declaration><![CDATA[METHOD SetAllAcceleration : iMoverList
 VAR_INPUT
 	
 	Acceleration		: LREAL;
@@ -29,7 +29,7 @@ END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="SetAllDeceleration" Id="{d14e387e-79be-456d-9c0b-e3f03ddf19f2}">
-      <Declaration><![CDATA[METHOD SetAllDeceleration : MoverList
+      <Declaration><![CDATA[METHOD SetAllDeceleration : iMoverList
 VAR_INPUT
 	
 	Deceleration		: LREAL;
@@ -37,21 +37,15 @@ VAR_INPUT
 END_VAR]]></Declaration>
     </Method>
     <Method Name="SetAllVelocity" Id="{2027ef8a-c9a4-4e95-be1e-4ccdc273c80d}">
-      <Declaration><![CDATA[METHOD SetAllVelocity : MoverList
+      <Declaration><![CDATA[METHOD SetAllVelocity : iMoverList
 VAR_INPUT
 	
 	Velocity	: LREAL;	
 
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="StopAll" Id="{e6f2dc09-c368-4204-99d6-941b7308ec6a}">
-      <Declaration><![CDATA[METHOD StopAll : MoverList
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="UnregisterAll" Id="{77dd6571-5452-49cc-817d-10e46daccff7}">
-      <Declaration><![CDATA[METHOD UnregisterAll : BOOL
+      <Declaration><![CDATA[METHOD UnregisterAll : iMoverList
 VAR_INPUT
 END_VAR]]></Declaration>
     </Method>

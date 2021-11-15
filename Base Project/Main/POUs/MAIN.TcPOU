@@ -8,12 +8,11 @@ VAR
 	// helper, state, index variables
 	i						: UINT;
 	n						: UINT;
-	MainState				: UINT;
+	MainState				: INT;
+	MainCommands			: MainCommands_typ;
 	
 	StationTimer			: ARRAY [0..GVL.NUM_STATIONS] OF TON;
 	nextStation				: USINT := 2;
-	
-	bInitialMovement		: BOOL;
 	
 	lowVelocity				: LREAL := 200; // mm/s
 	mediumVelocity			: LREAL := 800;	// mm/s
@@ -36,26 +35,59 @@ VAR
 	SpeedTrigger			: ARRAY [0..0] OF SpeedTrigger;
 	Zone					: ARRAY [0..3] OF Zone;	
 	
-	// User commands									
-	bCommandEnable			: BOOL;	
-		
-	allMoversEnabled: BOOL;
-	
-	MoveToStation: INT;
+	allMoversEnabled: BOOL;;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
 
+
 CASE MainState OF
-	0:	// -------------------------------------------- Idle state
+	MS_DISABLED:	// ------------------------------------------------------- IDLE STATE
 	
-		IF bCommandEnable THEN
-			MainState		:= 10;
+	
+		IF MainCommands.Enable THEN
+			MainState		:= MS_INITIALIZING_MOVERS;
 		END_IF
-		
-	10: // -------------------------------------------- Init Stations, Position Triggers
 	
+		
+	MS_INITIALIZING_MOVERS: 	// --------------------------------------- SET MOVER MOTION PARAMETERS
+	
+	
+		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
+			ParameterSet.Jerk					:= 1E5;		// mm/s3
+			ParameterSet.Acceleration			:= 1E4;		// mm/s2
+			ParameterSet.Deceleration			:= 1E4;		// mm/s2
+			ParameterSet.Velocity				:= 1E3;		// mm/s
+			ParameterSet.Direction				:= mcDirectionPositive;
+
+			Mover[i].MotionParameters			:= ParameterSet;
+		END_FOR
+		
+		MainState			:= MS_ENABLING_MOVERS;	
+		
+	
+	MS_ENABLING_MOVERS:	// ----------------------------------------------- RESETTING AND ENABLING AXES
+	
+	
+		allMoversEnabled		:= TRUE; // default ...
+		
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+			Mover[i].Enable		:= TRUE;
+			
+			IF Mover[i].Ready = FALSE THEN
+				allMoversEnabled	:= FALSE;
+			END_IF
+		END_FOR
+		
+		IF allMoversEnabled THEN
+			MainState		:= MS_INITIALIZING_OBJECTIVES;
+		END_IF		
+		
+	
+	MS_INITIALIZING_OBJECTIVES:	// --------------------------------------- WRITING OBJECTIVE PARAMETERS
+	
+		
 		Station[0].TrackPosition			:= 0;
 		Station[1].TrackPosition			:= 750;
 		Station[2].TrackPosition			:= 1000;
@@ -81,45 +113,14 @@ CASE MainState OF
 		Zone[3].StartPosition				:= 2750;
 		Zone[3].EndPosition					:= 3750;
 					
-		MainState		:= 20;
+		MainState		:= MS_ENABLED;
 		
-	20: // -------------------------------------------- Test enable state
-		
-		allMoversEnabled		:= TRUE; // default ...
-		
-		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-			Mover[i].Enable		:= TRUE;
+	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
+	
+		IF MainCommands.Start THEN
 			
-			IF Mover[i].Ready = FALSE THEN
-				allMoversEnabled	:= FALSE;
-			END_IF
-		END_FOR
+			// ===== RECOVERY LOGIC =====
 		
-		IF allMoversEnabled THEN
-			MainState		:= 30;
-		END_IF			
-	
-	
-	30:	// -------------------------------------------- Set all motion parameters
-	
-		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
-			ParameterSet.Jerk					:= 1e5;
-			ParameterSet.Acceleration			:= 1E4;		// mm/s2
-			ParameterSet.Deceleration			:= 1E4;		// mm/s2
-			ParameterSet.Direction				:= mcDirectionPositive;
-			ParameterSet.Velocity				:= 1E3;		// mm/s
-
-			Mover[i].MotionParameters			:= ParameterSet;
-		END_FOR
-		
-		//bInitialMovement	:= TRUE;
-		MainState			:= 40;
-	
-	40:	// -------------------------------------------- Ready for commands
-	
-		// Move all shuttles to specified stations
-		IF bInitialMovement THEN
-			
 			FOR i := 0 TO GVL.NUM_MOVERS - 1 DO				
 				Zone[0].RegisterMover( Mover[i] );
 				Zone[1].RegisterMover( Mover[i] );
@@ -133,10 +134,19 @@ CASE MainState OF
 			Zone[2].GetMoverList().MoveAllToStation( Station[0] );
 			Zone[3].GetMoverList().MoveAllToStation( Station[0] );
 		
-			bInitialMovement	:= FALSE;
-		END_IF
+			// ===== END =====
 		
-		// ============================================ Example traffic logic below
+			MainState	:= MS_RUN;
+			
+		ELSIF MainCommands.Disable THEN
+			MainState	:= MS_DISABLING;
+		END_IF
+	
+	MS_RUN: 	// ------------------------------------------------------- OPERATING
+	
+	
+	
+
 		
 		
 		// Station 0 Logic
@@ -225,27 +235,54 @@ CASE MainState OF
 			StationTimer[3]( IN := FALSE );
 		END_IF
 		
-		
-
-		// todo needs to be test, add groupstop
-		IF bCommandEnable = FALSE THEN
-			MainState			:= 50;
+		IF MainCommands.Stop THEN
+			MainState		:= MS_STOPPING;
+		ELSIF MainCommands.Disable THEN
+			MainState		:= MS_STOPPING;
 		END_IF
-		
-	50: // -------------------------------------------- Disabling
 	
-		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
-			Mover[i].Enable		:= FALSE;
-		END_FOR 
-		MainState				:= 0;		
+	MS_STOPPING:	// --------------------------------------------------- STOPPING MOVERS
+	
+		Mover[0].GroupStop();
+		// todo needs confirmation that all movers have stopped
+		
+		// todo needs to deregister all objectives
+		
+		MainState		:= MS_ENABLED;
+		
+		IF MainCommands.Disable THEN
+			MainState	:= MS_DISABLING;
+		ELSE
+			MainState	:= MS_ENABLED;
+		END_IF
+	
+	MS_DISABLING:	// --------------------------------------------------- DISABLING MOVERS
+	
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+			
+			Mover[i].Enable	:=  FALSE;
+		
+		END_FOR
+		
+		IF (* all movers are disabled *) TRUE THEN
+			
+			MainState		:= MS_DISABLED;
+		
+		END_IF
+	
+	MS_ERROR:		// --------------------------------------------------- ERRORSTATE
+	
+	MS_DEBUG:	// ------------------------------------------------------- DEV USE ONLY
 		
 END_CASE;
 
 
 
+
+
 // Call all mover function blocks cyclically
 FOR i := 0 TO GVL.NUM_MOVERS-1 DO
-	Mover[i]( GroupReference := GroupRef );
+	Mover[i].Cyclic( GroupRef );
 END_FOR;
 
 // Call all station function blocks cyclically
@@ -261,121 +298,76 @@ SpeedTrigger[0]();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="709" Count="1" />
+      <LineId Id="3502" Count="1" />
+      <LineId Id="710" Count="0" />
       <LineId Id="1457" Count="0" />
-      <LineId Id="712" Count="2" />
-      <LineId Id="2624" Count="6" />
-      <LineId Id="2633" Count="1" />
-      <LineId Id="2636" Count="1" />
-      <LineId Id="2635" Count="0" />
-      <LineId Id="2638" Count="0" />
-      <LineId Id="2766" Count="1" />
-      <LineId Id="3385" Count="11" />
-      <LineId Id="3413" Count="0" />
-      <LineId Id="2632" Count="0" />
-      <LineId Id="2824" Count="2" />
-      <LineId Id="2837" Count="0" />
-      <LineId Id="2836" Count="0" />
-      <LineId Id="2839" Count="0" />
-      <LineId Id="2828" Count="0" />
-      <LineId Id="2841" Count="3" />
-      <LineId Id="2829" Count="0" />
-      <LineId Id="2834" Count="0" />
-      <LineId Id="2830" Count="1" />
-      <LineId Id="2845" Count="0" />
-      <LineId Id="2806" Count="0" />
-      <LineId Id="727" Count="3" />
-      <LineId Id="1804" Count="1" />
-      <LineId Id="3456" Count="0" />
-      <LineId Id="1433" Count="0" />
-      <LineId Id="1422" Count="0" />
-      <LineId Id="1435" Count="0" />
-      <LineId Id="731" Count="2" />
-      <LineId Id="2537" Count="0" />
-      <LineId Id="734" Count="0" />
-      <LineId Id="743" Count="1" />
-      <LineId Id="2525" Count="0" />
-      <LineId Id="2527" Count="1" />
-      <LineId Id="3397" Count="1" />
-      <LineId Id="3404" Count="0" />
-      <LineId Id="3406" Count="2" />
-      <LineId Id="3403" Count="0" />
-      <LineId Id="3399" Count="1" />
-      <LineId Id="3409" Count="3" />
-      <LineId Id="2531" Count="1" />
-      <LineId Id="2524" Count="0" />
-      <LineId Id="2376" Count="1" />
-      <LineId Id="2385" Count="0" />
-      <LineId Id="2395" Count="0" />
-      <LineId Id="2409" Count="0" />
-      <LineId Id="2386" Count="1" />
-      <LineId Id="2391" Count="2" />
-      <LineId Id="2405" Count="0" />
-      <LineId Id="2400" Count="1" />
-      <LineId Id="2403" Count="1" />
-      <LineId Id="2402" Count="0" />
-      <LineId Id="2406" Count="0" />
-      <LineId Id="2394" Count="0" />
-      <LineId Id="2496" Count="1" />
-      <LineId Id="2388" Count="0" />
-      <LineId Id="2462" Count="0" />
-      <LineId Id="2378" Count="0" />
-      <LineId Id="2410" Count="3" />
-      <LineId Id="3040" Count="2" />
-      <LineId Id="2415" Count="0" />
-      <LineId Id="2414" Count="0" />
-      <LineId Id="3043" Count="0" />
-      <LineId Id="3045" Count="0" />
-      <LineId Id="2448" Count="1" />
-      <LineId Id="3046" Count="0" />
-      <LineId Id="2458" Count="0" />
-      <LineId Id="3052" Count="0" />
-      <LineId Id="3051" Count="0" />
-      <LineId Id="2459" Count="0" />
-      <LineId Id="2494" Count="1" />
-      <LineId Id="2460" Count="1" />
-      <LineId Id="2407" Count="0" />
-      <LineId Id="2463" Count="2" />
-      <LineId Id="2472" Count="1" />
-      <LineId Id="2466" Count="0" />
-      <LineId Id="2552" Count="0" />
-      <LineId Id="2554" Count="0" />
-      <LineId Id="2468" Count="0" />
-      <LineId Id="2467" Count="0" />
-      <LineId Id="2408" Count="0" />
-      <LineId Id="2469" Count="1" />
-      <LineId Id="2379" Count="0" />
-      <LineId Id="2474" Count="0" />
-      <LineId Id="2476" Count="1" />
-      <LineId Id="2555" Count="1" />
-      <LineId Id="2478" Count="0" />
-      <LineId Id="2475" Count="0" />
-      <LineId Id="2380" Count="0" />
-      <LineId Id="2479" Count="2" />
-      <LineId Id="2559" Count="0" />
-      <LineId Id="2482" Count="0" />
-      <LineId Id="2557" Count="1" />
-      <LineId Id="2484" Count="0" />
-      <LineId Id="2483" Count="0" />
-      <LineId Id="2381" Count="2" />
-      <LineId Id="2485" Count="1" />
-      <LineId Id="2488" Count="3" />
-      <LineId Id="2498" Count="1" />
-      <LineId Id="2487" Count="0" />
-      <LineId Id="2384" Count="0" />
-      <LineId Id="1908" Count="0" />
-      <LineId Id="1968" Count="0" />
-      <LineId Id="1909" Count="0" />
-      <LineId Id="1415" Count="2" />
-      <LineId Id="758" Count="1" />
-      <LineId Id="1418" Count="0" />
-      <LineId Id="1438" Count="1" />
-      <LineId Id="1455" Count="0" />
-      <LineId Id="1454" Count="0" />
-      <LineId Id="760" Count="1" />
+      <LineId Id="3522" Count="0" />
+      <LineId Id="3552" Count="0" />
+      <LineId Id="3599" Count="0" />
+      <LineId Id="3553" Count="1" />
+      <LineId Id="3548" Count="0" />
+      <LineId Id="3527" Count="0" />
+      <LineId Id="3600" Count="0" />
+      <LineId Id="3528" Count="0" />
+      <LineId Id="3584" Count="0" />
+      <LineId Id="3601" Count="0" />
+      <LineId Id="3586" Count="0" />
+      <LineId Id="3588" Count="2" />
+      <LineId Id="3598" Count="0" />
+      <LineId Id="3591" Count="0" />
+      <LineId Id="3593" Count="3" />
+      <LineId Id="3585" Count="0" />
+      <LineId Id="3602" Count="0" />
+      <LineId Id="3529" Count="0" />
+      <LineId Id="3531" Count="0" />
+      <LineId Id="3570" Count="0" />
+      <LineId Id="3603" Count="0" />
+      <LineId Id="3572" Count="11" />
+      <LineId Id="3571" Count="0" />
+      <LineId Id="3605" Count="0" />
+      <LineId Id="3532" Count="1" />
+      <LineId Id="3606" Count="0" />
+      <LineId Id="3609" Count="0" />
+      <LineId Id="3634" Count="0" />
+      <LineId Id="3610" Count="23" />
+      <LineId Id="3607" Count="0" />
+      <LineId Id="3636" Count="3" />
+      <LineId Id="3650" Count="0" />
+      <LineId Id="3666" Count="1" />
+      <LineId Id="3655" Count="10" />
+      <LineId Id="3651" Count="3" />
+      <LineId Id="3648" Count="1" />
+      <LineId Id="3643" Count="1" />
+      <LineId Id="3642" Count="0" />
+      <LineId Id="3534" Count="1" />
+      <LineId Id="3669" Count="0" />
+      <LineId Id="3671" Count="90" />
+      <LineId Id="3670" Count="0" />
+      <LineId Id="3762" Count="0" />
+      <LineId Id="3764" Count="1" />
+      <LineId Id="3763" Count="0" />
+      <LineId Id="3536" Count="1" />
+      <LineId Id="3766" Count="2" />
+      <LineId Id="3771" Count="0" />
+      <LineId Id="3779" Count="0" />
+      <LineId Id="3778" Count="0" />
+      <LineId Id="3770" Count="0" />
+      <LineId Id="3772" Count="2" />
+      <LineId Id="3776" Count="1" />
+      <LineId Id="3775" Count="0" />
+      <LineId Id="3540" Count="1" />
+      <LineId Id="3780" Count="2" />
+      <LineId Id="3784" Count="1" />
+      <LineId Id="3783" Count="0" />
+      <LineId Id="3786" Count="2" />
+      <LineId Id="3791" Count="1" />
+      <LineId Id="3789" Count="0" />
+      <LineId Id="3542" Count="3" />
       <LineId Id="2547" Count="0" />
       <LineId Id="2546" Count="0" />
-      <LineId Id="763" Count="4" />
+      <LineId Id="763" Count="1" />
+      <LineId Id="3793" Count="1" />
+      <LineId Id="765" Count="2" />
       <LineId Id="2548" Count="0" />
       <LineId Id="878" Count="1" />
       <LineId Id="881" Count="1" />
