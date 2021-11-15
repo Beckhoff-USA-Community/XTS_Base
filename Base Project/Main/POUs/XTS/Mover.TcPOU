@@ -432,6 +432,7 @@ END_VAR
           <ST><![CDATA[
 
 // should error if the limits are exceeded
+MoverParameters.Jerk				:= MotionParameters.Jerk;
 MoverParameters.Velocity			:= LIMIT( MinVelocity, MotionParameters.Velocity, MaxVelocity );
 MoverParameters.Acceleration		:= LIMIT( MinAcceleration, MotionParameters.Acceleration, MaxAcceleration );
 MoverParameters.Deceleration		:= LIMIT( MinDeceleration, MotionParameters.Deceleration, MaxDeceleration );
@@ -462,14 +463,15 @@ ELSE	// otherwise let 'er rip
 	
 	IF fbMoveAbsCA[0].Busy = FALSE THEN
 		
+		fbMoveAbsCA[0].Jerk			:= MoverParameters.Jerk;
 		fbMoveAbsCA[0].Acceleration	:= MoverParameters.Acceleration;
 		fbMoveAbsCA[0].Deceleration	:= MoverParameters.Deceleration;
 		fbMoveAbsCA[0].Velocity		:= MoverParameters.Velocity;
-		fbMoveAbsCA[0].Direction		:= MoverParameters.Direction;
+		fbMoveAbsCA[0].Direction	:= MoverParameters.Direction;
 		
 		fbMoveAbsCA[0].Position		:= DestinationPosition;
 		
-		fbMoveAbsCA[0].BufferMode		:= mcAborting;
+		fbMoveAbsCA[0].BufferMode	:= mcAborting;
 		fbMoveAbsCA[0].Execute		:= TRUE;
 		 
 		fbMoveAbsCA[0].Execute		:= TRUE;		// execute this block, and...
@@ -477,6 +479,7 @@ ELSE	// otherwise let 'er rip
 		
 	ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
 		
+		fbMoveAbsCA[1].Jerk			:= MoverParameters.Jerk;
 		fbMoveAbsCA[1].Acceleration	:= MoverParameters.Acceleration;
 		fbMoveAbsCA[1].Deceleration	:= MoverParameters.Deceleration;
 		fbMoveAbsCA[1].Velocity		:= MoverParameters.Velocity;
@@ -518,6 +521,7 @@ ELSE	// otherwise let 'er rip
 	
 	IF fbMoveAbsCA[0].Busy = FALSE THEN
 		
+		fbMoveAbsCA[0].Jerk			:= MoverParameters.Jerk;
 		fbMoveAbsCA[0].Acceleration	:= MoverParameters.Acceleration;
 		fbMoveAbsCA[0].Deceleration	:= MoverParameters.Deceleration;
 		fbMoveAbsCA[0].Velocity		:= MoverParameters.Velocity;
@@ -533,6 +537,7 @@ ELSE	// otherwise let 'er rip
 		
 	ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
 		
+		fbMoveAbsCA[1].Jerk			:= MoverParameters.Jerk;
 		fbMoveAbsCA[1].Acceleration	:= MoverParameters.Acceleration;
 		fbMoveAbsCA[1].Deceleration	:= MoverParameters.Deceleration;
 		fbMoveAbsCA[1].Velocity		:= MoverParameters.Velocity;
@@ -578,27 +583,31 @@ ELSE
 	
 	IF fbMoveRelCA[0].Busy = FALSE THEN
 		
-		fbMoverelCA[0].Acceleration	:= MoverParameters.Acceleration;
-		fbMoverelCA[0].Deceleration	:= MoverParameters.Deceleration;
-		fbMoverelCA[0].Velocity		:= MoverParameters.Velocity;
+		fbMoveRelCA[0].Jerk			:= MoverParameters.Jerk;
 		
-		fbMoverelCA[0].distance		:= 1E100;
-		      
-		fbMoverelCA[0].BufferMode		:= mcAborting;
-		fbMoverelCA[0].Execute		:= TRUE;
-		      
-		fbMoverelCA[0].Execute		:= TRUE;		// execute this block, and...
-		fbMoverelCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
+		fbMoveRelCA[0].Acceleration	:= MoverParameters.Acceleration;
+		fbMoveRelCA[0].Deceleration	:= MoverParameters.Deceleration;
+		fbMoveRelCA[0].Velocity		:= MoverParameters.Velocity;
 		
-	ELSIF fbMoverelCA[1].Busy = FALSE THEN
+		fbMoverelCA[0].Distance		:= 1E100;
+		      
+		fbMoveRelCA[0].BufferMode		:= mcAborting;
+		fbMoveRelCA[0].Execute		:= TRUE;
+		      
+		fbMoveRelCA[0].Execute		:= TRUE;		// execute this block, and...
+		fbMoveRelCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
+		
+	ELSIF fbMoveRelCA[1].Busy = FALSE THEN
+		
+		fbMoveRelCA[1].Jerk			:= MoverParameters.Jerk;
 		
 		fbMoveRelCA[1].Acceleration	:= MoverParameters.Acceleration;
 		fbMoveRelCA[1].Deceleration	:= MoverParameters.Deceleration;
 		fbMoveRelCA[1].Velocity		:= MoverParameters.Velocity;
 		      
-		fbMoveRelCA[1].distance		:= 1e100;
+		fbMoveRelCA[1].Distance		:= 1E100;
 		      
-		fbMoveRelCA[1].BufferMode		:= mcAborting;
+		fbMoveRelCA[1].BufferMode	:= mcAborting;
 		fbMoveRelCA[1].Execute		:= TRUE;
 		      
 		fbMoveRelCA[1].Execute		:= TRUE;		// execute this block, and...
@@ -676,6 +685,20 @@ MoverParameters.Deceleration	:= Deceleration;
 // todo: reissue currently executing motion command so the update applies immediately]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SetJerk" Id="{de57e13f-25de-42a4-aec6-c6dc8b78d964}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetJerk : iMover
+VAR_INPUT
+	Jerk		: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+MoverParameters.Jerk		:= Jerk;
+
+// todo: reissue currently executing command so the update applies immediately]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SetVelocity" Id="{530483ab-165f-437b-baf5-2db027b7f044}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetVelocity : iMover
 VAR_INPUT
@@ -707,6 +730,7 @@ IF State <> 60 THEN	// if the mover is not ready & able to accept a moveabs comm
 ELSE	// otherwise let 'er rip
 	
 	fbStop.Execute			:= TRUE;
+	fbStop.Jerk				:= MoverParameters.Jerk;
 	fbStop.Deceleration		:= MoverParameters.Deceleration;
 	
 	memset( ADR( CurrentDestObjective ), 0, SIZEOF( CurrentDestObjective ));
@@ -880,6 +904,7 @@ END_IF;]]></ST>
       <LineId Id="52" Count="0" />
       <LineId Id="42" Count="0" />
       <LineId Id="40" Count="0" />
+      <LineId Id="65" Count="0" />
       <LineId Id="43" Count="2" />
       <LineId Id="47" Count="0" />
       <LineId Id="46" Count="0" />
@@ -898,9 +923,12 @@ END_IF;]]></ST>
       <LineId Id="34" Count="0" />
       <LineId Id="78" Count="0" />
       <LineId Id="100" Count="0" />
+      <LineId Id="142" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="84" Count="2" />
-      <LineId Id="88" Count="11" />
+      <LineId Id="88" Count="10" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="99" Count="0" />
       <LineId Id="101" Count="6" />
       <LineId Id="109" Count="3" />
       <LineId Id="87" Count="0" />
@@ -914,11 +942,15 @@ END_IF;]]></ST>
       <LineId Id="23" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToStation">
-      <LineId Id="126" Count="13" />
+      <LineId Id="126" Count="9" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="136" Count="3" />
       <LineId Id="201" Count="0" />
       <LineId Id="142" Count="0" />
       <LineId Id="202" Count="0" />
-      <LineId Id="144" Count="11" />
+      <LineId Id="144" Count="7" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="152" Count="3" />
       <LineId Id="203" Count="0" />
       <LineId Id="159" Count="0" />
       <LineId Id="204" Count="0" />
@@ -940,8 +972,12 @@ END_IF;]]></ST>
       <LineId Id="53" Count="0" />
       <LineId Id="56" Count="0" />
       <LineId Id="51" Count="0" />
-      <LineId Id="17" Count="3" />
-      <LineId Id="22" Count="13" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="22" Count="10" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="33" Count="2" />
       <LineId Id="37" Count="7" />
       <LineId Id="50" Count="0" />
       <LineId Id="8" Count="0" />
@@ -974,6 +1010,12 @@ END_IF;]]></ST>
       <LineId Id="13" Count="0" />
       <LineId Id="12" Count="0" />
     </LineIds>
+    <LineIds Name="Mover.SetJerk">
+      <LineId Id="7" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
     <LineIds Name="Mover.SetVelocity">
       <LineId Id="6" Count="1" />
       <LineId Id="12" Count="0" />
@@ -981,7 +1023,9 @@ END_IF;]]></ST>
       <LineId Id="32" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Stop">
-      <LineId Id="15" Count="11" />
+      <LineId Id="15" Count="10" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="26" Count="0" />
       <LineId Id="29" Count="0" />
       <LineId Id="38" Count="0" />
       <LineId Id="34" Count="0" />

@@ -103,6 +103,7 @@ CASE MainState OF
 	30:	// -------------------------------------------- Set all motion parameters
 	
 		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
+			ParameterSet.Jerk					:= 1e5;
 			ParameterSet.Acceleration			:= 1E4;		// mm/s2
 			ParameterSet.Deceleration			:= 1E4;		// mm/s2
 			ParameterSet.Direction				:= mcDirectionPositive;
@@ -285,6 +286,7 @@ SpeedTrigger[0]();
       <LineId Id="2806" Count="0" />
       <LineId Id="727" Count="3" />
       <LineId Id="1804" Count="1" />
+      <LineId Id="3456" Count="0" />
       <LineId Id="1433" Count="0" />
       <LineId Id="1422" Count="0" />
       <LineId Id="1435" Count="0" />
@@ -383,6 +385,8 @@ SpeedTrigger[0]();
       <LineId Id="2544" Count="0" />
       <LineId Id="2543" Count="0" />
       <LineId Id="592" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

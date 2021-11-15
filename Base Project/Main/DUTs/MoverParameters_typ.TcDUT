@@ -4,6 +4,7 @@
     <Declaration><![CDATA[TYPE MoverParameters_typ :
 STRUCT
 	
+	Jerk			: LREAL;					// mm/s3
 	Acceleration	: LREAL;					// mm/s2
 	Deceleration	: LREAL;					// mm/s2
 	Velocity		: LREAL;					// mm/s
