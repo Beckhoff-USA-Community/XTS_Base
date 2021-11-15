@@ -51,14 +51,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-
-
-
-
-
-
-CASE MainState OF
+      <ST><![CDATA[CASE MainState OF
 	0:	// -------------------------------------------- Idle state
 	
 		IF bCommandEnable THEN
@@ -248,10 +241,7 @@ SpeedTrigger[0]();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="3101" Count="0" />
-      <LineId Id="3019" Count="3" />
-      <LineId Id="2894" Count="0" />
-      <LineId Id="708" Count="2" />
+      <LineId Id="709" Count="1" />
       <LineId Id="1457" Count="0" />
       <LineId Id="712" Count="2" />
       <LineId Id="2624" Count="6" />

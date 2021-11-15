@@ -582,7 +582,7 @@ ELSE
 		fbMoverelCA[0].Deceleration	:= MoverParameters.Deceleration;
 		fbMoverelCA[0].Velocity		:= MoverParameters.Velocity;
 		
-		fbMoverelCA[0].distance		:= 1E300;
+		fbMoverelCA[0].distance		:= 1E100;
 		      
 		fbMoverelCA[0].BufferMode		:= mcAborting;
 		fbMoverelCA[0].Execute		:= TRUE;
@@ -596,7 +596,7 @@ ELSE
 		fbMoveRelCA[1].Deceleration	:= MoverParameters.Deceleration;
 		fbMoveRelCA[1].Velocity		:= MoverParameters.Velocity;
 		      
-		fbMoveRelCA[1].distance		:= 1E300;
+		fbMoveRelCA[1].distance		:= 1e100;
 		      
 		fbMoveRelCA[1].BufferMode		:= mcAborting;
 		fbMoveRelCA[1].Execute		:= TRUE;
