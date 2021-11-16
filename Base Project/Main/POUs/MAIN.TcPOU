@@ -8,7 +8,7 @@ VAR
 	// helper, state, index variables
 	i						: UINT;
 	n						: UINT;
-	MainState				: INT;
+	MainState				: MainState_enum;
 	MainCommands			: MainCommands_typ;
 	
 	StationTimer			: ARRAY [0..GVL.NUM_STATIONS] OF TON;
@@ -169,6 +169,11 @@ CASE MainState OF
 		
 		
 		
+				
+		
+		
+		
+		
 		// Station 1 & 2 Logic
 		IF Station[1].MoverInPosition AND Station[2].MoverInPosition THEN
 			StationTimer[1]( IN := TRUE, PT := T#500MS );
@@ -192,6 +197,9 @@ CASE MainState OF
 		
 		
 		
+		
+		
+		
 		// Position Trigger 0 Logic
 		IF PositionTrigger[0].MoverPassedPosition THEN
 			PositionTrigger[1].RegisterMover( PositionTrigger[0].CurrentMover );	
@@ -201,6 +209,10 @@ CASE MainState OF
 			
 			PositionTrigger[0].UnregisterCurrent();
 		END_IF
+		
+		
+		
+		
 		
 		
 		// Position Trigger 1 Logic
@@ -214,6 +226,10 @@ CASE MainState OF
 		END_IF
 		
 		
+		
+		
+		
+		
 		// Speed Trigger 0 Logic
 		IF SpeedTrigger[0].MoverInVelocity THEN
 			
@@ -222,6 +238,10 @@ CASE MainState OF
 			
 			SpeedTrigger[0].UnregisterCurrent();
 		END_IF
+		
+		
+		
+		
 		
 		
 		// Station 3 Logic
@@ -234,6 +254,10 @@ CASE MainState OF
 		ELSE
 			StationTimer[3]( IN := FALSE );
 		END_IF
+		
+		
+		
+		
 		
 		IF MainCommands.Stop THEN
 			MainState		:= MS_STOPPING;
@@ -341,7 +365,20 @@ SpeedTrigger[0]();
       <LineId Id="3642" Count="0" />
       <LineId Id="3534" Count="1" />
       <LineId Id="3669" Count="0" />
-      <LineId Id="3671" Count="90" />
+      <LineId Id="3671" Count="22" />
+      <LineId Id="3831" Count="2" />
+      <LineId Id="3835" Count="1" />
+      <LineId Id="3694" Count="21" />
+      <LineId Id="3837" Count="2" />
+      <LineId Id="3716" Count="12" />
+      <LineId Id="3840" Count="3" />
+      <LineId Id="3729" Count="10" />
+      <LineId Id="3844" Count="3" />
+      <LineId Id="3740" Count="10" />
+      <LineId Id="3848" Count="3" />
+      <LineId Id="3751" Count="9" />
+      <LineId Id="3852" Count="3" />
+      <LineId Id="3761" Count="0" />
       <LineId Id="3670" Count="0" />
       <LineId Id="3762" Count="0" />
       <LineId Id="3764" Count="1" />

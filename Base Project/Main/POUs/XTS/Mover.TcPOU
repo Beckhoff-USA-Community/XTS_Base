@@ -46,6 +46,7 @@ VAR
 
 	fbMoveAbsCA				: ARRAY[0..1] OF MC_MoveAbsoluteCA;
 	fbAddToGroup			: MC_AddAxisToGroup;
+	fbRemoveFromGroup		: MC_RemoveAxisFromGroup;
 	
 	fbGroupStatus			: MC_GroupReadStatus;
 	fbGroupEnable			: MC_GroupEnable;
