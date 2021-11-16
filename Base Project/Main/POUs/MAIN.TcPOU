@@ -8,12 +8,11 @@ VAR
 	// helper, state, index variables
 	i						: UINT;
 	n						: UINT;
-	MainState				: UINT;
+	MainState				: MainState_enum;
+	MainCommands			: MainCommands_typ;
 	
 	StationTimer			: ARRAY [0..GVL.NUM_STATIONS] OF TON;
 	nextStation				: USINT := 2;
-	
-	bInitialMovement		: BOOL;
 	
 	lowVelocity				: LREAL := 200; // mm/s
 	mediumVelocity			: LREAL := 800;	// mm/s
@@ -36,13 +35,7 @@ VAR
 	SpeedTrigger			: ARRAY [0..0] OF SpeedTrigger;
 	Zone					: ARRAY [0..3] OF Zone;	
 	
-	// User commands									
-	bCommandEnable			: BOOL;	
-		
-	allMoversEnabled: BOOL;
-	
-	MoveToStation: INT;
-	bStorage: BOOL;
+	allMoversEnabled: BOOL;;
 END_VAR
 
 VAR_INPUT
@@ -51,15 +44,53 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
 
+
 CASE MainState OF
-	0:	// -------------------------------------------- Idle state
+	MS_DISABLED:	// ------------------------------------------------------- IDLE STATE
 	
-		IF bCommandEnable THEN
-			MainState		:= 10;
+	
+		IF MainCommands.Enable THEN
+			MainState		:= MS_INITIALIZING_MOVERS;
 		END_IF
-		
-	10: // -------------------------------------------- Init Stations, Position Triggers
 	
+		
+	MS_INITIALIZING_MOVERS: 	// --------------------------------------- SET MOVER MOTION PARAMETERS
+	
+	
+		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
+			ParameterSet.Jerk					:= 1E5;		// mm/s3
+			ParameterSet.Acceleration			:= 1E4;		// mm/s2
+			ParameterSet.Deceleration			:= 1E4;		// mm/s2
+			ParameterSet.Velocity				:= 1E3;		// mm/s
+			ParameterSet.Direction				:= mcDirectionPositive;
+
+			Mover[i].MotionParameters			:= ParameterSet;
+		END_FOR
+		
+		MainState			:= MS_ENABLING_MOVERS;	
+		
+	
+	MS_ENABLING_MOVERS:	// ----------------------------------------------- RESETTING AND ENABLING AXES
+	
+	
+		allMoversEnabled		:= TRUE; // default ...
+		
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+			Mover[i].Enable		:= TRUE;
+			
+			IF Mover[i].Ready = FALSE THEN
+				allMoversEnabled	:= FALSE;
+			END_IF
+		END_FOR
+		
+		IF allMoversEnabled THEN
+			MainState		:= MS_INITIALIZING_OBJECTIVES;
+		END_IF		
+		
+	
+	MS_INITIALIZING_OBJECTIVES:	// --------------------------------------- WRITING OBJECTIVE PARAMETERS
+	
+		
 		Station[0].TrackPosition			:= 0;
 		Station[1].TrackPosition			:= 1500;
 		
@@ -84,45 +115,14 @@ CASE MainState OF
 		Zone[3].StartPosition				:= 2750;
 		Zone[3].EndPosition					:= 3750;
 					
-		MainState		:= 20;
+		MainState		:= MS_ENABLED;
 		
-	20: // -------------------------------------------- Test enable state
-		
-		allMoversEnabled		:= TRUE; // default ...
-		
-		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-			Mover[i].Enable		:= TRUE;
+	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
+	
+		IF MainCommands.Start THEN
 			
-			IF Mover[i].Ready = FALSE THEN
-				allMoversEnabled	:= FALSE;
-			END_IF
-		END_FOR
+			// ===== RECOVERY LOGIC =====
 		
-		IF allMoversEnabled THEN
-			MainState		:= 30;
-		END_IF			
-	
-	
-	30:	// -------------------------------------------- Set all motion parameters
-	
-		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
-			ParameterSet.Jerk					:= 1e5;
-			ParameterSet.Acceleration			:= 1E4;		// mm/s2
-			ParameterSet.Deceleration			:= 1E4;		// mm/s2
-			ParameterSet.Direction				:= mcDirectionPositive;
-			ParameterSet.Velocity				:= 1E3;		// mm/s
-
-			Mover[i].MotionParameters			:= ParameterSet;
-		END_FOR
-		
-		//bInitialMovement	:= TRUE;
-		MainState			:= 40;
-	
-	40:	// -------------------------------------------- Ready for commands
-	
-		// Move all shuttles to specified stations
-		IF bInitialMovement THEN
-			
 			FOR i := 0 TO GVL.NUM_MOVERS - 1 DO				
 				Zone[0].RegisterMover( Mover[i] );
 				Zone[1].RegisterMover( Mover[i] );
@@ -136,10 +136,19 @@ CASE MainState OF
 			Zone[2].GetMoverList().MoveAllToStation( Station[0] );
 			Zone[3].GetMoverList().MoveAllToStation( Station[0] );
 		
-			bInitialMovement	:= FALSE;
-		END_IF
+			// ===== END =====
 		
-		// ============================================ Example traffic logic below
+			MainState	:= MS_RUN;
+			
+		ELSIF MainCommands.Disable THEN
+			MainState	:= MS_DISABLING;
+		END_IF
+	
+	MS_RUN: 	// ------------------------------------------------------- OPERATING
+	
+	
+	
+
 		
 		
 		// Station 0 Logic
@@ -155,48 +164,146 @@ CASE MainState OF
 			StationTimer[0]( IN := FALSE );
 		END_IF
 		
-		//Station 0 trigger
-	(*	IF PositionTrigger[0].MoverPassedPosition THEN
-			positionTrigger[0].CurrentMover.MoveVelocity( nGoalVelocity );
-			PositionTrigger[1].RegisterMover( PositionTrigger[0].CurrentMover );
+		
+		
+				
+		
+		
+		
+		
+		// Station 1 & 2 Logic
+		IF Station[1].MoverInPosition AND Station[2].MoverInPosition THEN
+			StationTimer[1]( IN := TRUE, PT := T#500MS );
+			
+			MoverList.RegisterMover( Station[1].CurrentMover );
+			MoverList.RegisterMover( Station[2].CurrentMover );
+
+			IF StationTimer[1].Q THEN
+				
+				PositionTrigger[0].RegisterMover( Station[1].CurrentMover );
+				PositionTrigger[0].RegisterMover( Station[2].CurrentMover );
+				
+				MoverList.SetAllVelocity( mediumVelocity );
+				MoverList.MoveAllToStation( Station[3] );
+
+				MoverList.UnregisterAll();				
+			END_IF
+		ELSE
+			StationTimer[1]( IN := FALSE );
+		END_IF
+		
+		
+		
+		
+		
+		
+		// Position Trigger 0 Logic
+		IF PositionTrigger[0].MoverPassedPosition THEN
+			PositionTrigger[1].RegisterMover( PositionTrigger[0].CurrentMover );	
+		
+			PositionTrigger[0].CurrentMover.SetVelocity( lowVelocity );
+			PositionTrigger[0].CurrentMover.MoveToStation( Station[3] );			
+			
 			PositionTrigger[0].UnregisterCurrent();
 		END_IF
-*)
-		//Station 1 Trigger
-		IF positionTrigger[1].MoverPassedPosition THEN
-			PositionTrigger[1].CurrentMover.SetAcceleration(4000);
-			PositionTrigger[1].CurrentMover.SetVelocity(4000);
-			bStorage :=UDINT_TO_BOOL(PositionTrigger[1].CurrentMover.AxisReference.NcToPlc.AxisId MOD 2);
-			IF bStorage THEN
-				IF bStorage THEN
-					Station[0].UnregisterMover(PositionTrigger[1].CurrentMover);
-					PositionTrigger[1].CurrentMover.MoveToStation(Station[1]);
-				ELSE
-					positionTrigger[1].CurrentMover.MoveToStation(Station[0]);	
-				END_IF
+		
+		
+		
+		
+		
+		
+		// Position Trigger 1 Logic
+		IF PositionTrigger[1].MoverPassedPosition THEN
+			SpeedTrigger[0].RegisterMover( PositionTrigger[1].CurrentMover );		
+			
+			PositionTrigger[1].CurrentMover.SetVelocity( highVelocity );
+			PositionTrigger[1].CurrentMover.MoveToStation( Station[3] );
+			
+			PositionTrigger[1].UnregisterCurrent();
+		END_IF
+		
+		
+		
+		
+		
+		
+		// Speed Trigger 0 Logic
+		IF SpeedTrigger[0].MoverInVelocity THEN
+			
+			SpeedTrigger[0].CurrentMover.SetVelocity( mediumVelocity );
+			SpeedTrigger[0].CurrentMover.MoveToStation( Station[3] );
+			
+			SpeedTrigger[0].UnregisterCurrent();
+		END_IF
+		
+		
+		
+		
+		
+		
+		// Station 3 Logic
+		IF Station[3].MoverInPosition THEN
+			StationTimer[3]( IN := TRUE, PT := T#250MS );
+			
+			IF StationTimer[3].Q THEN
+				Station[3].CurrentMover.MoveToStation( Station[0] );
 			END_IF
+		ELSE
+			StationTimer[3]( IN := FALSE );
 		END_IF
 		
-		//Station 1 logic
-		IF Station[1].MoverInPosition THEN
-			Station[1].CurrentMover.MoveToStation( Station[0] );
-		END_IF
 		
-
-	50: // -------------------------------------------- Disabling
+		
+		
+		
+		IF MainCommands.Stop THEN
+			MainState		:= MS_STOPPING;
+		ELSIF MainCommands.Disable THEN
+			MainState		:= MS_STOPPING;
+		END_IF
 	
-		FOR i := 0 TO GVL.NUM_MOVERS-1 DO
-			Mover[i].Enable		:= FALSE;
-		END_FOR 
-		MainState				:= 0;		
+	MS_STOPPING:	// --------------------------------------------------- STOPPING MOVERS
+	
+		Mover[0].GroupStop();
+		// todo needs confirmation that all movers have stopped
+		
+		// todo needs to deregister all objectives
+		
+		MainState		:= MS_ENABLED;
+		
+		IF MainCommands.Disable THEN
+			MainState	:= MS_DISABLING;
+		ELSE
+			MainState	:= MS_ENABLED;
+		END_IF
+	
+	MS_DISABLING:	// --------------------------------------------------- DISABLING MOVERS
+	
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+			
+			Mover[i].Enable	:=  FALSE;
+		
+		END_FOR
+		
+		IF (* all movers are disabled *) TRUE THEN
+			
+			MainState		:= MS_DISABLED;
+		
+		END_IF
+	
+	MS_ERROR:		// --------------------------------------------------- ERRORSTATE
+	
+	MS_DEBUG:	// ------------------------------------------------------- DEV USE ONLY
 		
 END_CASE;
 
 
 
+
+
 // Call all mover function blocks cyclically
 FOR i := 0 TO GVL.NUM_MOVERS-1 DO
-	Mover[i]( GroupReference := GroupRef );
+	Mover[i].Cyclic( GroupRef );
 END_FOR;
 
 // Call all station function blocks cyclically
@@ -211,83 +318,89 @@ PositionTrigger[1].Cyclic();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="709" Count="1" />
+      <LineId Id="3502" Count="1" />
+      <LineId Id="710" Count="0" />
       <LineId Id="1457" Count="0" />
-      <LineId Id="712" Count="2" />
-      <LineId Id="2624" Count="6" />
-      <LineId Id="2633" Count="0" />
-      <LineId Id="2636" Count="1" />
-      <LineId Id="2635" Count="0" />
-      <LineId Id="2638" Count="0" />
-      <LineId Id="2766" Count="1" />
-      <LineId Id="3385" Count="11" />
-      <LineId Id="3413" Count="0" />
-      <LineId Id="2632" Count="0" />
-      <LineId Id="2824" Count="2" />
-      <LineId Id="2837" Count="0" />
-      <LineId Id="2836" Count="0" />
-      <LineId Id="2839" Count="0" />
-      <LineId Id="2828" Count="0" />
-      <LineId Id="2841" Count="3" />
-      <LineId Id="2829" Count="0" />
-      <LineId Id="2834" Count="0" />
-      <LineId Id="2830" Count="1" />
-      <LineId Id="2845" Count="0" />
-      <LineId Id="2806" Count="0" />
-      <LineId Id="727" Count="3" />
-      <LineId Id="1804" Count="1" />
-      <LineId Id="3456" Count="0" />
-      <LineId Id="1433" Count="0" />
-      <LineId Id="1422" Count="0" />
-      <LineId Id="1435" Count="0" />
-      <LineId Id="731" Count="2" />
-      <LineId Id="2537" Count="0" />
-      <LineId Id="734" Count="0" />
-      <LineId Id="743" Count="1" />
-      <LineId Id="2525" Count="0" />
-      <LineId Id="2527" Count="1" />
-      <LineId Id="3397" Count="1" />
-      <LineId Id="3404" Count="0" />
-      <LineId Id="3406" Count="2" />
-      <LineId Id="3403" Count="0" />
-      <LineId Id="3399" Count="1" />
-      <LineId Id="3409" Count="3" />
-      <LineId Id="2531" Count="1" />
-      <LineId Id="2524" Count="0" />
-      <LineId Id="2376" Count="1" />
-      <LineId Id="2385" Count="0" />
-      <LineId Id="2395" Count="0" />
-      <LineId Id="2409" Count="0" />
-      <LineId Id="2386" Count="1" />
-      <LineId Id="2391" Count="2" />
-      <LineId Id="3506" Count="3" />
-      <LineId Id="2497" Count="0" />
-      <LineId Id="2388" Count="0" />
-      <LineId Id="2462" Count="0" />
-      <LineId Id="2378" Count="0" />
-      <LineId Id="2410" Count="1" />
-      <LineId Id="3557" Count="4" />
-      <LineId Id="3556" Count="0" />
-      <LineId Id="2412" Count="0" />
-      <LineId Id="3562" Count="0" />
-      <LineId Id="3566" Count="0" />
-      <LineId Id="3573" Count="0" />
-      <LineId Id="3572" Count="0" />
-      <LineId Id="3567" Count="3" />
-      <LineId Id="3574" Count="1" />
+      <LineId Id="3522" Count="0" />
+      <LineId Id="3552" Count="0" />
+      <LineId Id="3599" Count="0" />
+      <LineId Id="3553" Count="1" />
+      <LineId Id="3548" Count="0" />
+      <LineId Id="3527" Count="0" />
+      <LineId Id="3600" Count="0" />
+      <LineId Id="3528" Count="0" />
+      <LineId Id="3584" Count="0" />
+      <LineId Id="3601" Count="0" />
+      <LineId Id="3586" Count="0" />
+      <LineId Id="3588" Count="2" />
+      <LineId Id="3598" Count="0" />
+      <LineId Id="3591" Count="0" />
+      <LineId Id="3593" Count="3" />
+      <LineId Id="3585" Count="0" />
+      <LineId Id="3602" Count="0" />
+      <LineId Id="3529" Count="0" />
+      <LineId Id="3531" Count="0" />
+      <LineId Id="3570" Count="0" />
+      <LineId Id="3603" Count="0" />
+      <LineId Id="3572" Count="11" />
       <LineId Id="3571" Count="0" />
-      <LineId Id="3564" Count="1" />
-      <LineId Id="3576" Count="0" />
-      <LineId Id="3578" Count="3" />
-      <LineId Id="3577" Count="0" />
-      <LineId Id="1418" Count="0" />
-      <LineId Id="1438" Count="1" />
-      <LineId Id="1455" Count="0" />
-      <LineId Id="1454" Count="0" />
-      <LineId Id="760" Count="1" />
+      <LineId Id="3605" Count="0" />
+      <LineId Id="3532" Count="1" />
+      <LineId Id="3606" Count="0" />
+      <LineId Id="3609" Count="0" />
+      <LineId Id="3634" Count="0" />
+      <LineId Id="3610" Count="23" />
+      <LineId Id="3607" Count="0" />
+      <LineId Id="3636" Count="3" />
+      <LineId Id="3650" Count="0" />
+      <LineId Id="3666" Count="1" />
+      <LineId Id="3655" Count="10" />
+      <LineId Id="3651" Count="3" />
+      <LineId Id="3648" Count="1" />
+      <LineId Id="3643" Count="1" />
+      <LineId Id="3642" Count="0" />
+      <LineId Id="3534" Count="1" />
+      <LineId Id="3669" Count="0" />
+      <LineId Id="3671" Count="22" />
+      <LineId Id="3831" Count="2" />
+      <LineId Id="3835" Count="1" />
+      <LineId Id="3694" Count="21" />
+      <LineId Id="3837" Count="2" />
+      <LineId Id="3716" Count="12" />
+      <LineId Id="3840" Count="3" />
+      <LineId Id="3729" Count="10" />
+      <LineId Id="3844" Count="3" />
+      <LineId Id="3740" Count="10" />
+      <LineId Id="3848" Count="3" />
+      <LineId Id="3751" Count="9" />
+      <LineId Id="3852" Count="3" />
+      <LineId Id="3761" Count="0" />
+      <LineId Id="3670" Count="0" />
+      <LineId Id="3762" Count="0" />
+      <LineId Id="3764" Count="1" />
+      <LineId Id="3763" Count="0" />
+      <LineId Id="3536" Count="1" />
+      <LineId Id="3766" Count="2" />
+      <LineId Id="3771" Count="0" />
+      <LineId Id="3779" Count="0" />
+      <LineId Id="3778" Count="0" />
+      <LineId Id="3770" Count="0" />
+      <LineId Id="3772" Count="2" />
+      <LineId Id="3776" Count="1" />
+      <LineId Id="3775" Count="0" />
+      <LineId Id="3540" Count="1" />
+      <LineId Id="3780" Count="2" />
+      <LineId Id="3784" Count="1" />
+      <LineId Id="3783" Count="0" />
+      <LineId Id="3786" Count="2" />
+      <LineId Id="3791" Count="1" />
+      <LineId Id="3789" Count="0" />
+      <LineId Id="3542" Count="3" />
       <LineId Id="2547" Count="0" />
       <LineId Id="2546" Count="0" />
-      <LineId Id="763" Count="4" />
+      <LineId Id="763" Count="1" />
+      <LineId Id="3793" Count="1" />
+      <LineId Id="765" Count="2" />
       <LineId Id="2548" Count="0" />
       <LineId Id="878" Count="1" />
       <LineId Id="881" Count="1" />

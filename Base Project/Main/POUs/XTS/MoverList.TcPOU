@@ -38,7 +38,7 @@ END_FOR]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveAllToStation" Id="{7e8649c5-afae-438c-9d7c-0849d9778d85}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD MoveAllToStation : MoverList
+      <Declaration><![CDATA[METHOD MoveAllToStation : iMoverList
 VAR_INPUT
 	
 	DestinationStation	: REFERENCE TO Station;
@@ -61,7 +61,7 @@ END_FOR]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAllAcceleration" Id="{e13ce26b-c052-44c4-b781-edc2323e6bd8}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD SetAllAcceleration : MoverList
+      <Declaration><![CDATA[METHOD SetAllAcceleration : iMoverList
 VAR_INPUT
 	
 	Acceleration		: LREAL;
@@ -84,7 +84,7 @@ END_FOR]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAllDeceleration" Id="{b4a74589-da0f-40fe-9d74-9df176d68d9e}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD SetAllDeceleration : MoverList
+      <Declaration><![CDATA[METHOD SetAllDeceleration : iMoverList
 VAR_INPUT
 	
 	Deceleration		: LREAL;
@@ -106,7 +106,7 @@ END_FOR]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAllVelocity" Id="{cee9569c-3982-4955-90f1-8e5baf09c135}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD SetAllVelocity : MoverList
+      <Declaration><![CDATA[METHOD SetAllVelocity : iMoverList
 VAR_INPUT
 	
 	Velocity	: LREAL;	
@@ -127,30 +127,8 @@ FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) -
 END_FOR]]></ST>
       </Implementation>
     </Method>
-    <Method Name="StopAll" Id="{52e8beec-48ea-4912-8399-13b65c4fd5d8}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD StopAll : MoverList
-VAR_INPUT
-END_VAR
-
-VAR
-	i	: USINT;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
-
-// Stop all valid movers in the list
-FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
-	
-	IF THIS^.TrackedMovers[i] <> 0 THEN
-		THIS^.TrackedMovers[i]^.Stop();
-	END_IF
-
-END_FOR]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="UnregisterAll" Id="{9f7a3d8e-3975-4fa4-8579-c54f77146104}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD UnregisterAll : BOOL
+      <Declaration><![CDATA[METHOD UnregisterAll : iMoverList
 VAR_INPUT
 END_VAR
 VAR
@@ -211,14 +189,6 @@ END_FOR]]></ST>
       <LineId Id="16" Count="2" />
       <LineId Id="15" Count="0" />
       <LineId Id="14" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.StopAll">
-      <LineId Id="12" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="14" Count="1" />
-      <LineId Id="18" Count="2" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.UnregisterAll">
       <LineId Id="9" Count="1" />

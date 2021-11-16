@@ -17,6 +17,12 @@
     <LibraryReferences>{f62d2014-bde9-4d9c-b3c2-882851159b27}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DUTs\MainCommands_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MainState_enum.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MoverCommandType_enum.TcDUT">
       <SubType>Code</SubType>
     </Compile>
