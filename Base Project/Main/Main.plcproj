@@ -45,12 +45,6 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\MAIN_1.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\storage.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\XTS\Mover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
