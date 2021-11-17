@@ -26,7 +26,7 @@ END_VAR
           <ST><![CDATA[
 CurrentMover 	REF= 0;
 
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+FOR i := 0 TO SIZEOF( TrackedMovers[0] ) / SIZEOF( TrackedMovers ) - 1 DO
 	
 	IF TrackedMovers[i] <> 0 AND_THEN ( ABS(TrackedMovers[i]^.AxisReference.NcToPlc.ActVelo) >= ThresholdVelocity ) THEN
 		CurrentMover	REF= TrackedMovers[i]^;
@@ -87,8 +87,9 @@ END_VAR
     </LineIds>
     <LineIds Name="SpeedTrigger.CurrentMover.Get">
       <LineId Id="13" Count="0" />
-      <LineId Id="5" Count="1" />
+      <LineId Id="5" Count="0" />
       <LineId Id="2" Count="0" />
+      <LineId Id="17" Count="0" />
       <LineId Id="7" Count="0" />
       <LineId Id="9" Count="3" />
       <LineId Id="8" Count="0" />

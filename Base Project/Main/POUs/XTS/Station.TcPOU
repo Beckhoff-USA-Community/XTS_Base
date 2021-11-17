@@ -29,7 +29,7 @@ END_VAR
 // default to unassigned
 CurrentMover REF= 0;
 
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+FOR i := 0 TO SIZEOF( TrackedMovers[0] ) / SIZEOF( TrackedMovers ) - 1 DO
 	
 	// In order to deal with the rollover, we need to evaluate distance between congruence classes
 	// e.g. On a 4m track, if the Station is at 0.34mm and the Mover is at 3999.8mm, then this is considered 'in position'	
@@ -135,8 +135,8 @@ END_VAR
       <LineId Id="6" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="2" Count="0" />
-      <LineId Id="8" Count="0" />
       <LineId Id="7" Count="0" />
+      <LineId Id="54" Count="0" />
       <LineId Id="24" Count="0" />
       <LineId Id="36" Count="0" />
       <LineId Id="38" Count="0" />
