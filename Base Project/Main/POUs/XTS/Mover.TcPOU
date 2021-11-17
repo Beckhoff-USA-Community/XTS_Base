@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-{attribute 'hide_all_locals'}
+//{attribute 'hide_all_locals'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
 VAR_INPUT
 	
@@ -123,7 +123,7 @@ CASE State OF
 		IF fbReset.Done THEN
 			State			:= 20;
 		ELSIF fbReset.Error THEN
-			ErrorID			:= fbPower.ErrorID;
+			ErrorID			:= fbReset.ErrorID;
 			ErrorOrigin		:= CONCAT( InstancePath, '.fbReset' );
 			State			:= 999;		
 		END_IF
