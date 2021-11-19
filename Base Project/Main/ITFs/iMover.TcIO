@@ -29,16 +29,6 @@ PROPERTY CurrestDestinationPosition : LREAL]]></Declaration>
 VAR_INPUT
 END_VAR]]></Declaration>
     </Method>
-    <Property Name="MotionParameters" Id="{54e0be71-d3bc-452c-b6a4-43e2a6665d79}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY PUBLIC MotionParameters : MotionParameters_typ]]></Declaration>
-      <Get Name="Get" Id="{654efe72-5d86-4ed2-99d7-31579760d7f7}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-      <Set Name="Set" Id="{82b894a8-be13-4598-8eda-da63ea5eb622}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
     <Method Name="MoveToPosition" Id="{fa224fdd-1f94-4da8-9995-83f4c5355ce6}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
 VAR_INPUT
