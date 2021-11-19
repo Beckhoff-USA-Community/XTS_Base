@@ -29,7 +29,7 @@ END_VAR
 // default to unassigned
 CurrentMover REF= 0;
 
-FOR i := 0 TO SIZEOF( TrackedMovers[0] ) / SIZEOF( TrackedMovers ) - 1 DO
+FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( TrackedMovers[0] ) - 1 DO
 	
 	// In order to deal with the rollover, we need to evaluate distance between congruence classes
 	// e.g. On a 4m track, if the Station is at 0.34mm and the Mover is at 3999.8mm, then this is considered 'in position'	
@@ -63,7 +63,7 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 	IF TrackedMovers[i] <> 0 AND_THEN TrackedMovers[i]^.CurrentMoveType <> MoverCommandType_enum.MOVETYPE_STATION THEN
 		TrackedMovers[i]	:= 0;
 	// This mover is no longer destined for this specific station. Comparing instance path seems to be the best way to do this comparison?
-	ELSIF TrackedMovers[i] <> 0 AND_THEN TrackedMovers[i]^.Objective <> InstancePath THEN
+	ELSIF TrackedMovers[i] <> 0 AND_THEN TrackedMovers[i]^.CurrentObjective <> InstancePath THEN
 		TrackedMovers[i]	:= 0;
 	END_IF
 
@@ -86,7 +86,7 @@ END_VAR
 // default to false
 MoverInPosition		:= FALSE;
 
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( TrackedMovers[0] ) - 1 DO
 	
 	// In order to deal with the rollover, we need to evaluate distance between congruence classes
 	// e.g. On a 4m track, if the Station is at 0.34 mm and the Mover is at 3999.8mm, then this is considered 'in position' 
@@ -166,8 +166,8 @@ END_VAR
       <LineId Id="5" Count="0" />
       <LineId Id="21" Count="0" />
       <LineId Id="20" Count="0" />
+      <LineId Id="51" Count="0" />
       <LineId Id="6" Count="0" />
-      <LineId Id="2" Count="0" />
       <LineId Id="28" Count="3" />
       <LineId Id="44" Count="0" />
       <LineId Id="38" Count="0" />

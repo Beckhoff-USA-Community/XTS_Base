@@ -1417,6 +1417,10 @@ External Setpoint Generation:
 	</Project>
 	<Mappings>
 		<OwnerA Name="Main Instance">
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 1">
+				<Link VarA="PlcTask Inputs^MAIN.Mover[0].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.Mover[0].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
 			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 2">
 				<Link VarA="PlcTask Inputs^MAIN.Mover[1].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^MAIN.Mover[1].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>

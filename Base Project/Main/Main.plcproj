@@ -26,7 +26,10 @@
     <Compile Include="DUTs\MoverCommandType_enum.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\MoverParameters_typ.TcDUT">
+    <Compile Include="DUTs\MotionParameters_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MoverState_enum.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GVLs\GVL.TcGVL">

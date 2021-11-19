@@ -24,7 +24,7 @@ VAR
 	
 	MoverList				: MoverList;
 	
-	ParameterSet			: MoverParameters_typ;
+	ParameterSet			: MotionParameters_typ;
 	
 	// Objectives & Parameters
 	
@@ -76,7 +76,7 @@ CASE MainState OF
 		allMoversEnabled		:= TRUE; // default ...
 		
 		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-			Mover[i].Enable		:= TRUE;
+			Mover[i].Enable();
 			
 			IF Mover[i].Ready = FALSE THEN
 				allMoversEnabled	:= FALSE;
@@ -114,6 +114,8 @@ CASE MainState OF
 		
 		Zone[3].StartPosition				:= 2750;
 		Zone[3].EndPosition					:= 3750;
+		
+		nGoalVelocity						:= 1000;
 					
 		MainState		:= MS_ENABLED;
 		
@@ -281,8 +283,8 @@ CASE MainState OF
 	
 		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 			
-			Mover[i].Enable	:=  FALSE;
-		
+			Mover[i].Disable();
+			
 		END_FOR
 		
 		IF (* all movers are disabled *) TRUE THEN
@@ -342,14 +344,19 @@ PositionTrigger[1].Cyclic();
       <LineId Id="3531" Count="0" />
       <LineId Id="3570" Count="0" />
       <LineId Id="3603" Count="0" />
-      <LineId Id="3572" Count="11" />
+      <LineId Id="3572" Count="2" />
+      <LineId Id="3576" Count="0" />
+      <LineId Id="3857" Count="0" />
+      <LineId Id="3577" Count="6" />
       <LineId Id="3571" Count="0" />
       <LineId Id="3605" Count="0" />
       <LineId Id="3532" Count="1" />
       <LineId Id="3606" Count="0" />
       <LineId Id="3609" Count="0" />
       <LineId Id="3634" Count="0" />
-      <LineId Id="3610" Count="23" />
+      <LineId Id="3610" Count="21" />
+      <LineId Id="3860" Count="1" />
+      <LineId Id="3632" Count="1" />
       <LineId Id="3607" Count="0" />
       <LineId Id="3636" Count="3" />
       <LineId Id="3650" Count="0" />
@@ -387,8 +394,9 @@ PositionTrigger[1].Cyclic();
       <LineId Id="3770" Count="0" />
       <LineId Id="3772" Count="2" />
       <LineId Id="3776" Count="1" />
-      <LineId Id="3775" Count="0" />
-      <LineId Id="3540" Count="1" />
+      <LineId Id="3540" Count="0" />
+      <LineId Id="3859" Count="0" />
+      <LineId Id="3541" Count="0" />
       <LineId Id="3780" Count="2" />
       <LineId Id="3784" Count="1" />
       <LineId Id="3783" Count="0" />
@@ -405,12 +413,7 @@ PositionTrigger[1].Cyclic();
       <LineId Id="878" Count="1" />
       <LineId Id="881" Count="1" />
       <LineId Id="2549" Count="0" />
-      <LineId Id="2538" Count="1" />
-      <LineId Id="2542" Count="0" />
-      <LineId Id="2544" Count="0" />
-      <LineId Id="2543" Count="0" />
-      <LineId Id="592" Count="0" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="2538" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

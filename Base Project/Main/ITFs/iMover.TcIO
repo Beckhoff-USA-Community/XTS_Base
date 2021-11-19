@@ -11,9 +11,15 @@ PROPERTY CurrentMoveType : MoverCommandType_enum]]></Declaration>
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="DestinationPosition" Id="{fd336655-1b12-4c85-8800-888e616a0190}" FolderPath="Properties\">
+    <Property Name="CurrentObjective" Id="{8ebf7eff-2b0b-45f9-8604-dc48a6c2dec6}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentObjective : String]]></Declaration>
+      <Get Name="Get" Id="{1c8cee4d-d0d3-4396-aef2-3ace7cdfef3e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="CurrestDestinationPosition" Id="{fd336655-1b12-4c85-8800-888e616a0190}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY DestinationPosition : LREAL]]></Declaration>
+PROPERTY CurrestDestinationPosition : LREAL]]></Declaration>
       <Get Name="Get" Id="{3855cb66-22eb-461a-b098-b3ca2fe0f4f3}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
@@ -25,7 +31,7 @@ END_VAR]]></Declaration>
     </Method>
     <Property Name="MotionParameters" Id="{54e0be71-d3bc-452c-b6a4-43e2a6665d79}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY PUBLIC MotionParameters : MoverParameters_typ]]></Declaration>
+PROPERTY PUBLIC MotionParameters : MotionParameters_typ]]></Declaration>
       <Get Name="Get" Id="{654efe72-5d86-4ed2-99d7-31579760d7f7}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
@@ -57,12 +63,6 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Property Name="Objective" Id="{8ebf7eff-2b0b-45f9-8604-dc48a6c2dec6}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Objective : String]]></Declaration>
-      <Get Name="Get" Id="{1c8cee4d-d0d3-4396-aef2-3ace7cdfef3e}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
     <Property Name="Payload" Id="{8debfc3a-ede6-452a-8f81-b4825ce39b3b}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Payload : USINT]]></Declaration>
       <Get Name="Get" Id="{80534c46-bb57-4e05-bca0-e1e88d880aac}">
