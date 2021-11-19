@@ -36,6 +36,7 @@ VAR
 	Zone					: ARRAY [0..3] OF Zone;	
 	
 	allMoversEnabled: BOOL;;
+	
 END_VAR
 
 VAR_INPUT
@@ -43,7 +44,6 @@ VAR_INPUT
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-
 
 CASE MainState OF
 	MS_DISABLED:	// ------------------------------------------------------- IDLE STATE
@@ -158,9 +158,12 @@ CASE MainState OF
 			StationTimer[0]( IN := TRUE, PT := T#250MS );
 			
 			IF StationTimer[0].Q THEN
-				Station[0].CurrentMover.SetAcceleration(( nGoalVelocity-Station[0].CurrentMover.AxisReference.NcToPlc.ActVelo)/((2*(PositionTrigger[0].TrackPosition - Station[0].TrackPosition))/(Station[0].CurrentMover.AxisReference.NcToPlc.ActVelo+nGoalVelocity)));
 				PositionTrigger[0].RegisterMover( Station[0].CurrentMover );
-				Station[0].CurrentMover.movevelocity( nGoalVelocity);
+				Station[0].CurrentMover.MoveVelocity( 1000 );	
+			
+				//Station[0].CurrentMover.SetAcceleration(( nGoalVelocity-Station[0].CurrentMover.AxisReference.NcToPlc.ActVelo)/((2*(PositionTrigger[0].TrackPosition - Station[0].TrackPosition))/(Station[0].CurrentMover.AxisReference.NcToPlc.ActVelo+nGoalVelocity)));
+				//PositionTrigger[0].RegisterMover( Station[0].CurrentMover );
+				//Station[0].CurrentMover.movevelocity( nGoalVelocity);
 			END_IF
 		ELSE
 			StationTimer[0]( IN := FALSE );
@@ -320,7 +323,7 @@ PositionTrigger[1].Cyclic();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="3502" Count="1" />
+      <LineId Id="3503" Count="0" />
       <LineId Id="710" Count="0" />
       <LineId Id="1457" Count="0" />
       <LineId Id="3522" Count="0" />
@@ -368,7 +371,10 @@ PositionTrigger[1].Cyclic();
       <LineId Id="3642" Count="0" />
       <LineId Id="3534" Count="1" />
       <LineId Id="3669" Count="0" />
-      <LineId Id="3671" Count="22" />
+      <LineId Id="3671" Count="8" />
+      <LineId Id="3937" Count="0" />
+      <LineId Id="3935" Count="1" />
+      <LineId Id="3680" Count="13" />
       <LineId Id="3831" Count="2" />
       <LineId Id="3835" Count="1" />
       <LineId Id="3694" Count="21" />
