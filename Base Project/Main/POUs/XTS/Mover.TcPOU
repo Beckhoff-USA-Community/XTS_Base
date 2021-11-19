@@ -33,6 +33,7 @@ VAR
 	
 	internalCurrentDestPosition		: LREAL;	// Track position of the current motion destination;
 	internalCurrentDestObjective	: STRING;	// Instance path of the current destination objective
+	internalCurrentDestStation		: REFERENCE TO Station;		// Reference to a destination station, if that is the current movetype
 
 	internalState			: MoverState_enum;		// Internal state variable
 	
@@ -352,8 +353,7 @@ CASE internalState OF
 		// the Execute needs to remain High until the command has fully completed.
 		ELSIF fbGroupStop.Done THEN
 			fbGroupStop.Execute			:= FALSE;
-		 
-	
+
 		// And catch all internal function block errors
 		ELSIF fbMoveAbsCA[0].Error THEN
 			ErrorID					:= fbMoveAbsCA[0].ErrorID;
@@ -576,11 +576,11 @@ ELSE	// otherwise let 'er rip
 	
 END_IF
 
-internalCurrentMoveType		:= MoverCommandType_enum.MOVETYPE_POSITION;
+internalCurrentMoveType		:= MOVETYPE_POSITION;
 internalCurrentDestPosition := DestinationPosition;
 
 memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
-]]></ST>
+internalCurrentDestStation	REF= 0;]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveToStation" Id="{73370b80-491c-4017-a420-f08c462d830e}" FolderPath="Methods\">
@@ -633,15 +633,17 @@ ELSE	// otherwise let 'er rip
 		 
 	END_IF
 	
+	// Set the current destination object to the instance path of the objective, or 0 if unassigned
+	internalCurrentDestPosition		:= DestinationStation.TrackPosition;
+	internalCurrentDestObjective	:= SEL( __ISVALIDREF( DestinationStation ), '', DestinationStation.InstancePath );
+	internalCurrentDestStation		REF= DestinationStation;
+	internalCurrentMoveType			:= MOVETYPE_STATION;
+	
+	// Register this mover with the station, so the station knows this mover is incoming
+	DestinationStation.RegisterMover( THIS^ );
+	
 END_IF
 
-// Set the current destination object to the instance path of the objective, or 0 if unassigned
-internalCurrentDestPosition		:= DestinationStation.TrackPosition;
-internalCurrentDestObjective	:= SEL( __ISVALIDREF( DestinationStation ), '', DestinationStation.InstancePath );
-internalCurrentMoveType			:= MoverCommandType_enum.MOVETYPE_STATION;
-
-// Register this mover with the station, so the station knows this mover is incoming
-DestinationStation.RegisterMover( THIS^ );
 ]]></ST>
       </Implementation>
     </Method>
@@ -697,9 +699,11 @@ ELSE
 
 END_IF
 
-internalCurrentMoveType		:= MoverCommandType_enum.MOVETYPE_VELOCITY;
+internalCurrentMoveType		:= MOVETYPE_VELOCITY;
 internalCurrentDestPosition := 1E300;
-memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));]]></ST>
+
+memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
+internalCurrentDestStation	REF= 0;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Payload" Id="{5caf95a6-ad6c-448d-8947-8c8c07ab0a26}" FolderPath="Properties\">
@@ -725,6 +729,28 @@ internalPayload	:= Payload;]]></ST>
         </Implementation>
       </Set>
     </Property>
+    <Method Name="ReissueCommand" Id="{195ecbe2-3d92-4d60-b9b5-7e1a3292ea5b}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ReissueCommand : iMover
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+CASE internalCurrentMoveType OF
+	MOVETYPE_NONE:
+		// No current command to reissue	
+	MOVETYPE_POSITION:
+		THIS^.MoveToPosition( internalCurrentDestPosition );
+	MOVETYPE_STATION:
+		THIS^.MoveToStation( internalCurrentDestStation );
+	MOVETYPE_VELOCITY:
+		THIS^.MoveVelocity( internalMotionParameters.Velocity );	
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SetAcceleration" Id="{6c3e67ff-faff-4c11-8768-1de83c7995e4}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAcceleration : iMover
 VAR_INPUT
@@ -735,7 +761,7 @@ END_VAR
         <ST><![CDATA[
 internalMotionParameters.Acceleration		:= Acceleration;
 
-// todo: reissue currently executing motion command so the update applies immediately]]></ST>
+THIS^.ReissueCommand();]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetDeceleration" Id="{05a8542e-78cf-4f19-864b-98da64430703}" FolderPath="Methods\">
@@ -748,7 +774,7 @@ END_VAR
         <ST><![CDATA[
 internalMotionParameters.Deceleration	:= Deceleration;
 
-// todo: reissue currently executing motion command so the update applies immediately]]></ST>
+THIS^.ReissueCommand();]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetJerk" Id="{de57e13f-25de-42a4-aec6-c6dc8b78d964}" FolderPath="Methods\">
@@ -762,7 +788,7 @@ END_VAR
 
 internalMotionParameters.Jerk		:= Jerk;
 
-// todo: reissue currently executing command so the update applies immediately]]></ST>
+THIS^.ReissueCommand();]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetVelocity" Id="{530483ab-165f-437b-baf5-2db027b7f044}" FolderPath="Methods\">
@@ -776,7 +802,7 @@ END_VAR
 
 internalMotionParameters.Velocity	:= Velocity; 
 
-// todo: reissue currently executing motion command so the update applies immediately]]></ST>
+THIS^.ReissueCommand();]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="Mover">
@@ -803,7 +829,8 @@ internalMotionParameters.Velocity	:= Velocity;
       <LineId Id="161" Count="3" />
       <LineId Id="166" Count="53" />
       <LineId Id="322" Count="0" />
-      <LineId Id="220" Count="94" />
+      <LineId Id="220" Count="17" />
+      <LineId Id="239" Count="75" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Disable">
@@ -869,7 +896,7 @@ internalMotionParameters.Velocity	:= Velocity;
       <LineId Id="11" Count="0" />
       <LineId Id="151" Count="3" />
       <LineId Id="127" Count="0" />
-      <LineId Id="23" Count="0" />
+      <LineId Id="161" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToStation">
       <LineId Id="126" Count="2" />
@@ -886,11 +913,11 @@ internalMotionParameters.Velocity	:= Velocity;
       <LineId Id="203" Count="0" />
       <LineId Id="159" Count="0" />
       <LineId Id="204" Count="0" />
-      <LineId Id="160" Count="8" />
-      <LineId Id="197" Count="1" />
-      <LineId Id="219" Count="2" />
-      <LineId Id="199" Count="0" />
-      <LineId Id="179" Count="1" />
+      <LineId Id="160" Count="6" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="229" Count="7" />
+      <LineId Id="167" Count="1" />
+      <LineId Id="197" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveVelocity">
@@ -917,7 +944,9 @@ internalMotionParameters.Velocity	:= Velocity;
       <LineId Id="72" Count="0" />
       <LineId Id="71" Count="0" />
       <LineId Id="73" Count="0" />
+      <LineId Id="78" Count="0" />
       <LineId Id="48" Count="0" />
+      <LineId Id="79" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Payload.Get">
       <LineId Id="9" Count="1" />
@@ -927,28 +956,37 @@ internalMotionParameters.Velocity	:= Velocity;
       <LineId Id="12" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="Mover.ReissueCommand">
+      <LineId Id="11" Count="0" />
+      <LineId Id="14" Count="3" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="21" Count="4" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="Mover.SetAcceleration">
       <LineId Id="7" Count="0" />
       <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="0" />
+      <LineId Id="19" Count="0" />
       <LineId Id="8" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetDeceleration">
       <LineId Id="7" Count="0" />
       <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="0" />
+      <LineId Id="18" Count="0" />
       <LineId Id="12" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetJerk">
       <LineId Id="7" Count="1" />
       <LineId Id="5" Count="0" />
-      <LineId Id="10" Count="0" />
+      <LineId Id="15" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetVelocity">
       <LineId Id="6" Count="1" />
       <LineId Id="12" Count="0" />
-      <LineId Id="37" Count="0" />
+      <LineId Id="42" Count="0" />
       <LineId Id="32" Count="0" />
     </LineIds>
   </POU>

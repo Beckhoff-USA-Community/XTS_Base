@@ -60,7 +60,7 @@ END_VAR]]></Declaration>
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 	
 	// This mover is no longer destined for any station
-	IF TrackedMovers[i] <> 0 AND_THEN TrackedMovers[i]^.CurrentMoveType <> MoverCommandType_enum.MOVETYPE_STATION THEN
+	IF TrackedMovers[i] <> 0 AND_THEN TrackedMovers[i]^.CurrentMoveType <> MOVETYPE_STATION THEN
 		TrackedMovers[i]	:= 0;
 	// This mover is no longer destined for this specific station. Comparing instance path seems to be the best way to do this comparison?
 	ELSIF TrackedMovers[i] <> 0 AND_THEN TrackedMovers[i]^.CurrentObjective <> InstancePath THEN
