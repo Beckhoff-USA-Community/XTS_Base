@@ -36,9 +36,7 @@ VAR
 	Zone					: ARRAY [0..3] OF Zone;	
 	
 	allMoversEnabled: BOOL;;
-	myTrig: BOOL;
-	myTrig2: BOOL;
-	newVelo: LREAL;
+	
 END_VAR
 
 VAR_INPUT
@@ -46,31 +44,6 @@ VAR_INPUT
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-
-
-IF myTrig THEN
-	
-	FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-		Mover[i].MoveVelocity( 1000 );	
-	END_FOR;	
-
-	myTrig		:= FALSE;
-END_IF
-
-
-IF myTrig2 THEN
-
-	FOR i := 0 TO gvl.NUM_MOVERS - 1 DO
-		Mover[i].SetVelocity( newVelo );
-	END_FOR;	
-
-	myTrig2		:= FALSE;
-END_IF
-
-
-
-
-
 
 CASE MainState OF
 	MS_DISABLED:	// ------------------------------------------------------- IDLE STATE
@@ -350,25 +323,6 @@ PositionTrigger[1].Cyclic();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="3502" Count="0" />
-      <LineId Id="3901" Count="2" />
-      <LineId Id="3908" Count="0" />
-      <LineId Id="3915" Count="0" />
-      <LineId Id="3918" Count="0" />
-      <LineId Id="3916" Count="0" />
-      <LineId Id="3929" Count="0" />
-      <LineId Id="3911" Count="0" />
-      <LineId Id="3909" Count="0" />
-      <LineId Id="3921" Count="1" />
-      <LineId Id="3920" Count="0" />
-      <LineId Id="3930" Count="0" />
-      <LineId Id="3923" Count="0" />
-      <LineId Id="3932" Count="0" />
-      <LineId Id="3931" Count="0" />
-      <LineId Id="3927" Count="0" />
-      <LineId Id="3926" Count="0" />
-      <LineId Id="3924" Count="0" />
-      <LineId Id="3904" Count="3" />
       <LineId Id="3503" Count="0" />
       <LineId Id="710" Count="0" />
       <LineId Id="1457" Count="0" />
