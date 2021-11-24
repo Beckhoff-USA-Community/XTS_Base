@@ -29,18 +29,18 @@ END_VAR
 // default to unassigned
 CurrentMover REF= 0;
 
-FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( TrackedMovers[0] ) - 1 DO
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[0] ) - 1 DO
 	
 	// In order to deal with the rollover, we need to evaluate distance between congruence classes
 	// e.g. On a 4m track, if the Station is at 0.34mm and the Mover is at 3999.8mm, then this is considered 'in position'	
 
-	IF TrackedMovers[i] <> 0 THEN
+	IF internalTrackedMovers[i] <> 0 THEN
 		
 		// difference	:= ABS( MODABS( TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH ) - THIS^.TrackPosition );
-		difference	:= ABS( TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos - TrackPosition );
+		difference	:= ABS( internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos - TrackPosition );
 		
 		IF MIN( difference, GVL.TRACK_LENGTH - difference ) < 1.0 THEN
-			CurrentMover	REF= TrackedMovers[i]^;
+			CurrentMover	REF= internalTrackedMovers[i]^;
 		END_IF
 	END_IF
 
@@ -60,11 +60,11 @@ END_VAR]]></Declaration>
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 	
 	// This mover is no longer destined for any station
-	IF TrackedMovers[i] <> 0 AND_THEN TrackedMovers[i]^.CurrentMoveType <> MOVETYPE_STATION THEN
-		TrackedMovers[i]	:= 0;
+	IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.CurrentMoveType <> MOVETYPE_STATION THEN
+		internalTrackedMovers[i]	:= 0;
 	// This mover is no longer destined for this specific station. Comparing instance path seems to be the best way to do this comparison?
-	ELSIF TrackedMovers[i] <> 0 AND_THEN TrackedMovers[i]^.CurrentObjective <> InstancePath THEN
-		TrackedMovers[i]	:= 0;
+	ELSIF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.CurrentObjective <> InstancePath THEN
+		internalTrackedMovers[i]	:= 0;
 	END_IF
 
 END_FOR]]></ST>
@@ -86,14 +86,14 @@ END_VAR
 // default to false
 MoverInPosition		:= FALSE;
 
-FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( TrackedMovers[0] ) - 1 DO
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[0] ) - 1 DO
 	
 	// In order to deal with the rollover, we need to evaluate distance between congruence classes
 	// e.g. On a 4m track, if the Station is at 0.34 mm and the Mover is at 3999.8mm, then this is considered 'in position' 
 	
 	// todo: make in-position tolerance adjustable. add condition that mover is stopped?
-	IF TrackedMovers[i] <> 0 THEN
-		difference	:= ABS( MODABS( TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH ) - THIS^.TrackPosition );
+	IF internalTrackedMovers[i] <> 0 THEN
+		difference	:= ABS( MODABS( internalTrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH ) - THIS^.TrackPosition );
 	
 		IF MIN( difference, GVL.TRACK_LENGTH - difference ) < 1.0 THEN
 			MoverInPosition		:= TRUE;

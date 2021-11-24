@@ -26,10 +26,10 @@ END_VAR
           <ST><![CDATA[
 CurrentMover 	REF= 0;
 
-FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( TrackedMovers[0] ) - 1 DO
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[0] ) - 1 DO
 	
-	IF TrackedMovers[i] <> 0 AND_THEN ( ABS(TrackedMovers[i]^.AxisReference.NcToPlc.ActVelo) >= ThresholdVelocity ) THEN
-		CurrentMover	REF= TrackedMovers[i]^;
+	IF internalTrackedMovers[i] <> 0 AND_THEN ( ABS(internalTrackedMovers[i]^.AxisReference.NcToPlc.ActVelo) >= ThresholdVelocity ) THEN
+		CurrentMover	REF= internalTrackedMovers[i]^;
 	END_IF
 		
 END_FOR]]></ST>
@@ -48,9 +48,9 @@ END_VAR
           <ST><![CDATA[
 MoverInVelocity		:= FALSE;
 
-FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( TrackedMovers[0] ) - 1 DO
+FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( internalTrackedMovers[0] ) - 1 DO
 	
-	IF TrackedMovers[i] <> 0 AND_THEN ( ABS(TrackedMovers[i]^.AxisReference.NcToPlc.ActVelo) >= ThresholdVelocity ) THEN
+	IF internalTrackedMovers[i] <> 0 AND_THEN ( ABS(internalTrackedMovers[i]^.AxisReference.NcToPlc.ActVelo) >= ThresholdVelocity ) THEN
 		MoverInVelocity		:= TRUE;		
 	END_IF
 	

@@ -49,23 +49,23 @@ whichMover			:= 0;
 
 
 FOR i := 0 TO GVL.NUM_MOVERS-1 DO	
-	IF TrackedMovers[i] <> 0 THEN
+	IF internalTrackedMovers[i] <> 0 THEN
 		
 	
 		
 	
 	
 		// Determine if a position rollover occured in the last cycle
-		IF TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns > moverLastTurns[i] THEN
+		IF internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns > moverLastTurns[i] THEN
 			positiveRolloverDetected		:= TRUE;
-		ELSIF TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns < moverLastTurns[i] THEN
+		ELSIF internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns < moverLastTurns[i] THEN
 			negativeRolloverDetected		:= TRUE;
 		ELSE
 			positiveRolloverDetected		:= FALSE;
 			negativeRolloverDetected		:= FALSE;
 		END_IF
 		// Set value for next cycle
-		moverLastTurns[i]	:= TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns;
+		moverLastTurns[i]	:= internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns;
 	
 		
 		// Can combine with above stanza
@@ -84,7 +84,7 @@ FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 		IF TriggerDirection = MC_Positive_Direction THEN
 			
 			IF moverLastPos[i] < internalTrackPosition AND
-				TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos >= internalTrackPosition THEN
+				internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos >= internalTrackPosition THEN
 				// Position trigger event detected
 				someMoverPast	:= TRUE;
 				whichMover		:= i;
@@ -93,7 +93,7 @@ FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 		ELSIF TriggerDirection = MC_Negative_Direction THEN
 			
 			IF moverLastPos[i] > internalTrackPosition AND
-				TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos <= internalTrackPosition THEN
+				internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos <= internalTrackPosition THEN
 				// Position trigger event detected
 				someMoverPast	:= TRUE;
 				whichMover		:= i;
@@ -103,7 +103,7 @@ FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 
 		
 		
-		moverLastPos[i]			:= TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos;
+		moverLastPos[i]			:= internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos;
 		
 		
 		
@@ -127,7 +127,7 @@ END_FOR
 
 IF someMoverPast THEN
 	internalMoverPastPosition		:= TRUE;
-	internalCurrentMover			:= TrackedMovers[whichMover];
+	internalCurrentMover			:= internalTrackedMovers[whichMover];
 ELSE
 	internalMoverPastPosition		:= FALSE;
 	internalCurrentMover			:= 0;		

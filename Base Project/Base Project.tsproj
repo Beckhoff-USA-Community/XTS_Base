@@ -5229,11 +5229,11 @@ and will return to Group State Standby when the situation permits.
 							</Value>
 							<Value>
 								<Name>MoverDistance</Name>
-								<Value>60</Value>
+								<Value>100</Value>
 							</Value>
 							<Value>
 								<Name>PositionOffset</Name>
-								<Value>40</Value>
+								<Value>10</Value>
 							</Value>
 							<Value>
 								<Name>PositionNoiseBandwidth</Name>
@@ -5241,11 +5241,11 @@ and will return to Group State Standby when the situation permits.
 							</Value>
 							<Value>
 								<Name>RandomStartUpBandwidth</Name>
-								<Value>500</Value>
+								<Value>0</Value>
 							</Value>
 							<Value>
 								<Name>PositionStartUpSimulationMode</Name>
-								<EnumText>UseOffsetAndDistance</EnumText>
+								<EnumText>UseRandomDistribution</EnumText>
 							</Value>
 							<Value>
 								<Name>MoverIdStartUpSimulationMode</Name>

@@ -19,6 +19,15 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
+    <Method Name="MoveAllVelocity" Id="{be6cc2f7-a0ce-45ef-a956-f19486620100}">
+      <Declaration><![CDATA[METHOD MoveAllVelocity : iMoverList
+VAR_INPUT
+	
+	Velocity		: LREAL;
+	
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="SetAllAcceleration" Id="{455895b5-97e6-495e-9cb5-6646f55e97b6}">
       <Declaration><![CDATA[METHOD SetAllAcceleration : iMoverList
 VAR_INPUT
@@ -36,6 +45,24 @@ VAR_INPUT
 	
 END_VAR]]></Declaration>
     </Method>
+    <Method Name="SetAllDirection" Id="{4bfb0de3-28b7-4b24-a865-2cf8e65fcd48}">
+      <Declaration><![CDATA[METHOD SetAllDirection : iMoverList
+VAR_INPUT
+	
+	Direction		: Tc3_Mc3Definitions.MC_DIRECTION;
+	
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="SetAllJerk" Id="{a91832af-959e-462a-a423-5a2f3601faa8}">
+      <Declaration><![CDATA[METHOD SetAllJerk : iMoverList
+VAR_INPUT
+	
+	Jerk			: LREAL;
+
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="SetAllVelocity" Id="{2027ef8a-c9a4-4e95-be1e-4ccdc273c80d}">
       <Declaration><![CDATA[METHOD SetAllVelocity : iMoverList
 VAR_INPUT
@@ -44,6 +71,12 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
+    <Property Name="TrackedMovers" Id="{c1d0d30a-4686-4f53-a96b-53d64c99ec16}">
+      <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover]]></Declaration>
+      <Get Name="Get" Id="{d3d3bfad-1918-438f-8ad5-aa73cc840431}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="UnregisterAll" Id="{77dd6571-5452-49cc-817d-10e46daccff7}">
       <Declaration><![CDATA[METHOD UnregisterAll : iMoverList
 VAR_INPUT

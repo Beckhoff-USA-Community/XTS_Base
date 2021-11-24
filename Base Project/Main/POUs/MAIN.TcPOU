@@ -5,42 +5,48 @@
 VAR
 	
 
-	// helper, state, index variables
-	i						: UINT;
-	n						: UINT;
-	MainState				: MainState_enum;
-	MainCommands			: MainCommands_typ;
+	// ========= Example Application Variables =========
 	
-	StationTimer			: ARRAY [0..GVL.NUM_STATIONS] OF TON;
 	nextStation				: USINT := 2;
 	
-	lowVelocity				: LREAL := 200; // mm/s
-	mediumVelocity			: LREAL := 800;	// mm/s
-	highVelocity			: LREAL := 2000; // mm/s
+	lowVelocity				: LREAL := 200; 	// mm/s
+	mediumVelocity			: LREAL := 800;		// mm/s
+	highVelocity			: LREAL := 2000; 	// mm/s
+
 	
-	// linked NC handles
-	GroupRef				: AXES_GROUP_REF;
-	Mover					: ARRAY [0..GVL.NUM_MOVERS-1] OF Mover;
+	// ========= Helper, State, & Index Variables =========
 	
-	MoverList				: MoverList;
+	i						: UINT;					// index variable; gets reused in various FOR loops
+	n						: UINT;					// secondary index variable, for enabling movers
+	allMoversEnabled		: BOOL;					// helper flag for verifying enable status of all movers
 	
+	StationTimer			: ARRAY [0..GVL.NUM_STATIONS] OF TON;		// timer blocks, for station dwells
+	
+	MainState				: MainState_enum;		// enumeration for the Main state machine
+	MainCommands			: MainCommands_typ;		// command struct for cycling thru the state machine
+	
+		
+	// ========= Linked NC Variables & References =========
+	
+	
+	GroupRef				: AXES_GROUP_REF;							// linked to the Collision Avoidance group and passed cyclically to every Mover object
+	Mover					: ARRAY [0..GVL.NUM_MOVERS-1] OF Mover;		// instantiation of Mover objects. Matches the number of movers on the system
+	
+	
+	// ========= Objectives & Parameters =========
+	
+	
+	MoverList				: MoverList;						
 	ParameterSet			: MotionParameters_typ;
-	
-	// Objectives & Parameters
-	
-	// Todo initialize this in the code with the prop Setter, not by addressing an internal variable
 		
 	Station					: ARRAY [0..GVL.NUM_STATIONS-1] OF Station;		
-	PositionTrigger			: ARRAY [0..1] OF PositionTrigger;		
-	SpeedTrigger			: ARRAY [0..0] OF SpeedTrigger;
+	PositionTrigger			: ARRAY [0..3] OF PositionTrigger;		
+	SpeedTrigger			: ARRAY [0..1] OF SpeedTrigger;
 	Zone					: ARRAY [0..3] OF Zone;	
 	
-	allMoversEnabled: BOOL;;
-	
-END_VAR
 
-VAR_INPUT
-	nGoalVelocity: INT;
+	myTrig: BOOL;
+	TestMoverList: iMoverList;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -90,18 +96,19 @@ CASE MainState OF
 	
 	MS_INITIALIZING_OBJECTIVES:	// --------------------------------------- WRITING OBJECTIVE PARAMETERS
 	
+		// Initialize station positions
+		Station[0].TrackPosition		:= 0;
+		Station[1].TrackPosition		:= 750;
+		Station[2].TrackPosition		:= 1200;
+		Station[3].TrackPosition		:= 1300;
+		Station[4].TrackPosition		:= 1400;
 		
-		Station[0].TrackPosition			:= 0;
-		Station[1].TrackPosition			:= 1500;
+		PositionTrigger[0].TrackPosition	:= 1500;
+		PositionTrigger[1].TrackPosition	:= 2000;
+		PositionTrigger[2].TrackPosition	:= 3500;
+		PositionTrigger[3].TrackPosition	:= 4000;
 		
-		
-		PositionTrigger[0].TrackPosition	:= 500;
-		PositionTrigger[0].TriggerDirection	:= mcDirectionPositive;
-		
-		PositionTrigger[1].TrackPosition	:= 1000;
-		PositionTrigger[1].TriggerDirection := mcDirectionPositive;
-		
-		SpeedTrigger[0].ThresholdVelocity	:= 1900;
+		SpeedTrigger[0].ThresholdVelocity	:= 3000;
 		
 		Zone[0].StartPosition				:= 3750;
 		Zone[0].EndPosition					:= 750;
@@ -114,12 +121,19 @@ CASE MainState OF
 		
 		Zone[3].StartPosition				:= 2750;
 		Zone[3].EndPosition					:= 3750;
-		
-		nGoalVelocity						:= 1000;
-					
-		MainState		:= MS_ENABLED;
+							
+		MainState			:= MS_ENABLED;
 		
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
+	
+		IF myTrig THEN
+			//Zone[0].CurrentMoverList.MoveAllToPosition( 1000 );
+			Zone[0].GetMoverList().MoveAllToPosition( 1000 );	
+		
+		
+			// PositionTrigger[0].RegisterMoverList( Zone[0].CurrentMoverList );
+			myTrig		:= FALSE;
+		END_IF
 	
 		IF MainCommands.Start THEN
 			
@@ -132,12 +146,9 @@ CASE MainState OF
 				Zone[3].RegisterMover( Mover[i] );			
 			END_FOR
 			
-			Zone[0].GetMoverList().MoveAllToStation( Station[0] );
-			Zone[1].GetMoverList().MoveAllToStation( Station[0] );
+			Zone[0].CurrentMoverList.SetAllVelocity( 1500 );
+			Zone[1].CurrentMoverList.SetAllVelocity( 100 );
 			
-			Zone[2].GetMoverList().MoveAllToStation( Station[0] );
-			Zone[3].GetMoverList().MoveAllToStation( Station[0] );
-		
 			// ===== END =====
 		
 			MainState	:= MS_RUN;
@@ -354,18 +365,30 @@ PositionTrigger[1].Cyclic();
       <LineId Id="3571" Count="0" />
       <LineId Id="3605" Count="0" />
       <LineId Id="3532" Count="1" />
-      <LineId Id="3606" Count="0" />
-      <LineId Id="3609" Count="0" />
-      <LineId Id="3634" Count="0" />
-      <LineId Id="3610" Count="21" />
-      <LineId Id="3860" Count="1" />
-      <LineId Id="3632" Count="1" />
+      <LineId Id="4023" Count="1" />
+      <LineId Id="4033" Count="0" />
+      <LineId Id="4035" Count="3" />
+      <LineId Id="3611" Count="0" />
+      <LineId Id="4040" Count="5" />
+      <LineId Id="3620" Count="11" />
+      <LineId Id="3860" Count="0" />
+      <LineId Id="3633" Count="0" />
       <LineId Id="3607" Count="0" />
-      <LineId Id="3636" Count="3" />
+      <LineId Id="3636" Count="0" />
+      <LineId Id="4053" Count="1" />
+      <LineId Id="4059" Count="0" />
+      <LineId Id="4065" Count="0" />
+      <LineId Id="4060" Count="1" />
+      <LineId Id="4055" Count="0" />
+      <LineId Id="4058" Count="0" />
+      <LineId Id="4056" Count="0" />
+      <LineId Id="3637" Count="2" />
       <LineId Id="3650" Count="0" />
       <LineId Id="3666" Count="1" />
-      <LineId Id="3655" Count="10" />
-      <LineId Id="3651" Count="3" />
+      <LineId Id="3655" Count="4" />
+      <LineId Id="4047" Count="2" />
+      <LineId Id="3987" Count="0" />
+      <LineId Id="3652" Count="2" />
       <LineId Id="3648" Count="1" />
       <LineId Id="3643" Count="1" />
       <LineId Id="3642" Count="0" />

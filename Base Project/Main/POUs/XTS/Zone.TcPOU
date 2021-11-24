@@ -18,6 +18,50 @@ END_VAR
     </Implementation>
     <Folder Name="Methods" Id="{c12d9132-64a8-40b2-b1d9-3d115c20d531}" />
     <Folder Name="Properties" Id="{90c52b3d-9a13-4439-896a-3c5f735e1216}" />
+    <Property Name="CurrentMoverList" Id="{bdb402e8-3fc4-4870-8522-9febbbfee6ac}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentMoverList : iMoverList]]></Declaration>
+      <Get Name="Get" Id="{493a9c92-8844-4767-8212-d00703bc0f1d}">
+        <Declaration><![CDATA[VAR
+	i		: USINT;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+internalMoverList.UnregisterAll();
+
+FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( internalTrackedMovers[0] ) - 1 DO
+	IF internalTrackedMovers[i] <> 0 THEN
+		
+		IF internalStartPosition < internalEndPosition AND
+			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition AND
+			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
+			// Zone does NOT contain the rollover point, and DOES contain the mover	
+	
+			internalMoverList.RegisterMover( internalTrackedMovers[i]^ );
+			
+		ELSIF internalStartPosition > internalEndPosition AND
+			( internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition OR
+			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition ) THEN
+			// Zone DOES contain the rollover point, and DOES contain the mover	
+						
+			internalMoverList.RegisterMover( internalTrackedMovers[i]^ );
+			
+		ELSE
+			// Either the zone doesn't contain this mover,
+			// Or the StartPosition and EndPosition are coincident. Either way, add no movers
+		END_IF
+	
+	
+	END_IF	
+END_FOR
+
+
+CurrentMoverList	:= internalMoverList;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="EndPosition" Id="{0a5f097e-96c3-43a1-b536-04f368f24ca3}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY EndPosition : LREAL]]></Declaration>
       <Get Name="Get" Id="{a512e404-14bd-4b1c-9731-3bba7de351df}">
@@ -42,35 +86,33 @@ internalEndPosition		:= EndPosition;]]></ST>
         </Implementation>
       </Set>
     </Property>
-    <Method Name="GetMoverList" Id="{5ed7b86f-db74-48a1-b0d9-71e0559bd125}" FolderPath="Methods\">
+    <Method Name="GetMoverList" Id="{dffe793b-2863-47a1-8062-e3c6e34d8aa5}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD GetMoverList : iMoverList
-VAR_INPUT
-END_VAR
-
 VAR
-	i			: USINT;
-END_VAR]]></Declaration>
+	i		: USINT;
+END_VAR
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
 internalMoverList.UnregisterAll();
 
-FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( TrackedMovers[0] ) - 1 DO
-	IF TrackedMovers[i] <> 0 THEN
+FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( internalTrackedMovers[0] ) - 1 DO
+	IF internalTrackedMovers[i] <> 0 THEN
 		
 		IF internalStartPosition < internalEndPosition AND
-			TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition AND
-			TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
+			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition AND
+			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
 			// Zone does NOT contain the rollover point, and DOES contain the mover	
 	
-			internalMoverList.RegisterMover( TrackedMovers[i]^ );
+			internalMoverList.RegisterMover( internalTrackedMovers[i]^ );
 			
 		ELSIF internalStartPosition > internalEndPosition AND
-			( TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition OR
-			TrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition ) THEN
+			( internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition OR
+			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition ) THEN
 			// Zone DOES contain the rollover point, and DOES contain the mover	
 						
-			internalMoverList.RegisterMover( TrackedMovers[i]^ );
+			internalMoverList.RegisterMover( internalTrackedMovers[i]^ );
 			
 		ELSE
 			// Either the zone doesn't contain this mover,
@@ -82,7 +124,8 @@ FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( TrackedMovers[0] ) - 1 DO
 END_FOR
 
 
-GetMoverList	:= internalMoverList;]]></ST>
+GetMoverList	:= internalMoverList;
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="StartPosition" Id="{aacc7e02-3b0c-44c1-b85c-a6193164623c}" FolderPath="Properties\">
@@ -134,6 +177,12 @@ END_IF]]></ST>
     <LineIds Name="Zone">
       <LineId Id="9" Count="0" />
     </LineIds>
+    <LineIds Name="Zone.CurrentMoverList.Get">
+      <LineId Id="10" Count="29" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="42" Count="0" />
+    </LineIds>
     <LineIds Name="Zone.EndPosition.Get">
       <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
@@ -145,22 +194,8 @@ END_IF]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Zone.GetMoverList">
-      <LineId Id="6" Count="2" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="11" Count="2" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="15" Count="1" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="43" Count="1" />
-      <LineId Id="19" Count="3" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="24" Count="6" />
+      <LineId Id="6" Count="31" />
       <LineId Id="5" Count="0" />
-      <LineId Id="35" Count="1" />
-      <LineId Id="34" Count="0" />
     </LineIds>
     <LineIds Name="Zone.StartPosition.Get">
       <LineId Id="5" Count="1" />

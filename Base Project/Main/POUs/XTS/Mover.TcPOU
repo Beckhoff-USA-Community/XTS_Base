@@ -777,6 +777,19 @@ internalMotionParameters.Deceleration	:= Deceleration;
 THIS^.ReissueCommand();]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SetDirection" Id="{e0c3c5b2-5259-4ab4-9ff7-1ecaf9015b31}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetDirection : iMover
+VAR_INPUT
+	Direction		: Tc3_Mc3Definitions.MC_Direction;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+internalMotionParameters.Direction		:= Direction;
+
+THIS^.ReissueCommand();]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SetJerk" Id="{de57e13f-25de-42a4-aec6-c6dc8b78d964}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetJerk : iMover
 VAR_INPUT
@@ -794,7 +807,7 @@ THIS^.ReissueCommand();]]></ST>
     <Method Name="SetVelocity" Id="{530483ab-165f-437b-baf5-2db027b7f044}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetVelocity : iMover
 VAR_INPUT
-	Velocity		: LREAL;
+	Velocity		: LREAL;		// Updates Mover's internal velocity parameter. Takes effect immediately. [mm/s]
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -976,6 +989,12 @@ THIS^.ReissueCommand();]]></ST>
       <LineId Id="5" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetDirection">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetJerk">
       <LineId Id="7" Count="1" />

@@ -28,10 +28,10 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 // For every valid mover in the list, pass it a MoveToPosition command
-FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
 	
-	IF THIS^.TrackedMovers[i] <> 0 THEN
-		THIS^.TrackedMovers[i]^.MoveToPosition( DestinationPosition );
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.MoveToPosition( DestinationPosition );
 	END_IF
 
 END_FOR]]></ST>
@@ -51,10 +51,33 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 // For every valid mover in the list, pass it a MoveToStation command
-FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[0] ) - 1 DO
 	
-	IF THIS^.TrackedMovers[i] <> 0 THEN
-		THIS^.TrackedMovers[i]^.MoveToStation( DestinationStation ) ;
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.MoveToStation( DestinationStation ) ;
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAllVelocity" Id="{374fc66e-e454-42d2-84eb-da107ea5cc5b}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD MoveAllVelocity : iMoverList
+VAR_INPUT
+	
+	Velocity		: LREAL;
+
+END_VAR
+VAR
+	i	: USINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// For every valid mover in the list, pass it a MoveVelocity command
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+	
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.MoveVelocity( Velocity );
 	END_IF
 
 END_FOR]]></ST>
@@ -74,10 +97,10 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 // For every valid mover in the list, set the Acceleration values
-FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
 	
-	IF THIS^.TrackedMovers[i] <> 0 THEN
-		THIS^.TrackedMovers[i]^.SetAcceleration( Acceleration );
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.SetAcceleration( Acceleration );
 	END_IF
 
 END_FOR]]></ST>
@@ -96,10 +119,55 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 // For every valid mover in the list, set the Deceleration values
-FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
 	
-	IF THIS^.TrackedMovers[i] <> 0 THEN
-		THIS^.TrackedMovers[i]^.SetDeceleration( Deceleration );
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.SetDeceleration( Deceleration );
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetAllDirection" Id="{61dc841d-816d-4126-817b-0edc70c354b4}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetAllDirection : iMoverList
+VAR_INPUT
+	
+	Direction		: Tc3_Mc3Definitions.MC_DIRECTION;
+	
+END_VAR
+VAR
+	i	: USINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// For every valid mover in the list, update the internal Direction parameter
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+	
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.SetDirection( Direction );
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetAllJerk" Id="{713a2faa-4d72-4826-b835-2931c44827b9}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetAllJerk : iMoverList
+VAR_INPUT
+	
+	Jerk			: LREAL;
+
+END_VAR
+VAR
+	i	: USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// For every valid mover in the list, update the internal Jerk Parameter
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+	
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.SetJerk( Jerk );
 	END_IF
 
 END_FOR]]></ST>
@@ -118,10 +186,10 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 // For every valid mover in the list, set the Velocity values
-FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
 	
-	IF THIS^.TrackedMovers[i] <> 0 THEN
-		THIS^.TrackedMovers[i]^.SetVelocity( Velocity );
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.SetVelocity( Velocity );
 	END_IF
 
 END_FOR]]></ST>
@@ -137,9 +205,9 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
-FOR i := 0 TO SIZEOF( THIS^.TrackedMovers ) / SIZEOF( THIS^.TrackedMovers[i] ) - 1 DO
-	IF THIS^.TrackedMovers[i] <> 0 THEN
-		THIS^.UnregisterMover( THIS^.TrackedMovers[i]^ );
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+	IF internalTrackedMovers[i] <> 0 THEN
+		THIS^.UnregisterMover( internalTrackedMovers[i]^ );
 	END_IF
 END_FOR]]></ST>
       </Implementation>
@@ -166,6 +234,10 @@ END_FOR]]></ST>
       <LineId Id="16" Count="0" />
       <LineId Id="15" Count="0" />
     </LineIds>
+    <LineIds Name="MoverList.MoveAllVelocity">
+      <LineId Id="12" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="MoverList.SetAllAcceleration">
       <LineId Id="9" Count="0" />
       <LineId Id="5" Count="0" />
@@ -181,6 +253,14 @@ END_FOR]]></ST>
       <LineId Id="16" Count="2" />
       <LineId Id="15" Count="0" />
       <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllDirection">
+      <LineId Id="17" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllJerk">
+      <LineId Id="13" Count="7" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.SetAllVelocity">
       <LineId Id="11" Count="0" />

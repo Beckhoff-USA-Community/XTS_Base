@@ -6,11 +6,11 @@ FUNCTION_BLOCK ABSTRACT Objective
 VAR_INPUT
 END_VAR
 VAR
-	
-	TrackedMovers				: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover;
-	
+		
 	{attribute 'hide'}
 	internalTrackedMoverCount	: USINT;
+	//{attribute 'hide'}
+	internalTrackedMovers		: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover;
 
 END_VAR
 VAR_OUTPUT
@@ -57,15 +57,14 @@ END_VAR]]></Declaration>
 	Movers can't overwrite others in the list, so check that the array element is clear
 *)
 
-//	IF NewMover <> 0 THEN				// validate pointer
-IF __ISVALIDREF( NewMover ) THEN
+IF __ISVALIDREF( NewMover ) THEN		// validate reference
 	
 	duplicateFound		:= FALSE;		// default to false, counterexample below
 	internalTrackedMoverCount	:= 0;			// reset to zero, incremented below
 
-	FOR i := 0 TO SIZEOF(TrackedMovers)/SIZEOF(TrackedMovers[i])-1 DO
-		IF TrackedMovers[i] <> 0 THEN			
-			IF ADR( NewMover ) = TrackedMovers[i] THEN
+	FOR i := 0 TO SIZEOF(internalTrackedMovers)/SIZEOF(internalTrackedMovers[i])-1 DO
+		IF internalTrackedMovers[i] <> 0 THEN			
+			IF ADR( NewMover ) = internalTrackedMovers[i] THEN
 				duplicateFound	:= TRUE;				// this mover already tracked
 			END_IF			
 			internalTrackedMoverCount	:= internalTrackedMoverCount + 1;
@@ -75,12 +74,41 @@ IF __ISVALIDREF( NewMover ) THEN
 	END_FOR
 
 	IF duplicateFound = FALSE THEN
-		TrackedMovers[emptyIDX]		:= ADR( NewMover );		// new mover goes into open array element
+		internalTrackedMovers[emptyIDX]		:= ADR( NewMover );		// new mover goes into open array element
 		internalTrackedMoverCount			:= internalTrackedMoverCount + 1;
 	END_IF
 
 ELSE
 	ADSLOGSTR(ADSLOG_MSGTYPE_LOG,'Error: Mover input is invalid','');
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RegisterMoverList" Id="{97f69758-a5f2-4092-9f2f-11848d10cf56}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD RegisterMoverList : BOOL
+VAR_INPUT
+	NewMoverList		: iMoverList;
+END_VAR
+VAR
+	i					: USINT;
+	duplicateFound		: BOOL;
+	emptyIDX			: USINT;
+	arrTrackedMovers	: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+(*
+	Adds an entire MoverList to the Tracked Movers of the objective.
+*)
+
+arrTrackedMovers	:= NewMoverList.TrackedMovers;
+
+// IF __ISVALIDREF( NewMoverList ) THEN
+IF NewMoverList <> 0 THEN	
+	FOR i := 0 TO SIZEOF( arrTrackedMovers ) / SIZEOF( arrTrackedMovers[0] ) - 1 DO
+		
+		THIS^.RegisterMover( arrTrackedMovers[i]^ );	
+	
+	END_FOR
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -100,7 +128,7 @@ TrackedMoverCount		:= 0;
 
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 	
-	IF TrackedMovers[i] <> 0 THEN
+	IF internalTrackedMovers[i] <> 0 THEN
 		TrackedMoverCount		:= TrackedMoverCount + 1;
 	END_IF
 
@@ -115,6 +143,19 @@ END_VAR
           <ST><![CDATA[]]></ST>
         </Implementation>
       </Set>
+    </Property>
+    <Property Name="TrackedMovers" Id="{f2e27676-d8a8-4b3f-968b-790753e7621e}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover]]></Declaration>
+      <Get Name="Get" Id="{2692defb-0744-4a89-a02c-657d915f8a30}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+TrackedMovers	:= internalTrackedMovers;]]></ST>
+        </Implementation>
+      </Get>
     </Property>
     <Method Name="UnregisterCurrent" Id="{f5252866-1ebe-4ec3-aeab-827236ab79ab}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD UnregisterCurrent : BOOL
@@ -149,13 +190,13 @@ IF __ISVALIDREF( RemovingMover ) THEN
 	
 	internalTrackedMoverCount	:= 0;
 	
-	FOR i := 0 TO SIZEOF( TrackedMovers )/SIZEOF( TrackedMovers[0] )-1 DO
-		IF TrackedMovers[i] <> 0 THEN	// validate pointer
+	FOR i := 0 TO SIZEOF( internalTrackedMovers )/SIZEOF( internalTrackedMovers[0] )-1 DO
+		IF internalTrackedMovers[i] <> 0 THEN	// validate pointer
 					
 			internalTrackedMoverCount		:= internalTrackedMoverCount + 1;
 			
-			IF ADR( RemovingMover ) = TrackedMovers[i] THEN
-				TrackedMovers[i]	:= 0;		// remove the pointer
+			IF ADR( RemovingMover ) = internalTrackedMovers[i] THEN
+				internalTrackedMovers[i]	:= 0;		// remove the pointer
 				internalTrackedMoverCount	:= internalTrackedMoverCount - 1;
 			END_IF
 		
@@ -176,7 +217,6 @@ END_IF]]></ST>
     <LineIds Name="Objective.RegisterMover">
       <LineId Id="54" Count="4" />
       <LineId Id="53" Count="0" />
-      <LineId Id="13" Count="0" />
       <LineId Id="59" Count="0" />
       <LineId Id="69" Count="0" />
       <LineId Id="24" Count="0" />
@@ -198,11 +238,30 @@ END_IF]]></ST>
       <LineId Id="52" Count="0" />
       <LineId Id="23" Count="0" />
     </LineIds>
+    <LineIds Name="Objective.RegisterMoverList">
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
     <LineIds Name="Objective.TrackedMoverCount.Get">
       <LineId Id="5" Count="10" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Objective.TrackedMoverCount.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Objective.TrackedMovers.Get">
+      <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Objective.UnregisterCurrent">
