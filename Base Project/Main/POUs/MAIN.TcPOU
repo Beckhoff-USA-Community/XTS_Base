@@ -155,11 +155,11 @@ CASE MainState OF
 		
 		// Station 0 Logic
 		IF Station[0].MoverInPosition THEN
-			StationTimer[0]( IN := TRUE, PT := T#250MS );
+			StationTimer[0]( IN := TRUE, PT := T#200MS );
 			
 			IF StationTimer[0].Q THEN
 				PositionTrigger[0].RegisterMover( Station[0].CurrentMover );
-				Station[0].CurrentMover.MoveVelocity( 1000 );	
+				Station[0].CurrentMover.MoveVelocity( 1250 );	
 			
 				//Station[0].CurrentMover.SetAcceleration(( nGoalVelocity-Station[0].CurrentMover.AxisReference.NcToPlc.ActVelo)/((2*(PositionTrigger[0].TrackPosition - Station[0].TrackPosition))/(Station[0].CurrentMover.AxisReference.NcToPlc.ActVelo+nGoalVelocity)));
 				//PositionTrigger[0].RegisterMover( Station[0].CurrentMover );
@@ -249,7 +249,7 @@ CASE MainState OF
 		// Station 3 Logic
 		IF Station[3].MoverInPosition THEN
 			StationTimer[3]( IN := TRUE, PT := T#250MS );
-			station[3].CurrentMover.SetVelocity( 4000 );
+			station[3].CurrentMover.SetVelocity( 2000 );
 			IF StationTimer[3].Q THEN
 				Station[3].CurrentMover.MoveToStation( Station[0] );
 			END_IF
