@@ -249,7 +249,7 @@ CASE MainState OF
 		// Station 3 Logic
 		IF Station[3].MoverInPosition THEN
 			StationTimer[3]( IN := TRUE, PT := T#250MS );
-			
+			station[3].CurrentMover.SetVelocity( 4000 );
 			IF StationTimer[3].Q THEN
 				Station[3].CurrentMover.MoveToStation( Station[0] );
 			END_IF

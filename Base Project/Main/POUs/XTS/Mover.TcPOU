@@ -707,7 +707,7 @@ CASE internalCurrentMoveType OF
 	MOVETYPE_STATION:
 		THIS^.MoveToStation( internalCurrentDestStation );
 	MOVETYPE_VELOCITY:
-		THIS^.MoveVelocity( internalMotionParameters.Velocity );	
+		THIS^.MoveVelocity( MotionParameters.Velocity );	
 END_CASE
 ]]></ST>
       </Implementation>
