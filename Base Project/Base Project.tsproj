@@ -49086,7 +49086,7 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>Default Gap</Name>
-									<Value>100</Value>
+									<Value>80</Value>
 								</Value>
 								<Value>
 									<Name>Default Velocity</Name>

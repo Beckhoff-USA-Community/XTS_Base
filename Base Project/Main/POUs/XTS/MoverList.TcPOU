@@ -34,7 +34,9 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]
 		internalTrackedMovers[i]^.MoveToPosition( DestinationPosition );
 	END_IF
 
-END_FOR]]></ST>
+END_FOR
+
+MoveAllToPosition		:= THIS^;	// return this, to allow method chaining]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveAllToStation" Id="{7e8649c5-afae-438c-9d7c-0849d9778d85}" FolderPath="Methods\">
@@ -57,7 +59,9 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[0]
 		internalTrackedMovers[i]^.MoveToStation( DestinationStation ) ;
 	END_IF
 
-END_FOR]]></ST>
+END_FOR
+
+MoveAllToStation	:= THIS^;	// allows method chaining]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveAllVelocity" Id="{374fc66e-e454-42d2-84eb-da107ea5cc5b}" FolderPath="Methods\">
@@ -80,7 +84,10 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]
 		internalTrackedMovers[i]^.MoveVelocity( Velocity );
 	END_IF
 
-END_FOR]]></ST>
+END_FOR
+
+
+MoveAllVelocity		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAllAcceleration" Id="{e13ce26b-c052-44c4-b781-edc2323e6bd8}" FolderPath="Methods\">
@@ -103,7 +110,10 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]
 		internalTrackedMovers[i]^.SetAcceleration( Acceleration );
 	END_IF
 
-END_FOR]]></ST>
+END_FOR
+
+
+SetAllAcceleration		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAllDeceleration" Id="{b4a74589-da0f-40fe-9d74-9df176d68d9e}" FolderPath="Methods\">
@@ -125,7 +135,10 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]
 		internalTrackedMovers[i]^.SetDeceleration( Deceleration );
 	END_IF
 
-END_FOR]]></ST>
+END_FOR
+
+
+SetAllDeceleration		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAllDirection" Id="{61dc841d-816d-4126-817b-0edc70c354b4}" FolderPath="Methods\">
@@ -148,7 +161,10 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]
 		internalTrackedMovers[i]^.SetDirection( Direction );
 	END_IF
 
-END_FOR]]></ST>
+END_FOR
+
+
+SetAllDirection		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAllJerk" Id="{713a2faa-4d72-4826-b835-2931c44827b9}" FolderPath="Methods\">
@@ -170,7 +186,10 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]
 		internalTrackedMovers[i]^.SetJerk( Jerk );
 	END_IF
 
-END_FOR]]></ST>
+END_FOR
+
+
+SetAllJerk		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAllVelocity" Id="{cee9569c-3982-4955-90f1-8e5baf09c135}" FolderPath="Methods\">
@@ -192,7 +211,10 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]
 		internalTrackedMovers[i]^.SetVelocity( Velocity );
 	END_IF
 
-END_FOR]]></ST>
+END_FOR
+
+
+SetAllVelocity		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="UnregisterAll" Id="{9f7a3d8e-3975-4fa4-8579-c54f77146104}" FolderPath="Methods\">
@@ -209,7 +231,10 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]
 	IF internalTrackedMovers[i] <> 0 THEN
 		THIS^.UnregisterMover( internalTrackedMovers[i]^ );
 	END_IF
-END_FOR]]></ST>
+END_FOR
+
+
+UnregisterAll		:= THIS^;	// dunno how you would method chain from this call, but there ya go]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="MoverList">
@@ -223,6 +248,8 @@ END_FOR]]></ST>
       <LineId Id="14" Count="2" />
       <LineId Id="13" Count="0" />
       <LineId Id="9" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.MoveAllToStation">
       <LineId Id="9" Count="0" />
@@ -233,10 +260,14 @@ END_FOR]]></ST>
       <LineId Id="19" Count="1" />
       <LineId Id="16" Count="0" />
       <LineId Id="15" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.MoveAllVelocity">
       <LineId Id="12" Count="7" />
       <LineId Id="5" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="29" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.SetAllAcceleration">
       <LineId Id="9" Count="0" />
@@ -245,6 +276,8 @@ END_FOR]]></ST>
       <LineId Id="17" Count="2" />
       <LineId Id="16" Count="0" />
       <LineId Id="15" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="29" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.SetAllDeceleration">
       <LineId Id="11" Count="0" />
@@ -253,14 +286,20 @@ END_FOR]]></ST>
       <LineId Id="16" Count="2" />
       <LineId Id="15" Count="0" />
       <LineId Id="14" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="27" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.SetAllDirection">
       <LineId Id="17" Count="7" />
       <LineId Id="5" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="34" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.SetAllJerk">
       <LineId Id="13" Count="7" />
       <LineId Id="5" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="29" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.SetAllVelocity">
       <LineId Id="11" Count="0" />
@@ -269,6 +308,8 @@ END_FOR]]></ST>
       <LineId Id="16" Count="2" />
       <LineId Id="15" Count="0" />
       <LineId Id="14" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="27" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.UnregisterAll">
       <LineId Id="9" Count="1" />
@@ -277,6 +318,8 @@ END_FOR]]></ST>
       <LineId Id="16" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="12" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="22" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

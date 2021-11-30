@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="MAIN" Id="{0790caa7-8a3f-4f91-b0f8-9ebb3db3858d}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM MAIN
+    <Declaration><![CDATA[ PROGRAM MAIN
 VAR
 	
 
 	// ========= Example Application Variables =========
 	
-	nextStation				: USINT := 2;
+	nextStation				: USINT := 4;
 	
 	lowVelocity				: LREAL := 200; 	// mm/s
 	mediumVelocity			: LREAL := 800;		// mm/s
@@ -108,7 +108,7 @@ CASE MainState OF
 		PositionTrigger[2].TrackPosition	:= 3500;
 		PositionTrigger[3].TrackPosition	:= 4000;
 		
-		SpeedTrigger[0].ThresholdVelocity	:= 3000;
+		SpeedTrigger[0].ThresholdVelocity	:= 2000;
 		
 		Zone[0].StartPosition				:= 3750;
 		Zone[0].EndPosition					:= 750;
@@ -127,9 +127,12 @@ CASE MainState OF
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
 	
 		IF myTrig THEN
-			//Zone[0].CurrentMoverList.MoveAllToPosition( 1000 );
-			Zone[0].GetMoverList().MoveAllToPosition( 1000 );	
+
+			FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+				Zone[0].RegisterMover( Mover[i] );
+			END_FOR
 		
+			Zone[0].GetMoverList().MoveAllToPosition( 1000 );		
 		
 			// PositionTrigger[0].RegisterMoverList( Zone[0].CurrentMoverList );
 			myTrig		:= FALSE;
@@ -139,6 +142,7 @@ CASE MainState OF
 			
 			// ===== RECOVERY LOGIC =====
 		
+			// Register all movers with all Zones, for recovery
 			FOR i := 0 TO GVL.NUM_MOVERS - 1 DO				
 				Zone[0].RegisterMover( Mover[i] );
 				Zone[1].RegisterMover( Mover[i] );
@@ -146,8 +150,10 @@ CASE MainState OF
 				Zone[3].RegisterMover( Mover[i] );			
 			END_FOR
 			
-			Zone[0].CurrentMoverList.SetAllVelocity( 1500 );
-			Zone[1].CurrentMoverList.SetAllVelocity( 100 );
+			Zone[0].GetMoverList().MoveAllToStation( Station[1] );
+			Zone[1].GetMoverList().MoveAllToStation( Station[0] );
+			Zone[2].GetMoverList().MoveAllToStation( Station[0] );
+			Zone[3].GetMoverList().MoveAllToStation( Station[0] );
 			
 			// ===== END =====
 		
@@ -166,15 +172,12 @@ CASE MainState OF
 		
 		// Station 0 Logic
 		IF Station[0].MoverInPosition THEN
-			StationTimer[0]( IN := TRUE, PT := T#250MS );
+			StationTimer[0]( IN := TRUE, PT := T#1000MS );
 			
 			IF StationTimer[0].Q THEN
-				PositionTrigger[0].RegisterMover( Station[0].CurrentMover );
-				Station[0].CurrentMover.MoveVelocity( 1000 );	
-			
-				//Station[0].CurrentMover.SetAcceleration(( nGoalVelocity-Station[0].CurrentMover.AxisReference.NcToPlc.ActVelo)/((2*(PositionTrigger[0].TrackPosition - Station[0].TrackPosition))/(Station[0].CurrentMover.AxisReference.NcToPlc.ActVelo+nGoalVelocity)));
-				//PositionTrigger[0].RegisterMover( Station[0].CurrentMover );
-				//Station[0].CurrentMover.movevelocity( nGoalVelocity);
+
+				Station[0].CurrentMover.MoveToStation( Station[1] );
+				
 			END_IF
 		ELSE
 			StationTimer[0]( IN := FALSE );
@@ -182,34 +185,33 @@ CASE MainState OF
 		
 		
 		
-				
-		
-		
-		
-		
-		// Station 1 & 2 Logic
-		IF Station[1].MoverInPosition AND Station[2].MoverInPosition THEN
-			StationTimer[1]( IN := TRUE, PT := T#500MS );
+		// Station 1 Logic		
+		IF Station[1].MoverInPosition THEN
+			StationTimer[1]( IN := TRUE, PT := T#250MS );
 			
-			MoverList.RegisterMover( Station[1].CurrentMover );
-			MoverList.RegisterMover( Station[2].CurrentMover );
-
-			IF StationTimer[1].Q THEN
-				
-				PositionTrigger[0].RegisterMover( Station[1].CurrentMover );
-				PositionTrigger[0].RegisterMover( Station[2].CurrentMover );
-				
-				MoverList.SetAllVelocity( mediumVelocity );
-				MoverList.MoveAllToStation( Station[3] );
-
-				MoverList.UnregisterAll();				
+			Station[1].CurrentMover.MoveToStation( Station[ nextStation ] );
+			nextStation := nextStation - 1;
+			IF nextStation = 1 THEN
+				nextStation	:= 4;
 			END_IF
-		ELSE
-			StationTimer[1]( IN := FALSE );
 		END_IF
 		
+		IF Station[2].MoverInPosition AND Station[3].MoverInPosition AND Station[4].MoverInPosition THEN
+			StationTimer[2]( IN := TRUE, PT := T#750MS );
+			
+			IF StationTimer[2].Q THEN
+				PositionTrigger[0].RegisterMover( Station[2].CurrentMover );
+				PositionTrigger[0].RegisterMover( Station[3].CurrentMover );
+				PositionTrigger[0].RegisterMover( Station[4].CurrentMover );
+			
+				
+				Station[2].CurrentMover.MoveVelocity( 500 );
+				Station[3].CurrentMover.MoveVelocity( 500 );
+				Station[4].CurrentMover.MoveVelocity( 500 );
+			END_IF
+		END_IF
 		
-		
+
 		
 		
 		
@@ -217,37 +219,34 @@ CASE MainState OF
 		IF PositionTrigger[0].MoverPassedPosition THEN
 			PositionTrigger[1].RegisterMover( PositionTrigger[0].CurrentMover );	
 		
-			PositionTrigger[0].CurrentMover.SetVelocity( lowVelocity );
-			PositionTrigger[0].CurrentMover.MoveToStation( Station[3] );			
+			PositionTrigger[0].CurrentMover.SetVelocity( lowVelocity );			
 			
 			PositionTrigger[0].UnregisterCurrent();
 		END_IF
 		
 		
 		
-		
-		
+
 		
 		// Position Trigger 1 Logic
 		IF PositionTrigger[1].MoverPassedPosition THEN
 			SpeedTrigger[0].RegisterMover( PositionTrigger[1].CurrentMover );		
 			
 			PositionTrigger[1].CurrentMover.SetVelocity( highVelocity );
-			PositionTrigger[1].CurrentMover.MoveToStation( Station[3] );
 			
 			PositionTrigger[1].UnregisterCurrent();
 		END_IF
 		
 		
-		
-		
+
 		
 		
 		// Speed Trigger 0 Logic
 		IF SpeedTrigger[0].MoverInVelocity THEN
 			
 			SpeedTrigger[0].CurrentMover.SetVelocity( mediumVelocity );
-			SpeedTrigger[0].CurrentMover.MoveToStation( Station[3] );
+			
+			PositionTrigger[2].RegisterMover( SpeedTrigger[0].CurrentMover );
 			
 			SpeedTrigger[0].UnregisterCurrent();
 		END_IF
@@ -255,17 +254,12 @@ CASE MainState OF
 		
 		
 		
-		
-		
-		// Station 3 Logic
-		IF Station[3].MoverInPosition THEN
-			StationTimer[3]( IN := TRUE, PT := T#250MS );
-			
-			IF StationTimer[3].Q THEN
-				Station[3].CurrentMover.MoveToStation( Station[0] );
-			END_IF
-		ELSE
-			StationTimer[3]( IN := FALSE );
+		IF PositionTrigger[2].MoverPassedPosition THEN
+
+			PositionTrigger[2].CurrentMover.MoveToStation( Station[0] );
+			PositionTrigger[2].CurrentMover.SetVelocity( lowVelocity );
+
+			PositionTrigger[2].UnregisterCurrent();
 		END_IF
 		
 		
@@ -330,6 +324,7 @@ END_FOR
 // Call trigger function blocks cyclically
 PositionTrigger[0].Cyclic();
 PositionTrigger[1].Cyclic();
+PositionTrigger[2].Cyclic();
 
 ]]></ST>
     </Implementation>
@@ -375,19 +370,27 @@ PositionTrigger[1].Cyclic();
       <LineId Id="3633" Count="0" />
       <LineId Id="3607" Count="0" />
       <LineId Id="3636" Count="0" />
-      <LineId Id="4053" Count="1" />
-      <LineId Id="4059" Count="0" />
-      <LineId Id="4065" Count="0" />
-      <LineId Id="4060" Count="1" />
+      <LineId Id="4053" Count="0" />
+      <LineId Id="4112" Count="0" />
+      <LineId Id="4119" Count="0" />
+      <LineId Id="4116" Count="0" />
+      <LineId Id="4120" Count="1" />
+      <LineId Id="4118" Count="0" />
+      <LineId Id="4115" Count="0" />
+      <LineId Id="4061" Count="0" />
       <LineId Id="4055" Count="0" />
       <LineId Id="4058" Count="0" />
       <LineId Id="4056" Count="0" />
       <LineId Id="3637" Count="2" />
       <LineId Id="3650" Count="0" />
-      <LineId Id="3666" Count="1" />
+      <LineId Id="3666" Count="0" />
+      <LineId Id="4168" Count="0" />
+      <LineId Id="3667" Count="0" />
       <LineId Id="3655" Count="4" />
-      <LineId Id="4047" Count="2" />
+      <LineId Id="4169" Count="0" />
+      <LineId Id="4171" Count="2" />
       <LineId Id="3987" Count="0" />
+      <LineId Id="4177" Count="0" />
       <LineId Id="3652" Count="2" />
       <LineId Id="3648" Count="1" />
       <LineId Id="3643" Count="1" />
@@ -395,20 +398,55 @@ PositionTrigger[1].Cyclic();
       <LineId Id="3534" Count="1" />
       <LineId Id="3669" Count="0" />
       <LineId Id="3671" Count="8" />
-      <LineId Id="3937" Count="0" />
-      <LineId Id="3935" Count="1" />
-      <LineId Id="3680" Count="13" />
-      <LineId Id="3831" Count="2" />
-      <LineId Id="3835" Count="1" />
-      <LineId Id="3694" Count="21" />
+      <LineId Id="4180" Count="0" />
+      <LineId Id="3682" Count="0" />
+      <LineId Id="4181" Count="0" />
+      <LineId Id="3683" Count="7" />
+      <LineId Id="3692" Count="0" />
+      <LineId Id="4182" Count="0" />
+      <LineId Id="4184" Count="0" />
+      <LineId Id="4253" Count="3" />
+      <LineId Id="4187" Count="0" />
+      <LineId Id="4183" Count="0" />
+      <LineId Id="4204" Count="2" />
+      <LineId Id="4208" Count="1" />
+      <LineId Id="4214" Count="0" />
+      <LineId Id="4217" Count="1" />
+      <LineId Id="4216" Count="0" />
+      <LineId Id="4219" Count="0" />
+      <LineId Id="4210" Count="0" />
+      <LineId Id="4212" Count="1" />
+      <LineId Id="4211" Count="0" />
+      <LineId Id="4207" Count="0" />
+      <LineId Id="3712" Count="0" />
+      <LineId Id="4220" Count="0" />
+      <LineId Id="3713" Count="2" />
       <LineId Id="3837" Count="2" />
-      <LineId Id="3716" Count="12" />
+      <LineId Id="3716" Count="1" />
+      <LineId Id="3719" Count="4" />
+      <LineId Id="3726" Count="0" />
+      <LineId Id="4221" Count="0" />
+      <LineId Id="3727" Count="1" />
       <LineId Id="3840" Count="3" />
-      <LineId Id="3729" Count="10" />
-      <LineId Id="3844" Count="3" />
-      <LineId Id="3740" Count="10" />
-      <LineId Id="3848" Count="3" />
-      <LineId Id="3751" Count="9" />
+      <LineId Id="3730" Count="3" />
+      <LineId Id="3736" Count="0" />
+      <LineId Id="4223" Count="0" />
+      <LineId Id="3737" Count="2" />
+      <LineId Id="3844" Count="0" />
+      <LineId Id="4262" Count="1" />
+      <LineId Id="3845" Count="0" />
+      <LineId Id="4224" Count="0" />
+      <LineId Id="3740" Count="5" />
+      <LineId Id="4226" Count="0" />
+      <LineId Id="4270" Count="0" />
+      <LineId Id="4274" Count="0" />
+      <LineId Id="4266" Count="0" />
+      <LineId Id="4273" Count="0" />
+      <LineId Id="4267" Count="0" />
+      <LineId Id="4265" Count="0" />
+      <LineId Id="4229" Count="0" />
+      <LineId Id="3746" Count="0" />
+      <LineId Id="3756" Count="4" />
       <LineId Id="3852" Count="3" />
       <LineId Id="3761" Count="0" />
       <LineId Id="3670" Count="0" />
@@ -441,6 +479,7 @@ PositionTrigger[1].Cyclic();
       <LineId Id="2548" Count="0" />
       <LineId Id="878" Count="1" />
       <LineId Id="881" Count="1" />
+      <LineId Id="4259" Count="0" />
       <LineId Id="2549" Count="0" />
       <LineId Id="2538" Count="0" />
     </LineIds>

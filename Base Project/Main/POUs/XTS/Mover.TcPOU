@@ -440,7 +440,9 @@ END_VAR
       <Implementation>
         <ST><![CDATA[
 // Sets an internal flag to advance the state machine
-internalDisable		:= TRUE;]]></ST>
+internalDisable		:= TRUE;
+
+Disable		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Enable" Id="{77bc5ebc-ace3-48eb-8e85-e45bc80ac98b}" FolderPath="Methods\">
@@ -451,7 +453,10 @@ END_VAR
       <Implementation>
         <ST><![CDATA[
 // Sets an internal flag to advance the state machine
-internalEnable		:= TRUE;]]></ST>
+internalEnable		:= TRUE;
+
+
+Enable := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="GroupStop" Id="{19a65925-9b39-4de9-ab16-7733d66c5fd4}" FolderPath="Methods\">
@@ -476,7 +481,10 @@ ELSE	// otherwise execute the command
 	memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
 	internalCurrentMoveType		:= MoverCommandType_enum.MOVETYPE_NONE;
 	
-END_IF]]></ST>
+END_IF
+
+
+GroupStop		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Property Name="MotionParameters" Id="{1c0abd31-cb53-4dd3-a42f-2b8cda26fdde}" FolderPath="Properties\">
@@ -580,7 +588,9 @@ internalCurrentMoveType		:= MOVETYPE_POSITION;
 internalCurrentDestPosition := DestinationPosition;
 
 memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
-internalCurrentDestStation	REF= 0;]]></ST>
+internalCurrentDestStation	REF= 0;
+
+MoveToPosition		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveToStation" Id="{73370b80-491c-4017-a420-f08c462d830e}" FolderPath="Methods\">
@@ -644,6 +654,8 @@ ELSE	// otherwise let 'er rip
 	
 END_IF
 
+MoveToStation		:= THIS^;
+
 ]]></ST>
       </Implementation>
     </Method>
@@ -703,7 +715,11 @@ internalCurrentMoveType		:= MOVETYPE_VELOCITY;
 internalCurrentDestPosition := 1E300;
 
 memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
-internalCurrentDestStation	REF= 0;]]></ST>
+internalCurrentDestStation	REF= 0;
+
+MoveVelocity		:= THIS^;
+
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="Payload" Id="{5caf95a6-ad6c-448d-8947-8c8c07ab0a26}" FolderPath="Properties\">
@@ -748,7 +764,9 @@ CASE internalCurrentMoveType OF
 	MOVETYPE_VELOCITY:
 		THIS^.MoveVelocity( internalMotionParameters.Velocity );	
 END_CASE
-]]></ST>
+
+
+ReissueCommand		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAcceleration" Id="{6c3e67ff-faff-4c11-8768-1de83c7995e4}" FolderPath="Methods\">
@@ -761,7 +779,9 @@ END_VAR
         <ST><![CDATA[
 internalMotionParameters.Acceleration		:= Acceleration;
 
-THIS^.ReissueCommand();]]></ST>
+THIS^.ReissueCommand();
+
+SetAcceleration		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetDeceleration" Id="{05a8542e-78cf-4f19-864b-98da64430703}" FolderPath="Methods\">
@@ -774,7 +794,9 @@ END_VAR
         <ST><![CDATA[
 internalMotionParameters.Deceleration	:= Deceleration;
 
-THIS^.ReissueCommand();]]></ST>
+THIS^.ReissueCommand();
+
+SetDeceleration		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetDirection" Id="{e0c3c5b2-5259-4ab4-9ff7-1ecaf9015b31}" FolderPath="Methods\">
@@ -787,7 +809,10 @@ END_VAR
         <ST><![CDATA[
 internalMotionParameters.Direction		:= Direction;
 
-THIS^.ReissueCommand();]]></ST>
+THIS^.ReissueCommand();
+
+
+SetDirection		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetJerk" Id="{de57e13f-25de-42a4-aec6-c6dc8b78d964}" FolderPath="Methods\">
@@ -801,7 +826,9 @@ END_VAR
 
 internalMotionParameters.Jerk		:= Jerk;
 
-THIS^.ReissueCommand();]]></ST>
+THIS^.ReissueCommand();
+
+SetJerk		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetVelocity" Id="{530483ab-165f-437b-baf5-2db027b7f044}" FolderPath="Methods\">
@@ -815,7 +842,9 @@ END_VAR
 
 internalMotionParameters.Velocity	:= Velocity; 
 
-THIS^.ReissueCommand();]]></ST>
+THIS^.ReissueCommand();
+
+SetVelocity		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="Mover">
@@ -850,10 +879,14 @@ THIS^.ReissueCommand();]]></ST>
       <LineId Id="6" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Enable">
       <LineId Id="6" Count="1" />
       <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="11" Count="0" />
     </LineIds>
     <LineIds Name="Mover.GroupStop">
       <LineId Id="6" Count="2" />
@@ -868,6 +901,8 @@ THIS^.ReissueCommand();]]></ST>
       <LineId Id="22" Count="2" />
       <LineId Id="14" Count="0" />
       <LineId Id="10" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="33" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MotionParameters.Get">
       <LineId Id="13" Count="1" />
@@ -910,6 +945,8 @@ THIS^.ReissueCommand();]]></ST>
       <LineId Id="151" Count="3" />
       <LineId Id="127" Count="0" />
       <LineId Id="161" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="168" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToStation">
       <LineId Id="126" Count="2" />
@@ -930,6 +967,8 @@ THIS^.ReissueCommand();]]></ST>
       <LineId Id="227" Count="0" />
       <LineId Id="229" Count="7" />
       <LineId Id="167" Count="1" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="242" Count="0" />
       <LineId Id="197" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
@@ -960,6 +999,10 @@ THIS^.ReissueCommand();]]></ST>
       <LineId Id="78" Count="0" />
       <LineId Id="48" Count="0" />
       <LineId Id="79" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="90" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Payload.Get">
       <LineId Id="9" Count="1" />
@@ -976,6 +1019,7 @@ THIS^.ReissueCommand();]]></ST>
       <LineId Id="21" Count="4" />
       <LineId Id="27" Count="0" />
       <LineId Id="18" Count="0" />
+      <LineId Id="31" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetAcceleration">
@@ -983,30 +1027,40 @@ THIS^.ReissueCommand();]]></ST>
       <LineId Id="5" Count="0" />
       <LineId Id="19" Count="0" />
       <LineId Id="8" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="24" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetDeceleration">
       <LineId Id="7" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="12" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="23" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetDirection">
       <LineId Id="7" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="8" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="14" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetJerk">
       <LineId Id="7" Count="1" />
       <LineId Id="5" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="9" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetVelocity">
       <LineId Id="6" Count="1" />
       <LineId Id="12" Count="0" />
       <LineId Id="42" Count="0" />
       <LineId Id="32" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="47" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
