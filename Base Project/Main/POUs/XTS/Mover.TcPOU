@@ -338,15 +338,15 @@ CASE internalState OF
 			internalState		:= MV_STOPPING;
 			
 		// Reset all commands issued by method calls
-		ELSIF fbMoveAbsCA[0].Busy THEN // OR fbMoveAbs.CommandAborted THEN
+		ELSIF fbMoveAbsCA[0].Busy OR fbMoveAbsCA[0].CommandAborted THEN // OR fbMoveAbs.CommandAborted THEN
 			fbMoveAbsCA[0].Execute		:= FALSE;
-		ELSIF fbMoveAbsCA[1].Busy THEN
+		ELSIF fbMoveAbsCA[1].Busy OR fbMoveAbsCA[1].CommandAborted THEN
 			fbMoveAbsCA[1].Execute		:= FALSE;			
 		ELSIF fbAddToGroup.Done THEN
 			fbAddToGroup.Execute		:= FALSE;
-		ELSIF fbMoveRelCA[0].Busy THEN
+		ELSIF fbMoveRelCA[0].Busy OR fbMoveRelCA[0].CommandAborted THEN
 			fbMoveRelCA[0].Execute		:= FALSE;
-		ELSIF fbMoveRelCA[1].Busy THEN
+		ELSIF fbMoveRelCA[1].Busy OR fbMoveRelCA[1].CommandAborted THEN
 			fbMoveRelCA[1].Execute		:= FALSE;
 			
 		// This is different than the other similar cases, since a Stop command should prevent other commands from overriding it, thus
@@ -396,6 +396,7 @@ CASE internalState OF
 			
 		IF fbPower.Status = FALSE THEN
 			internalState			:= MV_IDLE;
+			
 		END_IF
 		
 	
@@ -420,8 +421,8 @@ fbGroupStop( AxesGroup := GroupReference );
 fbMoveAbsCA[0]( Axis := AxisReference );
 fbMoveAbsCA[1]( Axis := AxisReference );
 fbReadStatus( Enable := TRUE, Axis := AxisReference );
-fbMoveRelCA[0] (axis :=AxisReference);
-fbMoveRelCA[1] (axis :=AxisReference);
+fbMoveRelCA[0] ( Axis := AxisReference );
+fbMoveRelCA[1] ( Axis := AxisReference );
 
 fbReadM1DetectMode();
 fbReadM1DetectValid();
@@ -564,6 +565,8 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Execute		:= TRUE;		// execute this block, and...
 		fbMoveAbsCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
 		
+		fbMoveAbsCA[0]( Axis := AxisReference );
+		
 	ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
 		
 		fbMoveAbsCA[1].Jerk			:= internalMotionParameters.Jerk;
@@ -574,11 +577,13 @@ ELSE	// otherwise let 'er rip
 		
 		fbMoveAbsCA[1].Position		:= DestinationPosition;
 		
-		fbMoveAbsCA[1].BufferMode		:= mcAborting;
+		fbMoveAbsCA[1].BufferMode	:= mcAborting;
 		fbMoveAbsCA[1].Execute		:= TRUE;
 		
 		fbMoveAbsCA[1].Execute		:= TRUE;		// execute this block, and...
-		fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one		
+		fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
+		
+		fbMoveAbsCA[1]( Axis := AxisReference );
 		 
 	END_IF
 	
@@ -625,6 +630,8 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Execute		:= TRUE;		// execute this block, and...
 		fbMoveAbsCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
 		
+		fbMoveAbsCA[0]( Axis := AxisReference );
+		
 	ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
 		
 		fbMoveAbsCA[1].Jerk			:= internalMotionParameters.Jerk;
@@ -639,7 +646,9 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Execute		:= TRUE;
 		
 		fbMoveAbsCA[1].Execute		:= TRUE;		// execute this block, and...
-		fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one		
+		fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
+
+		fbMoveAbsCA[1]( Axis := AxisReference );		
 		 
 	END_IF
 	
@@ -685,11 +694,12 @@ ELSE
 		
 		fbMoverelCA[0].Distance		:= 1E100;
 		      
-		fbMoveRelCA[0].BufferMode		:= mcAborting;
-		fbMoveRelCA[0].Execute		:= TRUE;
+		fbMoveRelCA[0].BufferMode	:= mcAborting;
 		      
 		fbMoveRelCA[0].Execute		:= TRUE;		// execute this block, and...
 		fbMoveRelCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
+		
+		fbMoveRelCA[0]( Axis := AxisReference );
 		
 	ELSIF fbMoveRelCA[1].Busy = FALSE THEN
 		
@@ -702,12 +712,13 @@ ELSE
 		fbMoveRelCA[1].Distance		:= 1E100;
 		      
 		fbMoveRelCA[1].BufferMode	:= mcAborting;
-		fbMoveRelCA[1].Execute		:= TRUE;
 		      
 		fbMoveRelCA[1].Execute		:= TRUE;		// execute this block, and...
-		fbMoveRelCA[0].Execute		:= FALSE;		// if necessary, interrupt this one		
+		fbMoveRelCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
 
-		END_IF
+		fbMoveRelCA[1]( Axis := AxisReference );		
+
+	END_IF
 
 END_IF
 
@@ -872,7 +883,9 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="166" Count="53" />
       <LineId Id="322" Count="0" />
       <LineId Id="220" Count="17" />
-      <LineId Id="239" Count="75" />
+      <LineId Id="239" Count="42" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="282" Count="32" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Disable">
@@ -933,11 +946,14 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="142" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="84" Count="2" />
-      <LineId Id="88" Count="10" />
+      <LineId Id="88" Count="7" />
+      <LineId Id="176" Count="1" />
+      <LineId Id="96" Count="2" />
       <LineId Id="143" Count="0" />
       <LineId Id="99" Count="0" />
       <LineId Id="101" Count="6" />
       <LineId Id="109" Count="3" />
+      <LineId Id="178" Count="1" />
       <LineId Id="87" Count="0" />
       <LineId Id="83" Count="0" />
       <LineId Id="35" Count="0" />
@@ -957,13 +973,18 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="201" Count="0" />
       <LineId Id="142" Count="0" />
       <LineId Id="202" Count="0" />
-      <LineId Id="144" Count="7" />
+      <LineId Id="144" Count="4" />
+      <LineId Id="249" Count="1" />
+      <LineId Id="149" Count="2" />
       <LineId Id="212" Count="0" />
       <LineId Id="152" Count="3" />
       <LineId Id="203" Count="0" />
       <LineId Id="159" Count="0" />
       <LineId Id="204" Count="0" />
-      <LineId Id="160" Count="6" />
+      <LineId Id="160" Count="4" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="165" Count="1" />
       <LineId Id="227" Count="0" />
       <LineId Id="229" Count="7" />
       <LineId Id="167" Count="1" />
@@ -985,10 +1006,16 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="17" Count="0" />
       <LineId Id="61" Count="1" />
       <LineId Id="18" Count="2" />
-      <LineId Id="22" Count="10" />
+      <LineId Id="22" Count="3" />
+      <LineId Id="27" Count="2" />
+      <LineId Id="98" Count="1" />
+      <LineId Id="30" Count="2" />
       <LineId Id="63" Count="1" />
       <LineId Id="33" Count="2" />
-      <LineId Id="37" Count="7" />
+      <LineId Id="37" Count="3" />
+      <LineId Id="42" Count="2" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="100" Count="0" />
       <LineId Id="50" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="49" Count="0" />

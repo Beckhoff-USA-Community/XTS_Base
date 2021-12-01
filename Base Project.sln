@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{B1E792BE-AA5F-4E3C-8C82-674BF9C0715B}") = "Base Project", "Base Project\Base Project.tsproj", "{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}"
 EndProject
+Project("{FD9F1D59-E000-42F3-8744-88DE1BE93C06}") = "TwinCAT Measurement Project1", "TwinCAT Measurement Project1\TwinCAT Measurement Project1.tcmproj", "{4D510E6C-2F02-4F2F-B2CF-0A2D039FE3E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|TwinCAT CE7 (ARMV7) = Debug|TwinCAT CE7 (ARMV7)
@@ -33,6 +35,14 @@ Global
 		{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}.Release|TwinCAT RT (x64).Build.0 = Release|TwinCAT RT (x64)
 		{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}.Release|TwinCAT RT (x86).ActiveCfg = Release|TwinCAT RT (x86)
 		{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}.Release|TwinCAT RT (x86).Build.0 = Release|TwinCAT RT (x86)
+		{4D510E6C-2F02-4F2F-B2CF-0A2D039FE3E3}.Debug|TwinCAT CE7 (ARMV7).ActiveCfg = Debug|TwinCAT CE7 (ARMV7)
+		{4D510E6C-2F02-4F2F-B2CF-0A2D039FE3E3}.Debug|TwinCAT OS (ARMT2).ActiveCfg = Debug|TwinCAT OS (ARMT2)
+		{4D510E6C-2F02-4F2F-B2CF-0A2D039FE3E3}.Debug|TwinCAT RT (x64).ActiveCfg = Debug|TwinCAT RT (x64)
+		{4D510E6C-2F02-4F2F-B2CF-0A2D039FE3E3}.Debug|TwinCAT RT (x86).ActiveCfg = Debug|TwinCAT RT (x86)
+		{4D510E6C-2F02-4F2F-B2CF-0A2D039FE3E3}.Release|TwinCAT CE7 (ARMV7).ActiveCfg = Release|TwinCAT CE7 (ARMV7)
+		{4D510E6C-2F02-4F2F-B2CF-0A2D039FE3E3}.Release|TwinCAT OS (ARMT2).ActiveCfg = Release|TwinCAT OS (ARMT2)
+		{4D510E6C-2F02-4F2F-B2CF-0A2D039FE3E3}.Release|TwinCAT RT (x64).ActiveCfg = Release|TwinCAT RT (x64)
+		{4D510E6C-2F02-4F2F-B2CF-0A2D039FE3E3}.Release|TwinCAT RT (x86).ActiveCfg = Release|TwinCAT RT (x86)
 		{DD3A0B29-8E7C-4E32-989D-B0222C998777}.Debug|TwinCAT CE7 (ARMV7).ActiveCfg = Debug|TwinCAT CE7 (ARMV7)
 		{DD3A0B29-8E7C-4E32-989D-B0222C998777}.Debug|TwinCAT CE7 (ARMV7).Build.0 = Debug|TwinCAT CE7 (ARMV7)
 		{DD3A0B29-8E7C-4E32-989D-B0222C998777}.Debug|TwinCAT OS (ARMT2).ActiveCfg = Debug|TwinCAT OS (ARMT2)
