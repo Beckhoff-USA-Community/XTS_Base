@@ -45,11 +45,6 @@ VAR
 	Zone					: ARRAY [0..3] OF Zone;	
 	
 
-	myTrig: BOOL;
-	TestMoverList: iMoverList;
-	CurrentMoverList: INT;
-	selector: USINT;
-	StaSelect: USINT;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -129,18 +124,7 @@ CASE MainState OF
 		
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
 	
-		IF myTrig THEN
 
-			FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-				Zone[0].RegisterMover( Mover[i] );
-			END_FOR
-		
-			Zone[0].GetMoverList().MoveAllToPosition( 1000 );		
-		
-			// PositionTrigger[0].RegisterMoverList( Zone[0].CurrentMoverList );
-			myTrig		:= FALSE;
-		END_IF
-	
 		IF MainCommands.Start THEN
 			
 			// ===== RECOVERY LOGIC =====
@@ -153,10 +137,11 @@ CASE MainState OF
 				Zone[3].RegisterMover( Mover[i] );
 			END_FOR
 			
-			Zone[0].GetMoverList().MoveAllToStation( Station[0] );
-			Zone[1].GetMoverList().MoveAllToStation( Station[0] );
-			Zone[2].GetMoverList().MoveAllToStation( Station[0] );
-			Zone[3].GetMoverList().MoveAllToStation( Station[0] );
+			
+			Zone[0].CurrentMoverList.MoveAllToStation( Station[0] );
+			Zone[1].CurrentMoverList.MoveAllToStation( Station[0] );
+			Zone[2].CurrentMoverList.MoveAllToStation( Station[0] );
+			Zone[3].CurrentMoverList.MoveAllToStation( Station[0] );
 			
 
 			// ===== END =====
@@ -170,15 +155,6 @@ CASE MainState OF
 	MS_RUN: 	// ------------------------------------------------------- OPERATING
 	
 	
-	
-		IF myTrig THEN
-			selector;
-			
-			Mover[selector].MovetoStation( Station[StaSelect] );
-			myTrig	:= FALSE;
-		END_IF
-
-		
 		
 		// Station 0 Logic
 		IF Station[0].MoverInPosition THEN
@@ -378,24 +354,14 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3607" Count="0" />
       <LineId Id="3636" Count="0" />
       <LineId Id="4053" Count="0" />
-      <LineId Id="4112" Count="0" />
-      <LineId Id="4119" Count="0" />
-      <LineId Id="4116" Count="0" />
-      <LineId Id="4120" Count="1" />
-      <LineId Id="4118" Count="0" />
-      <LineId Id="4115" Count="0" />
-      <LineId Id="4061" Count="0" />
-      <LineId Id="4055" Count="0" />
-      <LineId Id="4058" Count="0" />
-      <LineId Id="4056" Count="0" />
       <LineId Id="3637" Count="2" />
       <LineId Id="3650" Count="0" />
       <LineId Id="4324" Count="0" />
       <LineId Id="4168" Count="0" />
       <LineId Id="3667" Count="0" />
       <LineId Id="3655" Count="4" />
-      <LineId Id="4169" Count="0" />
-      <LineId Id="4171" Count="2" />
+      <LineId Id="4473" Count="2" />
+      <LineId Id="4477" Count="1" />
       <LineId Id="3987" Count="0" />
       <LineId Id="4177" Count="0" />
       <LineId Id="4405" Count="0" />
@@ -404,15 +370,8 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3643" Count="1" />
       <LineId Id="3642" Count="0" />
       <LineId Id="3534" Count="1" />
-      <LineId Id="3669" Count="0" />
-      <LineId Id="4382" Count="0" />
-      <LineId Id="3671" Count="0" />
-      <LineId Id="4394" Count="0" />
-      <LineId Id="4396" Count="0" />
-      <LineId Id="4398" Count="0" />
-      <LineId Id="4400" Count="0" />
-      <LineId Id="4395" Count="0" />
-      <LineId Id="3672" Count="7" />
+      <LineId Id="3672" Count="0" />
+      <LineId Id="3674" Count="5" />
       <LineId Id="4180" Count="0" />
       <LineId Id="3682" Count="0" />
       <LineId Id="4181" Count="0" />
