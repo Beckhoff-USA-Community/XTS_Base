@@ -86,48 +86,6 @@ internalEndPosition		:= EndPosition;]]></ST>
         </Implementation>
       </Set>
     </Property>
-    <Method Name="GetMoverList" Id="{dffe793b-2863-47a1-8062-e3c6e34d8aa5}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD GetMoverList : iMoverList
-VAR
-	i		: USINT;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
-
-internalMoverList.UnregisterAll();
-
-FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( internalTrackedMovers[0] ) - 1 DO
-	IF internalTrackedMovers[i] <> 0 THEN
-
-		IF internalStartPosition < internalEndPosition AND
-			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition AND
-			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
-			// Zone does NOT contain the rollover point, and DOES contain the mover
-
-			internalMoverList.RegisterMover( internalTrackedMovers[i]^ );
-
-		ELSIF internalStartPosition > internalEndPosition AND
-			( internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition OR
-			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition ) THEN
-			// Zone DOES contain the rollover point, and DOES contain the mover
-
-			internalMoverList.RegisterMover( internalTrackedMovers[i]^ );
-
-		ELSE
-			// Either the zone doesn't contain this mover,
-			// Or the StartPosition and EndPosition are coincident. Either way, add no movers
-		END_IF
-
-
-	END_IF
-END_FOR
-
-
-GetMoverList	:= internalMoverList;
-]]></ST>
-      </Implementation>
-    </Method>
     <Property Name="StartPosition" Id="{aacc7e02-3b0c-44c1-b85c-a6193164623c}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY StartPosition : LREAL]]></Declaration>
       <Get Name="Get" Id="{3c066f4a-ee41-4a60-96e5-d5b56be91452}">
@@ -190,10 +148,6 @@ END_IF]]></ST>
       <LineId Id="7" Count="0" />
       <LineId Id="6" Count="0" />
       <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.GetMoverList">
-      <LineId Id="6" Count="31" />
-      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Zone.StartPosition.Get">
       <LineId Id="5" Count="1" />
