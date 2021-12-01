@@ -5221,7 +5221,7 @@ and will return to Group State Standby when the situation permits.
 							</Value>
 							<Value>
 								<Name>IsPositionNoiseEnabled</Name>
-								<EnumText>FALSE</EnumText>
+								<EnumText>TRUE</EnumText>
 							</Value>
 							<Value>
 								<Name>IsRandomStartUpEnabled</Name>

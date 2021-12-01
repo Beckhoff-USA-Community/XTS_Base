@@ -660,6 +660,10 @@ ELSE
 
 END_IF
 
+fbMoveRelCA[0] (axis :=AxisReference);
+fbMoveRelCA[1] (axis :=AxisReference);
+
+
 internalCurrentMoveType		:= MOVETYPE_VELOCITY;
 internalCurrentDestPosition := 1E300;
 
@@ -887,6 +891,9 @@ THIS^.ReissueCommand();]]></ST>
       <LineId Id="8" Count="0" />
       <LineId Id="49" Count="0" />
       <LineId Id="13" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="86" Count="1" />
+      <LineId Id="85" Count="0" />
       <LineId Id="72" Count="0" />
       <LineId Id="71" Count="0" />
       <LineId Id="73" Count="0" />
