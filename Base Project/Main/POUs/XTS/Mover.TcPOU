@@ -4,6 +4,12 @@
     <Declaration><![CDATA[{attribute 'reflection'}
 //{attribute 'hide_all_locals'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
+
+VAR_INPUT
+	
+	MotionParameters		: MotionParameters_typ;		// Motion parameters used by internal motion function blocks
+
+END_VAR
 VAR_OUTPUT
 	
 	Ready			: BOOL;			// Mover is enabled and ready to accept motion commands
@@ -29,7 +35,6 @@ VAR
 	internalDisable		: BOOL;		// moves the axis from Standstill to Disabled, removes Axis from CA Group
 	
 	internalCurrentMoveType			: MoverCommandType_enum;	// Most recent move command type
-	internalMotionParameters		: MotionParameters_typ;		// Motion parameters used by internal motion function blocks
 	
 	internalCurrentDestPosition		: LREAL;	// Track position of the current motion destination;
 	internalCurrentDestObjective	: STRING;	// Instance path of the current destination objective
@@ -476,8 +481,8 @@ IF NOT( Ready ) THEN	// if th emover is not ready & able to accept a GroupHalt C
 ELSE	// otherwise execute the command
 	
 	fbGroupStop.Execute			:= TRUE;
-	fbGroupStop.Deceleration	:= internalMotionParameters.Deceleration;
-	fbGroupStop.Jerk			:= internalMotionParameters.Jerk;
+	fbGroupStop.Deceleration	:= MotionParameters.Deceleration;
+	fbGroupStop.Jerk			:= MotionParameters.Jerk;
 	
 	memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
 	internalCurrentMoveType		:= MoverCommandType_enum.MOVETYPE_NONE;
@@ -488,50 +493,6 @@ END_IF
 GroupStop		:= THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="MotionParameters" Id="{1c0abd31-cb53-4dd3-a42f-2b8cda26fdde}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY PUBLIC MotionParameters : MotionParameters_typ]]></Declaration>
-      <Get Name="Get" Id="{5eebb531-f9c9-495e-840e-4a2e20f4add5}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[
-
-MotionParameters	:= internalMotionParameters;
-
-	]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{f06b0c16-d844-4ce4-b4d1-57ae1d4b972c}">
-        <Declaration><![CDATA[VAR
-
-	MaxVelocity		: LREAL := 40000.0; 	// mm/s
-	MinVelocity		: LREAL := 0.0;			// mm/s
-	
-	MaxAcceleration	: LREAL := 40000.0; 	// mm/s2
-	MinAcceleration : LREAL := 0.0;			// mm/s2
-	
-	MaxDeceleration	: LREAL := 40000.0;		// mm/s2
-	MinDeceleration : LREAL := 0.0;			// mm/s2
-
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[
-// todo: should error if the limits are exceeded
-internalMotionParameters.Jerk				:= MotionParameters.Jerk;
-internalMotionParameters.Velocity			:= LIMIT( MinVelocity, MotionParameters.Velocity, MaxVelocity );
-internalMotionParameters.Acceleration		:= LIMIT( MinAcceleration, MotionParameters.Acceleration, MaxAcceleration );
-internalMotionParameters.Deceleration		:= LIMIT( MinDeceleration, MotionParameters.Deceleration, MaxDeceleration );
-
-// Only accept valid directions. Should provide error information on invalid submissions
-IF MotionParameters.Direction = 1 OR MotionParameters.Direction = 3 THEN
-	internalMotionParameters.Direction	:= MotionParameters.Direction;
-END_IF;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Method Name="MoveToPosition" Id="{c28d081f-5f21-4357-8651-768a8cf4ef0e}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
 VAR_INPUT
@@ -551,11 +512,11 @@ ELSE	// otherwise let 'er rip
 	
 	IF fbMoveAbsCA[0].Busy = FALSE THEN
 		
-		fbMoveAbsCA[0].Jerk			:= internalMotionParameters.Jerk;
-		fbMoveAbsCA[0].Acceleration	:= internalMotionParameters.Acceleration;
-		fbMoveAbsCA[0].Deceleration	:= internalMotionParameters.Deceleration;
-		fbMoveAbsCA[0].Velocity		:= internalMotionParameters.Velocity;
-		fbMoveAbsCA[0].Direction	:= internalMotionParameters.Direction;
+		fbMoveAbsCA[0].Jerk			:= MotionParameters.Jerk;
+		fbMoveAbsCA[0].Acceleration	:= MotionParameters.Acceleration;
+		fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
+		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
+		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
 		
 		fbMoveAbsCA[0].Position		:= DestinationPosition;
 		
@@ -569,11 +530,11 @@ ELSE	// otherwise let 'er rip
 		
 	ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
 		
-		fbMoveAbsCA[1].Jerk			:= internalMotionParameters.Jerk;
-		fbMoveAbsCA[1].Acceleration	:= internalMotionParameters.Acceleration;
-		fbMoveAbsCA[1].Deceleration	:= internalMotionParameters.Deceleration;
-		fbMoveAbsCA[1].Velocity		:= internalMotionParameters.Velocity;
-		fbMoveAbsCA[1].Direction	:= internalMotionParameters.Direction;
+		fbMoveAbsCA[1].Jerk			:= MotionParameters.Jerk;
+		fbMoveAbsCA[1].Acceleration	:= MotionParameters.Acceleration;
+		fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
+		fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
+		fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
 		
 		fbMoveAbsCA[1].Position		:= DestinationPosition;
 		
@@ -616,11 +577,11 @@ ELSE	// otherwise let 'er rip
 	
 	IF fbMoveAbsCA[0].Busy = FALSE THEN
 		
-		fbMoveAbsCA[0].Jerk			:= internalMotionParameters.Jerk;
-		fbMoveAbsCA[0].Acceleration	:= internalMotionParameters.Acceleration;
-		fbMoveAbsCA[0].Deceleration	:= internalMotionParameters.Deceleration;
-		fbMoveAbsCA[0].Velocity		:= internalMotionParameters.Velocity;
-		fbMoveAbsCA[0].Direction	:= internalMotionParameters.Direction;
+		fbMoveAbsCA[0].Jerk			:= MotionParameters.Jerk;
+		fbMoveAbsCA[0].Acceleration	:= MotionParameters.Acceleration;
+		fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
+		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
+		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
 		
 		fbMoveAbsCA[0].Position		:= DestinationStation.Position;
 		
@@ -634,11 +595,11 @@ ELSE	// otherwise let 'er rip
 		
 	ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
 		
-		fbMoveAbsCA[1].Jerk			:= internalMotionParameters.Jerk;
-		fbMoveAbsCA[1].Acceleration	:= internalMotionParameters.Acceleration;
-		fbMoveAbsCA[1].Deceleration	:= internalMotionParameters.Deceleration;
-		fbMoveAbsCA[1].Velocity		:= internalMotionParameters.Velocity;
-		fbMoveAbsCA[1].Direction	:= internalMotionParameters.Direction;
+		fbMoveAbsCA[1].Jerk			:= MotionParameters.Jerk;
+		fbMoveAbsCA[1].Acceleration	:= MotionParameters.Acceleration;
+		fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
+		fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
+		fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
 		
 		fbMoveAbsCA[1].Position		:= DestinationStation.Position;
 		
@@ -682,15 +643,15 @@ END_VAR
 	
 ELSE
 	
-	internalMotionParameters.Velocity	:= DesiredVelocity;	
+	MotionParameters.Velocity	:= DesiredVelocity;	
 	
 	IF fbMoveRelCA[0].Busy = FALSE THEN
 		
-		fbMoveRelCA[0].Jerk			:= internalMotionParameters.Jerk;
+		fbMoveRelCA[0].Jerk			:= MotionParameters.Jerk;
 		
-		fbMoveRelCA[0].Acceleration	:= internalMotionParameters.Acceleration;
-		fbMoveRelCA[0].Deceleration	:= internalMotionParameters.Deceleration;
-		fbMoveRelCA[0].Velocity		:= internalMotionParameters.Velocity;
+		fbMoveRelCA[0].Acceleration	:= MotionParameters.Acceleration;
+		fbMoveRelCA[0].Deceleration	:= MotionParameters.Deceleration;
+		fbMoveRelCA[0].Velocity		:= MotionParameters.Velocity;
 		
 		fbMoverelCA[0].Distance		:= 1E100;
 		      
@@ -703,11 +664,11 @@ ELSE
 		
 	ELSIF fbMoveRelCA[1].Busy = FALSE THEN
 		
-		fbMoveRelCA[1].Jerk			:= internalMotionParameters.Jerk;
+		fbMoveRelCA[1].Jerk			:= MotionParameters.Jerk;
 		
-		fbMoveRelCA[1].Acceleration	:= internalMotionParameters.Acceleration;
-		fbMoveRelCA[1].Deceleration	:= internalMotionParameters.Deceleration;
-		fbMoveRelCA[1].Velocity		:= internalMotionParameters.Velocity;
+		fbMoveRelCA[1].Acceleration	:= MotionParameters.Acceleration;
+		fbMoveRelCA[1].Deceleration	:= MotionParameters.Deceleration;
+		fbMoveRelCA[1].Velocity		:= MotionParameters.Velocity;
 		      
 		fbMoveRelCA[1].Distance		:= 1E100;
 		      
@@ -721,6 +682,10 @@ ELSE
 	END_IF
 
 END_IF
+
+fbMoveRelCA[0] (axis :=AxisReference);
+fbMoveRelCA[1] (axis :=AxisReference);
+
 
 internalCurrentMoveType		:= MOVETYPE_VELOCITY;
 internalCurrentDestPosition := 1E300;
@@ -773,7 +738,7 @@ CASE internalCurrentMoveType OF
 	MOVETYPE_STATION:
 		THIS^.MoveToStation( internalCurrentDestStation );
 	MOVETYPE_VELOCITY:
-		THIS^.MoveVelocity( internalMotionParameters.Velocity );	
+		THIS^.MoveVelocity( MotionParameters.Velocity );	
 END_CASE
 
 
@@ -788,7 +753,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-internalMotionParameters.Acceleration		:= Acceleration;
+MotionParameters.Acceleration		:= Acceleration;
 
 THIS^.ReissueCommand();
 
@@ -803,7 +768,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-internalMotionParameters.Deceleration	:= Deceleration;
+MotionParameters.Deceleration	:= Deceleration;
 
 THIS^.ReissueCommand();
 
@@ -818,7 +783,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-internalMotionParameters.Direction		:= Direction;
+MotionParameters.Direction		:= Direction;
 
 THIS^.ReissueCommand();
 
@@ -835,7 +800,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[
 
-internalMotionParameters.Jerk		:= Jerk;
+MotionParameters.Jerk		:= Jerk;
 
 THIS^.ReissueCommand();
 
@@ -851,7 +816,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[
 
-internalMotionParameters.Velocity	:= Velocity; 
+MotionParameters.Velocity	:= Velocity; 
 
 THIS^.ReissueCommand();
 
@@ -916,21 +881,6 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="10" Count="0" />
       <LineId Id="34" Count="1" />
       <LineId Id="33" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.MotionParameters.Get">
-      <LineId Id="13" Count="1" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.MotionParameters.Set">
-      <LineId Id="78" Count="2" />
-      <LineId Id="83" Count="2" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="88" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="50" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToPosition">
       <LineId Id="9" Count="0" />
@@ -1020,6 +970,9 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="8" Count="0" />
       <LineId Id="49" Count="0" />
       <LineId Id="13" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="86" Count="1" />
+      <LineId Id="85" Count="0" />
       <LineId Id="72" Count="0" />
       <LineId Id="71" Count="0" />
       <LineId Id="73" Count="0" />
