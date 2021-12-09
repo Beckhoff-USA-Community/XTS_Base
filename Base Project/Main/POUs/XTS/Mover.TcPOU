@@ -26,7 +26,7 @@ VAR_OUTPUT
 	
 END_VAR
 VAR
-	
+
 	{attribute 'instance=path'}
 	{attribute 'no-init'}
 	InstancePath		: STRING;	// instance naming, for diagnostics purposes
@@ -170,7 +170,7 @@ CASE internalState OF
 		// todo: values may change. see issue #25 for update
 		fbReadM1DetectMode.NETID		:= '';
 		fbReadM1DetectMode.PORT			:= 351;
-		fbReadM1DetectMode.IDXGRP		:= 16#01010010;
+		fbReadM1DetectMode.IDXGRP		:= GVL.pXtsProcessingUnit;
 		fbReadM1DetectMode.IDXOFFS		:= 16#03080246;
 		fbReadM1DetectMode.LEN			:= SIZEOF( IdDetectionMode );
 		fbReadM1DetectMode.DESTADDR		:= ADR( IdDetectionMode );
@@ -203,7 +203,7 @@ CASE internalState OF
 		
 		fbReadM1DetectValid.NETID		:= '';
 		fbReadM1DetectValid.PORT		:= 351;
-		fbReadM1DetectValid.IDXGRP		:= 16#01010010;
+		fbReadM1DetectValid.IDXGRP		:= GVL.pXtsProcessingUnit;
 		fbReadM1DetectValid.IDXOFFS		:= 16#03080251;
 		fbReadM1DetectValid.LEN			:= SIZEOF( IsIdDetectionValid );
 		fbReadM1DetectValid.DESTADDR	:= ADR( IsIdDetectionValid );
@@ -211,7 +211,7 @@ CASE internalState OF
 		
 		fbReadM1DetectActive.NETID		:= '';
 		fbReadM1DetectActive.PORT		:= 351;
-		fbReadM1DetectActive.IDXGRP		:= 16#01010010;
+		fbReadM1DetectActive.IDXGRP		:= GVL.pXtsProcessingUnit;
 		fbReadM1DetectActive.IDXOFFS	:= 16#03080268;
 		fbReadM1DetectActive.LEN		:= SIZEOF( IsIdDetectionActive );
 		fbReadM1DetectActive.DESTADDR	:= ADR( IsIdDetectionActive );
@@ -246,7 +246,7 @@ CASE internalState OF
 		
 		fbWriteM1Detect.NETID			:= '';
 		fbWriteM1Detect.PORT			:= 351;
-		fbWriteM1Detect.IDXGRP			:= 16#01010010;
+		fbWriteM1Detect.IDXGRP			:= GVL.pXtsProcessingUnit;
 		fbWriteM1Detect.IDXOFFS			:= 16#03080250;
 		fbWriteM1Detect.WRITE			:= TRUE;
 		
@@ -613,8 +613,8 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Execute		:= TRUE;		// execute this block, and...
 		fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
 
-		fbMoveAbsCA[1]( Axis := AxisReference );		
-		 
+		fbMoveAbsCA[1]( Axis := AxisReference );	
+
 	END_IF
 	
 	// Set the current destination object to the instance path of the objective, or 0 if unassigned
@@ -946,7 +946,8 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="165" Count="1" />
       <LineId Id="227" Count="0" />
       <LineId Id="229" Count="7" />
-      <LineId Id="167" Count="1" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="168" Count="0" />
       <LineId Id="243" Count="0" />
       <LineId Id="242" Count="0" />
       <LineId Id="197" Count="0" />
