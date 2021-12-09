@@ -334,7 +334,11 @@ CASE internalState OF
 	MV_RUN: // ------------------------------------------------------- mover enabled, ready
 	
 		Ready	:= TRUE;
-		Busy	:= FALSE;
+		IF NOT fbMoveAbsCA[0].busy AND NOT fbMoveAbsCA[1].Busy AND NOT fbMoveRelCA[0].Busy AND NOT fbMoveRelCA[1].Busy THEN 
+			Busy	:= FALSE;
+		ELSE
+			Busy 	:= TRUE;
+		END_IF
 		Error	:= FALSE;
 		ErrorID	:= 0;
 		
@@ -845,7 +849,12 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="321" Count="0" />
       <LineId Id="20" Count="139" />
       <LineId Id="161" Count="3" />
-      <LineId Id="166" Count="53" />
+      <LineId Id="166" Count="48" />
+      <LineId Id="333" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="335" Count="1" />
+      <LineId Id="334" Count="0" />
+      <LineId Id="216" Count="3" />
       <LineId Id="322" Count="0" />
       <LineId Id="220" Count="17" />
       <LineId Id="239" Count="42" />
