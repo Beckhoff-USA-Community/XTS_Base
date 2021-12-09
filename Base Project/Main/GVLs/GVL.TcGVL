@@ -4,9 +4,12 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
 	
-	NUM_MOVERS		: USINT := 8;
-	NUM_STATIONS	: USINT := 5;
-	TRACK_LENGTH	: LREAL := 4000;
+	NUM_MOVERS		: USINT := 8;		// This should be set to the exact number of movers on the system
+	NUM_STATIONS	: USINT := 5;		// This should be set to a value equal to or greater than the number of stations needed
+	TRACK_LENGTH	: LREAL := 4000;	// This should be set to the exact length [mm] of the track system
+	
+	{attribute 'TcInitSymbol'}
+	pXtsProcessingUnit	: OTCID;		// This pointer needs to be initialized in the Main Instance, under Symbol Initialization
 
 END_VAR]]></Declaration>
   </GVL>

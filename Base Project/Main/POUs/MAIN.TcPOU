@@ -175,11 +175,16 @@ CASE MainState OF
 		IF Station[1].MoverInPosition THEN
 			StationTimer[1]( IN := TRUE, PT := T#250MS );
 			
-			Station[1].CurrentMover.MoveToStation( Station[ nextStation ] );
-			nextStation := nextStation - 1;
-			IF nextStation = 1 THEN
-				nextStation	:= 4;
+			IF StationTimer[1].Q THEN
+				Station[1].CurrentMover.SetVelocity( mediumVelocity );
+				Station[1].CurrentMover.MoveToStation( Station[ nextStation ] );
+				nextStation := nextStation - 1;
+				IF nextStation = 1 THEN
+					nextStation	:= 4;
+				END_IF
 			END_IF
+		ELSE
+			StationTimer[1]( IN := FALSE );
 		END_IF
 		
 		
@@ -378,9 +383,12 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3683" Count="7" />
       <LineId Id="3692" Count="0" />
       <LineId Id="4182" Count="0" />
-      <LineId Id="4184" Count="0" />
+      <LineId Id="4526" Count="1" />
+      <LineId Id="4525" Count="0" />
       <LineId Id="4253" Count="3" />
       <LineId Id="4187" Count="0" />
+      <LineId Id="4528" Count="0" />
+      <LineId Id="4523" Count="1" />
       <LineId Id="4183" Count="0" />
       <LineId Id="4391" Count="2" />
       <LineId Id="4204" Count="2" />
