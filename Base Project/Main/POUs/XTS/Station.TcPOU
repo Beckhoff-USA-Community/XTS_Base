@@ -94,13 +94,8 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[0]
 	// todo: make in-position tolerance adjustable. add condition that mover is stopped?
 	IF internalTrackedMovers[i] <> 0 THEN
 		difference	:= ABS( MODABS( internalTrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH ) - THIS^.TrackPosition );
-<<<<<<< HEAD
 	
 		IF (MIN( difference, GVL.TRACK_LENGTH - difference ) < 1.0 ) AND NOT internalTrackedMovers[i]^.Busy THEN
-=======
-			
-		IF MIN( difference, GVL.TRACK_LENGTH - difference ) < 1.0 THEN
->>>>>>> 0aff66dbed403d257b1cbc37ebf3b1f840852a66
 			MoverInPosition		:= TRUE;
 		END_IF
  	END_IF;
@@ -176,11 +171,11 @@ END_VAR
       <LineId Id="28" Count="3" />
       <LineId Id="44" Count="0" />
       <LineId Id="38" Count="0" />
-      <LineId Id="34" Count="1" />
+      <LineId Id="34" Count="0" />
       <LineId Id="37" Count="0" />
-      <LineId Id="40" Count="2" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="8" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="22" Count="3" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Station.TrackPosition.Get">
       <LineId Id="5" Count="1" />

@@ -45,6 +45,9 @@ VAR
 	Zone					: ARRAY [0..3] OF Zone;	
 	
 
+	myTrig: array [0..5] of bool;
+	idxSelect: USINT;
+	PositionSelect: LREAL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -123,6 +126,27 @@ CASE MainState OF
 		MainState			:= MS_ENABLED;
 		
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
+	
+	
+		IF myTrig[0] THEN
+			
+					// Register all movers with all Zones, for recovery
+			FOR i := 0 TO GVL.NUM_MOVERS - 1 DO				
+				Zone[0].RegisterMover( Mover[i] );
+				Zone[1].RegisterMover( Mover[i] );
+				Zone[2].RegisterMover( Mover[i] );
+				Zone[3].RegisterMover( Mover[i] );
+			END_FOR
+		
+			idxSelect;
+			PositionSelect;
+			
+		
+			Zone[0].CurrentMoverList.GetMoverByLocation( idxSelect, PositionSelect, MC_Positive_Direction ).MoveToPosition( 1000 );
+			
+			myTrig[0]	:= FALSE;
+		END_IF
+	
 	
 
 		IF MainCommands.Start THEN
@@ -359,6 +383,20 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3607" Count="0" />
       <LineId Id="3636" Count="0" />
       <LineId Id="4053" Count="0" />
+      <LineId Id="4575" Count="1" />
+      <LineId Id="4592" Count="0" />
+      <LineId Id="4594" Count="5" />
+      <LineId Id="4593" Count="0" />
+      <LineId Id="4579" Count="0" />
+      <LineId Id="4585" Count="0" />
+      <LineId Id="4587" Count="0" />
+      <LineId Id="4589" Count="0" />
+      <LineId Id="4586" Count="0" />
+      <LineId Id="4584" Count="0" />
+      <LineId Id="4591" Count="0" />
+      <LineId Id="4583" Count="0" />
+      <LineId Id="4580" Count="0" />
+      <LineId Id="4577" Count="1" />
       <LineId Id="3637" Count="2" />
       <LineId Id="3650" Count="0" />
       <LineId Id="4324" Count="0" />
