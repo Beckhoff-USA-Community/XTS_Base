@@ -14,6 +14,84 @@ END_VAR
     </Implementation>
     <Folder Name="Methods" Id="{f0610894-1931-4d0e-a817-1d1b4c8212b1}" />
     <Folder Name="Properties" Id="{3fdda14a-1516-48f6-a734-917962304085}" />
+    <Method Name="GetMoverByLocation" Id="{fef36da4-65e6-4a0c-848b-af8a54f15050}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE to Mover
+VAR_INPUT
+	Index		: USINT;	// 0 is find the first closest mover, 1 is find the second closest mover, 2 is find the third, etc. etc. etc.
+	Position	: LREAL;	// Fixed track position from which to search for movers by proximity
+	Direction	: Tc2_MC2.MC_Direction;	// Positive = find the most positive mover whose position is less than the Input. Negative = find the most negative mover whose position is greater than the input
+END_VAR
+
+VAR
+	positionSort	: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover;		// array copied from tracked movers, to be sorted by position
+	sortbuffer		: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover;		// temporary array, just to simplify sorting operation
+	currentLeast	: POINTER TO Mover;
+	ringOffset		: SINT;
+	leastIDX		: SINT;
+	i				: SINT;
+	j				: SINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[           
+// copy tracked movers into temporary array
+memcpy( ADR( sortbuffer ), ADR( internalTrackedMovers ), SIZEOF( internalTrackedMovers ));
+
+
+// sort temp array based on mover position (simple insertion sort)
+FOR i := 0 TO SIZEOF( positionSort ) / SIZEOF( positionSort[0] ) - 1 DO
+
+	leastIDX		:= 0;
+	currentLeast	:= 0;
+	FOR j := 0 TO SIZEOF( sortBuffer ) / SIZEOF( sortBuffer[0] ) - 1 DO
+		IF currentLeast = 0 THEN
+			currentLeast		:= sortbuffer[j];
+			leastIDX			:= j;
+		ELSIF sortbuffer[j] <> 0 AND_THEN sortbuffer[j]^.AxisReference.NcToPlc.ModuloActPos < currentLeast^.AxisReference.NcToPlc.ModuloActPos THEN
+			currentLeast		:= sortbuffer[j];
+			leastIDX			:= j;
+		END_IF;
+	END_FOR
+
+	memcpy( ADR( positionSort[i] ), ADR( currentLeast ), SIZEOF( currentLeast ));
+	memset( ADR( sortBuffer[leastIDX] ), 0, SIZEOF( sortBuffer[0] ));
+	
+END_FOR;
+
+
+// determine offset where position exists
+ringOffset		:= 0;
+FOR i := 0 TO SIZEOF( positionSort ) / SIZEOF( positionSort[0] ) - 1 DO
+	IF positionSort[i] <> 0 AND_THEN positionSort[i]^.AxisReference.NcToPlc.ModuloActPos < Position THEN
+		IF Direction = MC_Positive_Direction THEN
+			ringOffset := i - Index;
+		ELSIF Direction = MC_Negative_Direction THEN
+			ringOffset := i+1 + Index;			
+		END_IF
+	END_IF
+END_FOR
+
+IF ringOffset < 0 THEN
+	ringOffset := ringOffset + THIS^.TrackedMoverCount;
+ELSIF ringOffset >= THIS^.TrackedMoverCount THEN
+	ringOffset := ringOffset - THIS^.TrackedMoverCount;
+END_IF
+
+// count off either direction to return the proper mover
+IF Index < 0 OR Index >= THIS^.TrackedMoverCount THEN
+	GetMoverByLocation		REF= 0;
+ELSIF Direction = MC_Positive_Direction AND positionSort[ringOffset] <> 0 THEN
+	GetMoverByLocation		REF= positionSort[ringOffset]^;
+ELSIF Direction = MC_Negative_Direction AND positionSort[ringOffset] <> 0 THEN
+	GetMoverByLocation		REF= positionSort[ringOffset]^;
+ELSE
+	GetMoverByLocation		REF= 0;
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="MoveAllToPosition" Id="{bd912cae-8475-45f4-9366-6d4e3f45dbfd}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MoveAllToPosition : iMoverList
 VAR_INPUT
@@ -239,6 +317,55 @@ UnregisterAll		:= THIS^;	// dunno how you would method chain from this call, but
     </Method>
     <LineIds Name="MoverList">
       <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.GetMoverByLocation">
+      <LineId Id="45" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="93" Count="1" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="102" Count="1" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="122" Count="2" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="129" Count="1" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="142" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="131" Count="2" />
+      <LineId Id="10" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.MoveAllToPosition">
       <LineId Id="20" Count="0" />
