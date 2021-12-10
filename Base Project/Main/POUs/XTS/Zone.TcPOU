@@ -86,6 +86,25 @@ internalEndPosition		:= EndPosition;]]></ST>
         </Implementation>
       </Set>
     </Property>
+    <Method Name="GetMover" Id="{faabc650-b1f1-4ef7-8da9-de80f9ce94fc}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD GetMover : REFERENCE TO Mover
+VAR_INPUT
+	Index		: USINT;	// 0 is find the first closest mover, 1 is find the second closest mover, 2 is find the third, etc. etc. etc.
+	Direction	: Tc2_MC2.MC_Direction;	// Positive = find the mover closest to the End Position. Negative = find the mover closest to the Start Position
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+IF Direction = MC_Positive_Direction THEN
+	GetMover REF= THIS^.CurrentMoverList.GetMoverByLocation( Index, THIS^.EndPosition, MC_Positive_Direction );
+ELSIF Direction = MC_Negative_Direction THEN
+	GetMover REF= THIS^.CurrentMoverList.GetMoverByLocation( Index, THIS^.StartPosition, MC_Negative_Direction );
+ELSE
+	GetMover REF= 0;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="StartPosition" Id="{aacc7e02-3b0c-44c1-b85c-a6193164623c}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY StartPosition : LREAL]]></Declaration>
       <Get Name="Get" Id="{3c066f4a-ee41-4a60-96e5-d5b56be91452}">
@@ -148,6 +167,13 @@ END_IF]]></ST>
       <LineId Id="7" Count="0" />
       <LineId Id="6" Count="0" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.GetMover">
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="4" />
     </LineIds>
     <LineIds Name="Zone.StartPosition.Get">
       <LineId Id="5" Count="1" />

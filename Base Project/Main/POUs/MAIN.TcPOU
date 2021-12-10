@@ -140,12 +140,15 @@ CASE MainState OF
 		
 			idxSelect;
 			PositionSelect;
+
 			
-		
-			Zone[0].CurrentMoverList.GetMoverByLocation( idxSelect, PositionSelect, MC_Positive_Direction ).MoveToPosition( 1000 );
+			Zone[0].GetMover(0,MC_Positive_Direction).MoveToPosition( 1000 );
 			
 			myTrig[0]	:= FALSE;
 		END_IF
+		
+		
+		Station[0].CurrentMover.MoveToPosition( 1000 );
 	
 	
 
@@ -389,13 +392,13 @@ PositionTrigger[2].Cyclic();
       <LineId Id="4593" Count="0" />
       <LineId Id="4579" Count="0" />
       <LineId Id="4585" Count="0" />
-      <LineId Id="4587" Count="0" />
-      <LineId Id="4589" Count="0" />
-      <LineId Id="4586" Count="0" />
-      <LineId Id="4584" Count="0" />
       <LineId Id="4591" Count="0" />
+      <LineId Id="4602" Count="0" />
+      <LineId Id="4601" Count="0" />
+      <LineId Id="4603" Count="1" />
       <LineId Id="4583" Count="0" />
       <LineId Id="4580" Count="0" />
+      <LineId Id="4605" Count="2" />
       <LineId Id="4577" Count="1" />
       <LineId Id="3637" Count="2" />
       <LineId Id="3650" Count="0" />
