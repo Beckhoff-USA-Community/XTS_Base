@@ -1415,7 +1415,7 @@ External Setpoint Generation:
 					<Name>GVL.pXtsProcessingUnit</Name>
 					<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
 					<Comment><![CDATA[ This pointer needs to be initialized in the Main Instance, under Symbol Initialization]]></Comment>
-					<Data>10000101</Data>
+					<Data>00000000</Data>
 					<Properties>
 						<Property>
 							<Name>TcVarGlobal</Name>
@@ -1461,6 +1461,10 @@ External Setpoint Generation:
 			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 8">
 				<Link VarA="PlcTask Inputs^MAIN.Mover[7].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^MAIN.Mover[7].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC SAF^Objects^Collision Avoidance">
+				<Link VarA="PlcTask Inputs^MAIN.GroupRef.NcToPlc" VarB="Group Outputs^ToPLC"/>
+				<Link VarA="PlcTask Outputs^MAIN.GroupRef.PlcToNc" VarB="Group Inputs^FromPLC"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>
