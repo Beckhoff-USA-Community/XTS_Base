@@ -44,7 +44,6 @@ VAR
 	SpeedTrigger			: ARRAY [0..1] OF SpeedTrigger;
 	Zone					: ARRAY [0..3] OF Zone;	
 	
-
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -123,6 +122,7 @@ CASE MainState OF
 		MainState			:= MS_ENABLED;
 		
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
+	
 	
 
 		IF MainCommands.Start THEN
@@ -359,6 +359,7 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3607" Count="0" />
       <LineId Id="3636" Count="0" />
       <LineId Id="4053" Count="0" />
+      <LineId Id="4578" Count="0" />
       <LineId Id="3637" Count="2" />
       <LineId Id="3650" Count="0" />
       <LineId Id="4324" Count="0" />

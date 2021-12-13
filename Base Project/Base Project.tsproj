@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.22">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.17">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C929B002-BF94-48A2-937B-5D20DED8EF3B}">OperationMode</Name>
@@ -3513,6 +3513,248 @@ External Setpoint Generation:
 				<Enum>1</Enum>
 				<Comment><![CDATA[Move use of current feedforward after the cyclic current limit is ON]]></Comment>
 			</EnumInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{82B6918C-C4EC-45D5-B778-C7A36BF558DF}" Namespace="MC" TcBaseType="true">MC_DEFAULT_GAP_CONTROL_MODE</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[mcGapCtrlModeStandard]]></Text>
+				<Enum>#x1</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGapCtrlModeFast]]></Text>
+				<Enum>#x2</Enum>
+			</EnumInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{D68A608B-A876-4E91-AFD2-70BE1B760958}" Namespace="MC" TcBaseType="true">MC_GAP_CONTROL_DIRECTION</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[mcGapCtrlDirectionPositive]]></Text>
+				<Enum>#x1</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGapCtrlDirectionBoth]]></Text>
+				<Enum>#x2</Enum>
+			</EnumInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{FA8688D6-9668-4845-AED5-C25BE790FF69}" Namespace="MC" TcBaseType="true">MC_GearInPosDefaultDynamicsAfterSync</Name>
+			<Comment TxtId=""><![CDATA[Specifies the default dynamics used for MC_GearInPosCA command after the slave axis has become synchronous for the first time.]]></Comment>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[MaximumSlaveDynamics]]></Text>
+				<Enum>#x0</Enum>
+				<Comment><![CDATA[The maximum slave axis dynamics (Velocity, Acceleration, Deceleration) are used as default value for the AfterSyncDynamics. Jerk is not restricted.]]></Comment>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[JobDynamics]]></Text>
+				<Enum>#x1</Enum>
+				<Comment><![CDATA[The job dynamics (GearInPosCAs Velocity, Acceleration, Deceleration and Jerk) are used as default values for the AfterSyncDynamics.]]></Comment>
+			</EnumInfo>
+			<Hides>
+				<Hide GUID="{7B67411A-68C4-417F-95DF-6E7960613EDC}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{DB9169AE-6AF9-4994-9F36-F1067592C967}" Namespace="MC">MC_GROUP_TYPE</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupTypeInvalid]]></Text>
+				<Enum>0</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupTypeCA]]></Text>
+				<Enum>1</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupTypeDxd]]></Text>
+				<Enum>2</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupTypeCM]]></Text>
+				<Enum>3</Enum>
+			</EnumInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{6B93C4EA-DEE3-49CC-86A6-CEF078FEFD24}" Namespace="MC">MC_GROUP_STATE</Name>
+			<BitSize>16</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateInvalid]]></Text>
+				<Enum>0</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateDisabled]]></Text>
+				<Enum>1</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateStandby]]></Text>
+				<Enum>2</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateMoving]]></Text>
+				<Enum>3</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateStopping]]></Text>
+				<Enum>4</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateErrorStop]]></Text>
+				<Enum>5</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateHoming]]></Text>
+				<Enum>6</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateNotReady]]></Text>
+				<Enum>7</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateSuspended]]></Text>
+				<Enum>8</Enum>
+			</EnumInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>IsEnableRequested</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<Comment><![CDATA[Indicates whether Group has been enabled (e.g. via MC_GroupEnable)
+and will return to Group State Standby when the situation permits.
+(This information is usually only relevant when group is in error state.)]]></Comment>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AllAxesStanding</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<Comment><![CDATA[Indicate whether all axes are physically standing, i.e. velocity and acceleration are zero. This definition differs from the definition of the GroupStateMoving, which indicates whether a Motion Command is currently active.]]></Comment>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{51F0F443-1D05-4E13-ADFA-62EA48380092}" Namespace="MC">ST_GroupStatus</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>State</Name>
+				<Type GUID="{6B93C4EA-DEE3-49CC-86A6-CEF078FEFD24}" Namespace="MC">MC_GROUP_STATE</Type>
+				<Comment><![CDATA[0 = Invalid	(mcGroupStateInvalid),
+1 = Disabled	(mcGroupStateDisabled),
+2 = Standby	(mcGroupStateStandby),
+3 = Moving	(mcGroupStateMoving),
+4 = Stopping	(mcGroupStateStopping),
+5 = ErrorStop	(mcGroupStateErrorStop),
+6 = Homing	(mcGroupStateHoming),
+7 = NotReady	(mcGroupStateNotReady),
+8 = Suspended	(mcGroupStateSuspended)]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Flags</Name>
+				<Type GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC" TcBaseType="true">MCTOPLC_GROUP_COMMON_PART</Name>
+			<BitSize>512</BitSize>
+			<SubItem>
+				<Name>GroupOID</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
+				<Comment><![CDATA[TcCOM-Object-Id (OID) of this Group]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GroupType</Name>
+				<Type GUID="{DB9169AE-6AF9-4994-9F36-F1067592C967}" Namespace="MC">MC_GROUP_TYPE</Type>
+				<Comment><![CDATA[Actual Type of this Group:
+0 = Invalid            (mcGroupTypeInvalid),
+1 = CollisionAvoidance (mcGroupTypeCA),
+2 = DXD/CNC            (mcGroupTypeDxd),
+3 = CoordinatedMotion  (mcGroupTypeCM)]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GroupStatus</Name>
+				<Type GUID="{51F0F443-1D05-4E13-ADFA-62EA48380092}" Namespace="MC">ST_GroupStatus</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GroupErrorId</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Current Error Identifier (0 = no error)]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GroupAxesCount</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Number of Axes that are currently part of this Group 
+(e.g. added via MC_AddAxisToGroup)]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActOverrideFactor</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<Comment><![CDATA[Actual/Active override factor (1.0 = 100%)]]></Comment>
+				<BitSize>64</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{260A4C07-588B-43A4-9DE1-0381D61130FD}" Namespace="MC" TcBaseType="true">CDT_MCTOPLC_GROUP_CA</Name>
+			<BitSize>1536</BitSize>
+			<SubItem>
+				<Name>Common</Name>
+				<Type GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC">MCTOPLC_GROUP_COMMON_PART</Type>
+				<BitSize>512</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC" TcBaseType="true">PLCTOMC_GROUP_COMMON_PART</Name>
+			<BitSize>256</BitSize>
+			<SubItem>
+				<Name>OverrideFactor</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<Comment><![CDATA[Desired override factor (1.0 = 100%, default value is 1.0)]]></Comment>
+				<BitSize>64</BitSize>
+				<BitOffs>0</BitOffs>
+				<Default>
+					<Value>1.0</Value>
+				</Default>
+			</SubItem>
+			<Default>
+				<SubItem>
+					<Name>OverrideFactor</Name>
+					<Value>1.0</Value>
+				</SubItem>
+			</Default>
+		</DataType>
+		<DataType>
+			<Name GUID="{BAE35DD4-8FAE-4745-9207-33776C056045}" Namespace="MC" TcBaseType="true">CDT_PLCTOMC_GROUP_CA</Name>
+			<BitSize>1024</BitSize>
+			<SubItem>
+				<Name>Common</Name>
+				<Type GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC">PLCTOMC_GROUP_COMMON_PART</Type>
+				<BitSize>256</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
 		</DataType>
 	</DataTypes>
 	<ImageDatas>
@@ -48618,6 +48860,264 @@ External Setpoint Generation:
 						</Module>
 					</Module>
 				</Axis>
+				<Modules>
+					<Module Id="#x05120010">
+						<Name>Collision Avoidance</Name>
+						<TmcDesc GUID="{DFAB6BCE-9FBF-4B72-B0D3-B4C208CF459B}" TcSmClass="TComMcGroupObj">
+							<Name>CA Group</Name>
+							<CLSID ClassFactory="TcNc3">{0503003E-0000-0000-F000-000000000064}</CLSID>
+							<Licenses>
+								<License>
+									<LicenseId>{C7C2EEE2-23C9-47B9-82D4-0ADF5D82C0A0}</LicenseId>
+								</License>
+							</Licenses>
+							<InitSequence>SO</InitSequence>
+							<Contexts>
+								<Context>
+									<Id>0</Id>
+									<ManualConfig>
+										<OTCID>#x05000010</OTCID>
+									</ManualConfig>
+									<Priority>8</Priority>
+									<CycleTime>2000000</CycleTime>
+									<DependOn>ParentObject</DependOn>
+								</Context>
+								<Context>
+									<Id>1</Id>
+									<ManualConfig>
+										<OTCID>#x05000020</OTCID>
+									</ManualConfig>
+									<Priority>12</Priority>
+									<CycleTime>10000000</CycleTime>
+									<DependOn>ParentObject</DependOn>
+								</Context>
+							</Contexts>
+							<Parameters>
+								<Group><![CDATA[Geometry]]></Group>
+								<Group Collapsed="true"><![CDATA[Gap Control]]></Group>
+								<Parameter HideParameter="true">
+									<Name>TraceLevel</Name>
+									<BitSize>32</BitSize>
+									<BaseType GUID="{8007AE3B-86BB-40F2-B385-EF87FCC239A4}">TcTraceLevel</BaseType>
+									<Default>
+										<Value>2</Value>
+									</Default>
+									<PTCID>#x03002103</PTCID>
+								</Parameter>
+								<Parameter HideParameter="true">
+									<Name>Ctx_TaskOid</Name>
+									<Comment><![CDATA[Task implementing ICyclicCaller for cyclic execution of this module]]></Comment>
+									<BitSize>32</BitSize>
+									<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+									<PTCID>#x03002060</PTCID>
+								</Parameter>
+								<Parameter Group="Geometry">
+									<Name>Rail Length</Name>
+									<Comment><![CDATA[Length of Rail]]></Comment>
+									<BitSize>64</BitSize>
+									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+									<Default>
+										<Value>3000</Value>
+									</Default>
+									<PTCID>#x05030060</PTCID>
+								</Parameter>
+								<Parameter Group="Geometry">
+									<Name>Rail Is Ring</Name>
+									<Comment><![CDATA[Specifies if Rail is closed, i.e. in loop shape or the last mover is in front of first one]]></Comment>
+									<BitSize>8</BitSize>
+									<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+									<Default>
+										<Value>1</Value>
+									</Default>
+									<PTCID>#x05030066</PTCID>
+								</Parameter>
+								<Parameter Group="Gap Control">
+									<Name>Default Gap Control Mode</Name>
+									<Comment><![CDATA[Specifies the default gap control mode]]></Comment>
+									<BitSize>32</BitSize>
+									<BaseType GUID="{82B6918C-C4EC-45D5-B778-C7A36BF558DF}" Namespace="MC">MC_DEFAULT_GAP_CONTROL_MODE</BaseType>
+									<Default>
+										<Value>#x1</Value>
+									</Default>
+									<PTCID>#x050300a0</PTCID>
+								</Parameter>
+								<Parameter Group="Gap Control">
+									<Name>Gap Control Direction</Name>
+									<Comment><![CDATA[Specifies the direction in which the gap control acts]]></Comment>
+									<BitSize>32</BitSize>
+									<BaseType GUID="{D68A608B-A876-4E91-AFD2-70BE1B760958}" Namespace="MC">MC_GAP_CONTROL_DIRECTION</BaseType>
+									<Default>
+										<Value>#x2</Value>
+									</Default>
+									<PTCID>#x0503009c</PTCID>
+								</Parameter>
+								<Parameter Group="Gap Control">
+									<Name>Standby Gap Control</Name>
+									<Comment><![CDATA[Specifies whether the collision avoidance is active when no FB is active]]></Comment>
+									<BitSize>8</BitSize>
+									<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+									<Default>
+										<Value>0</Value>
+									</Default>
+									<PTCID>#x050300a1</PTCID>
+								</Parameter>
+								<Parameter Group="Gap Control">
+									<Name>Default Gap</Name>
+									<Comment><![CDATA[Size of Gap between Movers when it is not specified in Motion Command]]></Comment>
+									<BitSize>64</BitSize>
+									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+									<Default>
+										<Value>100</Value>
+									</Default>
+									<PTCID>#x05030062</PTCID>
+								</Parameter>
+								<Parameter Group="Gap Control">
+									<Name>Default Velocity</Name>
+									<Comment><![CDATA[Velocity used for gap control if no Motion Command is active (e.g. directly after GroupEnable)]]></Comment>
+									<BitSize>64</BitSize>
+									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+									<Default>
+										<Value>150</Value>
+									</Default>
+									<PTCID>#x05030030</PTCID>
+								</Parameter>
+								<Parameter Group="Gap Control">
+									<Name>Default Acceleration</Name>
+									<Comment><![CDATA[Acceleration used for gap control if no Motion Command is active (e.g. directly after GroupEnable)]]></Comment>
+									<BitSize>64</BitSize>
+									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+									<Default>
+										<Value>1000</Value>
+									</Default>
+									<PTCID>#x05030031</PTCID>
+								</Parameter>
+								<Parameter Group="Gap Control">
+									<Name>Default Deceleration</Name>
+									<Comment><![CDATA[Deceleration used for gap control if no Motion Command is active (e.g. directly after GroupEnable)]]></Comment>
+									<BitSize>64</BitSize>
+									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+									<Default>
+										<Value>1000</Value>
+									</Default>
+									<PTCID>#x05030032</PTCID>
+								</Parameter>
+								<Parameter Group="Gap Control">
+									<Name>Default Jerk</Name>
+									<Comment><![CDATA[Jerk used for gap control if no Motion Command is active (e.g. directly after GroupEnable)]]></Comment>
+									<BitSize>64</BitSize>
+									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+									<Default>
+										<Value>10000</Value>
+									</Default>
+									<PTCID>#x05030033</PTCID>
+								</Parameter>
+								<Parameter HideParameter="true">
+									<Name>GearInPosDefaultDynamicsAfterSync</Name>
+									<Comment TxtId=""><![CDATA[Specifies the default dynamics used for MC_GearInPosCA AfterSyncDynamics. By default, the value is set to ‘JobDynamics’. The parameter is not available for older projects (created with versions <3.1.10) but is set internally to 'MaximumSlaveDynamics'.]]></Comment>
+									<BitSize>32</BitSize>
+									<BaseType GUID="{FA8688D6-9668-4845-AED5-C25BE790FF69}" Namespace="MC">MC_GearInPosDefaultDynamicsAfterSync</BaseType>
+									<Default>
+										<EnumText>JobDynamics</EnumText>
+									</Default>
+									<PTCID>#x05030124</PTCID>
+								</Parameter>
+							</Parameters>
+							<DataAreas>
+								<DataArea>
+									<AreaNo AreaType="OutputSrc">1</AreaNo>
+									<Name>Group Outputs</Name>
+									<ContextId>0</ContextId>
+									<ByteSize>192</ByteSize>
+									<Symbol>
+										<Name>ToPLC</Name>
+										<BitSize>1536</BitSize>
+										<BaseType GUID="{260A4C07-588B-43A4-9DE1-0381D61130FD}">MC.CDT_MCTOPLC_GROUP_CA</BaseType>
+										<BitOffs>0</BitOffs>
+									</Symbol>
+								</DataArea>
+								<DataArea>
+									<AreaNo AreaType="InputDst">2</AreaNo>
+									<Name>Group Inputs</Name>
+									<ContextId>0</ContextId>
+									<ByteSize>128</ByteSize>
+									<Symbol>
+										<Name>FromPLC</Name>
+										<BitSize>1024</BitSize>
+										<BaseType GUID="{BAE35DD4-8FAE-4745-9207-33776C056045}">MC.CDT_PLCTOMC_GROUP_CA</BaseType>
+										<BitOffs>0</BitOffs>
+									</Symbol>
+								</DataArea>
+							</DataAreas>
+							<Properties>
+								<Property>
+									<Name>Category</Name>
+									<Value>MC Object</Value>
+								</Property>
+							</Properties>
+							<ParentOTCID>#x05000100</ParentOTCID>
+							<ParameterValues>
+								<Value>
+									<Name>TraceLevel</Name>
+									<EnumText>tlWarning</EnumText>
+								</Value>
+								<Value>
+									<Name>Ctx_TaskOid</Name>
+									<Value>83886096</Value>
+								</Value>
+								<Value>
+									<Name>Rail Length</Name>
+									<Value>4000</Value>
+								</Value>
+								<Value>
+									<Name>Rail Is Ring</Name>
+									<EnumText>TRUE</EnumText>
+								</Value>
+								<Value>
+									<Name>Default Gap Control Mode</Name>
+									<EnumText>mcGapCtrlModeStandard</EnumText>
+								</Value>
+								<Value>
+									<Name>Gap Control Direction</Name>
+									<EnumText>mcGapCtrlDirectionBoth</EnumText>
+								</Value>
+								<Value>
+									<Name>Standby Gap Control</Name>
+									<EnumText>FALSE</EnumText>
+								</Value>
+								<Value>
+									<Name>Default Gap</Name>
+									<Value>100</Value>
+								</Value>
+								<Value>
+									<Name>Default Velocity</Name>
+									<Value>150</Value>
+								</Value>
+								<Value>
+									<Name>Default Acceleration</Name>
+									<Value>1000</Value>
+								</Value>
+								<Value>
+									<Name>Default Deceleration</Name>
+									<Value>1000</Value>
+								</Value>
+								<Value>
+									<Name>Default Jerk</Name>
+									<Value>10000</Value>
+								</Value>
+								<Value>
+									<Name>GearInPosDefaultDynamicsAfterSync</Name>
+									<EnumText>JobDynamics</EnumText>
+								</Value>
+							</ParameterValues>
+						</TmcDesc>
+					</Module>
+					<Parameters>
+						<Parameter>
+							<PTCID>#x300a11b</PTCID>
+							<Data>02010070</Data>
+						</Parameter>
+					</Parameters>
+				</Modules>
 			</NC>
 		</Motion>
 		<Plc>
@@ -48632,6 +49132,7 @@ External Setpoint Generation:
 		</Io>
 	</Project>
 	<Mappings>
+		<MappingInfo Identifier="{08502001-0010-0500-0020-500810001205}" Id="#x02030020" Watchdog="08000000040000000400000004000000"/>
 		<MappingInfo Identifier="{08502001-0010-0500-0020-500850000403}" Id="#x02030010" Watchdog="08000000040000000400000004000000"/>
 		<OwnerA Name="TINC^NC SAF^Axes^Mover Axis 1">
 			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Mover 1">
