@@ -46,6 +46,9 @@ VAR
 	
 	meow: BOOL;
 	woof: BOOL;
+	bowwow: BOOL;
+	posSelect: LREAL;
+	woofwoof: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -135,15 +138,23 @@ CASE MainState OF
 			meow	:= FALSE;
 		END_IF
 		
-
-
 	
 		IF woof THEN
-			FOR i := 0 TO gvl.NUM_MOVERS - 1 DO
-				Mover[i].Enable();
-			END_FOR
-			
+			Mover[0].Enable();
 			woof	:= FALSE;
+		END_IF
+		
+		IF woofwoof THEN
+			Mover[1].Enable();
+			woofwoof	:= FALSE;
+		END_IF
+		
+		
+		IF bowwow THEN
+			FOR i := 0 TO gvl.NUM_MOVERS - 1 DO
+				Mover[i].MoveToPosition( posSelect );
+			END_FOR;
+			bowwow := FALSE;
 		END_IF
 		
 
@@ -391,10 +402,21 @@ PositionTrigger[2].Cyclic();
       <LineId Id="4639" Count="4" />
       <LineId Id="4654" Count="0" />
       <LineId Id="4644" Count="0" />
-      <LineId Id="4635" Count="1" />
-      <LineId Id="4645" Count="5" />
-      <LineId Id="4655" Count="1" />
-      <LineId Id="4651" Count="1" />
+      <LineId Id="4635" Count="0" />
+      <LineId Id="4646" Count="0" />
+      <LineId Id="4650" Count="0" />
+      <LineId Id="4722" Count="0" />
+      <LineId Id="4656" Count="0" />
+      <LineId Id="4651" Count="0" />
+      <LineId Id="4716" Count="2" />
+      <LineId Id="4721" Count="0" />
+      <LineId Id="4719" Count="0" />
+      <LineId Id="4702" Count="2" />
+      <LineId Id="4710" Count="0" />
+      <LineId Id="4714" Count="1" />
+      <LineId Id="4708" Count="0" />
+      <LineId Id="4706" Count="0" />
+      <LineId Id="4652" Count="0" />
       <LineId Id="4637" Count="1" />
       <LineId Id="4053" Count="0" />
       <LineId Id="4578" Count="0" />
