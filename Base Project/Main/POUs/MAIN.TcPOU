@@ -44,6 +44,8 @@ VAR
 	SpeedTrigger			: ARRAY [0..1] OF SpeedTrigger;
 	Zone					: ARRAY [0..3] OF Zone;	
 	
+	meow: BOOL;
+	woof: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -122,6 +124,30 @@ CASE MainState OF
 		MainState			:= MS_ENABLED;
 		
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
+
+
+
+	
+		IF meow THEN
+			FOR i := 0 TO gvl.NUM_MOVERS - 1 DO
+				Mover[i].Disable();
+			END_FOR
+			meow	:= FALSE;
+		END_IF
+		
+
+
+	
+		IF woof THEN
+			FOR i := 0 TO gvl.NUM_MOVERS - 1 DO
+				Mover[i].Enable();
+			END_FOR
+			
+			woof	:= FALSE;
+		END_IF
+		
+
+
 	
 	
 
@@ -153,6 +179,9 @@ CASE MainState OF
 		END_IF
 	
 	MS_RUN: 	// ------------------------------------------------------- OPERATING
+	
+
+		
 	
 	
 		
@@ -358,6 +387,15 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3633" Count="0" />
       <LineId Id="3607" Count="0" />
       <LineId Id="3636" Count="0" />
+      <LineId Id="4632" Count="2" />
+      <LineId Id="4639" Count="4" />
+      <LineId Id="4654" Count="0" />
+      <LineId Id="4644" Count="0" />
+      <LineId Id="4635" Count="1" />
+      <LineId Id="4645" Count="5" />
+      <LineId Id="4655" Count="1" />
+      <LineId Id="4651" Count="1" />
+      <LineId Id="4637" Count="1" />
       <LineId Id="4053" Count="0" />
       <LineId Id="4578" Count="0" />
       <LineId Id="3637" Count="2" />
@@ -375,7 +413,10 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3648" Count="1" />
       <LineId Id="3643" Count="1" />
       <LineId Id="3642" Count="0" />
-      <LineId Id="3534" Count="1" />
+      <LineId Id="3534" Count="0" />
+      <LineId Id="4622" Count="0" />
+      <LineId Id="4630" Count="1" />
+      <LineId Id="3535" Count="0" />
       <LineId Id="3672" Count="0" />
       <LineId Id="3674" Count="5" />
       <LineId Id="4180" Count="0" />

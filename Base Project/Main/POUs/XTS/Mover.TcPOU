@@ -48,6 +48,7 @@ VAR
 	// Internal function blocks	
 	fbPower					: MC_Power;
 	fbReset					: MC_Reset;
+	fbStop					: MC_Stop;
 
 	fbMoveAbsCA				: ARRAY[0..1] OF MC_MoveAbsoluteCA;
 	fbAddToGroup			: MC_AddAxisToGroup;
@@ -390,8 +391,70 @@ CASE internalState OF
 			internalState			:= MV_ERROR;
 		END_IF
 	
+		
+	MV_BEGIN_STOPPING:	// --------------------------------------------------- begin stopping process
+	
+		Ready	:= FALSE;
+		Busy	:= TRUE;
+		Error	:= FALSE;
+		ErrorID	:= 0;
+		
+		// Kill any active motion commands
+		fbMoveRelCA[0].Execute		:= FALSE;
+		fbMoveRelCA[1].Execute		:= FALSE;
+		fbMoveAbsCA[0].Execute		:= FALSE;
+		fbMoveAbsCA[1].Execute		:= FALSE;
+		
+		// Issue an MC_Stop
+		fbStop.Execute				:= TRUE;
+		fbStop.Deceleration			:= MotionParameters.Deceleration;
+		fbStop.Jerk					:= MotionParameters.Jerk;
+		
+		IF fbStop.Active THEN
+			internalState			:= MV_STOPPING;
+		ELSIF fbStop.Error THEN
+			ErrorID					:= fbStop.ErrorID;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbStop' );
+			internalState			:= MV_ERROR;
+		END_IF
+		
+		// Change state
+		
+		
 	MV_STOPPING:	// ------------------------------------------------------- mover disabling
 	
+		Ready	:= FALSE;
+		Busy	:= TRUE;
+		Error	:= FALSE;
+		ErrorID	:= 0;
+
+		// Wait for the stopping action to complete
+		IF fbStop.Done THEN
+			fbStop.Execute			:= FALSE;
+			internalState			:= MV_REMOVEFROMGROUP;
+		ELSIF fbStop.Error THEN
+			ErrorID					:= fbStop.ErrorID;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbStop' );
+			internalState			:= MV_ERROR;
+		END_IF
+		
+	MV_REMOVEFROMGROUP:	// ---------------------------------------------------- remove mover from CA group
+	
+		Ready	:= FALSE;
+		Busy	:= TRUE;
+		Error	:= FALSE;
+		ErrorID	:= 0;
+		
+		fbRemoveFromGroup.Execute			:= TRUE;
+		fbRemoveFromGroup.IdentInGroup		:= UDINT_TO_IDENTINGROUP( IdentInGroup );
+		
+		IF fbRemoveFromGroup.Done THEN
+			fbRemoveFromGroup.Execute		:= FALSE;
+			internalState					:= MV_DISABLING;		
+		END_IF
+
+	MV_DISABLING:	// ----------------------------------------------------- start the disabling process
+
 		Ready	:= FALSE;
 		Busy	:= TRUE;
 		Error	:= FALSE;
@@ -405,9 +468,11 @@ CASE internalState OF
 			
 		IF fbPower.Status = FALSE THEN
 			internalState			:= MV_IDLE;
-			
-		END_IF
-		
+		ELSIF fbPower.Error THEN
+			ErrorID					:= fbPower.ErrorID;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbPower' );
+			internalState			:= MV_ERROR;
+		END_IF		
 	
 	MV_ERROR: // ------------------------------------------------------- mover in error state
 	
@@ -419,9 +484,11 @@ END_CASE
 
 fbPower( Axis := AxisReference );
 fbReset( Axis := AxisReference );
+fbStop( Axis := AxisReference );
 //fbDisable( Axis := AxisRef );
 //fbExternEnable( Axis := AxisRef );
 fbAddToGroup( AxesGroup := GroupReference, Axis := AxisReference );
+fbRemoveFromGroup( AxesGroup := GroupReference );
 
 fbGroupStatus( AxesGroup := GroupReference );
 fbGroupEnable( AxesGroup := GroupReference );
@@ -857,9 +924,48 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="216" Count="3" />
       <LineId Id="322" Count="0" />
       <LineId Id="220" Count="17" />
-      <LineId Id="239" Count="42" />
-      <LineId Id="328" Count="0" />
-      <LineId Id="282" Count="32" />
+      <LineId Id="239" Count="27" />
+      <LineId Id="349" Count="1" />
+      <LineId Id="352" Count="5" />
+      <LineId Id="359" Count="0" />
+      <LineId Id="365" Count="3" />
+      <LineId Id="360" Count="1" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="371" Count="4" />
+      <LineId Id="401" Count="3" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="362" Count="1" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="267" Count="5" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="342" Count="1" />
+      <LineId Id="377" Count="0" />
+      <LineId Id="379" Count="0" />
+      <LineId Id="406" Count="2" />
+      <LineId Id="405" Count="0" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="380" Count="1" />
+      <LineId Id="389" Count="6" />
+      <LineId Id="397" Count="0" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="398" Count="0" />
+      <LineId Id="411" Count="0" />
+      <LineId Id="399" Count="1" />
+      <LineId Id="413" Count="0" />
+      <LineId Id="412" Count="0" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="414" Count="0" />
+      <LineId Id="416" Count="2" />
+      <LineId Id="344" Count="0" />
+      <LineId Id="274" Count="7" />
+      <LineId Id="419" Count="3" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="284" Count="10" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="295" Count="2" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="298" Count="16" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Disable">
