@@ -129,7 +129,7 @@ CASE MainState OF
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
 
 
-
+	
 	
 		IF meow THEN
 			FOR i := 0 TO gvl.NUM_MOVERS - 1 DO
@@ -338,7 +338,6 @@ END_CASE;
 
 
 
-
 // Call all mover function blocks cyclically
 FOR i := 0 TO GVL.NUM_MOVERS-1 DO
 	Mover[i].Cyclic( GroupRef );
@@ -398,7 +397,9 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3633" Count="0" />
       <LineId Id="3607" Count="0" />
       <LineId Id="3636" Count="0" />
-      <LineId Id="4632" Count="2" />
+      <LineId Id="4632" Count="0" />
+      <LineId Id="4773" Count="0" />
+      <LineId Id="4772" Count="0" />
       <LineId Id="4639" Count="4" />
       <LineId Id="4654" Count="0" />
       <LineId Id="4644" Count="0" />
@@ -518,7 +519,8 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3786" Count="2" />
       <LineId Id="3791" Count="1" />
       <LineId Id="3789" Count="0" />
-      <LineId Id="3542" Count="3" />
+      <LineId Id="3542" Count="1" />
+      <LineId Id="3545" Count="0" />
       <LineId Id="2547" Count="0" />
       <LineId Id="2546" Count="0" />
       <LineId Id="763" Count="1" />

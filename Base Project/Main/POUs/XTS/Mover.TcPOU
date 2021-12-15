@@ -49,7 +49,7 @@ VAR
 	fbPower					: MC_Power;
 	fbReset					: MC_Reset;
 	fbStop					: MC_Stop;
-	fbHalt					: MC_Halt;
+	fbHaltCA				: MC_HaltCA;
 
 	fbMoveAbsCA				: ARRAY[0..1] OF MC_MoveAbsoluteCA;
 	fbAddToGroup			: MC_AddAxisToGroup;
@@ -314,38 +314,28 @@ CASE internalState OF
 		
 		fbGroupStatus.Enable			:= TRUE;
 		
+		fbGroupStatus( AxesGroup := GroupReference );	// get current information
+		
 		IF fbGroupStatus.Valid AND fbGroupStatus.GroupErrorStop THEN
-			internalState				:= MV_RESETGROUP;
+			fbGroupReset.Execute		:= TRUE;
 		ELSIF fbGroupStatus.Valid AND fbGroupStatus.GroupDisabled THEN
+			fbGroupReset.Execute		:= FALSE;
 			internalState				:= MV_ENABLEGROUP;
-		ELSIF fbGroupStatus.Error THEN
+		ELSIF fbGroupStatus.Valid AND ( fbGroupStatus.GroupStandby OR fbGroupStatus.GroupMoving ) THEN
+			fbGroupReset.Execute		:= FALSE;
+			internalState				:= MV_RUN;
+		END_IF
+		
+		IF fbGroupStatus.Error THEN
 			ErrorID						:= fbGroupStatus.ErrorId;
 			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupStatus' );
 			internalState				:= MV_ERROR;
+		ELSIF fbGroupReset.Error THEN
+			ErrorID						:= fbGroupStatus.ErrorId;
+			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupReset' );
+			internalState				:= MV_ERROR;
 		END_IF
 		
-	MV_RESETGROUP:	// ----------------------------------------------------------- reset group errors
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbGroupReset.Execute	:= TRUE;
-		
-		IF fbGroupReset.Done AND fbGroupStatus.Valid AND fbGroupStatus.GroupDisabled THEN
-			internalState			:= MV_ENABLEGROUP;
-			fbGroupReset.Execute	:= FALSE;
-		ELSIF fbGroupReset.Done AND fbGroupStatus.Valid THEN
-			internalState			:= MV_RUN;
-			fbGroupReset.Execute	:= FALSE;
-		ELSIF fbGroupReset.Error THEN
-			ErrorID					:= fbGroupReset.ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGroupReset' );
-			internalState			:= MV_ERROR;
-		END_IF		
-		
-
 	
 	MV_ENABLEGROUP: // ------------------------------------------------------- enable the group
 	
@@ -379,7 +369,7 @@ CASE internalState OF
 		internalEnable			:= FALSE;		
 		IF internalDisable THEN
 			internalDisable		:= FALSE;
-			internalState		:= MV_REMOVEFROMGROUP;
+			internalState		:= MV_BEGIN_HALTING;
 			
 		// Reset all commands issued by method calls
 		ELSIF fbMoveAbsCA[0].Busy OR fbMoveAbsCA[0].CommandAborted THEN // OR fbMoveAbs.CommandAborted THEN
@@ -428,7 +418,55 @@ CASE internalState OF
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbReadStatus' );
 			internalState			:= MV_ERROR;
 		END_IF
+
+
+	MV_BEGIN_HALTING:	// --------------------------------------------------- begin stopping process
 	
+		Ready	:= FALSE;
+		Busy	:= TRUE;
+		Error	:= FALSE;
+		ErrorID	:= 0;
+		
+		// Kill any active motion commands
+		fbMoveRelCA[0].Execute		:= FALSE;
+		fbMoveRelCA[1].Execute		:= FALSE;
+		fbMoveAbsCA[0].Execute		:= FALSE;
+		fbMoveAbsCA[1].Execute		:= FALSE;
+				
+		IF fbReadStatus.ErrorStop = FALSE THEN
+			fbHaltCA.Execute		:= TRUE;
+			//fbHaltCA.Deceleration	:= MotionParameters.Deceleration;
+			//fbHaltCA.Jerk			:= MotionParameters.Jerk;
+		ELSE
+			internalState			:= MV_REMOVEFROMGROUP;
+		END_IF;
+		
+		IF fbHaltCA.Active OR fbHaltCA.Done THEN
+			internalState			:= MV_HALTING;
+		ELSIF fbHaltCA.Error THEN
+			ErrorID					:= fbHaltCA.ErrorID;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbHalt' );
+			internalState			:= MV_ERROR;				
+		END_IF	
+		
+	MV_HALTING:	// ------------------------------------------------------- mover disabling
+	
+		Ready	:= FALSE;
+		Busy	:= TRUE;
+		Error	:= FALSE;
+		ErrorID	:= 0;
+
+		// Wait for the stopping action to complete
+		IF fbHaltCA.Done THEN
+			fbHaltCA.Execute		:= FALSE;
+			internalState			:= MV_REMOVEFROMGROUP;
+		ELSIF fbHaltCA.Error THEN
+			ErrorID					:= fbStop.ErrorID;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbHalt' );
+			internalState			:= MV_ERROR;
+		END_IF
+		
+		
 		
 	MV_REMOVEFROMGROUP:	// ---------------------------------------------------- remove mover from CA group
 	
@@ -442,56 +480,10 @@ CASE internalState OF
 		
 		IF fbRemoveFromGroup.Done THEN
 			fbRemoveFromGroup.Execute		:= FALSE;
-			internalState					:= MV_BEGIN_HALTING;
+			internalState					:= MV_DISABLING;
 		END_IF
 		
-	MV_BEGIN_HALTING:	// --------------------------------------------------- begin stopping process
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		// Kill any active motion commands
-		fbMoveRelCA[0].Execute		:= FALSE;
-		fbMoveRelCA[1].Execute		:= FALSE;
-		fbMoveAbsCA[0].Execute		:= FALSE;
-		fbMoveAbsCA[1].Execute		:= FALSE;
-		
-		IF fbReadStatus.ErrorStop = FALSE THEN
-			fbHalt.Execute				:= TRUE;
-			fbHalt.Deceleration			:= MotionParameters.Deceleration;
-			fbHalt.Jerk					:= MotionParameters.Jerk;
-			fbHalt.BufferMode			:= mc_ABORTING;
-		ELSE
-			internalState			:= MV_DISABLING;
-		END_IF;
-		
-		IF fbHalt.Active OR fbHalt.Done THEN
-			internalState			:= MV_HALTING;
-		ELSIF fbHalt.Error THEN
-			ErrorID					:= fbHalt.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbHalt' );
-			internalState			:= MV_ERROR;				
-		END_IF
-		
-		
-	MV_HALTING:	// ------------------------------------------------------- mover disabling
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
 
-		// Wait for the stopping action to complete
-		IF fbHalt.Done THEN
-			fbHalt.Execute			:= FALSE;
-			internalState			:= MV_DISABLING;
-		ELSIF fbHalt.Error THEN
-			ErrorID					:= fbStop.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbHalt' );
-			internalState			:= MV_ERROR;
-		END_IF
 
 	MV_DISABLING:	// ----------------------------------------------------- start the disabling process
 
@@ -532,7 +524,7 @@ END_CASE
 fbPower( Axis := AxisReference );
 fbReset( Axis := AxisReference );
 fbStop( Axis := AxisReference );
-fbHalt( Axis := AxisReference );
+fbHaltCA( Axis := AxisReference );
 //fbDisable( Axis := AxisRef );
 //fbExternEnable( Axis := AxisRef );
 
@@ -974,19 +966,16 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="166" Count="7" />
       <LineId Id="509" Count="0" />
       <LineId Id="511" Count="7" />
-      <LineId Id="528" Count="2" />
-      <LineId Id="532" Count="1" />
-      <LineId Id="524" Count="3" />
+      <LineId Id="547" Count="4" />
+      <LineId Id="553" Count="1" />
+      <LineId Id="568" Count="3" />
+      <LineId Id="552" Count="0" />
+      <LineId Id="555" Count="1" />
+      <LineId Id="561" Count="1" />
+      <LineId Id="557" Count="0" />
+      <LineId Id="563" Count="3" />
       <LineId Id="510" Count="0" />
-      <LineId Id="487" Count="8" />
-      <LineId Id="500" Count="1" />
-      <LineId Id="534" Count="0" />
-      <LineId Id="537" Count="1" />
-      <LineId Id="540" Count="1" />
-      <LineId Id="505" Count="3" />
-      <LineId Id="503" Count="0" />
-      <LineId Id="174" Count="0" />
-      <LineId Id="192" Count="0" />
+      <LineId Id="487" Count="0" />
       <LineId Id="483" Count="0" />
       <LineId Id="194" Count="20" />
       <LineId Id="333" Count="0" />
@@ -1000,35 +989,14 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="220" Count="17" />
       <LineId Id="239" Count="25" />
       <LineId Id="464" Count="3" />
-      <LineId Id="265" Count="1" />
-      <LineId Id="439" Count="0" />
-      <LineId Id="441" Count="12" />
+      <LineId Id="265" Count="0" />
+      <LineId Id="635" Count="18" />
+      <LineId Id="655" Count="28" />
+      <LineId Id="632" Count="1" />
+      <LineId Id="619" Count="12" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="634" Count="0" />
       <LineId Id="440" Count="0" />
-      <LineId Id="349" Count="1" />
-      <LineId Id="352" Count="5" />
-      <LineId Id="359" Count="0" />
-      <LineId Id="365" Count="3" />
-      <LineId Id="475" Count="0" />
-      <LineId Id="361" Count="0" />
-      <LineId Id="369" Count="0" />
-      <LineId Id="371" Count="1" />
-      <LineId Id="427" Count="0" />
-      <LineId Id="476" Count="2" />
-      <LineId Id="428" Count="1" />
-      <LineId Id="431" Count="0" />
-      <LineId Id="433" Count="0" />
-      <LineId Id="435" Count="2" />
-      <LineId Id="432" Count="0" />
-      <LineId Id="358" Count="0" />
-      <LineId Id="351" Count="0" />
-      <LineId Id="267" Count="5" />
-      <LineId Id="364" Count="0" />
-      <LineId Id="342" Count="1" />
-      <LineId Id="377" Count="0" />
-      <LineId Id="379" Count="0" />
-      <LineId Id="406" Count="2" />
-      <LineId Id="405" Count="0" />
-      <LineId Id="378" Count="0" />
       <LineId Id="413" Count="0" />
       <LineId Id="412" Count="0" />
       <LineId Id="415" Count="0" />
@@ -1051,7 +1019,8 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="498" Count="0" />
       <LineId Id="297" Count="0" />
       <LineId Id="396" Count="0" />
-      <LineId Id="298" Count="2" />
+      <LineId Id="546" Count="0" />
+      <LineId Id="299" Count="1" />
       <LineId Id="499" Count="0" />
       <LineId Id="301" Count="13" />
       <LineId Id="5" Count="0" />
