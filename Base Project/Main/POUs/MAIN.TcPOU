@@ -44,11 +44,6 @@ VAR
 	SpeedTrigger			: ARRAY [0..1] OF SpeedTrigger;
 	Zone					: ARRAY [0..3] OF Zone;	
 	
-	meow: BOOL;
-	woof: BOOL;
-	bowwow: BOOL;
-	posSelect: LREAL;
-	woofwoof: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -127,40 +122,6 @@ CASE MainState OF
 		MainState			:= MS_ENABLED;
 		
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
-
-
-	
-	
-		IF meow THEN
-			FOR i := 0 TO gvl.NUM_MOVERS - 1 DO
-				Mover[i].Disable();
-			END_FOR
-			meow	:= FALSE;
-		END_IF
-		
-	
-		IF woof THEN
-			Mover[0].Enable();
-			woof	:= FALSE;
-		END_IF
-		
-		IF woofwoof THEN
-			Mover[1].Enable();
-			woofwoof	:= FALSE;
-		END_IF
-		
-		
-		IF bowwow THEN
-			FOR i := 0 TO gvl.NUM_MOVERS - 1 DO
-				Mover[i].MoveToPosition( posSelect );
-			END_FOR;
-			bowwow := FALSE;
-		END_IF
-		
-
-
-	
-	
 
 		IF MainCommands.Start THEN
 			
@@ -295,38 +256,50 @@ CASE MainState OF
 		
 		
 		IF MainCommands.Stop THEN
-			MainState		:= MS_STOPPING;
+			MainCommands.Start		:= FALSE;
+			MainState				:= MS_STOPPING;
 		ELSIF MainCommands.Disable THEN
-			MainState		:= MS_STOPPING;
+			MainCommands.Enable		:= FALSE;
+			MainState				:= MS_STOPPING;
 		END_IF
 	
 	MS_STOPPING:	// --------------------------------------------------- STOPPING MOVERS
 	
-		Mover[0].GroupStop();
-		// todo needs confirmation that all movers have stopped
-		
-		// todo needs to deregister all objectives
-		
-		MainState		:= MS_ENABLED;
-		
+		// Stop all movers
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO 
+			Mover[i].Disable();
+		END_FOR
+						
 		IF MainCommands.Disable THEN
-			MainState	:= MS_DISABLING;
-		ELSE
-			MainState	:= MS_ENABLED;
+			MainCommands.Enable		:= FALSE;
+			MainState				:= MS_DISABLING;
 		END_IF
 	
 	MS_DISABLING:	// --------------------------------------------------- DISABLING MOVERS
 	
-		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-			
-			Mover[i].Disable();
-			
+	
+		// Unregister everything from all stations
+		FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
+			Station[i].UnregisterAll();
 		END_FOR
 		
-		IF (* all movers are disabled *) TRUE THEN
-			
-			MainState		:= MS_DISABLED;
+		// Unregister everything from all Pos Trigs
+		FOR i := 0 TO SIZEOF( PositionTrigger ) / SIZEOF( PositionTrigger[0] ) - 1 DO
+			PositionTrigger[i].UnregisterAll();
+		END_FOR
 		
+		// Unregister everything from all speed trigs
+		FOR i := 0 TO SIZEOF( SpeedTrigger ) / SIZEOF( SpeedTrigger[0] ) - 1 DO
+			SpeedTrigger[i].UnregisterAll();
+		END_FOR
+		
+		// Unregister everything from all zones
+		FOR i := 0 TO SIZEOF( Zone ) / SIZEOF( Zone[0] ) - 1 DO
+			Zone[i].UnregisterAll();
+		END_FOR
+		
+		IF (* all movers are disabled *) TRUE THEN			
+			MainState		:= MS_DISABLED;		
 		END_IF
 	
 	MS_ERROR:		// --------------------------------------------------- ERRORSTATE
@@ -396,32 +369,7 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3860" Count="0" />
       <LineId Id="3633" Count="0" />
       <LineId Id="3607" Count="0" />
-      <LineId Id="3636" Count="0" />
-      <LineId Id="4632" Count="0" />
-      <LineId Id="4773" Count="0" />
-      <LineId Id="4772" Count="0" />
-      <LineId Id="4639" Count="4" />
-      <LineId Id="4654" Count="0" />
-      <LineId Id="4644" Count="0" />
-      <LineId Id="4635" Count="0" />
-      <LineId Id="4646" Count="0" />
-      <LineId Id="4650" Count="0" />
-      <LineId Id="4722" Count="0" />
-      <LineId Id="4656" Count="0" />
-      <LineId Id="4651" Count="0" />
-      <LineId Id="4716" Count="2" />
-      <LineId Id="4721" Count="0" />
-      <LineId Id="4719" Count="0" />
-      <LineId Id="4702" Count="2" />
-      <LineId Id="4710" Count="0" />
-      <LineId Id="4714" Count="1" />
-      <LineId Id="4708" Count="0" />
-      <LineId Id="4706" Count="0" />
-      <LineId Id="4652" Count="0" />
-      <LineId Id="4637" Count="1" />
-      <LineId Id="4053" Count="0" />
-      <LineId Id="4578" Count="0" />
-      <LineId Id="3637" Count="2" />
+      <LineId Id="3636" Count="3" />
       <LineId Id="3650" Count="0" />
       <LineId Id="4324" Count="0" />
       <LineId Id="4168" Count="0" />
@@ -496,25 +444,29 @@ PositionTrigger[2].Cyclic();
       <LineId Id="4229" Count="0" />
       <LineId Id="3746" Count="0" />
       <LineId Id="3756" Count="4" />
-      <LineId Id="3852" Count="3" />
+      <LineId Id="4816" Count="0" />
+      <LineId Id="3852" Count="1" />
+      <LineId Id="4817" Count="0" />
+      <LineId Id="3854" Count="1" />
       <LineId Id="3761" Count="0" />
       <LineId Id="3670" Count="0" />
-      <LineId Id="3762" Count="0" />
-      <LineId Id="3764" Count="1" />
-      <LineId Id="3763" Count="0" />
-      <LineId Id="3536" Count="1" />
-      <LineId Id="3766" Count="2" />
-      <LineId Id="3771" Count="0" />
-      <LineId Id="3779" Count="0" />
+      <LineId Id="4776" Count="0" />
+      <LineId Id="4781" Count="0" />
+      <LineId Id="4777" Count="2" />
+      <LineId Id="3536" Count="0" />
+      <LineId Id="3768" Count="0" />
+      <LineId Id="4818" Count="0" />
       <LineId Id="3778" Count="0" />
       <LineId Id="3770" Count="0" />
       <LineId Id="3772" Count="2" />
-      <LineId Id="3776" Count="1" />
-      <LineId Id="3540" Count="0" />
-      <LineId Id="3859" Count="0" />
-      <LineId Id="3541" Count="0" />
-      <LineId Id="3780" Count="2" />
-      <LineId Id="3784" Count="1" />
+      <LineId Id="4795" Count="0" />
+      <LineId Id="4804" Count="0" />
+      <LineId Id="4796" Count="3" />
+      <LineId Id="4805" Count="0" />
+      <LineId Id="4800" Count="2" />
+      <LineId Id="4806" Count="9" />
+      <LineId Id="3780" Count="1" />
+      <LineId Id="3784" Count="0" />
       <LineId Id="3783" Count="0" />
       <LineId Id="3786" Count="2" />
       <LineId Id="3791" Count="1" />

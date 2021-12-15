@@ -157,6 +157,22 @@ TrackedMovers	:= internalTrackedMovers;]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Method Name="UnregisterAll" Id="{8fb61f33-6bbe-4b93-92b5-f08c59b94375}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD UnregisterAll : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	i			: USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+
+// Blow out the tracked mover array
+memset( ADR( internalTrackedMovers ), 0, SIZEOF( internalTrackedMovers ));]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="UnregisterCurrent" Id="{f5252866-1ebe-4ec3-aeab-827236ab79ab}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD UnregisterCurrent : BOOL
 VAR_INPUT
@@ -263,6 +279,11 @@ END_IF]]></ST>
     <LineIds Name="Objective.TrackedMovers.Get">
       <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Objective.UnregisterAll">
+      <LineId Id="8" Count="0" />
+      <LineId Id="16" Count="3" />
+      <LineId Id="12" Count="0" />
     </LineIds>
     <LineIds Name="Objective.UnregisterCurrent">
       <LineId Id="8" Count="0" />

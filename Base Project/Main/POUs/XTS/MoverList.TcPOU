@@ -296,7 +296,7 @@ SetAllVelocity		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="UnregisterAll" Id="{9f7a3d8e-3975-4fa4-8579-c54f77146104}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD UnregisterAll : iMoverList
+      <Declaration><![CDATA[METHOD UnregisterAll : BOOL
 VAR_INPUT
 END_VAR
 VAR
@@ -312,7 +312,9 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]
 END_FOR
 
 
-UnregisterAll		:= THIS^;	// dunno how you would method chain from this call, but there ya go]]></ST>
+//UnregisterAll		:= THIS^;	// dunno how you would method chain from this call, but there ya go
+
+// Nope!]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="MoverList">
@@ -447,6 +449,8 @@ UnregisterAll		:= THIS^;	// dunno how you would method chain from this call, but
       <LineId Id="12" Count="0" />
       <LineId Id="23" Count="1" />
       <LineId Id="22" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

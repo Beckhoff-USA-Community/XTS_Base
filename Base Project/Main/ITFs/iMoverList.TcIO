@@ -87,7 +87,7 @@ END_VAR]]></Declaration>
       </Get>
     </Property>
     <Method Name="UnregisterAll" Id="{77dd6571-5452-49cc-817d-10e46daccff7}">
-      <Declaration><![CDATA[METHOD UnregisterAll : iMoverList
+      <Declaration><![CDATA[METHOD UnregisterAll : BOOL
 VAR_INPUT
 END_VAR]]></Declaration>
     </Method>
