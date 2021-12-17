@@ -127,6 +127,11 @@ CASE MainState OF
 			
 			// ===== RECOVERY LOGIC =====
 			
+			(*
+			Recovery is typically very application-specific. Each implementation will need to determine
+			what to do with work-in-progres, rejects, movers with unknown product status, etc.s
+			*)			
+			
 			// Register all movers with all Zones, for recovery
 			FOR i := 0 TO GVL.NUM_MOVERS - 1 DO				
 				Zone[0].RegisterMover( Mover[i] );
@@ -136,11 +141,10 @@ CASE MainState OF
 			END_FOR
 			
 			
-			Zone[0].CurrentMoverList.MoveAllToStation( Station[0] );
-			Zone[1].CurrentMoverList.MoveAllToStation( Station[0] );
-			Zone[2].CurrentMoverList.MoveAllToStation( Station[0] );
-			Zone[3].CurrentMoverList.MoveAllToStation( Station[0] );
-			
+			Zone[0].CurrentMoverList.SetAllVelocity( 800 ).MoveAllToStation( Station[0] );
+			Zone[1].CurrentMoverList.SetAllVelocity( 600 ).MoveAllToStation( Station[0] );
+			Zone[2].CurrentMoverList.SetAllVelocity( 400 ).MoveAllToStation( Station[0] );
+			Zone[3].CurrentMoverList.SetAllVelocity( 200 ).MoveAllToStation( Station[0] );			
 
 			// ===== END =====
 		
@@ -372,13 +376,18 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3636" Count="3" />
       <LineId Id="3650" Count="0" />
       <LineId Id="4324" Count="0" />
+      <LineId Id="4868" Count="0" />
+      <LineId Id="4872" Count="0" />
+      <LineId Id="4874" Count="0" />
+      <LineId Id="4871" Count="0" />
+      <LineId Id="4870" Count="0" />
       <LineId Id="4168" Count="0" />
       <LineId Id="3667" Count="0" />
       <LineId Id="3655" Count="4" />
       <LineId Id="4473" Count="2" />
-      <LineId Id="4477" Count="1" />
+      <LineId Id="4862" Count="0" />
+      <LineId Id="4866" Count="0" />
       <LineId Id="3987" Count="0" />
-      <LineId Id="4177" Count="0" />
       <LineId Id="4405" Count="0" />
       <LineId Id="3652" Count="2" />
       <LineId Id="3648" Count="1" />
