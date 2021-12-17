@@ -1,0 +1,48 @@
+site_name: XTS Base Documentation
+
+theme:
+    name: material
+    logo: Assets/XTS.svg
+    custom_dir: docs/overrides
+    font:
+        text: Arial
+    features:
+        - navigation.tabs
+
+extra_css:
+    - style.css
+
+use_directory_urls: false
+
+repo_name: XTS Base Project GitHub
+repo_url: https://github.com/pswift066/XTS_Base
+edit_uri: ""
+
+markdown_extensions:
+    - pymdownx.emoji:
+        emoji_index: !!python/name:materialx.emoji.twemoji
+        emoji_generator: !!python/name:materialx.emoji.to_svg
+    - pymdownx.highlight:
+        linenums: true
+    - pymdownx.inlinehilite
+    - pymdownx.superfences
+    - pymdownx.snippets
+
+nav:
+    - Home: index.md
+    - Getting Started:
+            - Introduction:     GettingStarted/Introduction.md
+            - First Steps:      GettingStarted/GettingStarted.md
+    - Code Reference:
+        - Overview:             CodeReference/Objectives.md
+        - Objects:
+            - Mover:                CodeReference/Mover.md
+            - Mover List:           CodeReference/MoverList.md
+            - Position Trigger:     CodeReference/PositionTrigger.md
+            - Speed Trigger:        CodeReference/SpeedTrigger.md
+            - Station:              CodeReference/Station.md
+            - Zone:                 CodeReference/Zone.md
+        - Diagnostics:
+            - Basics:           CodeReference/Diagnostics.md
+    #- Examples:
+        #- Station to Station:   Examples/StationRouting.md
