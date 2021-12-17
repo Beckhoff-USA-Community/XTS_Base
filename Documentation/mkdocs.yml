@@ -2,7 +2,7 @@ site_name: XTS Base Documentation
 
 theme:
     name: material
-    logo: Assets/XTS.svg
+    logo: Images/XTS.svg
     custom_dir: docs/overrides
     font:
         text: Arial
