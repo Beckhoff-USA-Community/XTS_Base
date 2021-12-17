@@ -89,5 +89,8 @@ END_IF
 > Automatically unregisters every mover from the Tracked Movers list
 
 ```javascript
-
+IF xClearTrigger THEN
+	PositionTrigger[2].UnregisterAll();
+	xClearTrigger	:= FALSE;
+END_IF
 ```
