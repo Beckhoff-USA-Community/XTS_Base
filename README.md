@@ -18,7 +18,7 @@
 
 ## Project Links
 
-- Project Documentation ( currently unavailable )
+- [Project Documentation](https://pswift066.github.io/XTS_Base/)
 - [Beckhoff XTS](https://www.beckhoff.com/en-us/products/motion/xts-linear-product-transport/)
 - [XTS Infosys](https://infosys.beckhoff.com/english.php?content=../content/1033/driveinfosys/9921860875.html&id=)
 
