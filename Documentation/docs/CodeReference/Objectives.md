@@ -83,7 +83,7 @@ Mover[1].MoveToPosition( Station[1].TrackPosition );
 
 > Automatically unregisters whatever mover is listed as CurrentMover for the Objective
 
-Here the MoverInPosition status output changes. The mover is still physically located at the Station position, but since it is no longer registered, it cannot report InPosition.
+Here the MoverInPosition status output changes. The mover is still physically located at the Station position, but since it is no longer registered, it cannot report MoverInPosition.
 
 ```javascript
 bCheck	:= Station[1].MoverInPosition;	// returns TRUE
