@@ -9,8 +9,7 @@
 
 ## Quick Start
 
-- Releases ( currently unavailable )
-- A link to download is above, inside the green 'Code' dropdown:
+- [Download the Latest Release](https://github.com/Beckhoff-USA-Community/XTS_Base/releases/tag/1.0.0)
 
 ---
 
