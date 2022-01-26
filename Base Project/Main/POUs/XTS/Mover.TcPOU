@@ -83,6 +83,19 @@ END_VAR]]></Declaration>
     </Implementation>
     <Folder Name="Methods" Id="{d146b766-1176-40b7-a641-ffa579406c77}" />
     <Folder Name="Properties" Id="{9b9301bf-13c1-4ce0-91ab-e61950dfd74a}" />
+    <Property Name="CurrentDestinationPosition" Id="{6d470b15-bd31-4ad6-8559-906c2c8d720c}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentDestinationPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{bc93c9f7-92a5-426e-9c7f-5953d1b7c034}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+CurrentDestinationPosition		:= internalCurrentDestPosition;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="CurrentMoveType" Id="{97c82f4e-fad3-4ecf-8f48-6f47f3a34a61}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY CurrentMoveType : MoverCommandType_enum]]></Declaration>
@@ -109,19 +122,6 @@ CurrentObjective		:= internalCurrentDestObjective;]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <Property Name="CurrestDestinationPosition" Id="{6d470b15-bd31-4ad6-8559-906c2c8d720c}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY CurrestDestinationPosition : LREAL]]></Declaration>
-      <Get Name="Get" Id="{bc93c9f7-92a5-426e-9c7f-5953d1b7c034}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[
-CurrestDestinationPosition		:= internalCurrentDestPosition;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Method Name="Cyclic" Id="{39769063-232f-402c-8c9b-ad47db196752}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Cyclic : iMover
 VAR_IN_OUT
@@ -130,6 +130,15 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
+
+
+
+
+// cleans motion parameters, removing possible negatives. Upper bounds are capped by the axis parameters
+MotionParameters.Acceleration	:= LIMIT( 0, MotionParameters.Acceleration, 1E300 );
+MotionParameters.Deceleration	:= LIMIT( 0, MotionParameters.Deceleration, 1E300 );
+MotionParameters.Jerk			:= LIMIT( 0, MotionParameters.Jerk, 1E300 );
+MotionParameters.Velocity		:= LIMIT( 0, MotionParameters.Velocity, 1E300 );
 
 
 
@@ -387,9 +396,10 @@ CASE internalState OF
 		// the Execute needs to remain High until the command has fully completed.
 		ELSIF fbGroupStop.Done THEN
 			fbGroupStop.Execute			:= FALSE;
+		END_IF;
 
 		// And catch all internal function block errors
-		ELSIF fbMoveAbsCA[0].Error THEN
+		IF fbMoveAbsCA[0].Error THEN
 			ErrorID					:= fbMoveAbsCA[0].ErrorID;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbMoveAbs[0]' );
 			internalState			:= MV_ERROR;
@@ -756,7 +766,7 @@ END_VAR
 	
 ELSE
 	
-	MotionParameters.Velocity	:= DesiredVelocity;	
+	MotionParameters.Velocity	:= LIMIT(0, DesiredVelocity, 1E300);	
 	
 	IF fbMoveRelCA[0].Busy = FALSE THEN
 		
@@ -866,7 +876,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-MotionParameters.Acceleration		:= Acceleration;
+MotionParameters.Acceleration		:= LIMIT( 0, Acceleration, 1E300 );	// upper limit is capped by the axis object parameters
 
 THIS^.ReissueCommand();
 
@@ -881,7 +891,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-MotionParameters.Deceleration	:= Deceleration;
+MotionParameters.Deceleration	:= LIMIT( 0, Deceleration, 1E300 ); // upper limit is capped by the axis parameters
 
 THIS^.ReissueCommand();
 
@@ -913,7 +923,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[
 
-MotionParameters.Jerk		:= Jerk;
+MotionParameters.Jerk		:= LIMIT( 0, Jerk, 1E300 ); // upper limit is capped by the axis parameters
 
 THIS^.ReissueCommand();
 
@@ -929,7 +939,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[
 
-MotionParameters.Velocity	:= Velocity; 
+MotionParameters.Velocity	:= LIMIT( 0, Velocity, 1E300 ); // upper limit is capped by the axis parameters 
 
 THIS^.ReissueCommand();
 
@@ -939,6 +949,10 @@ SetVelocity		:= THIS^;]]></ST>
     <LineIds Name="Mover">
       <LineId Id="110" Count="0" />
     </LineIds>
+    <LineIds Name="Mover.CurrentDestinationPosition.Get">
+      <LineId Id="20" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
     <LineIds Name="Mover.CurrentMoveType.Get">
       <LineId Id="13" Count="0" />
       <LineId Id="12" Count="0" />
@@ -947,12 +961,14 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="9" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="Mover.CurrestDestinationPosition.Get">
-      <LineId Id="20" Count="0" />
-      <LineId Id="15" Count="0" />
-    </LineIds>
     <LineIds Name="Mover.Cyclic">
-      <LineId Id="458" Count="5" />
+      <LineId Id="688" Count="0" />
+      <LineId Id="696" Count="0" />
+      <LineId Id="694" Count="1" />
+      <LineId Id="689" Count="0" />
+      <LineId Id="458" Count="0" />
+      <LineId Id="690" Count="3" />
+      <LineId Id="459" Count="4" />
       <LineId Id="6" Count="10" />
       <LineId Id="319" Count="0" />
       <LineId Id="474" Count="0" />
@@ -987,6 +1003,7 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="219" Count="0" />
       <LineId Id="322" Count="0" />
       <LineId Id="220" Count="17" />
+      <LineId Id="701" Count="0" />
       <LineId Id="239" Count="25" />
       <LineId Id="464" Count="3" />
       <LineId Id="265" Count="0" />
