@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="MAIN" Id="{0790caa7-8a3f-4f91-b0f8-9ebb3db3858d}" SpecialFunc="None">
-    <Declaration><![CDATA[ PROGRAM MAIN
+    <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	
 
@@ -46,7 +46,9 @@ VAR
 	
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// trivial change
+      <ST><![CDATA[
+
+
 
 CASE MainState OF
 	MS_DISABLED:	// ------------------------------------------------------- IDLE STATE
@@ -333,6 +335,7 @@ PositionTrigger[2].Cyclic();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="4918" Count="1" />
       <LineId Id="3503" Count="0" />
       <LineId Id="710" Count="0" />
       <LineId Id="1457" Count="0" />
