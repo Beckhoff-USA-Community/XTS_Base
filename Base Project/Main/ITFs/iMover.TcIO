@@ -4,6 +4,13 @@
     <Declaration><![CDATA[INTERFACE iMover]]></Declaration>
     <Folder Name="Methods" Id="{1b23c83c-1258-4c4f-a9ad-a029b20875d0}" />
     <Folder Name="Properties" Id="{73a4fa43-0d07-4dea-a761-2d7dc373ee4f}" />
+    <Property Name="CurrentDestinationPosition" Id="{fd336655-1b12-4c85-8800-888e616a0190}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentDestinationPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{3855cb66-22eb-461a-b098-b3ca2fe0f4f3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="CurrentMoveType" Id="{f31956ff-9981-42ba-a963-53182be5a6a1}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY CurrentMoveType : MoverCommandType_enum]]></Declaration>
@@ -14,13 +21,6 @@ PROPERTY CurrentMoveType : MoverCommandType_enum]]></Declaration>
     <Property Name="CurrentObjective" Id="{8ebf7eff-2b0b-45f9-8604-dc48a6c2dec6}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY CurrentObjective : String]]></Declaration>
       <Get Name="Get" Id="{1c8cee4d-d0d3-4396-aef2-3ace7cdfef3e}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="CurrestDestinationPosition" Id="{fd336655-1b12-4c85-8800-888e616a0190}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY CurrestDestinationPosition : LREAL]]></Declaration>
-      <Get Name="Get" Id="{3855cb66-22eb-461a-b098-b3ca2fe0f4f3}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>

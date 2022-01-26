@@ -83,6 +83,19 @@ END_VAR]]></Declaration>
     </Implementation>
     <Folder Name="Methods" Id="{d146b766-1176-40b7-a641-ffa579406c77}" />
     <Folder Name="Properties" Id="{9b9301bf-13c1-4ce0-91ab-e61950dfd74a}" />
+    <Property Name="CurrentDestinationPosition" Id="{6d470b15-bd31-4ad6-8559-906c2c8d720c}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentDestinationPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{bc93c9f7-92a5-426e-9c7f-5953d1b7c034}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+CurrentDestinationPosition		:= internalCurrentDestPosition;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="CurrentMoveType" Id="{97c82f4e-fad3-4ecf-8f48-6f47f3a34a61}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY CurrentMoveType : MoverCommandType_enum]]></Declaration>
@@ -106,19 +119,6 @@ END_VAR
         <Implementation>
           <ST><![CDATA[
 CurrentObjective		:= internalCurrentDestObjective;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="CurrestDestinationPosition" Id="{6d470b15-bd31-4ad6-8559-906c2c8d720c}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY CurrestDestinationPosition : LREAL]]></Declaration>
-      <Get Name="Get" Id="{bc93c9f7-92a5-426e-9c7f-5953d1b7c034}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[
-CurrestDestinationPosition		:= internalCurrentDestPosition;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -939,6 +939,10 @@ SetVelocity		:= THIS^;]]></ST>
     <LineIds Name="Mover">
       <LineId Id="110" Count="0" />
     </LineIds>
+    <LineIds Name="Mover.CurrentDestinationPosition.Get">
+      <LineId Id="20" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
     <LineIds Name="Mover.CurrentMoveType.Get">
       <LineId Id="13" Count="0" />
       <LineId Id="12" Count="0" />
@@ -946,10 +950,6 @@ SetVelocity		:= THIS^;]]></ST>
     <LineIds Name="Mover.CurrentObjective.Get">
       <LineId Id="9" Count="0" />
       <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.CurrestDestinationPosition.Get">
-      <LineId Id="20" Count="0" />
-      <LineId Id="15" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Cyclic">
       <LineId Id="458" Count="5" />
