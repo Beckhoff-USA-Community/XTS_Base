@@ -134,6 +134,15 @@ END_VAR
 
 
 
+// cleans motion parameters, removing possible negatives. Upper bounds are capped by the axis parameters
+MotionParameters.Acceleration	:= LIMIT( 0, MotionParameters.Acceleration, 1E300 );
+MotionParameters.Deceleration	:= LIMIT( 0, MotionParameters.Deceleration, 1E300 );
+MotionParameters.Jerk			:= LIMIT( 0, MotionParameters.Jerk, 1E300 );
+MotionParameters.Velocity		:= LIMIT( 0, MotionParameters.Velocity, 1E300 );
+
+
+
+
 
 
 CASE internalState OF
@@ -756,7 +765,7 @@ END_VAR
 	
 ELSE
 	
-	MotionParameters.Velocity	:= DesiredVelocity;	
+	MotionParameters.Velocity	:= LIMIT(0, DesiredVelocity, 1E300);	
 	
 	IF fbMoveRelCA[0].Busy = FALSE THEN
 		
@@ -866,7 +875,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-MotionParameters.Acceleration		:= Acceleration;
+MotionParameters.Acceleration		:= LIMIT( 0, Acceleration, 1E300 );	// upper limit is capped by the axis object parameters
 
 THIS^.ReissueCommand();
 
@@ -881,7 +890,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-MotionParameters.Deceleration	:= Deceleration;
+MotionParameters.Deceleration	:= LIMIT( 0, Deceleration, 1E300 ); // upper limit is capped by the axis parameters
 
 THIS^.ReissueCommand();
 
@@ -913,7 +922,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[
 
-MotionParameters.Jerk		:= Jerk;
+MotionParameters.Jerk		:= LIMIT( 0, Jerk, 1E300 ); // upper limit is capped by the axis parameters
 
 THIS^.ReissueCommand();
 
@@ -929,7 +938,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[
 
-MotionParameters.Velocity	:= Velocity; 
+MotionParameters.Velocity	:= LIMIT( 0, Velocity, 1E300 ); // upper limit is capped by the axis parameters 
 
 THIS^.ReissueCommand();
 
@@ -952,7 +961,13 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Cyclic">
-      <LineId Id="458" Count="5" />
+      <LineId Id="688" Count="0" />
+      <LineId Id="696" Count="0" />
+      <LineId Id="694" Count="1" />
+      <LineId Id="689" Count="0" />
+      <LineId Id="458" Count="0" />
+      <LineId Id="690" Count="3" />
+      <LineId Id="459" Count="4" />
       <LineId Id="6" Count="10" />
       <LineId Id="319" Count="0" />
       <LineId Id="474" Count="0" />
