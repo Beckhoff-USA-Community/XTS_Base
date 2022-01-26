@@ -396,9 +396,10 @@ CASE internalState OF
 		// the Execute needs to remain High until the command has fully completed.
 		ELSIF fbGroupStop.Done THEN
 			fbGroupStop.Execute			:= FALSE;
+		END_IF;
 
 		// And catch all internal function block errors
-		ELSIF fbMoveAbsCA[0].Error THEN
+		IF fbMoveAbsCA[0].Error THEN
 			ErrorID					:= fbMoveAbsCA[0].ErrorID;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbMoveAbs[0]' );
 			internalState			:= MV_ERROR;
@@ -1002,6 +1003,7 @@ SetVelocity		:= THIS^;]]></ST>
       <LineId Id="219" Count="0" />
       <LineId Id="322" Count="0" />
       <LineId Id="220" Count="17" />
+      <LineId Id="701" Count="0" />
       <LineId Id="239" Count="25" />
       <LineId Id="464" Count="3" />
       <LineId Id="265" Count="0" />

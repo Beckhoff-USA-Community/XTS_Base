@@ -283,7 +283,9 @@ CASE MainState OF
 	
 	MS_DISABLING:	// --------------------------------------------------- DISABLING MOVERS
 	
-	
+		// Reinit nextStation
+		nextStation	:= 4;
+		
 		// Unregister everything from all stations
 		FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
 			Station[i].UnregisterAll();
@@ -472,6 +474,8 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3770" Count="0" />
       <LineId Id="3772" Count="2" />
       <LineId Id="4795" Count="0" />
+      <LineId Id="4965" Count="0" />
+      <LineId Id="4963" Count="0" />
       <LineId Id="4804" Count="0" />
       <LineId Id="4796" Count="3" />
       <LineId Id="4805" Count="0" />
