@@ -44,6 +44,16 @@ VAR
 	SpeedTrigger			: ARRAY [0..1] OF SpeedTrigger;
 	Zone					: ARRAY [0..3] OF Zone;	
 	
+	myTrigA: BOOL;
+	myTrigB: BOOL;
+	myTrigC: BOOL;
+	myTrigD: BOOL;
+	mytrigtrig: BOOL;
+	differ: LREAL;
+	newgap: LREAL;
+	dagdag: BOOL;
+	whatwhat: BOOL;
+	bowbow: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -124,6 +134,57 @@ CASE MainState OF
 		MainState			:= MS_ENABLED;
 		
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
+	
+		IF myTrigA THEN
+			myTrigA		:= FALSE;
+			Mover[0].GearToMaster( Mover[1], 120 );
+		END_IF
+		
+		IF bowbow THEN
+			bowbow		:= FALSE;
+			Mover[0].GearToMaster( Mover[1], 200 );
+		END_IF
+		
+		
+		IF whatwhat THEN
+			whatwhat	:= FALSE;
+			Mover[0].PhaseAbsolute( newgap, 100 );
+		END_IF
+		
+		
+		differ	:= Mover[1].AxisReference.NcToPlc.ActPos - Mover[0].AxisReference.NcToPlc.ActPos;
+		IF mytrigtrig THEN
+			mytrigtrig	:= FALSE;
+			Mover[0].SuperImpose( differ - newgap, 100 );
+		END_IF
+		
+		IF dagdag THEN
+			dagdag	:= FALSE;
+			Mover[1].MoveVelocity( 100 );
+		END_IF
+		
+		IF myTrigB THEN
+			Mover[1].MoveToPosition( 2500 );
+			myTrigB	:= FALSE;
+		END_IF
+		
+		IF myTrigC THEN
+			Mover[1].SetVelocity( 1000 ).MoveToPosition( 500 );
+			myTrigC	:= FALSE;
+		END_IF
+		
+		IF myTrigD THEN
+			myTrigD	:= FALSE;
+			Mover[0].MoveToPosition( 250 );
+		END_IF
+	
+	
+	
+	
+	
+	
+	
+	
 
 		IF MainCommands.Start THEN
 			
@@ -378,7 +439,39 @@ PositionTrigger[2].Cyclic();
       <LineId Id="3860" Count="0" />
       <LineId Id="3633" Count="0" />
       <LineId Id="3607" Count="0" />
-      <LineId Id="3636" Count="3" />
+      <LineId Id="3636" Count="0" />
+      <LineId Id="5009" Count="1" />
+      <LineId Id="5019" Count="0" />
+      <LineId Id="5022" Count="0" />
+      <LineId Id="5020" Count="0" />
+      <LineId Id="5062" Count="0" />
+      <LineId Id="5068" Count="0" />
+      <LineId Id="5071" Count="0" />
+      <LineId Id="5074" Count="0" />
+      <LineId Id="5072" Count="0" />
+      <LineId Id="5069" Count="1" />
+      <LineId Id="5063" Count="1" />
+      <LineId Id="5067" Count="0" />
+      <LineId Id="5065" Count="0" />
+      <LineId Id="5042" Count="0" />
+      <LineId Id="5060" Count="1" />
+      <LineId Id="5043" Count="1" />
+      <LineId Id="5047" Count="0" />
+      <LineId Id="5045" Count="0" />
+      <LineId Id="5054" Count="2" />
+      <LineId Id="5059" Count="0" />
+      <LineId Id="5057" Count="0" />
+      <LineId Id="5023" Count="2" />
+      <LineId Id="5028" Count="0" />
+      <LineId Id="5026" Count="0" />
+      <LineId Id="5030" Count="2" />
+      <LineId Id="5035" Count="0" />
+      <LineId Id="5033" Count="0" />
+      <LineId Id="5036" Count="2" />
+      <LineId Id="5041" Count="0" />
+      <LineId Id="5039" Count="0" />
+      <LineId Id="5011" Count="7" />
+      <LineId Id="3637" Count="2" />
       <LineId Id="3650" Count="0" />
       <LineId Id="4324" Count="0" />
       <LineId Id="4868" Count="0" />
