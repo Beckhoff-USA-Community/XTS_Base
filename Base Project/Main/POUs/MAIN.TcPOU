@@ -54,6 +54,7 @@ VAR
 	dagdag: BOOL;
 	whatwhat: BOOL;
 	bowbow: BOOL;
+	hoodoo: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -137,20 +138,19 @@ CASE MainState OF
 	
 		IF myTrigA THEN
 			myTrigA		:= FALSE;
-			Mover[0].GearToMaster( Mover[1], 120 );
+			Mover[1].GearToMaster( Mover[0], -120 );
 		END_IF
 		
 		IF bowbow THEN
 			bowbow		:= FALSE;
-			Mover[0].GearToMaster( Mover[1], 200 );
+			Mover[1].GearToMaster( Mover[0], -200 );
 		END_IF
-		
-		
 
+		
 		
 		IF dagdag THEN
 			dagdag	:= FALSE;
-			Mover[1].MoveVelocity( 100 );
+			Mover[0].MoveVelocity( 100 );
 		END_IF
 		
 		IF myTrigB THEN
@@ -438,9 +438,9 @@ PositionTrigger[2].Cyclic();
       <LineId Id="5068" Count="0" />
       <LineId Id="5071" Count="0" />
       <LineId Id="5074" Count="0" />
-      <LineId Id="5072" Count="0" />
-      <LineId Id="5069" Count="1" />
-      <LineId Id="5045" Count="0" />
+      <LineId Id="5134" Count="0" />
+      <LineId Id="5138" Count="0" />
+      <LineId Id="5069" Count="0" />
       <LineId Id="5054" Count="2" />
       <LineId Id="5059" Count="0" />
       <LineId Id="5057" Count="0" />
