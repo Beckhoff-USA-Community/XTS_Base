@@ -146,17 +146,7 @@ CASE MainState OF
 		END_IF
 		
 		
-		IF whatwhat THEN
-			whatwhat	:= FALSE;
-			Mover[0].PhaseAbsolute( newgap, 100 );
-		END_IF
-		
-		
-		differ	:= Mover[1].AxisReference.NcToPlc.ActPos - Mover[0].AxisReference.NcToPlc.ActPos;
-		IF mytrigtrig THEN
-			mytrigtrig	:= FALSE;
-			Mover[0].SuperImpose( differ - newgap, 100 );
-		END_IF
+
 		
 		IF dagdag THEN
 			dagdag	:= FALSE;
@@ -450,13 +440,6 @@ PositionTrigger[2].Cyclic();
       <LineId Id="5074" Count="0" />
       <LineId Id="5072" Count="0" />
       <LineId Id="5069" Count="1" />
-      <LineId Id="5063" Count="1" />
-      <LineId Id="5067" Count="0" />
-      <LineId Id="5065" Count="0" />
-      <LineId Id="5042" Count="0" />
-      <LineId Id="5060" Count="1" />
-      <LineId Id="5043" Count="1" />
-      <LineId Id="5047" Count="0" />
       <LineId Id="5045" Count="0" />
       <LineId Id="5054" Count="2" />
       <LineId Id="5059" Count="0" />

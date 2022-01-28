@@ -58,7 +58,6 @@ VAR
 	fbRemoveFromGroup		: MC_RemoveAxisFromGroup;
 	
 	fbGearInPosCA			: ARRAY[0..1] OF MC_GearInPosCA;
-	fbMoveSuper				: MC_MoveSuperImposed;
 	
 	fbGroupStatus			: MC_GroupReadStatus;
 	fbGroupEnable			: MC_GroupEnable;
@@ -67,7 +66,6 @@ VAR
 	
 	fbReadStatus			: MC_ReadStatus;
 	fbMoveRelCA				: ARRAY[0..1] OF MC_MoveRelativeCA;
-	fbPhaseAbs				: MC_PhasingAbsolute;
 	
 	fbReadM1DetectMode		: ADSREAD;
 	fbReadM1DetectValid		: ADSREAD;
@@ -401,10 +399,6 @@ CASE internalState OF
 			fbGearInPosCA[0].Execute	:= FALSE;
 		ELSIF fbGearInPosCA[1].Busy OR fbGearInPosCA[1].CommandAborted THEN
 			fbGearInPosCA[1].Execute	:= FALSE;
-		ELSIF fbMoveSuper.Busy OR fbMoveSuper.CommandAborted THEN
-			fbMoveSuper.Execute			:= FALSE;
-		ELSIF fbPhaseAbs.Busy OR fbPhaseAbs.CommandAborted THEN
-			fbPhaseAbs.Execute			:= FALSE;
 			
 		// This is different than the other similar cases, since a Stop command should prevent other commands from overriding it, thus
 		// the Execute needs to remain High until the command has fully completed.
@@ -448,14 +442,6 @@ CASE internalState OF
 		ELSIF fbGearInPosCA[1].Error THEN
 			ErrorID					:= fbGearInPosCA[1].ErrorId;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosCA[1]');
-			internalState			:= MV_ERROR;
-		ELSIF fbMoveSuper.Error THEN
-			ErrorID					:= fbMoveSuper.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbMoveSuper');
-			internalState			:= MV_ERROR;
-		ELSIF fbPhaseAbs.Error THEN
-			ErrorID					:= fbPhaseAbs.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbPhaseAbs');
 			internalState			:= MV_ERROR;
 		END_IF
 
@@ -584,8 +570,6 @@ fbMoveRelCA[1] ( Axis := AxisReference );
 
 fbGearInPosCA[0]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
 fbGearInPosCA[1]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
-fbMoveSuper( Axis := AxisReference );
-fbPhaseAbs( Master := internalMasterMover.AxisReference, Slave := AxisReference );
 
 fbReadM1DetectMode();
 fbReadM1DetectValid();
@@ -732,6 +716,35 @@ END_IF
 GroupStop		:= THIS^;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="IsSyncedToMaster" Id="{b02e7e76-e41b-42cd-ad2a-fd14e80d7543}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsSyncedToMaster : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b38e44ed-4371-4ccd-ba7f-e98ea73ca608}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+IsSyncedToMaster		:= fbGearInPosCA[0].InSync OR fbGearInPosCA[1].InSync;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MasterMover" Id="{809c0b0b-ecf0-4af1-b9a6-f6c1668f1e51}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY MasterMover : Reference To Mover]]></Declaration>
+      <Get Name="Get" Id="{cf9c37de-0f5d-4ab8-bb6c-0c7a9a276e2e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+IF THIS^.IsSyncedToMaster THEN
+	MasterMover		REF= internalMasterMover;
+ELSE
+	MasterMover		REF= 0;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="MoveToPosition" Id="{c28d081f-5f21-4357-8651-768a8cf4ef0e}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
 VAR_INPUT
@@ -960,49 +973,6 @@ internalPayload	:= Payload;]]></ST>
         </Implementation>
       </Set>
     </Property>
-    <Method Name="PhaseAbsolute" Id="{307b38cb-265f-4454-9800-1a750f19d867}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD PhaseAbsolute : iMover
-VAR_INPUT
-	
-	NewGap		: LREAL;
-	RelVelo		: LREAL;
-
-END_VAR
-
-VAR
-	internalCurrentMove: INT;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
-
-
-IF NOT ( Ready ) THEN
-	
-	internalState		:= MV_ERROR;
-	ErrorID				:= 23456;
-	
-ELSE		// let 'er rip
-	
-	IF fbPhaseAbs.Busy = FALSE THEN
-		
-		fbPhaseAbs.Execute				:= TRUE;
-		
-		fbPhaseAbs.ContinuousUpdate		:= FALSE;
-		fbPhaseAbs.PhaseShift			:= NewGap;
-		fbPhaseAbs.Velocity				:= MotionParameters.Velocity;
-		fbPhaseAbs.Acceleration			:= MotionParameters.Acceleration;
-		fbPhaseAbs.Deceleration			:= MotionParameters.Deceleration;
-		fbPhaseAbs.Jerk					:= MotionParameters.Jerk;
-		
-		fbPhaseAbs( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
-			
-	END_IF
-END_IF
-
-
-PhaseAbsolute	:= THIS^;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="ReissueCommand" Id="{195ecbe2-3d92-4d60-b9b5-7e1a3292ea5b}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ReissueCommand : iMover
 VAR_INPUT
@@ -1105,55 +1075,6 @@ THIS^.ReissueCommand();
 SetVelocity		:= THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="SuperImpose" Id="{60a584a9-cfb4-4f8b-86cc-683b629f3f24}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD SuperImpose : iMover
-VAR_INPUT
-
-	Distance			: LREAL;
-	RelativeVelocity	: LREAL;
-
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
-
-IF NOT( Ready ) THEN
-	
-	internalState	:= MV_ERROR;
-	ErrorID			:= 859436;
-	
-ELSE		// let 'er rip
-	
-	IF fbMoveSuper.Busy = FALSE THEN
-	
-		fbMoveSuper.Execute			:= TRUE;
-	
-		fbMoveSuper.Mode			:= SUPERPOSITIONMODE_LENGTHREDUCTION_ADDITIVEMOTION;
-		
-		fbMoveSuper.Distance			:= Distance;
-		fbMoveSuper.VelocityDiff		:= RelativeVelocity;
-		fbMoveSuper.Acceleration		:= MotionParameters.Acceleration;
-		fbMoveSuper.Deceleration		:= MotionParameters.Deceleration;
-		fbMoveSuper.Jerk				:= MotionParameters.Jerk;
-		fbMoveSuper.VelocityProcess		:= THIS^.AxisReference.NcToPlc.ActVelo;
-		fbMoveSuper.Length				:= 0;	// iunno
-		
-		fbMoveSuper( Axis := THIS^.AxisReference );
-		
-	
-	END_IF
-	
-END_IF
-
-internalCurrentMoveType			:= MOVETYPE_SYNC;
-internalCurrentDestPosition		:= 1E300;
-
-memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
-internalCurrentDestStation		REF= 0;
-
-SuperImpose		:= THIS^;]]></ST>
-      </Implementation>
-    </Method>
     <LineIds Name="Mover">
       <LineId Id="110" Count="0" />
     </LineIds>
@@ -1212,17 +1133,15 @@ SuperImpose		:= THIS^;]]></ST>
       <LineId Id="322" Count="0" />
       <LineId Id="220" Count="12" />
       <LineId Id="707" Count="1" />
-      <LineId Id="728" Count="1" />
-      <LineId Id="713" Count="1" />
-      <LineId Id="721" Count="1" />
+      <LineId Id="728" Count="0" />
+      <LineId Id="722" Count="0" />
       <LineId Id="233" Count="4" />
       <LineId Id="701" Count="0" />
       <LineId Id="239" Count="25" />
       <LineId Id="464" Count="3" />
       <LineId Id="709" Count="3" />
-      <LineId Id="730" Count="3" />
-      <LineId Id="715" Count="3" />
-      <LineId Id="723" Count="3" />
+      <LineId Id="730" Count="2" />
+      <LineId Id="726" Count="0" />
       <LineId Id="265" Count="0" />
       <LineId Id="635" Count="18" />
       <LineId Id="655" Count="28" />
@@ -1259,8 +1178,6 @@ SuperImpose		:= THIS^;]]></ST>
       <LineId Id="301" Count="6" />
       <LineId Id="719" Count="0" />
       <LineId Id="706" Count="0" />
-      <LineId Id="734" Count="0" />
-      <LineId Id="720" Count="0" />
       <LineId Id="727" Count="0" />
       <LineId Id="308" Count="6" />
       <LineId Id="5" Count="0" />
@@ -1330,6 +1247,15 @@ SuperImpose		:= THIS^;]]></ST>
       <LineId Id="10" Count="0" />
       <LineId Id="34" Count="1" />
       <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsSyncedToMaster.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MasterMover.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="7" Count="2" />
     </LineIds>
     <LineIds Name="Mover.MoveToPosition">
       <LineId Id="9" Count="0" />
@@ -1442,20 +1368,6 @@ SuperImpose		:= THIS^;]]></ST>
       <LineId Id="12" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="Mover.PhaseAbsolute">
-      <LineId Id="10" Count="2" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="6" />
-      <LineId Id="23" Count="2" />
-      <LineId Id="27" Count="6" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="34" Count="0" />
-    </LineIds>
     <LineIds Name="Mover.ReissueCommand">
       <LineId Id="11" Count="0" />
       <LineId Id="14" Count="3" />
@@ -1503,33 +1415,6 @@ SuperImpose		:= THIS^;]]></ST>
       <LineId Id="12" Count="0" />
       <LineId Id="42" Count="0" />
       <LineId Id="32" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="47" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.SuperImpose">
-      <LineId Id="9" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="13" Count="4" />
-      <LineId Id="19" Count="1" />
-      <LineId Id="23" Count="1" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="30" Count="5" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="46" Count="0" />
       <LineId Id="48" Count="0" />
       <LineId Id="47" Count="0" />
     </LineIds>

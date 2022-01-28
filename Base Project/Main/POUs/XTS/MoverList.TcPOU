@@ -14,6 +14,33 @@ END_VAR
     </Implementation>
     <Folder Name="Methods" Id="{f0610894-1931-4d0e-a817-1d1b4c8212b1}" />
     <Folder Name="Properties" Id="{3fdda14a-1516-48f6-a734-917962304085}" />
+    <Method Name="GearAllToMaster" Id="{b4a8703b-5e07-422e-ad43-364cd1835413}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD GearAllToMaster : iMoverList
+VAR_INPUT
+	
+	MasterMover		: REFERENCE TO Mover;
+	Gap				: LREAL;
+
+END_VAR
+
+VAR
+	i: USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// For every valid mover in the list, pass it a GearToMaster command
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+	
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.GearToMaster( MasterMover, Gap );
+	END_IF
+
+END_FOR
+
+GearAllToMaster		:= THIS^;	// return this, to allow method chaining]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="GetMoverByLocation" Id="{fef36da4-65e6-4a0c-848b-af8a54f15050}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE to Mover
 VAR_INPUT
@@ -319,6 +346,16 @@ END_FOR
     </Method>
     <LineIds Name="MoverList">
       <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.GearAllToMaster">
+      <LineId Id="14" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="23" Count="2" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.GetMoverByLocation">
       <LineId Id="45" Count="0" />
