@@ -109,11 +109,12 @@ END_IF
 
 ---
 
-### GearToMaster
+### SyncToMaster
 
-*GearToMaster( MasterMover : Mover, Gap : LREAL )*
+*SyncToMaster( MasterMover : Mover, Gap : LREAL )*
 
 > Pairs the current mover with a desired mover at a specified gap distance. The current mover will immediately move (with CA) to a specified distance from the Master Mover and then mimic all motion from the master. The synchronization can be ended by executing a call on the slave for any other motion command, e.g. MoveToPosition.
+
 
 **Gap** specifies a center-to-center following distance between master and slave movers. This gap cannot be achieved if it is below the minimum collision avoidance distance established in the CA group. Positive Gap values will result in a following position *behind* the master and negative values will result in a slave that *precedes* the master.
 
@@ -124,7 +125,7 @@ Additional calls to this method can be used to update the gap between paired mov
 ```javascript
 
 IF xCmdSyncToLeader THEN
-	Mover[0].GearToMaster( Mover[1], 100 );	// move 100mm away from Mover 1
+	Mover[0].SyncToMaster( Mover[1], 100 );	// move 100mm away from Mover 1
 
 	IF Mover[0].IsSyncedToMaster THEN
 		Mover[1].MoveToPosition( 2000 );	// Master moves to 2000 and Mover 0 will follow
@@ -134,10 +135,10 @@ END_IF;
 
 ```javascript
 IF xBuildTrain THEN
-	Mover[3].GearToMaster( Mover[4], 100 );
-	Mover[2].GearToMaster( Mover[4], 200 );
-	Mover[1].GearToMaster( Mover[4], 300 );
-	Mover[0].GearToMaster( Mover[4], 400 );
+	Mover[3].SyncToMaster( Mover[4], 100 );
+	Mover[2].SyncToMaster( Mover[4], 200 );
+	Mover[1].SyncToMaster( Mover[4], 300 );
+	Mover[0].SyncToMaster( Mover[4], 400 );
 
 	IF Mover[0].IsSyncedToMaster THEN
 		Mover[0].MasterMover.MoveVelocity( 300 );
