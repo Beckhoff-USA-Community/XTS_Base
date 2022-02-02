@@ -618,7 +618,7 @@ END_VAR]]></Declaration>
 IF NOT( Ready ) THEN	// if th emover is not ready & able to accept a GroupHalt Command
 
 	internalState	:= MV_ERROR;
-	ErrorID			:= 904;
+	ErrorID			:= 19201;
 
 ELSE	// otherwise execute the command
 	
@@ -677,7 +677,7 @@ END_VAR
 IF NOT( Ready ) THEN	// if the mover is not ready & able to accept a moveabs command...
 	
 	internalState	:= MV_ERROR;
-	ErrorID			:= 901;
+	ErrorID			:= 19201;
 	
 ELSE	// otherwise let 'er rip
 	
@@ -742,7 +742,7 @@ END_VAR]]></Declaration>
 IF NOT( Ready ) AND NOT(__ISVALIDREF( DestinationStation )) THEN	// if the mover is not ready & able to accept a moveabs command...
 	
 	internalState	:= MV_ERROR;
-	ErrorID			:= 901;
+	ErrorID			:= 19201;
 	
 ELSE	// otherwise let 'er rip
 	
@@ -813,7 +813,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[IF NOT ( ready ) THEN
 	
 	internalState	:= MV_ERROR;
-	ErrorID			:= 902;
+	ErrorID			:= 19201;
 	
 ELSE
 	
@@ -1003,8 +1003,8 @@ SetVelocity		:= THIS^;]]></ST>
       <Declaration><![CDATA[METHOD SyncToMaster : iMover
 VAR_INPUT
 
-	MasterMover		: REFERENCE TO Mover;
-	Gap				: LREAL;
+	MasterMover		: REFERENCE TO Mover;	// Synchronization master mover, whose position to follow. Further motion commands break the pairing
+	Gap				: LREAL;				// Gap distance to lead mover. Positive values indicate following, negative values indicate leading
 
 END_VAR
 
@@ -1019,7 +1019,7 @@ END_VAR]]></Declaration>
 IF NOT( Ready ) THEN
 
 	internalState	:= MV_ERROR;
-	ErrorID			:= 943;
+	ErrorID			:= 19201;
 	
 ELSE	// let 'er rip
 	

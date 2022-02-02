@@ -212,6 +212,8 @@ CASE MainState OF
 				Station[3].CurrentMover.MoveVelocity( 500 );
 				Station[4].CurrentMover.MoveVelocity( 500 );
 			END_IF
+		ELSE
+			StationTimer[2]( IN := FALSE );
 		END_IF
 		
 
@@ -432,6 +434,7 @@ PositionTrigger[2].Cyclic();
       <LineId Id="4210" Count="0" />
       <LineId Id="4212" Count="1" />
       <LineId Id="4211" Count="0" />
+      <LineId Id="5062" Count="1" />
       <LineId Id="4207" Count="0" />
       <LineId Id="3712" Count="0" />
       <LineId Id="4220" Count="0" />
