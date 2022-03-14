@@ -109,6 +109,45 @@ END_IF
 
 ---
 
+### SyncToMaster
+
+*SyncToMaster( MasterMover : Mover, Gap : LREAL )*
+
+> Pairs the current mover with a desired mover at a specified gap distance. The current mover will immediately move (with CA) to a specified distance from the Master Mover and then mimic all motion from the master. The synchronization can be ended by executing a call on the slave for any other motion command, e.g. MoveToPosition.
+
+
+**Gap** specifies a center-to-center following distance between master and slave movers. This gap cannot be achieved if it is below the minimum collision avoidance distance established in the CA group. Positive Gap values will result in a following position *behind* the master and negative values will result in a slave that *precedes* the master.
+
+
+Additional calls to this method can be used to update the gap between paired movers.
+
+
+```javascript
+
+IF xCmdSyncToLeader THEN
+	Mover[0].SyncToMaster( Mover[1], 100 );	// move 100mm away from Mover 1
+
+	IF Mover[0].IsSyncedToMaster THEN
+		Mover[1].MoveToPosition( 2000 );	// Master moves to 2000 and Mover 0 will follow
+	END_IF;
+END_IF;
+```
+
+```javascript
+IF xBuildTrain THEN
+	Mover[3].SyncToMaster( Mover[4], 100 );
+	Mover[2].SyncToMaster( Mover[4], 200 );
+	Mover[1].SyncToMaster( Mover[4], 300 );
+	Mover[0].SyncToMaster( Mover[4], 400 );
+
+	IF Mover[0].IsSyncedToMaster THEN
+		Mover[0].MasterMover.MoveVelocity( 300 );
+	END_IF;
+END_IF;		
+```
+
+---
+
 ### ReissueCommand
 
 *ReissueCommand()*
@@ -251,6 +290,27 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 *STRING*
 
 > Provides the current Objective destination for the Mover. Right now this is only valid when the Mover is destined for a Station objective, and provides a string name for that station.
+
+---
+
+#### .IsSyncedToMaster
+
+*BOOL*
+
+> Returns true if the mover is slaved to another mover and has successfully reached the following position specified by the Gap.
+
+
+---
+
+#### .MasterMover
+
+*REFERENCE To Mover*
+
+> Reference variable that refers to the Mover this Mover is currently slaved to
+
+When this mover is not slaved to another mover, .MasterMover is an invalid reference. Attempting to evaluate it will result in a page fault and XAR will stop.
+
+It is recommended that all evaluations are nested inside IF checks for .IsSyncedToMaster OR by calling __ISVALIDREF
 
 ---
 
