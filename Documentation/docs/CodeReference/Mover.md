@@ -109,9 +109,9 @@ END_IF
 
 ---
 
-### SyncToMaster
+### SyncToMover
 
-*SyncToMaster( MasterMover : Mover, Gap : LREAL )*
+*SyncToMover( MasterMover : Mover, Gap : LREAL )*
 
 > Pairs the current mover with a desired mover at a specified gap distance. The current mover will immediately move (with CA) to a specified distance from the Master Mover and then mimic all motion from the master. The synchronization can be ended by executing a call on the slave for any other motion command, e.g. MoveToPosition.
 
@@ -125,9 +125,9 @@ Additional calls to this method can be used to update the gap between paired mov
 ```javascript
 
 IF xCmdSyncToLeader THEN
-	Mover[0].SyncToMaster( Mover[1], 100 );	// move 100mm away from Mover 1
+	Mover[0].SyncToMover( Mover[1], 100 );	// move 100mm away from Mover 1
 
-	IF Mover[0].IsSyncedToMaster THEN
+	IF Mover[0].IsSyncedToMover THEN
 		Mover[1].MoveToPosition( 2000 );	// Master moves to 2000 and Mover 0 will follow
 	END_IF;
 END_IF;
@@ -135,12 +135,13 @@ END_IF;
 
 ```javascript
 IF xBuildTrain THEN
-	Mover[3].SyncToMaster( Mover[4], 100 );
-	Mover[2].SyncToMaster( Mover[4], 200 );
-	Mover[1].SyncToMaster( Mover[4], 300 );
-	Mover[0].SyncToMaster( Mover[4], 400 );
+	Mover[3].SyncToMover( Mover[4], 100 );
+	Mover[2].SyncToMover( Mover[4], 200 );
+	Mover[1].SyncToMover( Mover[4], 300 );
+	Mover[0].SyncToMover( Mover[4], 400 );
 
-	IF Mover[0].IsSyncedToMaster THEN
+	IF Mover[0].IsSyncedToMover THEN
+		// Commands Mover 4 to move ahead at 300 mm/s
 		Mover[0].MasterMover.MoveVelocity( 300 );
 	END_IF;
 END_IF;		
@@ -293,7 +294,7 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 
 ---
 
-#### .IsSyncedToMaster
+#### .IsSyncedToMover
 
 *BOOL*
 
@@ -310,7 +311,7 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 
 When this mover is not slaved to another mover, .MasterMover is an invalid reference. Attempting to evaluate it will result in a page fault and XAR will stop.
 
-It is recommended that all evaluations are nested inside IF checks for .IsSyncedToMaster OR by calling __ISVALIDREF
+It is recommended that all evaluations are nested inside IF checks for .IsSyncedToMover OR by calling __ISVALIDREF
 
 ---
 
