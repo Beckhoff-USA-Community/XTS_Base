@@ -42,7 +42,8 @@ VAR
 
 	internalState			: MoverState_enum;		// Internal state variable
 	
-	internalMasterMover				: REFERENCE TO Mover;
+	internalMasterMover				: REFERENCE TO Mover;	// Internal reference to a target master mover
+	internalGap						: LREAL;	// Gap distance to master mover during sync
 	
 	// Configurable Payload description	
 	internalPayload			: USINT;	// E.g. 0: No Product, 1: Product Loaded, 2: Product Reject. Can be modified for application
@@ -635,8 +636,9 @@ END_IF
 GroupStop		:= THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="IsSyncedToMaster" Id="{b02e7e76-e41b-42cd-ad2a-fd14e80d7543}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY IsSyncedToMaster : BOOL]]></Declaration>
+    <Property Name="IsSyncedToMover" Id="{b02e7e76-e41b-42cd-ad2a-fd14e80d7543}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsSyncedToMover : BOOL]]></Declaration>
       <Get Name="Get" Id="{b38e44ed-4371-4ccd-ba7f-e98ea73ca608}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -644,7 +646,7 @@ END_VAR
         <Implementation>
           <ST><![CDATA[
 
-IsSyncedToMaster		:= fbGearInPosCA[0].InSync OR fbGearInPosCA[1].InSync;]]></ST>
+IsSyncedToMover		:= fbGearInPosCA[0].InSync OR fbGearInPosCA[1].InSync;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -656,7 +658,8 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[
-IF THIS^.IsSyncedToMaster THEN
+
+IF THIS^.internalCurrentMoveType = MOVETYPE_SYNC THEN
 	MasterMover		REF= internalMasterMover;
 ELSE
 	MasterMover		REF= 0;
@@ -914,7 +917,9 @@ CASE internalCurrentMoveType OF
 	MOVETYPE_STATION:
 		THIS^.MoveToStation( internalCurrentDestStation );
 	MOVETYPE_VELOCITY:
-		THIS^.MoveVelocity( MotionParameters.Velocity );	
+		THIS^.MoveVelocity( MotionParameters.Velocity );
+	MOVETYPE_SYNC:
+		THIS^.SyncToMover( internalMasterMover, internalGap );
 END_CASE
 
 
@@ -999,8 +1004,8 @@ THIS^.ReissueCommand();
 SetVelocity		:= THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="SyncToMaster" Id="{c1dddc96-f9c0-4f4e-b1ac-4bb8d23d72f1}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD SyncToMaster : iMover
+    <Method Name="SyncToMover" Id="{c1dddc96-f9c0-4f4e-b1ac-4bb8d23d72f1}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SyncToMover : iMover
 VAR_INPUT
 
 	MasterMover		: REFERENCE TO Mover;	// Synchronization master mover, whose position to follow. Further motion commands break the pairing
@@ -1014,9 +1019,7 @@ VAR
 	syncPos: LREAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-
-IF NOT( Ready ) THEN
+        <ST><![CDATA[IF NOT( Ready ) THEN
 
 	internalState	:= MV_ERROR;
 	ErrorID			:= 19201;
@@ -1024,9 +1027,10 @@ IF NOT( Ready ) THEN
 ELSE	// let 'er rip
 	
 	internalMasterMover		REF= MasterMover;
+	internalGap				:= Gap;
 	
 	
-	syncPos			:= internalMasterMover.AxisReference.NcToPlc.ActPos - Gap;
+	syncPos			:= internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap;
 	CWDistToSync	:= MODABS( syncPos - THIS^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
 	CWDistToMaster	:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - THIS^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
 		
@@ -1037,8 +1041,8 @@ ELSE	// let 'er rip
 		fbGearInPosCA[0].RatioNumerator			:= 1;
 		fbGearInPosCA[0].RatioDenumerator		:= 1;
 		
-		fbGearInPosCA[0].MasterSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos;
-		fbGearInPosCA[0].SlaveSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos - Gap;
+		fbGearInPosCA[0].MasterSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
+		fbGearInPosCA[0].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
 		
 		fbGearInPosCA[0].SyncStrategy			:= mcSyncStrategyEarly;		
 		fbGearInPosCA[0].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
@@ -1061,8 +1065,8 @@ ELSE	// let 'er rip
 		fbGearInPosCA[1].RatioNumerator			:= 1;
 		fbGearInPosCA[1].RatioDenumerator		:= 1;
 		
-		fbGearInPosCA[1].MasterSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos;
-		fbGearInPosCA[1].SlaveSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos - Gap;
+		fbGearInPosCA[1].MasterSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH);
+		fbGearInPosCA[1].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
 		
 		fbGearInPosCA[1].SyncStrategy			:= mcSyncStrategyEarly;
 		fbGearInPosCA[1].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
@@ -1074,7 +1078,7 @@ ELSE	// let 'er rip
 		fbGearInPosCA[1].Deceleration			:= MotionParameters.Deceleration;
 		fbGearInPosCA[1].Jerk					:= MotionParameters.Jerk;
 		
-		fbGearInPosCA[1].BufferMode			:= MC_Aborting;
+		fbGearInPosCA[1].BufferMode				:= MC_Aborting;
 		
 		
 		fbGearInPosCA[1]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
@@ -1089,7 +1093,7 @@ internalCurrentDestPosition		:= 1E300;
 memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
 internalCurrentDestStation	REF= 0;
 
-SyncToMaster		:= THIS^;
+SyncToMover		:= THIS^;
 
 ]]></ST>
       </Implementation>
@@ -1230,14 +1234,16 @@ SyncToMaster		:= THIS^;
       <LineId Id="34" Count="1" />
       <LineId Id="33" Count="0" />
     </LineIds>
-    <LineIds Name="Mover.IsSyncedToMaster.Get">
+    <LineIds Name="Mover.IsSyncedToMover.Get">
       <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MasterMover.Get">
-      <LineId Id="5" Count="1" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="7" Count="2" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="17" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToPosition">
       <LineId Id="9" Count="0" />
@@ -1359,6 +1365,7 @@ SyncToMaster		:= THIS^;
       <LineId Id="26" Count="0" />
       <LineId Id="21" Count="4" />
       <LineId Id="27" Count="0" />
+      <LineId Id="36" Count="1" />
       <LineId Id="18" Count="0" />
       <LineId Id="31" Count="1" />
       <LineId Id="5" Count="0" />
@@ -1403,50 +1410,10 @@ SyncToMaster		:= THIS^;
       <LineId Id="48" Count="0" />
       <LineId Id="47" Count="0" />
     </LineIds>
-    <LineIds Name="Mover.SyncToMaster">
-      <LineId Id="6" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="11" Count="2" />
-      <LineId Id="60" Count="1" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="153" Count="0" />
-      <LineId Id="146" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="62" Count="1" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="34" Count="1" />
-      <LineId Id="37" Count="4" />
-      <LineId Id="160" Count="0" />
-      <LineId Id="133" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="44" Count="5" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="31" Count="2" />
-      <LineId Id="64" Count="0" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="67" Count="4" />
-      <LineId Id="92" Count="3" />
-      <LineId Id="161" Count="2" />
-      <LineId Id="77" Count="7" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="88" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="19" Count="1" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="17" Count="0" />
+    <LineIds Name="Mover.SyncToMover">
+      <LineId Id="188" Count="7" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="196" Count="66" />
       <LineId Id="9" Count="0" />
     </LineIds>
   </POU>
