@@ -5,5 +5,5 @@
 
 ### Additional Resources
 
-- [Project Github](https://github.com/pswift066/XTS_Base)
-- [Beckhoff XTS Page](https://www.beckhoff.com/en-en/products/motion/xts-linear-product-transport/?pk_campaign=AdWords-AdWordsSearch-XTS_EN&pk_kwd=xts&gclid=CjwKCAjwzaSLBhBJEiwAJSRoklUK72ME_Io5i7_AjnJo3U0tYNL0pHdR_TXybjkDr0e3VwLCDNmCsxoCsxgQAvD_BwE)
+- [Project Github](https://github.com/Beckhoff-USA-Community/XTS_Base)
+- [Beckhoff XTS Page](https://www.beckhoff.com/en-en/products/motion/xts-linear-product-transport/)

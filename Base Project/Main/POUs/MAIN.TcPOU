@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="MAIN" Id="{0790caa7-8a3f-4f91-b0f8-9ebb3db3858d}" SpecialFunc="None">
-    <Declaration><![CDATA[ PROGRAM MAIN
+    <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	
 
@@ -47,6 +47,8 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
+
+
 
 CASE MainState OF
 	MS_DISABLED:	// ------------------------------------------------------- IDLE STATE
@@ -281,7 +283,9 @@ CASE MainState OF
 	
 	MS_DISABLING:	// --------------------------------------------------- DISABLING MOVERS
 	
-	
+		// Reinit nextStation
+		nextStation	:= 4;
+		
 		// Unregister everything from all stations
 		FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
 			Station[i].UnregisterAll();
@@ -333,165 +337,7 @@ PositionTrigger[2].Cyclic();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="3503" Count="0" />
-      <LineId Id="710" Count="0" />
-      <LineId Id="1457" Count="0" />
-      <LineId Id="3522" Count="0" />
-      <LineId Id="3552" Count="0" />
-      <LineId Id="3599" Count="0" />
-      <LineId Id="3553" Count="1" />
-      <LineId Id="3548" Count="0" />
-      <LineId Id="3527" Count="0" />
-      <LineId Id="3600" Count="0" />
-      <LineId Id="3528" Count="0" />
-      <LineId Id="3584" Count="0" />
-      <LineId Id="3601" Count="0" />
-      <LineId Id="3586" Count="0" />
-      <LineId Id="3588" Count="2" />
-      <LineId Id="3598" Count="0" />
-      <LineId Id="3591" Count="0" />
-      <LineId Id="3593" Count="3" />
-      <LineId Id="3585" Count="0" />
-      <LineId Id="3602" Count="0" />
-      <LineId Id="3529" Count="0" />
-      <LineId Id="3531" Count="0" />
-      <LineId Id="3570" Count="0" />
-      <LineId Id="3603" Count="0" />
-      <LineId Id="3572" Count="2" />
-      <LineId Id="3576" Count="0" />
-      <LineId Id="3857" Count="0" />
-      <LineId Id="3577" Count="6" />
-      <LineId Id="3571" Count="0" />
-      <LineId Id="3605" Count="0" />
-      <LineId Id="3532" Count="1" />
-      <LineId Id="4023" Count="1" />
-      <LineId Id="4033" Count="0" />
-      <LineId Id="4035" Count="3" />
-      <LineId Id="3611" Count="0" />
-      <LineId Id="4040" Count="5" />
-      <LineId Id="3620" Count="11" />
-      <LineId Id="3860" Count="0" />
-      <LineId Id="3633" Count="0" />
-      <LineId Id="3607" Count="0" />
-      <LineId Id="3636" Count="3" />
-      <LineId Id="3650" Count="0" />
-      <LineId Id="4324" Count="0" />
-      <LineId Id="4868" Count="0" />
-      <LineId Id="4872" Count="0" />
-      <LineId Id="4874" Count="0" />
-      <LineId Id="4871" Count="0" />
-      <LineId Id="4870" Count="0" />
-      <LineId Id="4168" Count="0" />
-      <LineId Id="3667" Count="0" />
-      <LineId Id="3655" Count="4" />
-      <LineId Id="4473" Count="2" />
-      <LineId Id="4862" Count="0" />
-      <LineId Id="4866" Count="0" />
-      <LineId Id="3987" Count="0" />
-      <LineId Id="4405" Count="0" />
-      <LineId Id="3652" Count="2" />
-      <LineId Id="3648" Count="1" />
-      <LineId Id="3643" Count="1" />
-      <LineId Id="3642" Count="0" />
-      <LineId Id="3534" Count="0" />
-      <LineId Id="4622" Count="0" />
-      <LineId Id="4630" Count="1" />
-      <LineId Id="3535" Count="0" />
-      <LineId Id="3672" Count="0" />
-      <LineId Id="3674" Count="5" />
-      <LineId Id="4180" Count="0" />
-      <LineId Id="3682" Count="0" />
-      <LineId Id="4181" Count="0" />
-      <LineId Id="3683" Count="7" />
-      <LineId Id="3692" Count="0" />
-      <LineId Id="4182" Count="0" />
-      <LineId Id="4526" Count="1" />
-      <LineId Id="4525" Count="0" />
-      <LineId Id="4253" Count="3" />
-      <LineId Id="4187" Count="0" />
-      <LineId Id="4528" Count="0" />
-      <LineId Id="4523" Count="1" />
-      <LineId Id="4183" Count="0" />
-      <LineId Id="4391" Count="2" />
-      <LineId Id="4204" Count="2" />
-      <LineId Id="4208" Count="1" />
-      <LineId Id="4214" Count="0" />
-      <LineId Id="4217" Count="1" />
-      <LineId Id="4216" Count="0" />
-      <LineId Id="4219" Count="0" />
-      <LineId Id="4210" Count="0" />
-      <LineId Id="4212" Count="1" />
-      <LineId Id="4211" Count="0" />
-      <LineId Id="4207" Count="0" />
-      <LineId Id="3712" Count="0" />
-      <LineId Id="4220" Count="0" />
-      <LineId Id="3713" Count="2" />
-      <LineId Id="3837" Count="2" />
-      <LineId Id="3716" Count="1" />
-      <LineId Id="3719" Count="4" />
-      <LineId Id="3726" Count="0" />
-      <LineId Id="4221" Count="0" />
-      <LineId Id="3727" Count="1" />
-      <LineId Id="3840" Count="0" />
-      <LineId Id="4406" Count="0" />
-      <LineId Id="4411" Count="0" />
-      <LineId Id="4410" Count="0" />
-      <LineId Id="3730" Count="1" />
-      <LineId Id="3742" Count="0" />
-      <LineId Id="4412" Count="4" />
-      <LineId Id="4418" Count="1" />
-      <LineId Id="4417" Count="0" />
-      <LineId Id="3744" Count="1" />
-      <LineId Id="4226" Count="0" />
-      <LineId Id="4270" Count="0" />
-      <LineId Id="4381" Count="0" />
-      <LineId Id="4274" Count="0" />
-      <LineId Id="4266" Count="0" />
-      <LineId Id="4273" Count="0" />
-      <LineId Id="4267" Count="0" />
-      <LineId Id="4265" Count="0" />
-      <LineId Id="4229" Count="0" />
-      <LineId Id="3746" Count="0" />
-      <LineId Id="3756" Count="4" />
-      <LineId Id="4816" Count="0" />
-      <LineId Id="3852" Count="1" />
-      <LineId Id="4817" Count="0" />
-      <LineId Id="3854" Count="1" />
-      <LineId Id="3761" Count="0" />
-      <LineId Id="3670" Count="0" />
-      <LineId Id="4776" Count="0" />
-      <LineId Id="4781" Count="0" />
-      <LineId Id="4777" Count="2" />
-      <LineId Id="3536" Count="0" />
-      <LineId Id="3768" Count="0" />
-      <LineId Id="4818" Count="0" />
-      <LineId Id="3778" Count="0" />
-      <LineId Id="3770" Count="0" />
-      <LineId Id="3772" Count="2" />
-      <LineId Id="4795" Count="0" />
-      <LineId Id="4804" Count="0" />
-      <LineId Id="4796" Count="3" />
-      <LineId Id="4805" Count="0" />
-      <LineId Id="4800" Count="2" />
-      <LineId Id="4806" Count="9" />
-      <LineId Id="3780" Count="1" />
-      <LineId Id="3784" Count="0" />
-      <LineId Id="3783" Count="0" />
-      <LineId Id="3786" Count="2" />
-      <LineId Id="3791" Count="1" />
-      <LineId Id="3789" Count="0" />
-      <LineId Id="3542" Count="1" />
-      <LineId Id="3545" Count="0" />
-      <LineId Id="2547" Count="0" />
-      <LineId Id="2546" Count="0" />
-      <LineId Id="763" Count="1" />
-      <LineId Id="3793" Count="1" />
-      <LineId Id="765" Count="2" />
-      <LineId Id="2548" Count="0" />
-      <LineId Id="878" Count="1" />
-      <LineId Id="881" Count="1" />
-      <LineId Id="4259" Count="0" />
-      <LineId Id="2549" Count="0" />
+      <LineId Id="5191" Count="287" />
       <LineId Id="2538" Count="0" />
     </LineIds>
   </POU>

@@ -15,6 +15,24 @@ Each *Objective* defines a set criteria that a Mover can either fulfill or not a
 
 When a Mover satisfies the requirements of the *Objective*, the *Objective* provides a Reference to the Mover through which new Mover commands can be issued.
 
+---
+
+## Invalid References
+
+Objectives that return References to MoverLists or Movers have the potential to return *invalid* references. For example, a Station with no mover present can't return a CurrentMover. Attempting to call methods on one like in the example below would cause a Page Fault.
+
+```javascript
+// There is no CurrentMover at the Station, so
+// this code will cause a pagefault and stop the runtime
+IF Station[1].MoverInPosition = FALSE THEN
+	Station[1].CurrentMover.MoveToPosition( 200 );
+END_IF
+```
+
+To prevent this, ensure that all *CurrentMover* and *CurrentMoverList* output properties are only evaluated when a *MoverInPosition*, *MoverPassedPosition*, *MoverInVelocity*, etc. flag is true for the relevant Objective.
+
+---
+
 ## Common Methods
 
 The objects listed above all share some common methods, which are implemented in the base parent *Objective* object.
@@ -65,7 +83,7 @@ Mover[1].MoveToPosition( Station[1].TrackPosition );
 
 > Automatically unregisters whatever mover is listed as CurrentMover for the Objective
 
-Here the MoverInPosition status output changes. The mover is still physically located at the Station position, but since it is no longer registered, it cannot report InPosition.
+Here the MoverInPosition status output changes. The mover is still physically located at the Station position, but since it is no longer registered, it cannot report MoverInPosition.
 
 ```javascript
 bCheck	:= Station[1].MoverInPosition;	// returns TRUE
@@ -89,5 +107,8 @@ END_IF
 > Automatically unregisters every mover from the Tracked Movers list
 
 ```javascript
-
+IF xClearTrigger THEN
+	PositionTrigger[2].UnregisterAll();
+	xClearTrigger	:= FALSE;
+END_IF
 ```

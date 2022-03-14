@@ -9,16 +9,13 @@
 
 ## Quick Start
 
-- Releases ( currently unavailable )
-- A link to download is above, inside the green 'Code' dropdown:
-
-![Download link](Assets/Download.png)
+- [Download the Latest Release](https://github.com/Beckhoff-USA-Community/XTS_Base/releases/tag/1.0.0)
 
 ---
 
 ## Project Links
 
-- Project Documentation ( currently unavailable )
+- [Project Documentation](https://beckhoff-usa-community.github.io/XTS_Base/)
 - [Beckhoff XTS](https://www.beckhoff.com/en-us/products/motion/xts-linear-product-transport/)
 - [XTS Infosys](https://infosys.beckhoff.com/english.php?content=../content/1033/driveinfosys/9921860875.html&id=)
 
@@ -28,6 +25,6 @@
 ## Development
 
 You can contribute by:
-- Submitting [bug reports](https://github.com/pswift066/XTS_Base/issues)
-- Submitting [pull requests](https://github.com/pswift066/XTS_Base/pulls)
+- Submitting [bug reports](https://github.com/Beckhoff-USA-Community/XTS_Base/issues)
+- Submitting [pull requests](https://github.com/Beckhoff-USA-Community/XTS_Base/pulls)
 - Joining the discussion

@@ -14,7 +14,7 @@ All XTS projects will require:
 
 The base project includes a simulated configuration for a 4m oval track and 6 movers. In order to modify the program to fit a different track configuration, navigate to the XTS Tool Window.
 
-![XTS Tool WIndow](../Assets/XTSToolWindow.png)
+![XTS Tool WIndow](../Images/XTSToolWindow.png)
 
 Then launch the XTS Configurator and follow the prompts to configure your system.
 
@@ -25,7 +25,7 @@ Then launch the XTS Configurator and follow the prompts to configure your system
 - Existing XTS_Task
 - Any hardware in the IO section.
 
-![XTS Configurator](../Assets/XTSConfigurator.png)
+![XTS Configurator](../Images/XTSConfigurator.png)
 
 ## Initialization Settings
 
@@ -33,16 +33,16 @@ Once your hardware configuration is set, you will need to change a few variable 
 
 Inside *MOTION > Objects > Collision Avoidance (CA Group)*, set the **Rail Length** parameter to match your hardware.
 
-![CollisionAvoidanceLength](../Assets/CALength.png)
+![CollisionAvoidanceLength](../Images/CALength.png)
 
 Next, open the GVL file within PLC and modify these constants to match your system.
 
-![GlobalVariables](../Assets/GlobalVars.png)
+![GlobalVariables](../Images/GlobalVars.png)
 
 Next, check that each of your Axis objects are properly linked to a corresponding Mover object.
 
-![AxisLinks](../Assets/AxisLinks.png)
+![AxisLinks](../Images/AxisLinks.png)
 
 Lastly, open the *XtsProcessingUnit* within SYSTEM and verify that every setting here is correct
 
-![ProcessingUnit](../Assets/ProcessingUnit.png)
+![ProcessingUnit](../Images/ProcessingUnit.png)
