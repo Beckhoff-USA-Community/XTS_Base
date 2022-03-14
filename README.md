@@ -9,7 +9,7 @@
 
 ## Quick Start
 
-- [Download the Latest Release](https://github.com/Beckhoff-USA-Community/XTS_Base/releases/tag/1.0.0)
+- [Download the Latest Release](https://github.com/Beckhoff-USA-Community/XTS_Base/releases/latest)
 
 ---
 
