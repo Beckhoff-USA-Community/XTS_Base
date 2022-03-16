@@ -64,6 +64,23 @@ Mover[1].Disable();
 
 ---
 
+### GroupStop
+
+*GroupStop()*
+
+> Immediately stops all enabled movers on the system with the deceleration parameters of the mover on which the method was called.
+
+Since the method acts upon the collision avoidance group, all enabled movers on the system are immediately stopped and any active movements are cancelled. New motion commands to each mover are ignored until the Stop has completed.
+
+```javascript
+IF xStopAllMovers THEN
+	Mover[0].GroupStop();
+	xStopAllMovers		:= FALSE;
+END_IF
+```
+
+---
+
 ### MoveToPosition
 
 *MoveToPosition( Destination : LREAL )*
