@@ -19,17 +19,18 @@ When a Mover satisfies the requirements of the *Objective*, the *Objective* prov
 
 ## Invalid References
 
-Objectives that return References to MoverLists or Movers have the potential to return *invalid* references. For example, a Station with no mover present can't return a CurrentMover. Attempting to call methods on one like in the example below would cause a Page Fault.
+Objectives that return References to MoverLists or Movers have the potential to return *invalid* references. For example, a Station with no mover present can't possibly return a CurrentMover, because by definition no CurrentMover exists! To prevent this, ensure that all *CurrentMover* and *CurrentMoverList* output properties are only evaluated when a *MoverInPosition*, *MoverPassedPosition*, *MoverInVelocity*, etc. flag is true for the relevant Objective.
 
 ```javascript
-// There is no CurrentMover at the Station, so
-// this code will cause a pagefault and stop the runtime
+// There is no CurrentMover at the Station, so this code will not operate correctly!!
 IF Station[1].MoverInPosition = FALSE THEN
 	Station[1].CurrentMover.MoveToPosition( 200 );
 END_IF
 ```
 
-To prevent this, ensure that all *CurrentMover* and *CurrentMoverList* output properties are only evaluated when a *MoverInPosition*, *MoverPassedPosition*, *MoverInVelocity*, etc. flag is true for the relevant Objective.
+Typically, calling methods on these *invalid references* would result in a Pagefault and halt the XAR. However this outcome can be frustrating and slows development. Instead, an imposter **ErrorMover** object is returned in these circumstances as a quality-of-life improvement. ErrorMovers replace all the method functionality of standard Movers and will instead generate Errors in TwinCAT. For example:
+
+![ErrorMover](../Images/PagefaultPrevention.png)
 
 ---
 

@@ -5,10 +5,9 @@
 VAR
 
 	{attribute 'hide'}
-	internalThresholdVelocity	: LREAL;	
+	internalThresholdVelocity	: LREAL;
 
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
@@ -32,7 +31,13 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[0]
 		CurrentMover	REF= internalTrackedMovers[i]^;
 	END_IF
 		
-END_FOR]]></ST>
+END_FOR
+
+// If the Trigger has no CurrentMover, then return an imposter ErrorMover, whose method calls all trigger an error message
+IF __ISVALIDREF( CurrentMover ) = FALSE THEN	
+	ErrorMover.SourceInstancePath	:= THIS^.InstancePath;
+	CurrentMover	REF= ErrorMover;
+END_IF]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -93,6 +98,8 @@ END_VAR
       <LineId Id="7" Count="0" />
       <LineId Id="9" Count="3" />
       <LineId Id="8" Count="0" />
+      <LineId Id="22" Count="4" />
+      <LineId Id="21" Count="0" />
     </LineIds>
     <LineIds Name="SpeedTrigger.MoverInVelocity.Get">
       <LineId Id="5" Count="0" />

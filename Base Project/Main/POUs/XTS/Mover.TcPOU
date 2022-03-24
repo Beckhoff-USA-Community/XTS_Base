@@ -23,7 +23,7 @@ VAR_OUTPUT
 	IdentInGroup	: UDINT;		// IDX within group, for knowing which movers are adjacent
 	
 	AxisReference	: AXIS_REF;		// Motion link variable. Left as output so the link can be made directly, and accessed by external code
-	
+
 END_VAR
 VAR
 

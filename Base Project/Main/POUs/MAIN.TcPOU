@@ -43,7 +43,7 @@ VAR
 	PositionTrigger			: ARRAY [0..3] OF PositionTrigger;		
 	SpeedTrigger			: ARRAY [0..1] OF SpeedTrigger;
 	Zone					: ARRAY [0..3] OF Zone;	
-	
+
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -124,7 +124,7 @@ CASE MainState OF
 		MainState			:= MS_ENABLED;
 		
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
-
+	
 		IF MainCommands.Start THEN
 			
 			// ===== RECOVERY LOGIC =====
@@ -336,9 +336,35 @@ PositionTrigger[2].Cyclic();
 
 ]]></ST>
     </Implementation>
+    <Action Name="ACT" Id="{8ad80231-35f7-4c13-a2ff-67eb7eea2208}">
+      <Implementation>
+        <ST><![CDATA[
+
+
+
+
+
+
+IF Station[2].MoverInPosition THEN
+	
+	Station[2].CurrentMover.MoveToStation( Station[3] ).SetVelocity( 2000 );
+	
+END_IF]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="MAIN">
-      <LineId Id="5191" Count="287" />
+      <LineId Id="5191" Count="77" />
+      <LineId Id="5549" Count="0" />
+      <LineId Id="5270" Count="208" />
       <LineId Id="2538" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.ACT">
+      <LineId Id="2" Count="2" />
+      <LineId Id="7" Count="3" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="12" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

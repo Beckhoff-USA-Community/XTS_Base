@@ -41,6 +41,8 @@ Next, open the GVL file within PLC and modify these constants to match your syst
 
 Next, check that each of your Axis objects are properly linked to a corresponding Mover object.
 
+!!! Note The project contains *ErrorMover* objects which also appear as options when linking axes. **Do not link axes to these variables.**
+
 ![AxisLinks](../Images/AxisLinks.png)
 
 Lastly, open the *XtsProcessingUnit* within SYSTEM and verify that every setting here is correct
