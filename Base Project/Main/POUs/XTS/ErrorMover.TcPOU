@@ -2,9 +2,6 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="ErrorMover" Id="{bd3df610-8473-440e-a9dc-a09f811846e0}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK ErrorMover EXTENDS Mover IMPLEMENTS iMover
-VAR_INPUT
-	SourceInstancePath		: STRING;
-END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>

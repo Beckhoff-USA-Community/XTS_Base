@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
-    <Declaration><![CDATA[	{attribute 'reflection'}
+    <Declaration><![CDATA[{attribute 'reflection'}
 //{attribute 'hide_all_locals'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
 
 VAR_INPUT
 	
 	MotionParameters		: MotionParameters_typ;		// Motion parameters used by internal motion function blocks
+	SourceInstancePath		: STRING	:= 'Direct access';					// Used internally to temporarily store the source of a Mover method call for logging purposes. Don't read or write
 
 END_VAR
 VAR_OUTPUT
@@ -27,8 +28,9 @@ VAR_OUTPUT
 END_VAR
 VAR
 
-	{attribute 'instance=path'}
-	{attribute 'no-init'}
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	{attribute 'hide'}
 	InstancePath		: STRING;	// instance naming, for diagnostics purposes
 	
 	internalEnable		: BOOL;		// moves the axis from Disabled to Standstill, adds Axis to CA group, and triggers M1 Detection if configured
@@ -585,18 +587,29 @@ fbWriteM1Detect();
       <Declaration><![CDATA[METHOD Disable : iMover
 VAR_INPUT
 END_VAR
-]]></Declaration>
+VAR
+	MsgCreate	: FB_TcMessage;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 // Sets an internal flag to advance the state machine
 internalDisable		:= TRUE;
 
-Disable		:= THIS^;]]></ST>
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverDisable,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
+
+Disable		:= THIS^;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="Enable" Id="{77bc5ebc-ace3-48eb-8e85-e45bc80ac98b}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Enable : iMover
 VAR_INPUT
+END_VAR
+VAR
+	MsgCreate	: FB_TcMessage;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -604,6 +617,10 @@ END_VAR
 // Sets an internal flag to advance the state machine
 internalEnable		:= TRUE;
 
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverEnable,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
 
 Enable := THIS^;]]></ST>
       </Implementation>
@@ -611,6 +628,9 @@ Enable := THIS^;]]></ST>
     <Method Name="GroupStop" Id="{19a65925-9b39-4de9-ab16-7733d66c5fd4}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD GroupStop : iMover
 VAR_INPUT
+END_VAR
+VAR
+	MsgCreate: FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -632,6 +652,10 @@ ELSE	// otherwise execute the command
 	
 END_IF
 
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverGroupStop,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
 
 GroupStop		:= THIS^;]]></ST>
       </Implementation>
@@ -650,6 +674,27 @@ IsSyncedToMover		:= fbGearInPosCA[0].InSync OR fbGearInPosCA[1].InSync;]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Method Name="LogUserEvent" Id="{2ade5417-e15a-4da8-a731-8eb7341e5999}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD LogUserEvent : iMover
+VAR_INPUT
+	String1	: STRING;	// First content section of user-event message
+	String2 : STRING;	// Second content section of user-event message
+	String3 : STRING;	// Third content section of user-event message
+END_VAR
+
+VAR
+	MsgCreate: FB_TcMessage;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.UserEvent, 0 );
+MsgCreate.ipArguments.Clear().AddString(String1).AddString(String2).AddString(String3);
+MsgCreate.Send(0);
+
+LogUserEvent	:= THIS^;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="MasterMover" Id="{809c0b0b-ecf0-4af1-b9a6-f6c1668f1e51}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY MasterMover : Reference To Mover]]></Declaration>
       <Get Name="Get" Id="{cf9c37de-0f5d-4ab8-bb6c-0c7a9a276e2e}">
@@ -674,7 +719,11 @@ VAR_INPUT
 	DestinationPosition		: LREAL;	// position on track for a shuttle to move towards
 
 END_VAR
-]]></Declaration>
+
+VAR
+	MsgCreate: FB_TcMessage;
+	
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 IF NOT( Ready ) THEN	// if the mover is not ready & able to accept a moveabs command...
@@ -730,6 +779,11 @@ internalCurrentDestPosition := DestinationPosition;
 memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
 internalCurrentDestStation	REF= 0;
 
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveToPosition,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(DestinationPosition);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
+
 MoveToPosition		:= THIS^;]]></ST>
       </Implementation>
     </Method>
@@ -739,6 +793,7 @@ VAR_INPUT
 	DestinationStation	: REFERENCE TO Station;	
 END_VAR
 VAR
+	MsgCreate: FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -798,6 +853,11 @@ ELSE	// otherwise let 'er rip
 	
 END_IF
 
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveToStation,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(DestinationStation.InstancePath);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
+
 MoveToStation		:= THIS^;
 
 ]]></ST>
@@ -811,6 +871,7 @@ END_VAR
 
 VAR
 	negativeCommand: BOOL;
+	MsgCreate: FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT ( ready ) THEN
@@ -872,6 +933,11 @@ internalCurrentDestPosition := 1E300;
 memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
 internalCurrentDestStation	REF= 0;
 
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveVelocity,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(DesiredVelocity);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
+
 MoveVelocity		:= THIS^;
 
 ]]></ST>
@@ -907,7 +973,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-
+THIS^.SourceInstancePath	:= 'ReissueCommand';
 
 CASE internalCurrentMoveType OF
 	MOVETYPE_NONE:
@@ -931,12 +997,21 @@ ReissueCommand		:= THIS^;]]></ST>
 VAR_INPUT
 	Acceleration	: LREAL;
 END_VAR
-]]></Declaration>
+
+VAR
+	MsgCreate: FB_TcMessage;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 MotionParameters.Acceleration		:= LIMIT( 0, Acceleration, 1E300 );	// upper limit is capped by the axis object parameters
 
 THIS^.ReissueCommand();
+
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetAcceleration,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Acceleration);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
+
 
 SetAcceleration		:= THIS^;]]></ST>
       </Implementation>
@@ -946,12 +1021,20 @@ SetAcceleration		:= THIS^;]]></ST>
 VAR_INPUT
 	Deceleration	: LREAL;
 END_VAR
-]]></Declaration>
+
+VAR
+	MsgCreate: FB_TcMessage;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 MotionParameters.Deceleration	:= LIMIT( 0, Deceleration, 1E300 ); // upper limit is capped by the axis parameters
 
 THIS^.ReissueCommand();
+
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetDeceleration,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Deceleration);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
 
 SetDeceleration		:= THIS^;]]></ST>
       </Implementation>
@@ -961,12 +1044,20 @@ SetDeceleration		:= THIS^;]]></ST>
 VAR_INPUT
 	Direction		: Tc3_Mc3Definitions.MC_Direction;
 END_VAR
-]]></Declaration>
+
+VAR
+	MsgCreate: FB_TcMessage;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 MotionParameters.Direction		:= Direction;
 
 THIS^.ReissueCommand();
+
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetDirection,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddInt(Direction);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
 
 
 SetDirection		:= THIS^;]]></ST>
@@ -977,13 +1068,21 @@ SetDirection		:= THIS^;]]></ST>
 VAR_INPUT
 	Jerk		: LREAL;
 END_VAR
-]]></Declaration>
+
+VAR
+	MsgCreate: FB_TcMessage;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
 MotionParameters.Jerk		:= LIMIT( 0, Jerk, 1E300 ); // upper limit is capped by the axis parameters
 
 THIS^.ReissueCommand();
+
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetJerk,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Jerk);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
 
 SetJerk		:= THIS^;]]></ST>
       </Implementation>
@@ -993,13 +1092,23 @@ SetJerk		:= THIS^;]]></ST>
 VAR_INPUT
 	Velocity		: LREAL;		// Updates Mover's internal velocity parameter. Takes effect immediately. [mm/s]
 END_VAR
-]]></Declaration>
+VAR
+	logstr			: STRING(200);		// method variable containing an event log message for the command
+	LogEvent: INT;
+	MsgCreate: FB_TcMessage;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
 MotionParameters.Velocity	:= LIMIT( 0, Velocity, 1E300 ); // upper limit is capped by the axis parameters 
 
 THIS^.ReissueCommand();
+
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetVelocity,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Velocity);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
+
 
 SetVelocity		:= THIS^;]]></ST>
       </Implementation>
@@ -1017,6 +1126,7 @@ VAR
 	CWDistToSync: LREAL;
 	CWDistToMaster: LREAL;
 	syncPos: LREAL;
+	MsgCreate: FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT( Ready ) THEN
@@ -1092,6 +1202,11 @@ internalCurrentDestPosition		:= 1E300;
 
 memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
 internalCurrentDestStation	REF= 0;
+
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSyncToMover,0 );
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(MasterMover.InstancePath).AddLReal(Gap);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
 
 SyncToMover		:= THIS^;
 
@@ -1209,12 +1324,17 @@ SyncToMover		:= THIS^;
       <LineId Id="6" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="0" />
+      <LineId Id="24" Count="2" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="0" />
       <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="36" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Enable">
       <LineId Id="6" Count="1" />
       <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="3" />
       <LineId Id="12" Count="1" />
       <LineId Id="11" Count="0" />
     </LineIds>
@@ -1231,12 +1351,21 @@ SyncToMover		:= THIS^;
       <LineId Id="22" Count="2" />
       <LineId Id="14" Count="0" />
       <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="3" />
       <LineId Id="34" Count="1" />
       <LineId Id="33" Count="0" />
     </LineIds>
     <LineIds Name="Mover.IsSyncedToMover.Get">
       <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.LogUserEvent">
+      <LineId Id="7" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="26" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MasterMover.Get">
       <LineId Id="14" Count="1" />
@@ -1274,6 +1403,8 @@ SyncToMover		:= THIS^;
       <LineId Id="151" Count="3" />
       <LineId Id="127" Count="0" />
       <LineId Id="161" Count="0" />
+      <LineId Id="187" Count="3" />
+      <LineId Id="186" Count="0" />
       <LineId Id="169" Count="0" />
       <LineId Id="168" Count="0" />
     </LineIds>
@@ -1302,6 +1433,8 @@ SyncToMover		:= THIS^;
       <LineId Id="229" Count="7" />
       <LineId Id="259" Count="0" />
       <LineId Id="168" Count="0" />
+      <LineId Id="266" Count="3" />
+      <LineId Id="265" Count="0" />
       <LineId Id="243" Count="0" />
       <LineId Id="242" Count="0" />
       <LineId Id="197" Count="0" />
@@ -1346,6 +1479,8 @@ SyncToMover		:= THIS^;
       <LineId Id="78" Count="0" />
       <LineId Id="48" Count="0" />
       <LineId Id="79" Count="0" />
+      <LineId Id="126" Count="3" />
+      <LineId Id="125" Count="0" />
       <LineId Id="93" Count="0" />
       <LineId Id="92" Count="0" />
       <LineId Id="91" Count="0" />
@@ -1375,7 +1510,11 @@ SyncToMover		:= THIS^;
       <LineId Id="5" Count="0" />
       <LineId Id="19" Count="0" />
       <LineId Id="8" Count="0" />
-      <LineId Id="25" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="44" Count="0" />
       <LineId Id="24" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetDeceleration">
@@ -1383,6 +1522,8 @@ SyncToMover		:= THIS^;
       <LineId Id="5" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="12" Count="0" />
+      <LineId Id="30" Count="3" />
+      <LineId Id="29" Count="0" />
       <LineId Id="24" Count="0" />
       <LineId Id="23" Count="0" />
     </LineIds>
@@ -1391,6 +1532,8 @@ SyncToMover		:= THIS^;
       <LineId Id="5" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="8" Count="0" />
+      <LineId Id="22" Count="3" />
+      <LineId Id="21" Count="0" />
       <LineId Id="15" Count="1" />
       <LineId Id="14" Count="0" />
     </LineIds>
@@ -1399,6 +1542,8 @@ SyncToMover		:= THIS^;
       <LineId Id="5" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="9" Count="0" />
+      <LineId Id="27" Count="3" />
+      <LineId Id="26" Count="0" />
       <LineId Id="21" Count="0" />
       <LineId Id="20" Count="0" />
     </LineIds>
@@ -1407,13 +1552,20 @@ SyncToMover		:= THIS^;
       <LineId Id="12" Count="0" />
       <LineId Id="42" Count="0" />
       <LineId Id="32" Count="0" />
+      <LineId Id="60" Count="3" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="58" Count="0" />
       <LineId Id="48" Count="0" />
       <LineId Id="47" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SyncToMover">
       <LineId Id="188" Count="7" />
       <LineId Id="275" Count="0" />
-      <LineId Id="196" Count="66" />
+      <LineId Id="196" Count="63" />
+      <LineId Id="288" Count="0" />
+      <LineId Id="290" Count="2" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="260" Count="2" />
       <LineId Id="9" Count="0" />
     </LineIds>
   </POU>
