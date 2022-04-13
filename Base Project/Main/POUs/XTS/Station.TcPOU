@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="Station" Id="{5b67f0b3-4286-49f2-9b21-1e637f521584}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective
 VAR
@@ -19,7 +19,7 @@ PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{590174cc-2a32-4e82-86cf-1c2eff136812}">
         <Declaration><![CDATA[VAR
 	
-	i: USINT;	
+	i: ulint;	
 	difference: LREAL;
 	
 END_VAR
@@ -76,7 +76,7 @@ PROPERTY MoverInPosition : BOOL]]></Declaration>
       <Get Name="Get" Id="{11118b5e-d8b3-4427-a8f3-470e1381cae5}">
         <Declaration><![CDATA[VAR
 	
-	i		: USINT;	
+	i		: ulint;	
 	difference: LREAL;
 	
 END_VAR
@@ -172,8 +172,6 @@ END_VAR
       <LineId Id="34" Count="1" />
       <LineId Id="37" Count="0" />
       <LineId Id="40" Count="2" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="8" Count="0" />
     </LineIds>
     <LineIds Name="Station.TrackPosition.Get">
       <LineId Id="5" Count="1" />

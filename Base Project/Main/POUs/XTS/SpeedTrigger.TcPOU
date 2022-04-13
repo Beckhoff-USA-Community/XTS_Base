@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="SpeedTrigger" Id="{ceb84e98-9bb3-44af-9526-f95d6c0344e5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK SpeedTrigger EXTENDS Objective
 VAR
@@ -19,7 +19,7 @@ END_VAR
 PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{579026c0-dbc9-45df-a0d9-58debaf1382a}">
         <Declaration><![CDATA[VAR
-	i	: USINT;
+	i	: ULINT;
 END_VAR
 ]]></Declaration>
         <Implementation>
@@ -41,7 +41,7 @@ END_FOR]]></ST>
 PROPERTY MoverInVelocity : BOOL]]></Declaration>
       <Get Name="Get" Id="{2ea072c0-2f9e-44bb-b822-47a0341f43bf}">
         <Declaration><![CDATA[VAR
-	i	: USINT;
+	i	: ulint;
 END_VAR
 ]]></Declaration>
         <Implementation>
