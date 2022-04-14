@@ -1,7 +1,18 @@
 
-# Objectives
+# Project Overview
 
-## Overview
+## Broad Concept
+
+The core concept driving the project structure is that it is useful to address movers **contextually** as opposed to **directly**.
+
+To illustrate, consider a scenario of recovering from an E-Stop where a robot is positioned directly in the path of the movers. In this instance, a first step might be to command any movers *downstream* of the robot to move further downstream, and movers *upstream* of the robot should be commanded further upstream in order to create some space for the arm to reset.
+
+As a programmer, one wouldn't seek to specifically command Mover #4 and Mover #5 to carry out those instructions because during the next occurence it may be an entirely different pair of movers in this situation. Instead, the commands are issued to *whichever movers are closest to the robot right now*.
+
+In this sense, we take a list of all movers on the track system, and apply *filters* to help select only the movers we care to command. These filters are applied via a family of objects called Objectives.
+
+
+## Objectives
 
 *Objective* is an umbrella term used by the project, that includes the following objects:
 
@@ -15,28 +26,28 @@ Each *Objective* defines a set criteria that a Mover can either fulfill or not a
 
 When a Mover satisfies the requirements of the *Objective*, the *Objective* provides a Reference to the Mover through which new Mover commands can be issued.
 
----
+## .CurrentMover
 
-## Invalid References
-
-Objectives that return References to MoverLists or Movers have the potential to return *invalid* references. For example, a Station with no mover present can't possibly return a CurrentMover, because by definition no CurrentMover exists! To prevent this, ensure that all *CurrentMover* and *CurrentMoverList* output properties are only evaluated when a *MoverInPosition*, *MoverPassedPosition*, *MoverInVelocity*, etc. flag is true for the relevant Objective.
+*CurrentMover* is the Reference output through which Movers can be addressed contextually via an Objective. Let's look at a simple example:
 
 ```javascript
-// There is no CurrentMover at the Station, so this code will not operate correctly!!
-IF Station[1].MoverInPosition = FALSE THEN
-	Station[1].CurrentMover.MoveToPosition( 200 );
-END_IF
+Station[3].CurrentMover;	// is equivalent to...
+Mover[4];					// as long as Mover #4 is parked at Station#3
 ```
 
-Typically, calling methods on these *invalid references* would result in a Pagefault and halt the XAR. However this outcome can be frustrating and slows development. Instead, an imposter **ErrorMover** object is returned in these circumstances as a quality-of-life improvement. ErrorMovers replace all the method functionality of standard Movers and will instead generate Errors in TwinCAT. For example:
+And as a Reference, this *CurrentMover* output accepts any Method call instructions that a base Mover object could. E.g.:
 
-![ErrorMover](../Images/PagefaultPrevention.png)
+```javascript
+Station[3].CurrentMover.SetVelocity( 2000 );	// is equivalent to...
+Mover[4].SetVelocity( 2000 );	// so long as the the Mover is parked as above
+```
+
 
 ---
 
 ## Common Methods
 
-The objects listed above all share some common methods, which are implemented in the base parent *Objective* object.
+The objects listed above all share some common methods, which are implemented in the parent *Objective* base class.
 
 ### RegisterMover
 

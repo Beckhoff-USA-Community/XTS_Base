@@ -191,6 +191,20 @@ END_IF
 
 ---
 
+### LogUserEvent
+
+*LogUserEvent( Text1 : STRING, Text2 : STRING, Text3 : STRING )*
+
+> Submits custom log events to the Event Logger which can be viewed in TwinCAT
+
+```javascript
+IF PositionTrigger[1].MoverPassedPosition THEN
+	PositionTrigger[1].CurrentMover.LogUserEvent('Mover Passed PT#1','','');
+END_IF;
+```
+
+---
+
 ### SetAcceleration
 
 *SetAcceleration( DesiredAccel : LREAL )*
