@@ -76,6 +76,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="SetDirection" Id="{d30a8638-0d69-48d2-9461-53ec598dc889}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetDirection : iMover
+VAR_INPUT
+	Direction		: Tc3_Mc3Definitions.MC_Direction;
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="SetJerk" Id="{24979a1d-e480-47b1-9bd4-1285fd9fc50c}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetJerk : iMover
 VAR_INPUT

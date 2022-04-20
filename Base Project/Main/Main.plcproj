@@ -9,12 +9,12 @@
     <GenerateTpy>false</GenerateTpy>
     <Name>Main</Name>
     <ProgramVersion>3.1.4023.0</ProgramVersion>
-    <Application>{67864e67-2b7a-4525-9989-1cf8c40eb273}</Application>
-    <TypeSystem>{2b744d53-919e-415f-9920-493ed98d30b6}</TypeSystem>
-    <Implicit_Task_Info>{fd764aec-3abe-498a-8cca-42f25bcf6df1}</Implicit_Task_Info>
-    <Implicit_KindOfTask>{c10dc27f-e4cf-4f68-bc23-795878a4d6bc}</Implicit_KindOfTask>
-    <Implicit_Jitter_Distribution>{c1afecce-c75e-406b-a0d4-d79ec9d9a027}</Implicit_Jitter_Distribution>
-    <LibraryReferences>{f62d2014-bde9-4d9c-b3c2-882851159b27}</LibraryReferences>
+    <Application>{fbc96af2-da04-48ef-aea0-33a5cfcaf85e}</Application>
+    <TypeSystem>{9986292d-8899-4bc1-a4ea-c4cf818cdcb3}</TypeSystem>
+    <Implicit_Task_Info>{8cb84593-ce1e-4cfb-a9a5-d1c9d9db8556}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{dcd341de-b36d-417b-8667-bfd63cbb51eb}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{1aeed109-e54f-4b73-b529-dc7320750764}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{96cd68c3-4e06-47fb-98c0-7e5446cc95fb}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\MainCommands_typ.TcDUT">
@@ -123,8 +123,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -2420,16 +2420,16 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="Int32">System.Int32</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-    <Type n="UInt32">System.UInt32</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="Int32">System.Int32</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+          <Type n="UInt32">System.UInt32</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>
