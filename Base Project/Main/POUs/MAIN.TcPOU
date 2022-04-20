@@ -43,7 +43,8 @@ VAR
 	PositionTrigger			: ARRAY [0..3] OF PositionTrigger;		
 	SpeedTrigger			: ARRAY [0..1] OF SpeedTrigger;
 	Zone					: ARRAY [0..3] OF Zone;	
-	
+
+
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -125,6 +126,7 @@ CASE MainState OF
 		
 	MS_ENABLED:	// ------------------------------------------------------- MOVERS ENABLED, STOPPED
 
+	
 		IF MainCommands.Start THEN
 			
 			// ===== RECOVERY LOGIC =====
@@ -176,13 +178,12 @@ CASE MainState OF
 			StationTimer[0]( IN := FALSE );
 		END_IF
 		
-		
-		
+				
 		// Station 1 Logic		
 		IF Station[1].MoverInPosition THEN
 			StationTimer[1]( IN := TRUE, PT := T#250MS );
 			
-			IF StationTimer[1].Q THEN
+			IF StationTimer[1].Q THEN			
 				Station[1].CurrentMover.SetVelocity( mediumVelocity );
 				Station[1].CurrentMover.MoveToStation( Station[ nextStation ] );
 				nextStation := nextStation - 1;
@@ -337,7 +338,13 @@ PositionTrigger[2].Cyclic();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="5191" Count="287" />
+      <LineId Id="5191" Count="77" />
+      <LineId Id="5649" Count="0" />
+      <LineId Id="5549" Count="0" />
+      <LineId Id="5270" Count="49" />
+      <LineId Id="5652" Count="0" />
+      <LineId Id="5657" Count="0" />
+      <LineId Id="5323" Count="155" />
       <LineId Id="2538" Count="0" />
     </LineIds>
   </POU>

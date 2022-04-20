@@ -44,5 +44,7 @@ nav:
             - Zone:                 CodeReference/Zone.md
         - Diagnostics:
             - Basics:           CodeReference/Diagnostics.md
+            - ErrorMovers:      CodeReference/ErrorMovers.md
+            - Event Logger:     CodeReference/EventLogger.md
     #- Examples:
         #- Station to Station:   Examples/StationRouting.md

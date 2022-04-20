@@ -3756,6 +3756,95 @@ and will return to Group State Standby when the situation permits.
 				<BitOffs>0</BitOffs>
 			</SubItem>
 		</DataType>
+		<DataType>
+			<Name GUID="{F72A7747-C2A5-4AB8-BC55-EA3D58D76268}" PersistentType="true">XtsBaseEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="1">UserEvent</Name>
+				<DisplayName TxtId=""><![CDATA[{0} | {1} | {2}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">MoverDisable</Name>
+				<DisplayName TxtId=""><![CDATA[{0} Disable command issued. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">MoverEnable</Name>
+				<DisplayName TxtId=""><![CDATA[{0} Enable command issued. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">MoverGroupStop</Name>
+				<DisplayName TxtId=""><![CDATA[{0} GroupStop command issued. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">MoverMoveToPosition</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveToPosition command issued. Commanded Position = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">MoverMoveToStation</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveToStation command issued. Commanded Station = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">MoverMoveVelocity</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveVelocity command issued. Commanded Velocity = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">MoverSetAcceleration</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetAcceleration command issued. Commanded Acceleration = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9">MoverSetDeceleration</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetDeceleration command issued. Commanded Decelaration = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="10">MoverSetDirection</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetDirection command issued. Commanded Direction = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="11">MoverSetJerk</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetJerk command issued. Commanded Jerk = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="12">MoverSetVelocity</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetVelocity command issued. Commanded Velocity = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="13">MoverSyncToMover</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SyncToMover command issued. MasterMover = {2}. GapDistance = {3}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{05156EAA-0F28-483B-B3ED-0A061BA2DDE9}"/>
+				<Hide GUID="{18E0FAE1-EDAC-4CEB-9B5F-AEA0EA7CB0BB}"/>
+				<Hide GUID="{66FA28C4-0FB7-4DA6-859C-B54827CE2395}"/>
+				<Hide GUID="{F63352B1-8E7F-48CB-953D-546E45AE1B11}"/>
+				<Hide GUID="{88411A0E-3484-41DC-B698-335B0EEFF131}"/>
+				<Hide GUID="{1EE55F7A-50B7-4AA5-B092-894E8021A00A}"/>
+				<Hide GUID="{A18DCF2F-BCD4-4147-BD48-F6D11150D63F}"/>
+				<Hide GUID="{5E8436AE-C6FB-4E0A-BFF7-F43CB35E58AA}"/>
+				<Hide GUID="{4852EB5D-97BF-461F-8343-CF2477892A8F}"/>
+				<Hide GUID="{2FD29EE4-1D32-4B75-B06E-2D24E279484A}"/>
+				<Hide GUID="{3EB692ED-E25C-47B0-AB1B-3AB7FD5B694D}"/>
+				<Hide GUID="{F4F1A9D5-39FA-4084-81D0-5937B07DBB2A}"/>
+				<Hide GUID="{C87D4290-25E0-445A-84DC-BA530CBBB6A0}"/>
+				<Hide GUID="{1208FAF5-31D9-4802-AAD9-28CD0C6B4F87}"/>
+				<Hide GUID="{9FC18FAC-071B-4D21-8C13-3C4FC1984385}"/>
+				<Hide GUID="{268DC8AE-1F44-49D7-9156-E8C31A62132B}"/>
+				<Hide GUID="{33635654-A58A-437D-877F-7553D357C9DF}"/>
+				<Hide GUID="{B43881BB-A77B-4C1D-B790-E1343B180300}"/>
+			</Hides>
+		</DataType>
 	</DataTypes>
 	<ImageDatas>
 		<ImageData Id="1000">424d360400000000000036000000280000001000000010000000010020000000000000000000d70d0000d70d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000000000000000000ababab009e9e9e003d3d3d00111111000a0a0a000a0a0a000a0a0a00121212002f2f2f0070707000757575006f6f6f006a6a6a00646464000000000000000000b4b4b400414141004e4e4e00a8a8a800b0b0b000b0b0b000b0b0b000aaaaaa005c5c5c002a2a2a007e7e7e0078787800737373006e6e6e000000000000000000bdbdbd0014141400a7a7a700bcbcbc00bcbcbc00bcbcbc00bcbcbc00bcbcbc00b7b7b7000606060086868600828282007c7c7c00777777000000000000000000c6c6c6003b3b3b0062626200bababa00bcbcbc00bcbcbc00bcbcbc00bbbbbb00727272001d1d1d00575757007e7e7e0085858500808080000000000000000000d0d0d000b7b7b7002f2f2f000d0d0d000909090006060600070707000c0c0c00131313002a2a2a00242424000c0c0c0065656500898989000000000000000000d9d9d900d3d3d300cecece00c1c1c10018181800646464007f7f7f0081818100878787008787870087878700666666001a1a1a00929292000000000000000000e2e2e200dcdcdc00d7d7d700d1d1d1000f0f0f007b7b7b00878787008787870087878700878787008787870077777700111111009b9b9b000000000000000000ebebeb00d7d7d7003f3f3f000b0b0b000b0b0b001c1c1c004b4b4b005656560056565600565656004a4a4a001e1e1e0054545400a5a5a5000000000000000000f4f4f4004646460034343400696969006d6d6d004747470024242400272727001a1a1a00111111003939390078787800b3b3b300aeaeae000000000000000000fbfbfb0018181800606060006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006b6b6b0005050500c4c4c400c2c2c200bcbcbc00b7b7b7000000000000000000fbfbfb004c4c4c0032323200686868006c6c6c006c6c6c006c6c6c006a6a6a003d3d3d0027272700d0d0d000cbcbcb00c5c5c500c0c0c0000000000000000000fbfbfb00ebebeb00444444000e0e0e000101010001010100010101001111110036363600c7c7c700d9d9d900d4d4d400cfcfcf00c9c9c9000000000000000000fbfbfb00fbfbfb00fbfbfb00fbfbfb00fbfbfb00fbfbfb00f8f8f800f3f3f300ededed00e8e8e800e3e3e300dddddd00d8d8d800d2d2d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</ImageData>

@@ -32,7 +32,14 @@ END_VAR
         <Implementation>
           <ST><![CDATA[
 
-	CurrentMover	REF= internalCurrentMover^;]]></ST>
+CurrentMover	REF= internalCurrentMover^;
+CurrentMover.SourceInstancePath		:= THIS^.InstancePath;
+	
+// If the Trigger has no CurrentMover, then return an imposter ErrorMover, whose method calls all trigger an error message
+IF __ISVALIDREF( CurrentMover ) = FALSE THEN	
+	ErrorMover.SourceInstancePath	:= THIS^.InstancePath;
+	CurrentMover	REF= ErrorMover;
+END_IF]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -198,6 +205,10 @@ END_VAR
     <LineIds Name="PositionTrigger.CurrentMover.Get">
       <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="3" />
+      <LineId Id="10" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.Cyclic">
       <LineId Id="6" Count="88" />

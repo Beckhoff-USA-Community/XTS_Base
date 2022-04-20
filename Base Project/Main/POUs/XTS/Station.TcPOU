@@ -40,11 +40,18 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[0]
 		difference	:= ABS( internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos - TrackPosition );
 		
 		IF MIN( difference, GVL.TRACK_LENGTH - difference ) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
-			CurrentMover	REF= internalTrackedMovers[i]^;
+			CurrentMover						REF= internalTrackedMovers[i]^;
+			CurrentMover.SourceInstancePath		:= THIS^.InstancePath;
 		END_IF
 	END_IF
 
-END_FOR]]></ST>
+END_FOR
+
+// If the Station has no CurrentMover, then return an imposter ErrorMover, whose method calls all trigger an error message
+IF __ISVALIDREF( CurrentMover ) = FALSE THEN	
+	ErrorMover.SourceInstancePath	:= THIS^.InstancePath;
+	CurrentMover	REF= ErrorMover;
+END_IF]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -143,10 +150,19 @@ END_VAR
       <LineId Id="40" Count="0" />
       <LineId Id="47" Count="0" />
       <LineId Id="30" Count="0" />
-      <LineId Id="32" Count="2" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="34" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="12" Count="0" />
       <LineId Id="10" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="64" Count="0" />
     </LineIds>
     <LineIds Name="Station.Cyclic">
       <LineId Id="6" Count="1" />

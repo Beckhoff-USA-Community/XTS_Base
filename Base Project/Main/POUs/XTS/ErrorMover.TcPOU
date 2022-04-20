@@ -1,0 +1,369 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="ErrorMover" Id="{bd3df610-8473-440e-a9dc-a09f811846e0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ErrorMover EXTENDS Mover IMPLEMENTS iMover
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{95344208-9410-4fde-9b34-506fa304a287}" />
+    <Folder Name="Properties" Id="{6fd2fbdb-965d-489f-acb7-82704f375aa0}" />
+    <Property Name="CurrentDestinationPosition" Id="{2b4b67cc-3100-4b95-930e-6d7f88a409da}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentDestinationPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{4ab8604e-f7e5-4051-87ad-121e3916f22d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The CurrentDestinationPosition Get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="CurrentMoveType" Id="{654cf008-4e25-44e0-a02e-14f98c95c229}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentMoveType : MoverCommandType_enum]]></Declaration>
+      <Get Name="Get" Id="{ff80f46a-8539-4feb-9642-1a61fe0c4d1f}">
+        <Declaration><![CDATA[VAR
+	MoverCurrentMoveType: MoverCommandType_enum;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The CurrentMoveType Get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="CurrentObjective" Id="{7897b829-22ce-468b-bc00-104f4387a246}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentObjective : String]]></Declaration>
+      <Get Name="Get" Id="{43ffd29e-7106-4bdc-961e-f77ce36447cf}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The CurrentObjective Get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Cyclic" Id="{764e6bb0-4d0d-42b1-82a2-beacd8ec9b5d}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Cyclic : iMover
+VAR_IN_OUT
+	GroupReference		: AXES_GROUP_REF;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Cyclic method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Disable" Id="{a35f8faa-093e-4292-a444-f58b6f5f6d4f}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Disable : iMover
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Disable method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Enable" Id="{d4744d94-4a3b-451e-bbfc-59a59ee494e3}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Enable : iMover
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Enable method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GroupStop" Id="{4e389025-4e76-4cce-ac5c-8a82b786913e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD GroupStop : iMover
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The GroupStop method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="IsSyncedToMover" Id="{6b623c29-8901-4623-afb3-f30839740c89}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsSyncedToMover : BOOL]]></Declaration>
+      <Get Name="Get" Id="{11e533df-3e35-43ba-a245-0cb48a9f5be4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The IsSyncedToMover Get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MasterMover" Id="{6243eebd-fe41-4008-9c02-b6d5bac54829}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY MasterMover : Reference To Mover]]></Declaration>
+      <Get Name="Get" Id="{763be082-226a-441a-8e70-1d4aacb4d1ea}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The MasterMover Get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="MoveToPosition" Id="{06584b48-b7d7-45ec-b670-d5553ed7efde}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
+VAR_INPUT
+	
+	DestinationPosition		: LREAL;	// position on track for a shuttle to move towards
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The MoveToPosition method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveToStation" Id="{f7d51585-b63e-4a40-86ce-600a20ecf081}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD MoveToStation : iMover
+VAR_INPUT
+	DestinationStation	: REFERENCE TO Station;	
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The MoveToStation method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveVelocity" Id="{6f39fd6e-0630-4b12-9284-3c4d7e063735}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD MoveVelocity : iMover
+VAR_INPUT
+	DesiredVelocity : LREAL;		//The velocity to be commanded [mm/s]
+END_VAR
+
+VAR
+	negativeCommand: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The MoveVelocity method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Payload" Id="{24ebdcd3-9649-41f7-9f65-e4f7f86ef316}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Payload : USINT]]></Declaration>
+      <Get Name="Get" Id="{28f7f04b-9925-4df5-91ef-030257222faa}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Payload Get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{0f0e05f2-3b7b-4da0-bed5-5c8e12c1a732}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Payload Set method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="ReissueCommand" Id="{2b2633c0-7db7-4352-ae48-063856e2b0db}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ReissueCommand : iMover
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The ReissueCommand method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetAcceleration" Id="{90f501cd-2aae-43a2-a87f-fdbe1a4cb2d2}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetAcceleration : iMover
+VAR_INPUT
+	Acceleration	: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SetAcceleration method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetDeceleration" Id="{1da65927-f09e-4d2d-9427-dff6efde0728}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetDeceleration : iMover
+VAR_INPUT
+	Deceleration	: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SetDeceleration method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetDirection" Id="{2ad42cfb-45f4-4a68-956c-6004efe4ef84}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetDirection : iMover
+VAR_INPUT
+	Direction		: Tc3_Mc3Definitions.MC_Direction;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SetDirection method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetJerk" Id="{8f7db2a4-6343-4dd3-aa2a-28dea1975f9e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetJerk : iMover
+VAR_INPUT
+	Jerk		: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SetJerk method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetVelocity" Id="{cdd1b3bc-a3c7-4bf5-8a9b-c45db8a075f7}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetVelocity : iMover
+VAR_INPUT
+	Velocity	: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SetVelocity method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SyncToMover" Id="{cd1d5b64-e134-455b-8660-842288b989a0}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SyncToMover : iMover
+VAR_INPUT
+
+	MasterMover		: REFERENCE TO Mover;	// Synchronization master mover, whose position to follow. Further motion commands break the pairing
+	Gap				: LREAL;				// Gap distance to lead mover. Positive values indicate following, negative values indicate leading
+
+END_VAR
+
+VAR
+	CWDistToSync: LREAL;
+	CWDistToMaster: LREAL;
+	syncPos: LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SyncToMover method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="ErrorMover">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.CurrentDestinationPosition.Get">
+      <LineId Id="23" Count="1" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.CurrentMoveType.Get">
+      <LineId Id="17" Count="1" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.CurrentObjective.Get">
+      <LineId Id="12" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.Cyclic">
+      <LineId Id="737" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.Disable">
+      <LineId Id="16" Count="1" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.Enable">
+      <LineId Id="17" Count="1" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.GroupStop">
+      <LineId Id="38" Count="1" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.IsSyncedToMover.Get">
+      <LineId Id="9" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.MasterMover.Get">
+      <LineId Id="22" Count="1" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.MoveToPosition">
+      <LineId Id="186" Count="1" />
+      <LineId Id="168" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.MoveToStation">
+      <LineId Id="265" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.MoveVelocity">
+      <LineId Id="125" Count="1" />
+      <LineId Id="90" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.Payload.Get">
+      <LineId Id="13" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.Payload.Set">
+      <LineId Id="16" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.ReissueCommand">
+      <LineId Id="41" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.SetAcceleration">
+      <LineId Id="30" Count="1" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.SetDeceleration">
+      <LineId Id="29" Count="1" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.SetDirection">
+      <LineId Id="21" Count="1" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.SetJerk">
+      <LineId Id="26" Count="1" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.SetVelocity">
+      <LineId Id="8" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.SyncToMover">
+      <LineId Id="288" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

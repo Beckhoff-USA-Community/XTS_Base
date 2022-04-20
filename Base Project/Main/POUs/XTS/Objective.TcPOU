@@ -11,6 +11,9 @@ VAR
 	internalTrackedMoverCount	: USINT;
 	//{attribute 'hide'}
 	internalTrackedMovers		: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover;
+	
+	{attribute 'TcNoSymbol'}
+	ErrorMover					: ErrorMover;
 
 END_VAR
 VAR_OUTPUT
