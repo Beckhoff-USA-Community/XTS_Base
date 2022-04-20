@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="Zone" Id="{de9b5dde-c203-4f4d-abe0-431568995536}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'hide_all_local'}
 FUNCTION_BLOCK Zone EXTENDS Objective
@@ -22,7 +22,7 @@ END_VAR
       <Declaration><![CDATA[PROPERTY CurrentMoverList : iMoverList]]></Declaration>
       <Get Name="Get" Id="{9681b7d1-44db-47ce-812f-f41b5199fc2d}">
         <Declaration><![CDATA[VAR
-	i		: USINT;
+	i		: ulint;
 END_VAR
 ]]></Declaration>
         <Implementation>

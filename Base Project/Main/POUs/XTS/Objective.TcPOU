@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="Objective" Id="{72371872-54aa-4f25-a82d-ba585015a7c5}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK ABSTRACT Objective
@@ -45,9 +45,9 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i				: USINT;
+	i				: ULINT;
 	duplicateFound	: BOOL;
-	emptyIDX		: USINT;
+	emptyIDX		: ulint;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -89,7 +89,7 @@ VAR_INPUT
 	NewMoverList		: iMoverList;
 END_VAR
 VAR
-	i					: USINT;
+	i					: ULINT;
 	duplicateFound		: BOOL;
 	emptyIDX			: USINT;
 	arrTrackedMovers	: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover;
@@ -189,7 +189,7 @@ VAR_INPUT
 	RemovingMover		: REFERENCE TO Mover;
 END_VAR
 VAR
-	i					: USINT;
+	i					: dint;
 	duplicateFound		: BOOL;
 END_VAR]]></Declaration>
       <Implementation>
