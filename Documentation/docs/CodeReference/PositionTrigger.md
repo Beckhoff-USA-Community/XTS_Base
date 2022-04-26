@@ -44,9 +44,9 @@ Position Triggers are unique in that the Current Mover output *latches* even tho
 
 > Reference variable that refers to the earliest registered mover to cross over the track position since being registered
 
-- If no movers are tracked, or no tracked movers have yet satisfied the objective, then .CurrentMover is an invalid reference. Attempting to evaluate it will result in a page fault and XAR will stop.
+- If no movers are tracked, or no tracked movers have yet satisfied the objective, then .CurrentMover is an invalid reference. In this case, an ErrorMover will replace the invalid reference. The user will receive notifications when this happens in the TwinCAT event logs. See Diagnostics>ErrorMovers for more information. 
 
-- It is recommended that all evaluations are nested inside IF checks for .MoverPassedPosition OR by calling [__ISVALIDREF](https://infosys.beckhoff.com/english.php?content=../content/1033/tc3_plc_intro/2529165707.html&id=)
+- It is recommended that all evaluations are nested inside IF checks for .MoverPassedPosition. 
 
 - It is possible that multiple registered movers have crossed over a threshold position. Only the least recently valid mover handle is provided by .CurrentMover. To access more recent events, deregister the current mover with *PositionTrigger.UnregisterCurrent()*
 

@@ -340,7 +340,7 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 
 > Reference variable that refers to the Mover this Mover is currently slaved to
 
-When this mover is not slaved to another mover, .MasterMover is an invalid reference. Attempting to evaluate it will result in a page fault and XAR will stop.
+When this mover is not slaved to another mover, .MasterMover is an invalid reference. There is therefore an ErrorMover object which will return information on what action was requested by the object while .MasterMover was invalid. This will show up in TwinCAT's Event Logs. See Diagnostics>ErrorMovers for more information.  
 
 It is recommended that all evaluations are nested inside IF checks for .IsSyncedToMover OR by calling __ISVALIDREF
 

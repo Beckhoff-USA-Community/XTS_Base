@@ -77,9 +77,9 @@ END_FOR
 
 > Reference variable that refers to the Mover that is docked with the Station
 
-When no mover is present in the Station, .CurrentMover is an invalid reference. Attempting to evaluate it will result in a page fault and XAR will stop.
+When no mover is present in the Station, .CurrentMover is an invalid reference. In this case, an ErrorMover will replace the invalid reference. The user will receive notifications when this happens in the TwinCAT Event Logs. 
 
-It is recommended that all evaluations are nested inside IF checks for .MoverInPosition OR by calling [__ISVALIDREF](https://infosys.beckhoff.com/english.php?content=../content/1033/tc3_plc_intro/2529165707.html&id=)
+It is recommended that all evaluations are nested inside IF checks for .MoverInPosition.
 
 ---
 
