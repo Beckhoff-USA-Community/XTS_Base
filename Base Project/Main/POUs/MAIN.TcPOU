@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="MAIN" Id="{0790caa7-8a3f-4f91-b0f8-9ebb3db3858d}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -47,11 +47,7 @@ VAR
 
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-
-
-
-CASE MainState OF
+      <ST><![CDATA[CASE MainState OF
 	MS_DISABLED:	// ------------------------------------------------------- IDLE STATE
 	
 	
@@ -159,10 +155,6 @@ CASE MainState OF
 		END_IF
 	
 	MS_RUN: 	// ------------------------------------------------------- OPERATING
-	
-
-		
-	
 	
 		
 		// Station 0 Logic
@@ -280,7 +272,18 @@ CASE MainState OF
 		IF MainCommands.Disable THEN
 			MainCommands.Enable		:= FALSE;
 			MainState				:= MS_DISABLING;
+			ELSE
+			MainState				:= MS_Stopped;
 		END_IF
+		
+	MS_Stopped:		// --------------------------------------------------- Stop Command has been sent, hold here
+	
+	IF MainCommands.Disable THEN 
+		MainState := MS_Disabling;
+	END_IF
+	IF MainCommands.Start THEN 
+		MainState := MS_ENABLING_MOVERS;
+	END_IF
 	
 	MS_DISABLING:	// --------------------------------------------------- DISABLING MOVERS
 	
@@ -338,13 +341,19 @@ PositionTrigger[2].Cyclic();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="5191" Count="77" />
+      <LineId Id="5195" Count="73" />
       <LineId Id="5649" Count="0" />
       <LineId Id="5549" Count="0" />
-      <LineId Id="5270" Count="49" />
+      <LineId Id="5270" Count="31" />
+      <LineId Id="5306" Count="13" />
       <LineId Id="5652" Count="0" />
       <LineId Id="5657" Count="0" />
-      <LineId Id="5323" Count="155" />
+      <LineId Id="5323" Count="100" />
+      <LineId Id="5702" Count="1" />
+      <LineId Id="5424" Count="0" />
+      <LineId Id="5704" Count="5" />
+      <LineId Id="5711" Count="2" />
+      <LineId Id="5425" Count="53" />
       <LineId Id="2538" Count="0" />
     </LineIds>
   </POU>
