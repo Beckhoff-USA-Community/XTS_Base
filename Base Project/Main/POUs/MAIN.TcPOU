@@ -273,10 +273,10 @@ END_VAR]]></Declaration>
 			MainCommands.Enable		:= FALSE;
 			MainState				:= MS_DISABLING;
 			ELSE
-			MainState				:= MS_Stopped;
+			MainState				:= MS_STOPPED;
 		END_IF
 		
-	MS_Stopped:		// --------------------------------------------------- Stop Command has been sent, hold here
+	MS_STOPPED:		// --------------------------------------------------- Stop Command has been sent, hold here
 	
 	IF MainCommands.Disable THEN 
 		MainState := MS_Disabling;
