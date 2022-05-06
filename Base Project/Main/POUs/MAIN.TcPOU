@@ -50,8 +50,10 @@ END_VAR]]></Declaration>
       <ST><![CDATA[CASE MainState OF
 	MS_DISABLED:	// ------------------------------------------------------- IDLE STATE
 	
+		MainCommands.Start:=FALSE;
 	
 		IF MainCommands.Enable THEN
+			MainCommands.Disable:=false;
 			MainState		:= MS_INITIALIZING_MOVERS;
 		END_IF
 	
@@ -151,6 +153,7 @@ END_VAR]]></Declaration>
 			MainState	:= MS_RUN;
 			
 		ELSIF MainCommands.Disable THEN
+			maincommands.Enable:=False;
 			MainState	:= MS_DISABLING;
 		END_IF
 	
@@ -278,12 +281,14 @@ END_VAR]]></Declaration>
 		
 	MS_STOPPED:		// --------------------------------------------------- Stop Command has been sent, hold here
 	
-	IF MainCommands.Disable THEN 
-		MainState := MS_Disabling;
-	END_IF
-	IF MainCommands.Start THEN 
-		MainState := MS_ENABLING_MOVERS;
-	END_IF
+		IF MainCommands.Disable THEN
+			MainCommands.Enable := FALSE;
+			MainState := MS_DISABLING;
+		ELSIF MainCommands.Start THEN
+			MainCommands.Stop := FALSE;
+			MainState := MS_ENABLING_MOVERS;
+		END_IF
+
 	
 	MS_DISABLING:	// --------------------------------------------------- DISABLING MOVERS
 	
@@ -341,18 +346,27 @@ PositionTrigger[2].Cyclic();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="5195" Count="73" />
+      <LineId Id="5195" Count="2" />
+      <LineId Id="5811" Count="1" />
+      <LineId Id="5199" Count="0" />
+      <LineId Id="5813" Count="0" />
+      <LineId Id="5200" Count="68" />
       <LineId Id="5649" Count="0" />
       <LineId Id="5549" Count="0" />
-      <LineId Id="5270" Count="31" />
+      <LineId Id="5270" Count="27" />
+      <LineId Id="5814" Count="0" />
+      <LineId Id="5298" Count="3" />
       <LineId Id="5306" Count="13" />
       <LineId Id="5652" Count="0" />
       <LineId Id="5657" Count="0" />
       <LineId Id="5323" Count="100" />
       <LineId Id="5702" Count="1" />
       <LineId Id="5424" Count="0" />
-      <LineId Id="5704" Count="5" />
-      <LineId Id="5711" Count="2" />
+      <LineId Id="5704" Count="2" />
+      <LineId Id="5758" Count="3" />
+      <LineId Id="5765" Count="0" />
+      <LineId Id="5763" Count="1" />
+      <LineId Id="5713" Count="0" />
       <LineId Id="5425" Count="53" />
       <LineId Id="2538" Count="0" />
     </LineIds>
