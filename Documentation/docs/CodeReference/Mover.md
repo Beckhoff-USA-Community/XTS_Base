@@ -159,7 +159,7 @@ IF xBuildTrain THEN
 
 	IF Mover[0].IsSyncedToMover THEN
 		// Commands Mover 4 to move ahead at 300 mm/s
-		Mover[0].MasterMover.MoveVelocity( 300 );
+		Mover[4].MasterMover.MoveVelocity( 300 );
 	END_IF;
 END_IF;		
 ```
