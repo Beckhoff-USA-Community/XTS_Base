@@ -592,13 +592,17 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-// Sets an internal flag to advance the state machine
-internalDisable		:= TRUE;
+IF internalState = MV_RUN THEN
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverDisable,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
-MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+	// Sets an internal flag to advance the state machine
+	internalDisable		:= TRUE;
+	
+	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverDisable,0 );
+	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+	MsgCreate.Send(0);
+	THIS^.SourceInstancePath	:= 'Direct access';
+	
+END_IF
 
 Disable		:= THIS^;
 ]]></ST>
@@ -614,15 +618,20 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-// Sets an internal flag to advance the state machine
-internalEnable		:= TRUE;
+IF internalState = MV_IDLE THEN
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverEnable,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
-MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+	// Sets an internal flag to advance the state machine
+	internalEnable		:= TRUE;
+	
+	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverEnable,0 );
+	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+	MsgCreate.Send(0);
+	THIS^.SourceInstancePath	:= 'Direct access';
 
-Enable := THIS^;]]></ST>
+END_IF;
+
+Enable := THIS^;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="GroupStop" Id="{19a65925-9b39-4de9-ab16-7733d66c5fd4}" FolderPath="Methods\">
@@ -1321,22 +1330,28 @@ SyncToMover		:= THIS^;
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Disable">
+      <LineId Id="48" Count="1" />
       <LineId Id="6" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="0" />
       <LineId Id="24" Count="2" />
       <LineId Id="33" Count="0" />
       <LineId Id="35" Count="0" />
+      <LineId Id="50" Count="1" />
       <LineId Id="12" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="42" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Enable">
+      <LineId Id="27" Count="1" />
       <LineId Id="6" Count="1" />
       <LineId Id="5" Count="0" />
       <LineId Id="17" Count="3" />
-      <LineId Id="12" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="13" Count="0" />
       <LineId Id="11" Count="0" />
+      <LineId Id="29" Count="0" />
     </LineIds>
     <LineIds Name="Mover.GroupStop">
       <LineId Id="6" Count="2" />
