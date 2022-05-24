@@ -1,29 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <DUT Name="MoverState_enum" Id="{89a812d1-f23a-47af-b019-1e4ee25dac44}">
     <Declaration><![CDATA[{attribute 'strict'}
-TYPE MoverState_enum :
-(
-	MV_IDLE				:= 0,
-	MV_RESET			:= 10,
-	MV_M1_READMODE		:= 20,
-	MV_M1_EVALMODE		:= 30,
-	MV_M1_READSTATUS	:= 40,
-	MV_M1_EVALSTATUS	:= 50,
-	MV_M1_DETECT		:= 60,
-	MV_ENABLING			:= 70,
-	MV_ADDTOGROUP		:= 80,
-	MV_READGROUPSTATUS	:= 90,
-	MV_RESETGROUP		:= 100,
-	MV_ENABLEGROUP		:= 110,
-	MV_RUN				:= 120,
-	MV_REMOVEFROMGROUP	:= 130,
-	MV_BEGIN_HALTING	:= 140,
-	MV_HALTING			:= 150,
-	MV_DISABLING		:= 160,
-	MV_ERROR			:= 999
-);
-END_TYPE
-]]></Declaration>
+TYPE MoverState_enum : (
+        MV_IDLE            := 0,
+        MV_RESET           := 10,
+        MV_M1_READMODE     := 20,
+        MV_M1_EVALMODE     := 30,
+        MV_M1_READSTATUS   := 40,
+        MV_M1_EVALSTATUS   := 50,
+        MV_M1_DETECT       := 60,
+        MV_ENABLING        := 70,
+        MV_ADDTOGROUP      := 80,
+        MV_READGROUPSTATUS := 90,
+        MV_RESETGROUP      := 100,
+        MV_ENABLEGROUP     := 110,
+        MV_RUN             := 120,
+        MV_REMOVEFROMGROUP := 130,
+        MV_BEGIN_HALTING   := 140,
+        MV_HALTING         := 150,
+        MV_DISABLING       := 160,
+        MV_ERROR           := 999
+    );
+END_TYPE]]></Declaration>
   </DUT>
 </TcPlcObject>

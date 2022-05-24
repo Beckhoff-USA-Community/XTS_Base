@@ -6,84 +6,83 @@
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
 
 VAR_INPUT
-	
-	MotionParameters		: MotionParameters_typ;		// Motion parameters used by internal motion function blocks
-	SourceInstancePath		: STRING	:= 'Direct access';					// Used internally to temporarily store the source of a Mover method call for logging purposes. Don't read or write
+
+    MotionParameters   : MotionParameters_typ;      // Motion parameters used by internal motion function blocks
+    SourceInstancePath : STRING := 'Direct access'; // Used internally to temporarily store the source of a Mover method call for logging purposes. Don't read or write
 
 END_VAR
 VAR_OUTPUT
-	
-	Ready			: BOOL;			// Mover is enabled and ready to accept motion commands
-	Busy			: BOOL;			// Mover is processing a command or changing state
-	
-	Error			: BOOL;			// error is currently active
-	ErrorID			: UDINT;		// errorID of the active error
-	ErrorOrigin		: STRING;		// error source, in case of errored internal function block
-	
-	InGroup			: BOOL;			// Mover is currently grouped for CA
-	IdentInGroup	: UDINT;		// IDX within group, for knowing which movers are adjacent
-	
-	AxisReference	: AXIS_REF;		// Motion link variable. Left as output so the link can be made directly, and accessed by external code
+
+    Ready : BOOL; // Mover is enabled and ready to accept motion commands
+    Busy  : BOOL; // Mover is processing a command or changing state
+
+    Error       : BOOL;   // error is currently active
+    ErrorID     : UDINT;  // errorID of the active error
+    ErrorOrigin : STRING; // error source, in case of errored internal function block
+
+    InGroup      : BOOL;  // Mover is currently grouped for CA
+    IdentInGroup : UDINT; // IDX within group, for knowing which movers are adjacent
+
+    AxisReference : AXIS_REF; // Motion link variable. Left as output so the link can be made directly, and accessed by external code
 
 END_VAR
 VAR
 
-	{attribute 'instance-path'}
-	{attribute 'noinit'}
-	{attribute 'hide'}
-	InstancePath		: STRING;	// instance naming, for diagnostics purposes
-	
-	internalEnable		: BOOL;		// moves the axis from Disabled to Standstill, adds Axis to CA group, and triggers M1 Detection if configured
-	internalDisable		: BOOL;		// moves the axis from Standstill to Disabled, removes Axis from CA Group
-	
-	internalCurrentMoveType			: MoverCommandType_enum;	// Most recent move command type
-	
-	internalCurrentDestPosition		: LREAL;	// Track position of the current motion destination;
-	internalCurrentDestObjective	: STRING;	// Instance path of the current destination objective
-	internalCurrentDestStation		: REFERENCE TO Station;		// Reference to a destination station, if that is the current movetype
+    {attribute 'instance-path'}
+    {attribute 'noinit'}
+    {attribute 'hide'}
+    InstancePath : STRING; // instance naming, for diagnostics purposes
 
-	internalState			: MoverState_enum;		// Internal state variable
-	
-	internalMasterMover				: REFERENCE TO Mover;	// Internal reference to a target master mover
-	internalGap						: LREAL;	// Gap distance to master mover during sync
-	
-	// Configurable Payload description	
-	internalPayload			: USINT;	// E.g. 0: No Product, 1: Product Loaded, 2: Product Reject. Can be modified for application
-	
-	// Internal function blocks	
-	fbPower					: MC_Power;
-	fbReset					: MC_Reset;
-	fbStop					: MC_Stop;
-	fbHaltCA				: MC_HaltCA;
+    internalEnable  : BOOL; // moves the axis from Disabled to Standstill, adds Axis to CA group, and triggers M1 Detection if configured
+    internalDisable : BOOL; // moves the axis from Standstill to Disabled, removes Axis from CA Group
 
-	fbMoveAbsCA				: ARRAY[0..1] OF MC_MoveAbsoluteCA;
-	fbAddToGroup			: MC_AddAxisToGroup;
-	fbRemoveFromGroup		: MC_RemoveAxisFromGroup;
-	
-	fbGearInPosCA			: ARRAY[0..1] OF MC_GearInPosCA;
-	
-	fbGroupStatus			: MC_GroupReadStatus;
-	fbGroupEnable			: MC_GroupEnable;
-	fbGroupReset			: MC_GroupReset;
-	fbGroupStop				: MC_GroupStop;
-	
-	fbReadStatus			: MC_ReadStatus;
-	fbMoveRelCA				: ARRAY[0..1] OF MC_MoveRelativeCA;
-	
-	fbReadM1DetectMode		: ADSREAD;
-	fbReadM1DetectValid		: ADSREAD;
-	fbReadM1DetectActive	: ADSREAD;
-	fbWriteM1Detect			: ADSWRITE;
-	IdDetectionMode			: DINT;			// 0: Standard 1: Mover1
-	IsIdDetectionValid		: BOOL;			// M1 Detection has completed
-	IsIdDetectionActive		: BOOL;			// M1 Detection currently underway
-	
-	
+    internalCurrentMoveType : MoverCommandType_enum; // Most recent move command type
+
+    internalCurrentDestPosition  : LREAL;                // Track position of the current motion destination;
+    internalCurrentDestObjective : STRING;               // Instance path of the current destination objective
+    internalCurrentDestStation   : REFERENCE TO Station; // Reference to a destination station, if that is the current movetype
+
+    internalState : MoverState_enum; // Internal state variable
+
+    internalMasterMover : REFERENCE TO Mover; // Internal reference to a target master mover
+    internalGap         : LREAL;              // Gap distance to master mover during sync
+
+    // Configurable Payload description	
+    internalPayload : USINT; // E.g. 0: No Product, 1: Product Loaded, 2: Product Reject. Can be modified for application
+
+    // Internal function blocks	
+    fbPower  : MC_Power;
+    fbReset  : MC_Reset;
+    fbStop   : MC_Stop;
+    fbHaltCA : MC_HaltCA;
+
+    fbMoveAbsCA       : ARRAY[0..1] OF MC_MoveAbsoluteCA;
+    fbAddToGroup      : MC_AddAxisToGroup;
+    fbRemoveFromGroup : MC_RemoveAxisFromGroup;
+
+    fbGearInPosCA : ARRAY[0..1] OF MC_GearInPosCA;
+
+    fbGroupStatus : MC_GroupReadStatus;
+    fbGroupEnable : MC_GroupEnable;
+    fbGroupReset  : MC_GroupReset;
+    fbGroupStop   : MC_GroupStop;
+
+    fbReadStatus : MC_ReadStatus;
+    fbMoveRelCA  : ARRAY[0..1] OF MC_MoveRelativeCA;
+
+    fbReadM1DetectMode   : ADSREAD;
+    fbReadM1DetectValid  : ADSREAD;
+    fbReadM1DetectActive : ADSREAD;
+    fbWriteM1Detect      : ADSWRITE;
+    IdDetectionMode      : DINT; // 0: Standard 1: Mover1
+    IsIdDetectionValid   : BOOL; // M1 Detection has completed
+    IsIdDetectionActive  : BOOL; // M1 Detection currently underway
+
 END_VAR
 VAR_IN_OUT
-	
-	GroupReference		: AXES_GROUP_REF;
-	
+
+    GroupReference : AXES_GROUP_REF;
+
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -95,11 +94,9 @@ END_VAR]]></Declaration>
 PROPERTY CurrentDestinationPosition : LREAL]]></Declaration>
       <Get Name="Get" Id="{bc93c9f7-92a5-426e-9c7f-5953d1b7c034}">
         <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-CurrentDestinationPosition		:= internalCurrentDestPosition;]]></ST>
+          <ST><![CDATA[CurrentDestinationPosition := internalCurrentDestPosition;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -108,12 +105,10 @@ CurrentDestinationPosition		:= internalCurrentDestPosition;]]></ST>
 PROPERTY CurrentMoveType : MoverCommandType_enum]]></Declaration>
       <Get Name="Get" Id="{008a2288-6099-47d9-88ab-640a99950162}">
         <Declaration><![CDATA[VAR
-	MoverCurrentMoveType: MoverCommandType_enum;
-END_VAR
-]]></Declaration>
+    MoverCurrentMoveType : MoverCommandType_enum;
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-CurrentMoveType		:= internalCurrentMoveType;]]></ST>
+          <ST><![CDATA[CurrentMoveType := internalCurrentMoveType;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -121,466 +116,449 @@ CurrentMoveType		:= internalCurrentMoveType;]]></ST>
       <Declaration><![CDATA[PROPERTY CurrentObjective : String]]></Declaration>
       <Get Name="Get" Id="{39f22891-e1d0-4fbf-9032-2bbc45b18310}">
         <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-CurrentObjective		:= internalCurrentDestObjective;]]></ST>
+          <ST><![CDATA[CurrentObjective := internalCurrentDestObjective;]]></ST>
         </Implementation>
       </Get>
     </Property>
     <Method Name="Cyclic" Id="{39769063-232f-402c-8c9b-ad47db196752}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Cyclic : iMover
 VAR_IN_OUT
-	GroupReference		: AXES_GROUP_REF;
-END_VAR
-]]></Declaration>
+    GroupReference : AXES_GROUP_REF;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-
-
-
-
-// cleans motion parameters, removing possible negatives. Upper bounds are capped by the axis parameters
-MotionParameters.Acceleration	:= LIMIT( 0, MotionParameters.Acceleration, 1E300 );
-MotionParameters.Deceleration	:= LIMIT( 0, MotionParameters.Deceleration, 1E300 );
-MotionParameters.Jerk			:= LIMIT( 0, MotionParameters.Jerk, 1E300 );
-MotionParameters.Velocity		:= LIMIT( 0, MotionParameters.Velocity, 1E300 );
-
-
-
-
-
+        <ST><![CDATA[// cleans motion parameters, removing possible negatives. Upper bounds are capped by the axis parameters
+MotionParameters.Acceleration := LIMIT(0, MotionParameters.Acceleration, 1E300);
+MotionParameters.Deceleration := LIMIT(0, MotionParameters.Deceleration, 1E300);
+MotionParameters.Jerk         := LIMIT(0, MotionParameters.Jerk, 1E300);
+MotionParameters.Velocity     := LIMIT(0, MotionParameters.Velocity, 1E300);
 
 CASE internalState OF
-	MV_IDLE:	// ------------------------------------------------------- idle state
-	
-		Ready	:= FALSE;
-		Busy	:= FALSE;
+    MV_IDLE: // ------------------------------------------------------- idle state
 
-		fbMoveAbsCA[0].Execute	:= FALSE;
-		fbMoveAbsCA[1].Execute	:= FALSE;
-		fbMoveRelCA[0].Execute	:= FALSE;
-		fbMoveRelCA[1].Execute	:= FALSE;
-		
-		internalDisable			:= FALSE;
-		IF internalEnable THEN
-			internalEnable		:= FALSE;
-			internalState		:= MV_RESET;
-		END_IF
-		
-	MV_RESET: // ------------------------------------------------------- axis is resetting
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbReset.Execute			:= TRUE;
-		
-		IF fbReset.Done THEN
-			fbReset.Execute		:= FALSE;
-			internalState		:= MV_M1_READMODE;
-		ELSIF fbReset.Error THEN
-			ErrorID				:= fbReset.ErrorID;
-			ErrorOrigin			:= CONCAT( InstancePath, '.fbReset' );
-			internalState		:= MV_ERROR;		
-		END_IF
-		
-	MV_M1_READMODE: // ------------------------------------------------------- begin checking for M1 detection mode setting
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		// todo: values may change. see issue #25 for update
-		fbReadM1DetectMode.NETID		:= '';
-		fbReadM1DetectMode.PORT			:= 351;
-		fbReadM1DetectMode.IDXGRP		:= GVL.pXtsProcessingUnit;
-		fbReadM1DetectMode.IDXOFFS		:= 16#03080246;
-		fbReadM1DetectMode.LEN			:= SIZEOF( IdDetectionMode );
-		fbReadM1DetectMode.DESTADDR		:= ADR( IdDetectionMode );
-		fbReadM1DetectMode.READ			:= TRUE;
-		
-		internalState	:= MV_M1_EVALMODE;
-		
-	MV_M1_EVALMODE: // ------------------------------------------------------- Determine detection mode setting
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-	
-		fbReadM1DetectMode.READ		:= FALSE;
-		
-		CASE IdDetectionMode OF
-			0:	internalState		:= MV_ENABLING;			// Mover 1 functionality is not configured, skip ahead to enabling the mover
-			1:	internalState		:= MV_M1_READSTATUS;	// Mover 1 functionality is configured, read detection status
-		END_CASE
-	
-	MV_M1_READSTATUS: // ------------------------------------------------------- Determine current M1 Detection Status
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbWriteM1Detect.WRITE			:= FALSE;
-		
-		fbReadM1DetectValid.NETID		:= '';
-		fbReadM1DetectValid.PORT		:= 351;
-		fbReadM1DetectValid.IDXGRP		:= GVL.pXtsProcessingUnit;
-		fbReadM1DetectValid.IDXOFFS		:= 16#03080251;
-		fbReadM1DetectValid.LEN			:= SIZEOF( IsIdDetectionValid );
-		fbReadM1DetectValid.DESTADDR	:= ADR( IsIdDetectionValid );
-		fbReadM1DetectValid.READ		:= TRUE;
-		
-		fbReadM1DetectActive.NETID		:= '';
-		fbReadM1DetectActive.PORT		:= 351;
-		fbReadM1DetectActive.IDXGRP		:= GVL.pXtsProcessingUnit;
-		fbReadM1DetectActive.IDXOFFS	:= 16#03080268;
-		fbReadM1DetectActive.LEN		:= SIZEOF( IsIdDetectionActive );
-		fbReadM1DetectActive.DESTADDR	:= ADR( IsIdDetectionActive );
-		fbReadM1DetectActive.READ		:= TRUE;
-		
-		internalState	:= MV_M1_EVALSTATUS;
-		
-	MV_M1_EVALSTATUS:	// ------------------------------------------------------- Determine to activate M1 Detect or ignore
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-	
-		fbReadM1DetectValid.READ		:= FALSE;
-		fbReadM1DetectActive.READ		:= FALSE;
-		
-		IF IsIdDetectionActive THEN
-			internalState		:= MV_M1_READSTATUS;	// M1 Detection is underway, but we need to wait until it completes
-		ELSIF IsIdDetectionValid THEN
-			internalState		:= MV_ENABLING;			// M1 Detection complete, ready to enable this mover
-		ELSE
-			internalState		:= MV_M1_DETECT;		// M1 Detection hasn't been started yet. So start it!
-		END_IF
- 
-	MV_M1_DETECT:	// ------------------------------------------------------- Begin M1 Detection
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbWriteM1Detect.NETID			:= '';
-		fbWriteM1Detect.PORT			:= 351;
-		fbWriteM1Detect.IDXGRP			:= GVL.pXtsProcessingUnit;
-		fbWriteM1Detect.IDXOFFS			:= 16#03080250;
-		fbWriteM1Detect.WRITE			:= TRUE;
-		
-		internalState	:= MV_M1_READSTATUS;	// go back to Read M1 Detect status to confirm it has completed
-			
-	MV_ENABLING: // ------------------------------------------------------- axis is enabling
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbPower.Enable					:= TRUE;
-		fbPower.Enable_Positive			:= TRUE;
-		fbPower.Enable_Negative			:= TRUE;
-		fbPower.BufferMode				:= MC_Aborting;
-		fbPower.Override				:= 100;
-		
-		IF fbPower.Status THEN
-			internalState				:= MV_ADDTOGROUP;
-		ELSIF fbPower.Error THEN
-			ErrorID						:= fbPower.ErrorID;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbPower' );
-			internalState				:= MV_ERROR;
-		END_IF
-		
-	MV_ADDTOGROUP: // ------------------------------------------------------- axis is adding to a group
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbAddToGroup.Execute			:= TRUE;
-		fbAddToGroup.IdentInGroup		:= UDINT_TO_IDENTINGROUP( AxisReference.NcToPlc.AxisId - 1 );
-		
-		IF fbAddToGroup.Done THEN
-			InGroup						:= TRUE;
-			IdentInGroup				:= AxisReference.NcToPlc.AxisId - 1;
-			fbAddToGroup.Execute		:= FALSE;
-			internalState				:= MV_READGROUPSTATUS;
-		ELSIF fbAddToGroup.Error THEN
-			ErrorID						:= fbAddToGroup.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbAddToGroup' );
-			internalState				:= MV_ERROR;
-		END_IF
-		
-	MV_READGROUPSTATUS: // ------------------------------------------------------- check the status of the group
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbGroupStatus.Enable			:= TRUE;
-		
-		fbGroupStatus( AxesGroup := GroupReference );	// get current information
-		
-		IF fbGroupStatus.Valid AND fbGroupStatus.GroupErrorStop THEN
-			fbGroupReset.Execute		:= TRUE;
-		ELSIF fbGroupStatus.Valid AND fbGroupStatus.GroupDisabled THEN
-			fbGroupReset.Execute		:= FALSE;
-			internalState				:= MV_ENABLEGROUP;
-		ELSIF fbGroupStatus.Valid AND ( fbGroupStatus.GroupStandby OR fbGroupStatus.GroupMoving ) THEN
-			fbGroupReset.Execute		:= FALSE;
-			internalState				:= MV_RUN;
-		END_IF
-		
-		IF fbGroupStatus.Error THEN
-			ErrorID						:= fbGroupStatus.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupStatus' );
-			internalState				:= MV_ERROR;
-		ELSIF fbGroupReset.Error THEN
-			ErrorID						:= fbGroupStatus.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupReset' );
-			internalState				:= MV_ERROR;
-		END_IF
-		
-	
-	MV_ENABLEGROUP: // ------------------------------------------------------- enable the group
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbGroupEnable.Execute			:= TRUE;
-		
-		IF fbGroupEnable.Done THEN
-			fbGroupEnable.Execute		:= FALSE;
-			internalState				:= MV_RUN;
-		ELSIF fbGroupEnable.Error THEN
-			ErrorID						:= fbGroupEnable.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupEnable' );
-			internalState				:= MV_ERROR;
-		END_IF
-		
-	MV_RUN: // ------------------------------------------------------- mover enabled, ready
-	
-		Ready	:= TRUE;
-		IF NOT fbMoveAbsCA[0].busy AND NOT fbMoveAbsCA[1].Busy AND NOT fbMoveRelCA[0].Busy AND NOT fbMoveRelCA[1].Busy THEN 
-			Busy	:= FALSE;
-		ELSE
-			Busy 	:= TRUE;
-		END_IF
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		internalEnable			:= FALSE;		
-		IF internalDisable THEN
-			internalDisable		:= FALSE;
-			internalState		:= MV_BEGIN_HALTING;
-			
-		// Reset all commands issued by method calls
-		ELSIF fbMoveAbsCA[0].Busy OR fbMoveAbsCA[0].CommandAborted THEN // OR fbMoveAbs.CommandAborted THEN
-			fbMoveAbsCA[0].Execute		:= FALSE;
-		ELSIF fbMoveAbsCA[1].Busy OR fbMoveAbsCA[1].CommandAborted THEN
-			fbMoveAbsCA[1].Execute		:= FALSE;			
-		ELSIF fbAddToGroup.Done THEN
-			fbAddToGroup.Execute		:= FALSE;
-		ELSIF fbMoveRelCA[0].Busy OR fbMoveRelCA[0].CommandAborted THEN
-			fbMoveRelCA[0].Execute		:= FALSE;
-		ELSIF fbMoveRelCA[1].Busy OR fbMoveRelCA[1].CommandAborted THEN
-			fbMoveRelCA[1].Execute		:= FALSE;
-		ELSIF fbGearInPosCA[0].Busy OR fbGearInPosCA[0].CommandAborted THEN
-			fbGearInPosCA[0].Execute	:= FALSE;
-		ELSIF fbGearInPosCA[1].Busy OR fbGearInPosCA[1].CommandAborted THEN
-			fbGearInPosCA[1].Execute	:= FALSE;
-			
-		// This is different than the other similar cases, since a Stop command should prevent other commands from overriding it, thus
-		// the Execute needs to remain High until the command has fully completed.
-		ELSIF fbGroupStop.Done THEN
-			fbGroupStop.Execute			:= FALSE;
-		END_IF;
+        Ready := FALSE;
+        Busy  := FALSE;
 
-		// And catch all internal function block errors
-		IF fbMoveAbsCA[0].Error THEN
-			ErrorID					:= fbMoveAbsCA[0].ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbMoveAbs[0]' );
-			internalState			:= MV_ERROR;
-		ELSIF fbMoveAbsCA[1].Error THEN
-			ErrorID					:= fbMoveAbsCA[1].ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbMoveAbs[1]' );
-			internalState			:= MV_ERROR;
-		ELSIF fbAddToGroup.Error THEN
-			ErrorID					:= fbAddToGroup.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbAddToGroup' );
-			internalState			:= MV_ERROR;
-		ELSIF fbGroupStop.Error THEN
-			ErrorID					:= fbGroupStop.ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGroupStop' );
-			internalState			:= MV_ERROR;
-		ELSIF fbMoveRelCA[0].Error THEN
-			ErrorID					:= fbMoveRelCA[0].ErrorID;
-			ErrorOrigin 			:= CONCAT ( InstancePath, '.fbMoveRelCA[0]');
-			internalState			:= MV_ERROR;
-		ELSIF fbMoveRelCA[1].Error THEN
-			ErrorID					:= fbMoveRelCA[1].ErrorID;
-			ErrorOrigin 			:= CONCAT ( InstancePath, '.fbMoveRelCA[1]');
-			internalState			:= MV_ERROR;
-		ELSIF fbReadStatus.Valid AND fbReadStatus.ErrorStop THEN
-			ErrorID					:= fbReadStatus.Status.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbReadStatus' );
-			internalState			:= MV_ERROR;
-		ELSIF fbGearInPosCA[0].Error THEN
-			ErrorID					:= fbGearInPosCA[0].ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosCA[0]');
-			internalState			:= MV_ERROR;
-		ELSIF fbGearInPosCA[1].Error THEN
-			ErrorID					:= fbGearInPosCA[1].ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosCA[1]');
-			internalState			:= MV_ERROR;
-		END_IF
+        fbMoveAbsCA[0].Execute := FALSE;
+        fbMoveAbsCA[1].Execute := FALSE;
+        fbMoveRelCA[0].Execute := FALSE;
+        fbMoveRelCA[1].Execute := FALSE;
 
+        internalDisable := FALSE;
 
-	MV_BEGIN_HALTING:	// --------------------------------------------------- begin stopping process
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		// Kill any active motion commands
-		fbMoveRelCA[0].Execute		:= FALSE;
-		fbMoveRelCA[1].Execute		:= FALSE;
-		fbMoveAbsCA[0].Execute		:= FALSE;
-		fbMoveAbsCA[1].Execute		:= FALSE;
-				
-		IF fbReadStatus.ErrorStop = FALSE THEN
-			fbHaltCA.Execute		:= TRUE;
-			//fbHaltCA.Deceleration	:= MotionParameters.Deceleration;
-			//fbHaltCA.Jerk			:= MotionParameters.Jerk;
-		ELSE
-			internalState			:= MV_REMOVEFROMGROUP;
-		END_IF;
-		
-		IF fbHaltCA.Active OR fbHaltCA.Done THEN
-			internalState			:= MV_HALTING;
-		ELSIF fbHaltCA.Error THEN
-			ErrorID					:= fbHaltCA.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbHalt' );
-			internalState			:= MV_ERROR;				
-		END_IF	
-		
-	MV_HALTING:	// ------------------------------------------------------- mover disabling
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
+        IF internalEnable THEN
+            internalEnable := FALSE;
+            internalState  := MV_RESET;
+        END_IF
 
-		// Wait for the stopping action to complete
-		IF fbHaltCA.Done THEN
-			fbHaltCA.Execute		:= FALSE;
-			internalState			:= MV_REMOVEFROMGROUP;
-		ELSIF fbHaltCA.Error THEN
-			ErrorID					:= fbStop.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbHalt' );
-			internalState			:= MV_ERROR;
-		END_IF
-		
-		
-		
-	MV_REMOVEFROMGROUP:	// ---------------------------------------------------- remove mover from CA group
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbRemoveFromGroup.Execute			:= TRUE;
-		fbRemoveFromGroup.IdentInGroup		:= UDINT_TO_IDENTINGROUP( IdentInGroup );
-		
-		IF fbRemoveFromGroup.Done THEN
-			fbRemoveFromGroup.Execute		:= FALSE;
-			internalState					:= MV_DISABLING;
-		END_IF
-		
+    MV_RESET: // ------------------------------------------------------- axis is resetting
 
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
 
-	MV_DISABLING:	// ----------------------------------------------------- start the disabling process
+        fbReset.Execute := TRUE;
 
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbPower.Enable				:= FALSE;
-		fbPower.Enable_Positive		:= FALSE;
-		fbPower.Enable_Negative		:= FALSE;
-		fbPower.BufferMode			:= MC_Aborting;
-		fbPower.Override			:= 100;
-			
-		IF fbPower.Status = FALSE THEN
-			internalState			:= MV_IDLE;
-		ELSIF fbPower.Error THEN
-			ErrorID					:= fbPower.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbPower' );
-			internalState			:= MV_ERROR;
-		END_IF		
-	
-	MV_ERROR: // ------------------------------------------------------- mover in error state
-	
-		Ready	:= FALSE;
-		Busy	:= FALSE;
-		Error	:= TRUE;
-		
-		internalEnable			:= FALSE;		
-		IF internalDisable THEN
-			internalDisable		:= FALSE;
-			internalState		:= MV_REMOVEFROMGROUP;
-			ErrorOrigin			:= '';
-		END_IF;
-		
+        IF fbReset.Done THEN
+            fbReset.Execute := FALSE;
+            internalState   := MV_M1_READMODE;
+        ELSIF fbReset.Error THEN
+            ErrorID       := fbReset.ErrorID;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbReset');
+            internalState := MV_ERROR;
+        END_IF
+
+    MV_M1_READMODE: // ------------------------------------------------------- begin checking for M1 detection mode setting
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        // todo: values may change. see issue #25 for update
+        fbReadM1DetectMode.NETID    := '';
+        fbReadM1DetectMode.PORT     := 351;
+        fbReadM1DetectMode.IDXGRP   := GVL.pXtsProcessingUnit;
+        fbReadM1DetectMode.IDXOFFS  := 16#03080246;
+        fbReadM1DetectMode.LEN      := SIZEOF(IdDetectionMode);
+        fbReadM1DetectMode.DESTADDR := ADR(IdDetectionMode);
+        fbReadM1DetectMode.READ     := TRUE;
+
+        internalState := MV_M1_EVALMODE;
+
+    MV_M1_EVALMODE: // ------------------------------------------------------- Determine detection mode setting
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        fbReadM1DetectMode.READ := FALSE;
+
+        CASE IdDetectionMode OF
+            0:
+                internalState := MV_ENABLING; // Mover 1 functionality is not configured, skip ahead to enabling the mover
+            1:
+                internalState := MV_M1_READSTATUS; // Mover 1 functionality is configured, read detection status
+        END_CASE
+
+    MV_M1_READSTATUS: // ------------------------------------------------------- Determine current M1 Detection Status
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        fbWriteM1Detect.WRITE := FALSE;
+
+        fbReadM1DetectValid.NETID    := '';
+        fbReadM1DetectValid.PORT     := 351;
+        fbReadM1DetectValid.IDXGRP   := GVL.pXtsProcessingUnit;
+        fbReadM1DetectValid.IDXOFFS  := 16#03080251;
+        fbReadM1DetectValid.LEN      := SIZEOF(IsIdDetectionValid);
+        fbReadM1DetectValid.DESTADDR := ADR(IsIdDetectionValid);
+        fbReadM1DetectValid.READ     := TRUE;
+
+        fbReadM1DetectActive.NETID    := '';
+        fbReadM1DetectActive.PORT     := 351;
+        fbReadM1DetectActive.IDXGRP   := GVL.pXtsProcessingUnit;
+        fbReadM1DetectActive.IDXOFFS  := 16#03080268;
+        fbReadM1DetectActive.LEN      := SIZEOF(IsIdDetectionActive);
+        fbReadM1DetectActive.DESTADDR := ADR(IsIdDetectionActive);
+        fbReadM1DetectActive.READ     := TRUE;
+
+        internalState := MV_M1_EVALSTATUS;
+
+    MV_M1_EVALSTATUS: // ------------------------------------------------------- Determine to activate M1 Detect or ignore
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        fbReadM1DetectValid.READ  := FALSE;
+        fbReadM1DetectActive.READ := FALSE;
+
+        IF IsIdDetectionActive THEN
+            internalState := MV_M1_READSTATUS; // M1 Detection is underway, but we need to wait until it completes
+        ELSIF IsIdDetectionValid THEN
+            internalState := MV_ENABLING; // M1 Detection complete, ready to enable this mover
+        ELSE
+            internalState := MV_M1_DETECT; // M1 Detection hasn't been started yet. So start it!
+        END_IF
+
+    MV_M1_DETECT: // ------------------------------------------------------- Begin M1 Detection
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        fbWriteM1Detect.NETID   := '';
+        fbWriteM1Detect.PORT    := 351;
+        fbWriteM1Detect.IDXGRP  := GVL.pXtsProcessingUnit;
+        fbWriteM1Detect.IDXOFFS := 16#03080250;
+        fbWriteM1Detect.WRITE   := TRUE;
+
+        internalState := MV_M1_READSTATUS; // go back to Read M1 Detect status to confirm it has completed
+
+    MV_ENABLING: // ------------------------------------------------------- axis is enabling
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        fbPower.Enable          := TRUE;
+        fbPower.Enable_Positive := TRUE;
+        fbPower.Enable_Negative := TRUE;
+        fbPower.BufferMode      := MC_Aborting;
+        fbPower.Override        := 100;
+
+        IF fbPower.Status THEN
+            internalState := MV_ADDTOGROUP;
+        ELSIF fbPower.Error THEN
+            ErrorID       := fbPower.ErrorID;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbPower');
+            internalState := MV_ERROR;
+        END_IF
+
+    MV_ADDTOGROUP: // ------------------------------------------------------- axis is adding to a group
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        fbAddToGroup.Execute      := TRUE;
+        fbAddToGroup.IdentInGroup := UDINT_TO_IDENTINGROUP(AxisReference.NcToPlc.AxisId - 1);
+
+        IF fbAddToGroup.Done THEN
+            InGroup              := TRUE;
+            IdentInGroup         := AxisReference.NcToPlc.AxisId - 1;
+            fbAddToGroup.Execute := FALSE;
+            internalState        := MV_READGROUPSTATUS;
+        ELSIF fbAddToGroup.Error THEN
+            ErrorID       := fbAddToGroup.ErrorId;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbAddToGroup');
+            internalState := MV_ERROR;
+        END_IF
+
+    MV_READGROUPSTATUS: // ------------------------------------------------------- check the status of the group
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        fbGroupStatus.Enable := TRUE;
+
+        fbGroupStatus(AxesGroup := GroupReference); // get current information
+
+        IF fbGroupStatus.Valid AND fbGroupStatus.GroupErrorStop THEN
+            fbGroupReset.Execute := TRUE;
+        ELSIF fbGroupStatus.Valid AND fbGroupStatus.GroupDisabled THEN
+            fbGroupReset.Execute := FALSE;
+            internalState        := MV_ENABLEGROUP;
+        ELSIF fbGroupStatus.Valid AND (fbGroupStatus.GroupStandby OR fbGroupStatus.GroupMoving) THEN
+            fbGroupReset.Execute := FALSE;
+            internalState        := MV_RUN;
+        END_IF
+
+        IF fbGroupStatus.Error THEN
+            ErrorID       := fbGroupStatus.ErrorId;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbGroupStatus');
+            internalState := MV_ERROR;
+        ELSIF fbGroupReset.Error THEN
+            ErrorID       := fbGroupStatus.ErrorId;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbGroupReset');
+            internalState := MV_ERROR;
+        END_IF
+
+    MV_ENABLEGROUP: // ------------------------------------------------------- enable the group
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        fbGroupEnable.Execute := TRUE;
+
+        IF fbGroupEnable.Done THEN
+            fbGroupEnable.Execute := FALSE;
+            internalState         := MV_RUN;
+        ELSIF fbGroupEnable.Error THEN
+            ErrorID       := fbGroupEnable.ErrorId;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbGroupEnable');
+            internalState := MV_ERROR;
+        END_IF
+
+    MV_RUN: // ------------------------------------------------------- mover enabled, ready
+
+        Ready := TRUE;
+
+        IF NOT fbMoveAbsCA[0].busy AND NOT fbMoveAbsCA[1].Busy AND NOT fbMoveRelCA[0].Busy AND NOT fbMoveRelCA[1].Busy THEN
+            Busy := FALSE;
+        ELSE
+            Busy := TRUE;
+        END_IF
+
+        Error   := FALSE;
+        ErrorID := 0;
+
+        internalEnable := FALSE;
+        IF internalDisable THEN
+            internalDisable := FALSE;
+            internalState   := MV_BEGIN_HALTING;
+
+            // Reset all commands issued by method calls
+        ELSIF fbMoveAbsCA[0].Busy OR fbMoveAbsCA[0].CommandAborted THEN // OR fbMoveAbs.CommandAborted THEN
+            fbMoveAbsCA[0].Execute := FALSE;
+        ELSIF fbMoveAbsCA[1].Busy OR fbMoveAbsCA[1].CommandAborted THEN
+            fbMoveAbsCA[1].Execute := FALSE;
+        ELSIF fbAddToGroup.Done THEN
+            fbAddToGroup.Execute := FALSE;
+        ELSIF fbMoveRelCA[0].Busy OR fbMoveRelCA[0].CommandAborted THEN
+            fbMoveRelCA[0].Execute := FALSE;
+        ELSIF fbMoveRelCA[1].Busy OR fbMoveRelCA[1].CommandAborted THEN
+            fbMoveRelCA[1].Execute := FALSE;
+        ELSIF fbGearInPosCA[0].Busy OR fbGearInPosCA[0].CommandAborted THEN
+            fbGearInPosCA[0].Execute := FALSE;
+        ELSIF fbGearInPosCA[1].Busy OR fbGearInPosCA[1].CommandAborted THEN
+            fbGearInPosCA[1].Execute := FALSE;
+
+            // This is different than the other similar cases, since a Stop command should prevent other commands from overriding it, thus
+            // the Execute needs to remain High until the command has fully completed.
+        ELSIF fbGroupStop.Done THEN
+            fbGroupStop.Execute := FALSE;
+        END_IF;
+
+        // And catch all internal function block errors
+        IF fbMoveAbsCA[0].Error THEN
+            ErrorID       := fbMoveAbsCA[0].ErrorID;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbMoveAbs[0]');
+            internalState := MV_ERROR;
+        ELSIF fbMoveAbsCA[1].Error THEN
+            ErrorID       := fbMoveAbsCA[1].ErrorId;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbMoveAbs[1]');
+            internalState := MV_ERROR;
+        ELSIF fbAddToGroup.Error THEN
+            ErrorID       := fbAddToGroup.ErrorID;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbAddToGroup');
+            internalState := MV_ERROR;
+        ELSIF fbGroupStop.Error THEN
+            ErrorID       := fbGroupStop.ErrorId;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbGroupStop');
+            internalState := MV_ERROR;
+        ELSIF fbMoveRelCA[0].Error THEN
+            ErrorID       := fbMoveRelCA[0].ErrorID;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbMoveRelCA[0]');
+            internalState := MV_ERROR;
+        ELSIF fbMoveRelCA[1].Error THEN
+            ErrorID       := fbMoveRelCA[1].ErrorID;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbMoveRelCA[1]');
+            internalState := MV_ERROR;
+        ELSIF fbReadStatus.Valid AND fbReadStatus.ErrorStop THEN
+            ErrorID       := fbReadStatus.Status.ErrorID;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbReadStatus');
+            internalState := MV_ERROR;
+        ELSIF fbGearInPosCA[0].Error THEN
+            ErrorID       := fbGearInPosCA[0].ErrorId;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbGearInPosCA[0]');
+            internalState := MV_ERROR;
+        ELSIF fbGearInPosCA[1].Error THEN
+            ErrorID       := fbGearInPosCA[1].ErrorId;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbGearInPosCA[1]');
+            internalState := MV_ERROR;
+        END_IF
+
+    MV_BEGIN_HALTING: // --------------------------------------------------- begin stopping process
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        // Kill any active motion commands
+        fbMoveRelCA[0].Execute := FALSE;
+        fbMoveRelCA[1].Execute := FALSE;
+        fbMoveAbsCA[0].Execute := FALSE;
+        fbMoveAbsCA[1].Execute := FALSE;
+
+        IF fbReadStatus.ErrorStop = FALSE THEN
+            fbHaltCA.Execute := TRUE;
+            //fbHaltCA.Deceleration	:= MotionParameters.Deceleration;
+            //fbHaltCA.Jerk			:= MotionParameters.Jerk;
+        ELSE
+            internalState := MV_REMOVEFROMGROUP;
+        END_IF;
+
+        IF fbHaltCA.Active OR fbHaltCA.Done THEN
+            internalState := MV_HALTING;
+        ELSIF fbHaltCA.Error THEN
+            ErrorID       := fbHaltCA.ErrorID;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbHalt');
+            internalState := MV_ERROR;
+        END_IF
+
+    MV_HALTING: // ------------------------------------------------------- mover disabling
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        // Wait for the stopping action to complete
+        IF fbHaltCA.Done THEN
+            fbHaltCA.Execute := FALSE;
+            internalState    := MV_REMOVEFROMGROUP;
+        ELSIF fbHaltCA.Error THEN
+            ErrorID       := fbStop.ErrorID;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbHalt');
+            internalState := MV_ERROR;
+        END_IF
+
+    MV_REMOVEFROMGROUP: // ---------------------------------------------------- remove mover from CA group
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        fbRemoveFromGroup.Execute      := TRUE;
+        fbRemoveFromGroup.IdentInGroup := UDINT_TO_IDENTINGROUP(IdentInGroup);
+
+        IF fbRemoveFromGroup.Done THEN
+            fbRemoveFromGroup.Execute := FALSE;
+            internalState             := MV_DISABLING;
+        END_IF
+
+    MV_DISABLING: // ----------------------------------------------------- start the disabling process
+
+        Ready   := FALSE;
+        Busy    := TRUE;
+        Error   := FALSE;
+        ErrorID := 0;
+
+        fbPower.Enable          := FALSE;
+        fbPower.Enable_Positive := FALSE;
+        fbPower.Enable_Negative := FALSE;
+        fbPower.BufferMode      := MC_Aborting;
+        fbPower.Override        := 100;
+
+        IF fbPower.Status = FALSE THEN
+            internalState := MV_IDLE;
+        ELSIF fbPower.Error THEN
+            ErrorID       := fbPower.ErrorID;
+            ErrorOrigin   := CONCAT(InstancePath, '.fbPower');
+            internalState := MV_ERROR;
+        END_IF
+
+    MV_ERROR: // ------------------------------------------------------- mover in error state
+
+        Ready := FALSE;
+        Busy  := FALSE;
+        Error := TRUE;
+
+        internalEnable := FALSE;
+        IF internalDisable THEN
+            internalDisable := FALSE;
+            internalState   := MV_REMOVEFROMGROUP;
+            ErrorOrigin     := '';
+        END_IF;
+
 END_CASE
 
-fbPower( Axis := AxisReference );
-fbReset( Axis := AxisReference );
-fbStop( Axis := AxisReference );
-fbHaltCA( Axis := AxisReference );
+fbPower(Axis := AxisReference);
+fbReset(Axis := AxisReference);
+fbStop(Axis := AxisReference);
+fbHaltCA(Axis := AxisReference);
 //fbDisable( Axis := AxisRef );
 //fbExternEnable( Axis := AxisRef );
 
-fbAddToGroup( AxesGroup := GroupReference, Axis := AxisReference );
-fbRemoveFromGroup( AxesGroup := GroupReference );
+fbAddToGroup(AxesGroup := GroupReference, Axis := AxisReference);
+fbRemoveFromGroup(AxesGroup := GroupReference);
 
-fbGroupStatus( AxesGroup := GroupReference );
-fbGroupEnable( AxesGroup := GroupReference );
-fbGroupReset( AxesGroup := GroupReference );
-fbGroupStop( AxesGroup := GroupReference );
+fbGroupStatus(AxesGroup := GroupReference);
+fbGroupEnable(AxesGroup := GroupReference);
+fbGroupReset(AxesGroup := GroupReference);
+fbGroupStop(AxesGroup := GroupReference);
 
-fbMoveAbsCA[0]( Axis := AxisReference );
-fbMoveAbsCA[1]( Axis := AxisReference );
-fbReadStatus( Enable := TRUE, Axis := AxisReference );
-fbMoveRelCA[0] ( Axis := AxisReference );
-fbMoveRelCA[1] ( Axis := AxisReference );
+fbMoveAbsCA[0](Axis := AxisReference);
+fbMoveAbsCA[1](Axis := AxisReference);
+fbReadStatus(Enable := TRUE, Axis := AxisReference);
+fbMoveRelCA[0](Axis := AxisReference);
+fbMoveRelCA[1](Axis := AxisReference);
 
-fbGearInPosCA[0]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
-fbGearInPosCA[1]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
+fbGearInPosCA[0](Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference);
+fbGearInPosCA[1](Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference);
 
 fbReadM1DetectMode();
 fbReadM1DetectValid();
 fbReadM1DetectActive();
-fbWriteM1Detect();
-
-
-]]></ST>
+fbWriteM1Detect();]]></ST>
       </Implementation>
     </Method>
     <Method Name="Disable" Id="{2aa14795-54cd-46b8-a131-b1a8801c005f}" FolderPath="Methods\">
@@ -588,20 +566,20 @@ fbWriteM1Detect();
 VAR_INPUT
 END_VAR
 VAR
-	MsgCreate	: FB_TcMessage;
+    MsgCreate : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-// Sets an internal flag to advance the state machine
-internalDisable		:= TRUE;
+        <ST><![CDATA[// Sets an internal flag to advance the state machine
+internalDisable := TRUE;
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverDisable,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverDisable, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+
 MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+THIS^.SourceInstancePath := 'Direct access';
 
-Disable		:= THIS^;
-]]></ST>
+Disable := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Enable" Id="{77bc5ebc-ace3-48eb-8e85-e45bc80ac98b}" FolderPath="Methods\">
@@ -609,18 +587,18 @@ Disable		:= THIS^;
 VAR_INPUT
 END_VAR
 VAR
-	MsgCreate	: FB_TcMessage;
-END_VAR
-]]></Declaration>
+    MsgCreate : FB_TcMessage;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-// Sets an internal flag to advance the state machine
-internalEnable		:= TRUE;
+        <ST><![CDATA[// Sets an internal flag to advance the state machine
+internalEnable := TRUE;
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverEnable,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverEnable, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+
 MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+THIS^.SourceInstancePath := 'Direct access';
 
 Enable := THIS^;]]></ST>
       </Implementation>
@@ -630,34 +608,33 @@ Enable := THIS^;]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	MsgCreate: FB_TcMessage;
+    MsgCreate : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[IF NOT (Ready) THEN // if th emover is not ready & able to accept a GroupHalt Command
 
+    internalState := MV_ERROR;
+    ErrorID       := 19201;
 
-IF NOT( Ready ) THEN	// if th emover is not ready & able to accept a GroupHalt Command
+ELSE // otherwise execute the command
 
-	internalState	:= MV_ERROR;
-	ErrorID			:= 19201;
+    fbGroupStop.Execute      := TRUE;
+    fbGroupStop.Deceleration := MotionParameters.Deceleration;
+    fbGroupStop.Jerk         := MotionParameters.Jerk;
 
-ELSE	// otherwise execute the command
-	
-	fbGroupStop.Execute			:= TRUE;
-	fbGroupStop.Deceleration	:= MotionParameters.Deceleration;
-	fbGroupStop.Jerk			:= MotionParameters.Jerk;
-	
-	memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
-	internalCurrentMoveType		:= MoverCommandType_enum.MOVETYPE_NONE;
-	
+    memset(ADR(internalCurrentDestObjective), 0, SIZEOF(internalCurrentDestObjective));
+    internalCurrentMoveType := MoverCommandType_enum.MOVETYPE_NONE;
+
 END_IF
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverGroupStop,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
-MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverGroupStop, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
 
-GroupStop		:= THIS^;]]></ST>
+MsgCreate.Send(0);
+THIS^.SourceInstancePath := 'Direct access';
+
+GroupStop := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Property Name="IsSyncedToMover" Id="{b02e7e76-e41b-42cd-ad2a-fd14e80d7543}" FolderPath="Properties\">
@@ -665,49 +642,44 @@ GroupStop		:= THIS^;]]></ST>
 PROPERTY IsSyncedToMover : BOOL]]></Declaration>
       <Get Name="Get" Id="{b38e44ed-4371-4ccd-ba7f-e98ea73ca608}">
         <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-
-IsSyncedToMover		:= fbGearInPosCA[0].InSync OR fbGearInPosCA[1].InSync;]]></ST>
+          <ST><![CDATA[IsSyncedToMover := fbGearInPosCA[0].InSync OR fbGearInPosCA[1].InSync;]]></ST>
         </Implementation>
       </Get>
     </Property>
     <Method Name="LogUserEvent" Id="{2ade5417-e15a-4da8-a731-8eb7341e5999}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD LogUserEvent : iMover
 VAR_INPUT
-	String1	: STRING;	// First content section of user-event message
-	String2 : STRING;	// Second content section of user-event message
-	String3 : STRING;	// Third content section of user-event message
+    String1 : STRING; // First content section of user-event message
+    String2 : STRING; // Second content section of user-event message
+    String3 : STRING; // Third content section of user-event message
 END_VAR
 
 VAR
-	MsgCreate: FB_TcMessage;
+    MsgCreate : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.UserEvent, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(String1)
+    .AddString(String2).AddString(String3);
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.UserEvent, 0 );
-MsgCreate.ipArguments.Clear().AddString(String1).AddString(String2).AddString(String3);
 MsgCreate.Send(0);
 
-LogUserEvent	:= THIS^;]]></ST>
+LogUserEvent := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Property Name="MasterMover" Id="{809c0b0b-ecf0-4af1-b9a6-f6c1668f1e51}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY MasterMover : Reference To Mover]]></Declaration>
       <Get Name="Get" Id="{cf9c37de-0f5d-4ab8-bb6c-0c7a9a276e2e}">
         <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-
-IF THIS^.internalCurrentMoveType = MOVETYPE_SYNC THEN
-	MasterMover		REF= internalMasterMover;
+          <ST><![CDATA[IF THIS^.internalCurrentMoveType = MOVETYPE_SYNC THEN
+    MasterMover REF= internalMasterMover;
 ELSE
-	MasterMover		REF= 0;
+    MasterMover REF= 0;
 END_IF]]></ST>
         </Implementation>
       </Get>
@@ -715,857 +687,584 @@ END_IF]]></ST>
     <Method Name="MoveToPosition" Id="{c28d081f-5f21-4357-8651-768a8cf4ef0e}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
 VAR_INPUT
-	
-	DestinationPosition		: LREAL;	// position on track for a shuttle to move towards
+
+    DestinationPosition : LREAL; // position on track for a shuttle to move towards
 
 END_VAR
 
 VAR
-	MsgCreate: FB_TcMessage;
-	
+    MsgCreate : FB_TcMessage;
+
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-IF NOT( Ready ) THEN	// if the mover is not ready & able to accept a moveabs command...
-	
-	internalState	:= MV_ERROR;
-	ErrorID			:= 19201;
-	
-ELSE	// otherwise let 'er rip
-	
-	IF fbMoveAbsCA[0].Busy = FALSE THEN
-		
-		fbMoveAbsCA[0].Jerk			:= MotionParameters.Jerk;
-		fbMoveAbsCA[0].Acceleration	:= MotionParameters.Acceleration;
-		fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
-		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
-		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
-		
-		fbMoveAbsCA[0].Position		:= DestinationPosition;
-		
-		fbMoveAbsCA[0].BufferMode	:= mcAborting;
-		fbMoveAbsCA[0].Execute		:= TRUE;
-		 
-		fbMoveAbsCA[0].Execute		:= TRUE;		// execute this block, and...
-		fbMoveAbsCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
-		
-		fbMoveAbsCA[0]( Axis := AxisReference );
-		
-	ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
-		
-		fbMoveAbsCA[1].Jerk			:= MotionParameters.Jerk;
-		fbMoveAbsCA[1].Acceleration	:= MotionParameters.Acceleration;
-		fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
-		fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
-		fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
-		
-		fbMoveAbsCA[1].Position		:= DestinationPosition;
-		
-		fbMoveAbsCA[1].BufferMode	:= mcAborting;
-		fbMoveAbsCA[1].Execute		:= TRUE;
-		
-		fbMoveAbsCA[1].Execute		:= TRUE;		// execute this block, and...
-		fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
-		
-		fbMoveAbsCA[1]( Axis := AxisReference );
-		 
-	END_IF
-	
+        <ST><![CDATA[IF NOT (Ready) THEN // if the mover is not ready & able to accept a moveabs command...
+
+    internalState := MV_ERROR;
+    ErrorID       := 19201;
+
+ELSE // otherwise let 'er rip
+
+    IF fbMoveAbsCA[0].Busy = FALSE THEN
+
+        fbMoveAbsCA[0].Jerk         := MotionParameters.Jerk;
+        fbMoveAbsCA[0].Acceleration := MotionParameters.Acceleration;
+        fbMoveAbsCA[0].Deceleration := MotionParameters.Deceleration;
+        fbMoveAbsCA[0].Velocity     := MotionParameters.Velocity;
+        fbMoveAbsCA[0].Direction    := MotionParameters.Direction;
+
+        fbMoveAbsCA[0].Position := DestinationPosition;
+
+        fbMoveAbsCA[0].BufferMode := mcAborting;
+        fbMoveAbsCA[0].Execute    := TRUE;
+
+        fbMoveAbsCA[0].Execute := TRUE;  // execute this block, and...
+        fbMoveAbsCA[1].Execute := FALSE; // if necessary, interrupt this one
+
+        fbMoveAbsCA[0](Axis := AxisReference);
+
+    ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
+
+        fbMoveAbsCA[1].Jerk         := MotionParameters.Jerk;
+        fbMoveAbsCA[1].Acceleration := MotionParameters.Acceleration;
+        fbMoveAbsCA[1].Deceleration := MotionParameters.Deceleration;
+        fbMoveAbsCA[1].Velocity     := MotionParameters.Velocity;
+        fbMoveAbsCA[1].Direction    := MotionParameters.Direction;
+
+        fbMoveAbsCA[1].Position := DestinationPosition;
+
+        fbMoveAbsCA[1].BufferMode := mcAborting;
+        fbMoveAbsCA[1].Execute    := TRUE;
+
+        fbMoveAbsCA[1].Execute := TRUE;  // execute this block, and...
+        fbMoveAbsCA[0].Execute := FALSE; // if necessary, interrupt this one
+
+        fbMoveAbsCA[1](Axis := AxisReference);
+
+    END_IF
+
 END_IF
 
-internalCurrentMoveType		:= MOVETYPE_POSITION;
+internalCurrentMoveType     := MOVETYPE_POSITION;
 internalCurrentDestPosition := DestinationPosition;
 
-memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
-internalCurrentDestStation	REF= 0;
+memset(ADR(internalCurrentDestObjective), 0, SIZEOF(internalCurrentDestObjective));
+internalCurrentDestStation REF= 0;
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveToPosition,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(DestinationPosition);
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverMoveToPosition, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath)
+    .AddString(THIS^.SourceInstancePath).AddLReal(DestinationPosition);
+
 MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+THIS^.SourceInstancePath := 'Direct access';
 
-MoveToPosition		:= THIS^;]]></ST>
+MoveToPosition := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveToStation" Id="{73370b80-491c-4017-a420-f08c462d830e}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MoveToStation : iMover
 VAR_INPUT
-	DestinationStation	: REFERENCE TO Station;	
+    DestinationStation : REFERENCE TO Station;
 END_VAR
 VAR
-	MsgCreate: FB_TcMessage;
+    MsgCreate : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-IF NOT( Ready ) AND NOT(__ISVALIDREF( DestinationStation )) THEN	// if the mover is not ready & able to accept a moveabs command...
-	
-	internalState	:= MV_ERROR;
-	ErrorID			:= 19201;
-	
-ELSE	// otherwise let 'er rip
-	
-	IF fbMoveAbsCA[0].Busy = FALSE THEN
-		
-		fbMoveAbsCA[0].Jerk			:= MotionParameters.Jerk;
-		fbMoveAbsCA[0].Acceleration	:= MotionParameters.Acceleration;
-		fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
-		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
-		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
-		
-		fbMoveAbsCA[0].Position		:= DestinationStation.Position;
-		
-		fbMoveAbsCA[0].BufferMode	:= mcAborting;
-		fbMoveAbsCA[0].Execute		:= TRUE;
-		 
-		fbMoveAbsCA[0].Execute		:= TRUE;		// execute this block, and...
-		fbMoveAbsCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
-		
-		fbMoveAbsCA[0]( Axis := AxisReference );
-		
-	ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
-		
-		fbMoveAbsCA[1].Jerk			:= MotionParameters.Jerk;
-		fbMoveAbsCA[1].Acceleration	:= MotionParameters.Acceleration;
-		fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
-		fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
-		fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
-		
-		fbMoveAbsCA[1].Position		:= DestinationStation.Position;
-		
-		fbMoveAbsCA[1].BufferMode	:= mcAborting;
-		fbMoveAbsCA[1].Execute		:= TRUE;
-		
-		fbMoveAbsCA[1].Execute		:= TRUE;		// execute this block, and...
-		fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
+        <ST><![CDATA[IF NOT (Ready) AND NOT (__ISVALIDREF(DestinationStation)) THEN // if the mover is not ready & able to accept a moveabs command...
 
-		fbMoveAbsCA[1]( Axis := AxisReference );	
+    internalState := MV_ERROR;
+    ErrorID       := 19201;
 
-	END_IF
-	
-	// Set the current destination object to the instance path of the objective, or 0 if unassigned
-	internalCurrentDestPosition		:= DestinationStation.TrackPosition;
-	internalCurrentDestObjective	:= SEL( __ISVALIDREF( DestinationStation ), '', DestinationStation.InstancePath );
-	internalCurrentDestStation		REF= DestinationStation;
-	internalCurrentMoveType			:= MOVETYPE_STATION;
-	
-	// Register this mover with the station, so the station knows this mover is incoming
-	DestinationStation.RegisterMover( THIS^ );
-	
+ELSE // otherwise let 'er rip
+
+    IF fbMoveAbsCA[0].Busy = FALSE THEN
+
+        fbMoveAbsCA[0].Jerk         := MotionParameters.Jerk;
+        fbMoveAbsCA[0].Acceleration := MotionParameters.Acceleration;
+        fbMoveAbsCA[0].Deceleration := MotionParameters.Deceleration;
+        fbMoveAbsCA[0].Velocity     := MotionParameters.Velocity;
+        fbMoveAbsCA[0].Direction    := MotionParameters.Direction;
+
+        fbMoveAbsCA[0].Position := DestinationStation.Position;
+
+        fbMoveAbsCA[0].BufferMode := mcAborting;
+        fbMoveAbsCA[0].Execute    := TRUE;
+
+        fbMoveAbsCA[0].Execute := TRUE;  // execute this block, and...
+        fbMoveAbsCA[1].Execute := FALSE; // if necessary, interrupt this one
+
+        fbMoveAbsCA[0](Axis := AxisReference);
+
+    ELSIF fbMoveAbsCA[1].Busy = FALSE THEN
+
+        fbMoveAbsCA[1].Jerk         := MotionParameters.Jerk;
+        fbMoveAbsCA[1].Acceleration := MotionParameters.Acceleration;
+        fbMoveAbsCA[1].Deceleration := MotionParameters.Deceleration;
+        fbMoveAbsCA[1].Velocity     := MotionParameters.Velocity;
+        fbMoveAbsCA[1].Direction    := MotionParameters.Direction;
+
+        fbMoveAbsCA[1].Position := DestinationStation.Position;
+
+        fbMoveAbsCA[1].BufferMode := mcAborting;
+        fbMoveAbsCA[1].Execute    := TRUE;
+
+        fbMoveAbsCA[1].Execute := TRUE;  // execute this block, and...
+        fbMoveAbsCA[0].Execute := FALSE; // if necessary, interrupt this one
+
+        fbMoveAbsCA[1](Axis := AxisReference);
+
+    END_IF
+
+    // Set the current destination object to the instance path of the objective, or 0 if unassigned
+    internalCurrentDestPosition  := DestinationStation.TrackPosition;
+    internalCurrentDestObjective := SEL(__ISVALIDREF(DestinationStation), '', DestinationStation.InstancePath);
+    internalCurrentDestStation   REF= DestinationStation;
+    internalCurrentMoveType      := MOVETYPE_STATION;
+
+    // Register this mover with the station, so the station knows this mover is incoming
+    DestinationStation.RegisterMover(THIS^);
+
 END_IF
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveToStation,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(DestinationStation.InstancePath);
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverMoveToStation, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath)
+    .AddString(THIS^.SourceInstancePath).AddString(DestinationStation.InstancePath);
+
 MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+THIS^.SourceInstancePath := 'Direct access';
 
-MoveToStation		:= THIS^;
-
-]]></ST>
+MoveToStation := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveVelocity" Id="{b843a8f8-3644-434c-aaf5-7e88053f31b1}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MoveVelocity : iMover
 VAR_INPUT
-	DesiredVelocity : LREAL;		//The velocity to be commanded [mm/s]
+    DesiredVelocity : LREAL; //The velocity to be commanded [mm/s]
 END_VAR
 
 VAR
-	negativeCommand: BOOL;
-	MsgCreate: FB_TcMessage;
+    negativeCommand : BOOL;
+    MsgCreate       : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT ( ready ) THEN
-	
-	internalState	:= MV_ERROR;
-	ErrorID			:= 19201;
-	
+        <ST><![CDATA[IF NOT (ready) THEN
+
+    internalState := MV_ERROR;
+    ErrorID       := 19201;
+
 ELSE
-	
-	negativeCommand					:= SEL( DesiredVelocity < 0, FALSE, TRUE );
-	MotionParameters.Velocity		:= ABS( DesiredVelocity );
-	
-	IF fbMoveRelCA[0].Busy = FALSE THEN
-		
-		fbMoveRelCA[0].Jerk			:= MotionParameters.Jerk;
-		
-		fbMoveRelCA[0].Acceleration	:= MotionParameters.Acceleration;
-		fbMoveRelCA[0].Deceleration	:= MotionParameters.Deceleration;
-		fbMoveRelCA[0].Velocity		:= MotionParameters.Velocity;
-		
-		fbMoveRelCA[0].Distance		:= SEL( negativeCommand, 1E100, -1E100 );
-		
-		      
-		fbMoveRelCA[0].BufferMode	:= mcAborting;
-		      
-		fbMoveRelCA[0].Execute		:= TRUE;		// execute this block, and...
-		fbMoveRelCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
-		
-		fbMoveRelCA[0]( Axis := AxisReference );
-		
-	ELSIF fbMoveRelCA[1].Busy = FALSE THEN
-		
-		fbMoveRelCA[1].Jerk			:= MotionParameters.Jerk;
-		
-		fbMoveRelCA[1].Acceleration	:= MotionParameters.Acceleration;
-		fbMoveRelCA[1].Deceleration	:= MotionParameters.Deceleration;
-		fbMoveRelCA[1].Velocity		:= MotionParameters.Velocity;
-		      
-		fbMoveRelCA[1].Distance		:= SEL( negativeCommand, 1E100, -1E100 );
-		      
-		fbMoveRelCA[1].BufferMode	:= mcAborting;
-		      
-		fbMoveRelCA[1].Execute		:= TRUE;		// execute this block, and...
-		fbMoveRelCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
 
-		fbMoveRelCA[1]( Axis := AxisReference );		
+    negativeCommand           := SEL(DesiredVelocity < 0, FALSE, TRUE);
+    MotionParameters.Velocity := ABS(DesiredVelocity);
 
-	END_IF
+    IF fbMoveRelCA[0].Busy = FALSE THEN
+
+        fbMoveRelCA[0].Jerk := MotionParameters.Jerk;
+
+        fbMoveRelCA[0].Acceleration := MotionParameters.Acceleration;
+        fbMoveRelCA[0].Deceleration := MotionParameters.Deceleration;
+        fbMoveRelCA[0].Velocity     := MotionParameters.Velocity;
+
+        fbMoveRelCA[0].Distance := SEL(negativeCommand, 1E100, -1E100);
+
+        fbMoveRelCA[0].BufferMode := mcAborting;
+
+        fbMoveRelCA[0].Execute := TRUE;  // execute this block, and...
+        fbMoveRelCA[1].Execute := FALSE; // if necessary, interrupt this one
+
+        fbMoveRelCA[0](Axis := AxisReference);
+
+    ELSIF fbMoveRelCA[1].Busy = FALSE THEN
+
+        fbMoveRelCA[1].Jerk := MotionParameters.Jerk;
+
+        fbMoveRelCA[1].Acceleration := MotionParameters.Acceleration;
+        fbMoveRelCA[1].Deceleration := MotionParameters.Deceleration;
+        fbMoveRelCA[1].Velocity     := MotionParameters.Velocity;
+
+        fbMoveRelCA[1].Distance := SEL(negativeCommand, 1E100, -1E100);
+
+        fbMoveRelCA[1].BufferMode := mcAborting;
+
+        fbMoveRelCA[1].Execute := TRUE;  // execute this block, and...
+        fbMoveRelCA[0].Execute := FALSE; // if necessary, interrupt this one
+
+        fbMoveRelCA[1](Axis := AxisReference);
+
+    END_IF
 
 END_IF
 
-fbMoveRelCA[0] (axis :=AxisReference);
-fbMoveRelCA[1] (axis :=AxisReference);
+fbMoveRelCA[0](axis := AxisReference);
+fbMoveRelCA[1](axis := AxisReference);
 
-
-internalCurrentMoveType		:= MOVETYPE_VELOCITY;
+internalCurrentMoveType     := MOVETYPE_VELOCITY;
 internalCurrentDestPosition := 1E300;
 
-memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
-internalCurrentDestStation	REF= 0;
+memset(ADR(internalCurrentDestObjective), 0, SIZEOF(internalCurrentDestObjective));
+internalCurrentDestStation REF= 0;
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveVelocity,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(DesiredVelocity);
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverMoveVelocity, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath)
+    .AddString(THIS^.SourceInstancePath).AddLReal(DesiredVelocity);
+
 MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+THIS^.SourceInstancePath := 'Direct access';
 
-MoveVelocity		:= THIS^;
-
-]]></ST>
+MoveVelocity := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Payload" Id="{5caf95a6-ad6c-448d-8947-8c8c07ab0a26}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Payload : USINT]]></Declaration>
       <Get Name="Get" Id="{8a73f5fd-2b02-4094-9725-10c35f9f9334}">
         <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-
-Payload	:= internalPayload;]]></ST>
+          <ST><![CDATA[Payload := internalPayload;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{6f8bbb61-047b-455a-a948-12da14d2f890}">
         <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-
-internalPayload	:= Payload;]]></ST>
+          <ST><![CDATA[internalPayload := Payload;]]></ST>
         </Implementation>
       </Set>
     </Property>
     <Method Name="ReissueCommand" Id="{195ecbe2-3d92-4d60-b9b5-7e1a3292ea5b}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ReissueCommand : iMover
 VAR_INPUT
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-THIS^.SourceInstancePath	:= 'ReissueCommand';
+        <ST><![CDATA[THIS^.SourceInstancePath := 'ReissueCommand';
 
 CASE internalCurrentMoveType OF
-	MOVETYPE_NONE:
-		// No current command to reissue	
-	MOVETYPE_POSITION:
-		THIS^.MoveToPosition( internalCurrentDestPosition );
-	MOVETYPE_STATION:
-		THIS^.MoveToStation( internalCurrentDestStation );
-	MOVETYPE_VELOCITY:
-		THIS^.MoveVelocity( MotionParameters.Velocity );
-	MOVETYPE_SYNC:
-		THIS^.SyncToMover( internalMasterMover, internalGap );
+    MOVETYPE_NONE:
+    // No current command to reissue	
+    MOVETYPE_POSITION:
+        THIS^.MoveToPosition(internalCurrentDestPosition);
+    MOVETYPE_STATION:
+        THIS^.MoveToStation(internalCurrentDestStation);
+    MOVETYPE_VELOCITY:
+        THIS^.MoveVelocity(MotionParameters.Velocity);
+    MOVETYPE_SYNC:
+        THIS^.SyncToMover(internalMasterMover, internalGap);
 END_CASE
 
-
-ReissueCommand		:= THIS^;]]></ST>
+ReissueCommand := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAcceleration" Id="{6c3e67ff-faff-4c11-8768-1de83c7995e4}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAcceleration : iMover
 VAR_INPUT
-	Acceleration	: LREAL;
+    Acceleration : LREAL;
 END_VAR
 
 VAR
-	MsgCreate: FB_TcMessage;
+    MsgCreate : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-MotionParameters.Acceleration		:= LIMIT( 0, Acceleration, 1E300 );	// upper limit is capped by the axis object parameters
+        <ST><![CDATA[MotionParameters.Acceleration := LIMIT(0, Acceleration, 1E300); // upper limit is capped by the axis object parameters
 
 THIS^.ReissueCommand();
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetAcceleration,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Acceleration);
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverSetAcceleration, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath)
+    .AddString(THIS^.SourceInstancePath).AddLReal(Acceleration);
+
 MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+THIS^.SourceInstancePath := 'Direct access';
 
-
-SetAcceleration		:= THIS^;]]></ST>
+SetAcceleration := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetDeceleration" Id="{05a8542e-78cf-4f19-864b-98da64430703}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetDeceleration : iMover
 VAR_INPUT
-	Deceleration	: LREAL;
+    Deceleration : LREAL;
 END_VAR
 
 VAR
-	MsgCreate: FB_TcMessage;
+    MsgCreate : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-MotionParameters.Deceleration	:= LIMIT( 0, Deceleration, 1E300 ); // upper limit is capped by the axis parameters
+        <ST><![CDATA[MotionParameters.Deceleration := LIMIT(0, Deceleration, 1E300); // upper limit is capped by the axis parameters
 
 THIS^.ReissueCommand();
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetDeceleration,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Deceleration);
-MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverSetDeceleration, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath)
+    .AddString(THIS^.SourceInstancePath).AddLReal(Deceleration);
 
-SetDeceleration		:= THIS^;]]></ST>
+MsgCreate.Send(0);
+THIS^.SourceInstancePath := 'Direct access';
+
+SetDeceleration := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetDirection" Id="{e0c3c5b2-5259-4ab4-9ff7-1ecaf9015b31}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetDirection : iMover
 VAR_INPUT
-	Direction		: Tc3_Mc3Definitions.MC_Direction;
+    Direction : Tc3_Mc3Definitions.MC_Direction;
 END_VAR
 
 VAR
-	MsgCreate: FB_TcMessage;
+    MsgCreate : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-MotionParameters.Direction		:= Direction;
+        <ST><![CDATA[MotionParameters.Direction := Direction;
 
 THIS^.ReissueCommand();
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetDirection,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddInt(Direction);
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverSetDirection, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath)
+    .AddString(THIS^.SourceInstancePath).AddInt(Direction);
+
 MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+THIS^.SourceInstancePath := 'Direct access';
 
-
-SetDirection		:= THIS^;]]></ST>
+SetDirection := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetJerk" Id="{de57e13f-25de-42a4-aec6-c6dc8b78d964}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetJerk : iMover
 VAR_INPUT
-	Jerk		: LREAL;
+    Jerk : LREAL;
 END_VAR
 
 VAR
-	MsgCreate: FB_TcMessage;
+    MsgCreate : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-
-MotionParameters.Jerk		:= LIMIT( 0, Jerk, 1E300 ); // upper limit is capped by the axis parameters
+        <ST><![CDATA[MotionParameters.Jerk := LIMIT(0, Jerk, 1E300); // upper limit is capped by the axis parameters
 
 THIS^.ReissueCommand();
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetJerk,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Jerk);
-MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverSetJerk, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath)
+    .AddString(THIS^.SourceInstancePath).AddLReal(Jerk);
 
-SetJerk		:= THIS^;]]></ST>
+MsgCreate.Send(0);
+THIS^.SourceInstancePath := 'Direct access';
+
+SetJerk := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetVelocity" Id="{530483ab-165f-437b-baf5-2db027b7f044}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetVelocity : iMover
 VAR_INPUT
-	Velocity		: LREAL;		// Updates Mover's internal velocity parameter. Takes effect immediately. [mm/s]
+    Velocity : LREAL; // Updates Mover's internal velocity parameter. Takes effect immediately. [mm/s]
 END_VAR
 VAR
-	logstr			: STRING(200);		// method variable containing an event log message for the command
-	LogEvent: INT;
-	MsgCreate: FB_TcMessage;
+    logstr    : STRING(200); // method variable containing an event log message for the command
+    LogEvent  : INT;
+    MsgCreate : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-
-MotionParameters.Velocity	:= LIMIT( 0, Velocity, 1E300 ); // upper limit is capped by the axis parameters 
+        <ST><![CDATA[MotionParameters.Velocity := LIMIT(0, Velocity, 1E300); // upper limit is capped by the axis parameters 
 
 THIS^.ReissueCommand();
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetVelocity,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Velocity);
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverSetVelocity, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath)
+    .AddString(THIS^.SourceInstancePath).AddLReal(Velocity);
+
 MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+THIS^.SourceInstancePath := 'Direct access';
 
-
-SetVelocity		:= THIS^;]]></ST>
+SetVelocity := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SyncToMover" Id="{c1dddc96-f9c0-4f4e-b1ac-4bb8d23d72f1}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SyncToMover : iMover
 VAR_INPUT
 
-	MasterMover		: REFERENCE TO Mover;	// Synchronization master mover, whose position to follow. Further motion commands break the pairing
-	Gap				: LREAL;				// Gap distance to lead mover. Positive values indicate following, negative values indicate leading
+    MasterMover : REFERENCE TO Mover; // Synchronization master mover, whose position to follow. Further motion commands break the pairing
+    Gap         : LREAL;              // Gap distance to lead mover. Positive values indicate following, negative values indicate leading
 
 END_VAR
 
 VAR
-	CWDistToSync: LREAL;
-	CWDistToMaster: LREAL;
-	syncPos: LREAL;
-	MsgCreate: FB_TcMessage;
+    CWDistToSync   : LREAL;
+    CWDistToMaster : LREAL;
+    syncPos        : LREAL;
+    MsgCreate      : FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT( Ready ) THEN
+        <ST><![CDATA[IF NOT (Ready) THEN
 
-	internalState	:= MV_ERROR;
-	ErrorID			:= 19201;
-	
-ELSE	// let 'er rip
-	
-	internalMasterMover		REF= MasterMover;
-	internalGap				:= Gap;
-	
-	
-	syncPos			:= internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap;
-	CWDistToSync	:= MODABS( syncPos - THIS^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
-	CWDistToMaster	:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - THIS^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
-		
-	IF fbGearInPosCA[0].Busy = FALSE THEN
-		
-		fbGearInPosCA[0].Execute				:= TRUE;
-			
-		fbGearInPosCA[0].RatioNumerator			:= 1;
-		fbGearInPosCA[0].RatioDenumerator		:= 1;
-		
-		fbGearInPosCA[0].MasterSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
-		fbGearInPosCA[0].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
-		
-		fbGearInPosCA[0].SyncStrategy			:= mcSyncStrategyEarly;		
-		fbGearInPosCA[0].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
-				
-		//fbGearInPosCA[0].Options.MinimalSlavePosition	:= -1E300;
-		
-		fbGearInPosCA[0].Velocity				:= MotionParameters.Velocity;
-		fbGearInPosCA[0].Acceleration			:= MotionParameters.Acceleration;
-		fbGearInPosCA[0].Deceleration			:= MotionParameters.Deceleration;
-		fbGearInPosCA[0].Jerk					:= MotionParameters.Jerk;
-		
-		fbGearInPosCA[0].BufferMode				:= MC_Aborting;
-		
-		fbGearInPosCA[0]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
-		
-	ELSIF fbGearInPosCA[1].Busy = FALSE THEN
-		
-		fbGearInPosCA[1].Execute				:= TRUE;
-		
-		fbGearInPosCA[1].RatioNumerator			:= 1;
-		fbGearInPosCA[1].RatioDenumerator		:= 1;
-		
-		fbGearInPosCA[1].MasterSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH);
-		fbGearInPosCA[1].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
-		
-		fbGearInPosCA[1].SyncStrategy			:= mcSyncStrategyEarly;
-		fbGearInPosCA[1].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
-		
-		//fbGearInPosCA[1].Options.MinimalSlavePosition	:= -1E300;
-		
-		fbGearInPosCA[1].Velocity				:= MotionParameters.Velocity;
-		fbGearInPosCA[1].Acceleration			:= MotionParameters.Acceleration;
-		fbGearInPosCA[1].Deceleration			:= MotionParameters.Deceleration;
-		fbGearInPosCA[1].Jerk					:= MotionParameters.Jerk;
-		
-		fbGearInPosCA[1].BufferMode				:= MC_Aborting;
-		
-		
-		fbGearInPosCA[1]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
-		
-	END_IF
+    internalState := MV_ERROR;
+    ErrorID       := 19201;
+
+ELSE // let 'er rip
+
+    internalMasterMover REF= MasterMover;
+    internalGap         := Gap;
+
+    syncPos        := internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap;
+    CWDistToSync   := MODABS(syncPos - THIS^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH);
+    CWDistToMaster := MODABS(internalMasterMover.AxisReference.NcToPlc.ActPos - THIS^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH);
+
+    IF fbGearInPosCA[0].Busy = FALSE THEN
+
+        fbGearInPosCA[0].Execute := TRUE;
+
+        fbGearInPosCA[0].RatioNumerator   := 1;
+        fbGearInPosCA[0].RatioDenumerator := 1;
+
+        fbGearInPosCA[0].MasterSyncPosition := MODABS(internalMasterMover.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH);
+        fbGearInPosCA[0].SlaveSyncPosition  := MODABS(internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
+
+        fbGearInPosCA[0].SyncStrategy := mcSyncStrategyEarly;
+        fbGearInPosCA[0].SyncMode     := SEL(CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive);
+
+        //fbGearInPosCA[0].Options.MinimalSlavePosition	:= -1E300;
+
+        fbGearInPosCA[0].Velocity     := MotionParameters.Velocity;
+        fbGearInPosCA[0].Acceleration := MotionParameters.Acceleration;
+        fbGearInPosCA[0].Deceleration := MotionParameters.Deceleration;
+        fbGearInPosCA[0].Jerk         := MotionParameters.Jerk;
+
+        fbGearInPosCA[0].BufferMode := MC_Aborting;
+
+        fbGearInPosCA[0](Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference);
+
+    ELSIF fbGearInPosCA[1].Busy = FALSE THEN
+
+        fbGearInPosCA[1].Execute := TRUE;
+
+        fbGearInPosCA[1].RatioNumerator   := 1;
+        fbGearInPosCA[1].RatioDenumerator := 1;
+
+        fbGearInPosCA[1].MasterSyncPosition := MODABS(internalMasterMover.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH);
+        fbGearInPosCA[1].SlaveSyncPosition  := MODABS(internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
+
+        fbGearInPosCA[1].SyncStrategy := mcSyncStrategyEarly;
+        fbGearInPosCA[1].SyncMode     := SEL(CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive);
+
+        //fbGearInPosCA[1].Options.MinimalSlavePosition	:= -1E300;
+
+        fbGearInPosCA[1].Velocity     := MotionParameters.Velocity;
+        fbGearInPosCA[1].Acceleration := MotionParameters.Acceleration;
+        fbGearInPosCA[1].Deceleration := MotionParameters.Deceleration;
+        fbGearInPosCA[1].Jerk         := MotionParameters.Jerk;
+
+        fbGearInPosCA[1].BufferMode := MC_Aborting;
+
+        fbGearInPosCA[1](Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference);
+
+    END_IF
 
 END_IF;
 
-internalCurrentMoveType			:= MOVETYPE_SYNC;
-internalCurrentDestPosition		:= 1E300;
+internalCurrentMoveType     := MOVETYPE_SYNC;
+internalCurrentDestPosition := 1E300;
 
-memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
-internalCurrentDestStation	REF= 0;
+memset(ADR(internalCurrentDestObjective), 0, SIZEOF(internalCurrentDestObjective));
+internalCurrentDestStation REF= 0;
 
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSyncToMover,0 );
-MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(MasterMover.InstancePath).AddLReal(Gap);
+MsgCreate.CreateEx(TC_EVENTS.XtsBaseEventClass.MoverSyncToMover, 0);
+MsgCreate.ipArguments.Clear()
+    .AddString(THIS^.InstancePath)
+    .AddString(THIS^.SourceInstancePath)
+    .AddString(MasterMover.InstancePath).AddLReal(Gap);
+
 MsgCreate.Send(0);
-THIS^.SourceInstancePath	:= 'Direct access';
+THIS^.SourceInstancePath := 'Direct access';
 
-SyncToMover		:= THIS^;
-
-]]></ST>
+SyncToMover := THIS^;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="Mover">
       <LineId Id="110" Count="0" />
     </LineIds>
     <LineIds Name="Mover.CurrentDestinationPosition.Get">
-      <LineId Id="20" Count="0" />
       <LineId Id="15" Count="0" />
     </LineIds>
     <LineIds Name="Mover.CurrentMoveType.Get">
-      <LineId Id="13" Count="0" />
       <LineId Id="12" Count="0" />
     </LineIds>
     <LineIds Name="Mover.CurrentObjective.Get">
-      <LineId Id="9" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Cyclic">
-      <LineId Id="688" Count="0" />
-      <LineId Id="696" Count="0" />
-      <LineId Id="694" Count="1" />
-      <LineId Id="689" Count="0" />
-      <LineId Id="458" Count="0" />
-      <LineId Id="690" Count="3" />
-      <LineId Id="459" Count="4" />
-      <LineId Id="6" Count="10" />
-      <LineId Id="319" Count="0" />
-      <LineId Id="474" Count="0" />
-      <LineId Id="320" Count="0" />
-      <LineId Id="323" Count="0" />
-      <LineId Id="321" Count="0" />
-      <LineId Id="20" Count="11" />
-      <LineId Id="481" Count="0" />
-      <LineId Id="32" Count="127" />
-      <LineId Id="161" Count="3" />
-      <LineId Id="166" Count="7" />
-      <LineId Id="509" Count="0" />
-      <LineId Id="511" Count="7" />
-      <LineId Id="547" Count="4" />
-      <LineId Id="553" Count="1" />
-      <LineId Id="568" Count="3" />
-      <LineId Id="552" Count="0" />
-      <LineId Id="555" Count="1" />
-      <LineId Id="561" Count="1" />
-      <LineId Id="557" Count="0" />
-      <LineId Id="563" Count="3" />
-      <LineId Id="510" Count="0" />
-      <LineId Id="487" Count="0" />
-      <LineId Id="483" Count="0" />
-      <LineId Id="194" Count="20" />
-      <LineId Id="333" Count="0" />
-      <LineId Id="215" Count="0" />
-      <LineId Id="335" Count="1" />
-      <LineId Id="334" Count="0" />
-      <LineId Id="216" Count="2" />
-      <LineId Id="457" Count="0" />
-      <LineId Id="219" Count="0" />
-      <LineId Id="322" Count="0" />
-      <LineId Id="220" Count="12" />
-      <LineId Id="707" Count="1" />
-      <LineId Id="728" Count="0" />
-      <LineId Id="722" Count="0" />
-      <LineId Id="233" Count="4" />
-      <LineId Id="701" Count="0" />
-      <LineId Id="239" Count="25" />
-      <LineId Id="464" Count="3" />
-      <LineId Id="709" Count="3" />
-      <LineId Id="730" Count="2" />
-      <LineId Id="726" Count="0" />
-      <LineId Id="265" Count="0" />
-      <LineId Id="635" Count="18" />
-      <LineId Id="655" Count="28" />
-      <LineId Id="632" Count="1" />
-      <LineId Id="619" Count="12" />
-      <LineId Id="572" Count="0" />
-      <LineId Id="634" Count="0" />
-      <LineId Id="440" Count="0" />
-      <LineId Id="413" Count="0" />
-      <LineId Id="412" Count="0" />
-      <LineId Id="415" Count="0" />
-      <LineId Id="414" Count="0" />
-      <LineId Id="416" Count="2" />
-      <LineId Id="344" Count="0" />
-      <LineId Id="274" Count="7" />
-      <LineId Id="419" Count="3" />
-      <LineId Id="282" Count="0" />
-      <LineId Id="284" Count="5" />
-      <LineId Id="468" Count="0" />
-      <LineId Id="470" Count="2" />
-      <LineId Id="469" Count="0" />
-      <LineId Id="480" Count="0" />
-      <LineId Id="473" Count="0" />
-      <LineId Id="290" Count="4" />
-      <LineId Id="370" Count="0" />
-      <LineId Id="438" Count="0" />
-      <LineId Id="295" Count="1" />
-      <LineId Id="498" Count="0" />
-      <LineId Id="297" Count="0" />
-      <LineId Id="396" Count="0" />
-      <LineId Id="546" Count="0" />
-      <LineId Id="299" Count="1" />
-      <LineId Id="499" Count="0" />
-      <LineId Id="301" Count="6" />
-      <LineId Id="719" Count="0" />
-      <LineId Id="706" Count="0" />
-      <LineId Id="727" Count="0" />
-      <LineId Id="308" Count="6" />
+      <LineId Id="740" Count="429" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Disable">
-      <LineId Id="6" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="24" Count="2" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="18" Count="0" />
+      <LineId Id="53" Count="9" />
       <LineId Id="42" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Enable">
-      <LineId Id="6" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="17" Count="3" />
-      <LineId Id="12" Count="1" />
+      <LineId Id="32" Count="9" />
       <LineId Id="11" Count="0" />
     </LineIds>
     <LineIds Name="Mover.GroupStop">
-      <LineId Id="6" Count="2" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="28" Count="2" />
-      <LineId Id="22" Count="2" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="38" Count="3" />
-      <LineId Id="34" Count="1" />
+      <LineId Id="52" Count="22" />
       <LineId Id="33" Count="0" />
     </LineIds>
     <LineIds Name="Mover.IsSyncedToMover.Get">
-      <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.LogUserEvent">
-      <LineId Id="7" Count="0" />
-      <LineId Id="27" Count="1" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="46" Count="0" />
+      <LineId Id="65" Count="6" />
       <LineId Id="26" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MasterMover.Get">
-      <LineId Id="14" Count="1" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="18" Count="1" />
+      <LineId Id="23" Count="3" />
       <LineId Id="17" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToPosition">
-      <LineId Id="9" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="150" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="84" Count="2" />
-      <LineId Id="88" Count="7" />
-      <LineId Id="176" Count="1" />
-      <LineId Id="96" Count="2" />
-      <LineId Id="143" Count="0" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="101" Count="6" />
-      <LineId Id="109" Count="3" />
-      <LineId Id="178" Count="1" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="83" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="151" Count="3" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="187" Count="3" />
-      <LineId Id="186" Count="0" />
-      <LineId Id="169" Count="0" />
+      <LineId Id="211" Count="60" />
       <LineId Id="168" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToStation">
-      <LineId Id="126" Count="2" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="130" Count="5" />
-      <LineId Id="211" Count="0" />
-      <LineId Id="136" Count="3" />
-      <LineId Id="201" Count="0" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="202" Count="0" />
-      <LineId Id="144" Count="4" />
-      <LineId Id="249" Count="1" />
-      <LineId Id="149" Count="2" />
-      <LineId Id="212" Count="0" />
-      <LineId Id="152" Count="3" />
-      <LineId Id="203" Count="0" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="204" Count="0" />
-      <LineId Id="160" Count="4" />
-      <LineId Id="252" Count="0" />
-      <LineId Id="251" Count="0" />
-      <LineId Id="165" Count="1" />
-      <LineId Id="227" Count="0" />
-      <LineId Id="229" Count="7" />
-      <LineId Id="259" Count="0" />
-      <LineId Id="168" Count="0" />
-      <LineId Id="266" Count="3" />
-      <LineId Id="265" Count="0" />
-      <LineId Id="243" Count="0" />
-      <LineId Id="242" Count="0" />
-      <LineId Id="197" Count="0" />
+      <LineId Id="282" Count="63" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveVelocity">
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="10" Count="1" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="111" Count="0" />
-      <LineId Id="106" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="61" Count="1" />
-      <LineId Id="18" Count="2" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="23" Count="2" />
-      <LineId Id="27" Count="2" />
-      <LineId Id="98" Count="1" />
-      <LineId Id="30" Count="2" />
-      <LineId Id="63" Count="1" />
-      <LineId Id="33" Count="2" />
-      <LineId Id="37" Count="3" />
-      <LineId Id="42" Count="2" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="84" Count="0" />
-      <LineId Id="86" Count="1" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="72" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="126" Count="3" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="91" Count="0" />
+      <LineId Id="146" Count="64" />
       <LineId Id="90" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Payload.Get">
-      <LineId Id="9" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Payload.Set">
-      <LineId Id="12" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.ReissueCommand">
-      <LineId Id="11" Count="0" />
-      <LineId Id="14" Count="3" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="21" Count="4" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="36" Count="1" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="31" Count="1" />
+      <LineId Id="43" Count="14" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetAcceleration">
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="38" Count="2" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="44" Count="0" />
+      <LineId Id="60" Count="11" />
       <LineId Id="24" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetDeceleration">
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="30" Count="3" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="24" Count="0" />
+      <LineId Id="48" Count="11" />
       <LineId Id="23" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetDirection">
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="22" Count="3" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="15" Count="1" />
+      <LineId Id="40" Count="11" />
       <LineId Id="14" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetJerk">
-      <LineId Id="7" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="27" Count="3" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="21" Count="0" />
+      <LineId Id="45" Count="11" />
       <LineId Id="20" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetVelocity">
-      <LineId Id="6" Count="1" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="60" Count="3" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="48" Count="0" />
+      <LineId Id="80" Count="11" />
       <LineId Id="47" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SyncToMover">
-      <LineId Id="188" Count="7" />
-      <LineId Id="275" Count="0" />
-      <LineId Id="196" Count="63" />
-      <LineId Id="288" Count="0" />
-      <LineId Id="290" Count="2" />
-      <LineId Id="289" Count="0" />
-      <LineId Id="260" Count="2" />
+      <LineId Id="319" Count="80" />
       <LineId Id="9" Count="0" />
     </LineIds>
   </POU>

@@ -1,16 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <DUT Name="MoverCommandType_enum" Id="{cfb76be7-0d79-49cb-87ba-a046be8c33bb}">
     <Declaration><![CDATA[{attribute 'strict'}
-TYPE MoverCommandType_enum :
-(
-	MOVETYPE_NONE		:= 0,
-	MOVETYPE_POSITION	:= 1,
-	MOVETYPE_STATION	:= 2,
-	MOVETYPE_VELOCITY	:= 3,
-	MOVETYPE_SYNC		:= 4
-);
-END_TYPE
-]]></Declaration>
+TYPE MoverCommandType_enum : (
+        MOVETYPE_NONE     := 0,
+        MOVETYPE_POSITION := 1,
+        MOVETYPE_STATION  := 2,
+        MOVETYPE_VELOCITY := 3,
+        MOVETYPE_SYNC     := 4
+    );
+END_TYPE]]></Declaration>
   </DUT>
 </TcPlcObject>
