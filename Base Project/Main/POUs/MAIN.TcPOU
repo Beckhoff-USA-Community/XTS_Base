@@ -44,10 +44,11 @@ VAR
 	SpeedTrigger			: ARRAY [0..1] OF SpeedTrigger;
 	Zone					: ARRAY [0..3] OF Zone;	
 
-
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[CASE MainState OF
+      <ST><![CDATA[
+
+CASE MainState OF
 	MS_DISABLED:	// ------------------------------------------------------- IDLE STATE
 	
 		MainCommands.Start:=FALSE;
@@ -131,7 +132,7 @@ END_VAR]]></Declaration>
 			
 			(*
 			Recovery is typically very application-specific. Each implementation will need to determine
-			what to do with work-in-progres, rejects, movers with unknown product status, etc.s
+			what to do with work-in-progres, rejects, movers with unknown product status, etc.
 			*)			
 			
 			// Register all movers with all Zones, for recovery
@@ -142,8 +143,7 @@ END_VAR]]></Declaration>
 				Zone[3].RegisterMover( Mover[i] );
 			END_FOR
 			
-			
-			Zone[0].CurrentMoverList.SetAllVelocity( 800 ).MoveAllToStation( Station[0] );
+			Zone[0].CurrentMoverList.SetAllVelocity( 800 ).MoveAllToStation( Station[0] );			
 			Zone[1].CurrentMoverList.SetAllVelocity( 600 ).MoveAllToStation( Station[0] );
 			Zone[2].CurrentMoverList.SetAllVelocity( 400 ).MoveAllToStation( Station[0] );
 			Zone[3].CurrentMoverList.SetAllVelocity( 200 ).MoveAllToStation( Station[0] );			
@@ -346,6 +346,8 @@ PositionTrigger[2].Cyclic();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="5870" Count="0" />
+      <LineId Id="5864" Count="0" />
       <LineId Id="5195" Count="2" />
       <LineId Id="5811" Count="1" />
       <LineId Id="5199" Count="0" />
@@ -353,7 +355,10 @@ PositionTrigger[2].Cyclic();
       <LineId Id="5200" Count="68" />
       <LineId Id="5649" Count="0" />
       <LineId Id="5549" Count="0" />
-      <LineId Id="5270" Count="27" />
+      <LineId Id="5270" Count="15" />
+      <LineId Id="5874" Count="0" />
+      <LineId Id="5878" Count="0" />
+      <LineId Id="5289" Count="8" />
       <LineId Id="5814" Count="0" />
       <LineId Id="5298" Count="3" />
       <LineId Id="5306" Count="13" />
