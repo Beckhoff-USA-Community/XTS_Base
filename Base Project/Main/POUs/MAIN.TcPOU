@@ -46,7 +46,7 @@ END_VAR]]></Declaration>
         MainCommands.Start := FALSE;
 
         IF MainCommands.Enable THEN
-            MainCommands.Disable := false;
+            MainCommands.Disable := FALSE;
             MainState            := MS_INITIALIZING_MOVERS;
         END_IF
 
@@ -123,10 +123,10 @@ END_VAR]]></Declaration>
 
             // Register all movers with all Zones, for recovery
             FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-                Zone[0].RegisterMover(Mover[i]);
-                Zone[1].RegisterMover(Mover[i]);
-                Zone[2].RegisterMover(Mover[i]);
-                Zone[3].RegisterMover(Mover[i]);
+                Zone[0].RegisterMover( Mover[i] );
+                Zone[1].RegisterMover( Mover[i] );
+                Zone[2].RegisterMover( Mover[i] );
+                Zone[3].RegisterMover( Mover[i] );
             END_FOR
 
             Zone[0].CurrentMoverList.SetAllVelocity(800).MoveAllToStation(Station[0]);
@@ -136,10 +136,11 @@ END_VAR]]></Declaration>
 
             // ===== END =====
 
-            MainState := MS_RUN;
+			MainCommands.Stop	:= FALSE;
+            MainState			:= MS_RUN;
 
         ELSIF MainCommands.Disable THEN
-            maincommands.Enable := False;
+            MainCommands.Enable := FALSE;
             MainState           := MS_DISABLING;
         END_IF
 
@@ -231,10 +232,10 @@ END_VAR]]></Declaration>
 
     MS_STOPPING: // --------------------------------------------------- STOPPING MOVERS
 
-        // Stop all movers
-        FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-            Mover[i].Disable();
-        END_FOR
+		// Stop all movers
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+			Mover[i].Halt();
+		END_FOR
 
         IF MainCommands.Disable THEN
             MainCommands.Enable := FALSE;
@@ -304,7 +305,13 @@ PositionTrigger[1].Cyclic();
 PositionTrigger[2].Cyclic();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="5896" Count="260" />
+      <LineId Id="5896" Count="94" />
+      <LineId Id="6203" Count="0" />
+      <LineId Id="5991" Count="94" />
+      <LineId Id="6195" Count="0" />
+      <LineId Id="6086" Count="0" />
+      <LineId Id="6197" Count="2" />
+      <LineId Id="6091" Count="65" />
       <LineId Id="2538" Count="0" />
     </LineIds>
   </POU>

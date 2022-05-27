@@ -3757,7 +3757,7 @@ and will return to Group State Standby when the situation permits.
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{F72A7747-C2A5-4AB8-BC55-EA3D58D76268}" PersistentType="true">XtsBaseEventClass</Name>
+			<Name GUID="{B67A5FE6-4FCA-4C1E-831A-66538297DABD}" PersistentType="true">XtsBaseEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
 			<EventId>
 				<Name Id="1">UserEvent</Name>
@@ -3824,6 +3824,11 @@ and will return to Group State Standby when the situation permits.
 				<DisplayName TxtId=""><![CDATA[{0} SyncToMover command issued. MasterMover = {2}. GapDistance = {3}. Source: {1}]]></DisplayName>
 				<Severity>Info</Severity>
 			</EventId>
+			<EventId>
+				<Name Id="14">MoverHalt</Name>
+				<DisplayName TxtId=""><![CDATA[{0} Halt command issued. Commanded Deceleration = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
 			<Hides>
 				<Hide GUID="{05156EAA-0F28-483B-B3ED-0A061BA2DDE9}"/>
 				<Hide GUID="{18E0FAE1-EDAC-4CEB-9B5F-AEA0EA7CB0BB}"/>
@@ -3843,6 +3848,7 @@ and will return to Group State Standby when the situation permits.
 				<Hide GUID="{268DC8AE-1F44-49D7-9156-E8C31A62132B}"/>
 				<Hide GUID="{33635654-A58A-437D-877F-7553D357C9DF}"/>
 				<Hide GUID="{B43881BB-A77B-4C1D-B790-E1343B180300}"/>
+				<Hide GUID="{F72A7747-C2A5-4AB8-BC55-EA3D58D76268}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

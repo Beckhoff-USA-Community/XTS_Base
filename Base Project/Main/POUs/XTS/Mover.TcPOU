@@ -407,6 +407,8 @@ CASE internalState OF
 		// the Execute needs to remain High until the command has fully completed.
 		ELSIF fbGroupStop.Done THEN
 			fbGroupStop.Execute			:= FALSE;
+		ELSIF fbHaltCA.Done THEN
+			fbHaltCA.Execute			:= FALSE;
 		END_IF;
 
 		// And catch all internal function block errors
@@ -644,8 +646,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
-
-IF NOT( Ready ) THEN	// if th emover is not ready & able to accept a GroupHalt Command
+IF NOT( Ready ) THEN	// if the mover is not ready & able to accept a GroupHalt Command
 
 	internalState	:= MV_ERROR;
 	ErrorID			:= 19201;
@@ -667,6 +668,47 @@ MsgCreate.Send(0);
 THIS^.SourceInstancePath	:= 'Direct access';
 
 GroupStop		:= THIS^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Halt" Id="{1f55ad78-11ad-492d-9f7a-e48ae6feda84}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Halt : iMover
+VAR_INPUT
+END_VAR
+
+
+VAR
+	MsgCreate: FB_TcMessage;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF NOT( Ready ) THEN
+	
+	internalState	:= MV_ERROR;
+	ErrorID			:= 19201;
+	
+ELSE
+	
+	fbHaltCA.Execute		:= TRUE;
+	fbHaltCA.Deceleration	:= MotionParameters.Deceleration;
+	fbHaltCA.Jerk			:= MotionParameters.Jerk;
+	
+	fbHaltCA( Axis := AxisReference );
+	
+END_IF
+
+internalCurrentMoveType		:= MOVETYPE_NONE;
+internalCurrentDestPosition	:= 1E300;
+
+memset( ADR( internalCurrentDestObjective), 0, SIZEOF( internalCurrentDestObjective ));
+internalCurrentDestStation	REF= 0;
+
+MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverHalt,0);
+MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(MotionParameters.Deceleration);
+MsgCreate.Send(0);
+THIS^.SourceInstancePath	:= 'Direct access';
+
+Halt	:= THIS^;
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="IsSyncedToMover" Id="{b02e7e76-e41b-42cd-ad2a-fd14e80d7543}" FolderPath="Properties\">
@@ -932,8 +974,8 @@ ELSE
 
 END_IF
 
-fbMoveRelCA[0] (axis :=AxisReference);
-fbMoveRelCA[1] (axis :=AxisReference);
+fbMoveRelCA[0] ( Axis := AxisReference );
+fbMoveRelCA[1] ( Axis := AxisReference );
 
 
 internalCurrentMoveType		:= MOVETYPE_VELOCITY;
@@ -1283,6 +1325,7 @@ SyncToMover		:= THIS^;
       <LineId Id="728" Count="0" />
       <LineId Id="722" Count="0" />
       <LineId Id="233" Count="4" />
+      <LineId Id="737" Count="1" />
       <LineId Id="701" Count="0" />
       <LineId Id="239" Count="25" />
       <LineId Id="464" Count="3" />
@@ -1354,7 +1397,7 @@ SyncToMover		:= THIS^;
       <LineId Id="29" Count="0" />
     </LineIds>
     <LineIds Name="Mover.GroupStop">
-      <LineId Id="6" Count="2" />
+      <LineId Id="7" Count="1" />
       <LineId Id="5" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="9" Count="0" />
@@ -1369,6 +1412,27 @@ SyncToMover		:= THIS^;
       <LineId Id="38" Count="3" />
       <LineId Id="34" Count="1" />
       <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Halt">
+      <LineId Id="10" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="8" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="45" Count="2" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="41" Count="0" />
     </LineIds>
     <LineIds Name="Mover.IsSyncedToMover.Get">
       <LineId Id="5" Count="1" />
