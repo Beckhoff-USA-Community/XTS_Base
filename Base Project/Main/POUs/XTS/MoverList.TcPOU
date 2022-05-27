@@ -83,6 +83,12 @@ ELSIF Direction = MC_Negative_Direction AND positionSort[ringOffset] <> 0 THEN
     GetMoverByLocation REF= positionSort[ringOffset]^;
 ELSE
     GetMoverByLocation REF= 0;
+END_IF
+
+// If the MoverList has no proper mover to return, then return an imposter ErrorMover, whose method calls all trigger an error message
+IF __ISVALIDREF(GetMoverByLocation) = FALSE THEN
+	ErrorMover.SourceInstancePath	:= THIS^.InstancePath;
+	GetMoverByLocation				REF= ErrorMover;
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -298,6 +304,11 @@ END_FOR
     <LineIds Name="MoverList.GetMoverByLocation">
       <LineId Id="174" Count="51" />
       <LineId Id="10" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="243" Count="1" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="245" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.MoveAllToPosition">
       <LineId Id="51" Count="8" />
