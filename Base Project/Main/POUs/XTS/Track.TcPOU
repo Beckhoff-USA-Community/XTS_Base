@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="Track" Id="{1d568bee-17b0-45d9-8c81-c6842c2a11d5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Track
 VAR_INPUT
@@ -7,8 +7,7 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
