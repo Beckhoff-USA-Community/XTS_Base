@@ -1,7 +1,7 @@
 
 # Event Logger
 
-When the occasion programmed instruction leads to unexpected Mover behavior, it can be useful to look back at a logged history of Mover Events.
+When the occasional programmed instruction leads to unexpected Mover behavior, it can be useful to look back at a logged history of Mover Events.
 
 In this project, every command issued to any Mover on the track is submitted as a log entry which can be viewed in TwinCAT:
 

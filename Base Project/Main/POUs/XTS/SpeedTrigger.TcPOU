@@ -4,8 +4,8 @@
     <Declaration><![CDATA[FUNCTION_BLOCK SpeedTrigger EXTENDS Objective
 VAR
 
-	{attribute 'hide'}
-	internalThresholdVelocity	: LREAL;
+    {attribute 'hide'}
+    internalThresholdVelocity : LREAL;
 
 END_VAR]]></Declaration>
     <Implementation>
@@ -18,26 +18,24 @@ END_VAR]]></Declaration>
 PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{579026c0-dbc9-45df-a0d9-58debaf1382a}">
         <Declaration><![CDATA[VAR
-	i	: ULINT;
-END_VAR
-]]></Declaration>
+    i : ULINT;
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-CurrentMover 	REF= 0;
+          <ST><![CDATA[CurrentMover REF= 0;
 
-FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[0] ) - 1 DO
-	
-	IF internalTrackedMovers[i] <> 0 AND_THEN ( ABS(internalTrackedMovers[i]^.AxisReference.NcToPlc.ActVelo) >= ThresholdVelocity ) THEN
-		CurrentMover	REF= internalTrackedMovers[i]^;
-		CurrentMover.SourceInstancePath		:= THIS^.InstancePath;
-	END_IF
-		
+FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) - 1 DO
+
+    IF internalTrackedMovers[i] <> 0 AND_THEN (ABS(internalTrackedMovers[i]^.AxisReference.NcToPlc.ActVelo) >= ThresholdVelocity) THEN
+        CurrentMover                    REF= internalTrackedMovers[i]^;
+        CurrentMover.SourceInstancePath := THIS^.InstancePath;
+    END_IF
+
 END_FOR
 
 // If the Trigger has no CurrentMover, then return an imposter ErrorMover, whose method calls all trigger an error message
-IF __ISVALIDREF( CurrentMover ) = FALSE THEN	
-	ErrorMover.SourceInstancePath	:= THIS^.InstancePath;
-	CurrentMover	REF= ErrorMover;
+IF __ISVALIDREF(CurrentMover) = FALSE THEN
+    ErrorMover.SourceInstancePath := THIS^.InstancePath;
+    CurrentMover                  REF= ErrorMover;
 END_IF]]></ST>
         </Implementation>
       </Get>
@@ -47,19 +45,17 @@ END_IF]]></ST>
 PROPERTY MoverInVelocity : BOOL]]></Declaration>
       <Get Name="Get" Id="{2ea072c0-2f9e-44bb-b822-47a0341f43bf}">
         <Declaration><![CDATA[VAR
-	i	: ulint;
-END_VAR
-]]></Declaration>
+    i : ulint;
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-MoverInVelocity		:= FALSE;
+          <ST><![CDATA[MoverInVelocity := FALSE;
 
-FOR i := 0 TO SIZEOF( TrackedMovers ) / SIZEOF( internalTrackedMovers[0] ) - 1 DO
-	
-	IF internalTrackedMovers[i] <> 0 AND_THEN ( ABS(internalTrackedMovers[i]^.AxisReference.NcToPlc.ActVelo) >= ThresholdVelocity ) THEN
-		MoverInVelocity		:= TRUE;		
-	END_IF
-	
+FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[0]) - 1 DO
+
+    IF internalTrackedMovers[i] <> 0 AND_THEN (ABS(internalTrackedMovers[i]^.AxisReference.NcToPlc.ActVelo) >= ThresholdVelocity) THEN
+        MoverInVelocity := TRUE;
+    END_IF
+
 END_FOR]]></ST>
         </Implementation>
       </Get>
@@ -68,23 +64,16 @@ END_FOR]]></ST>
       <Declaration><![CDATA[PROPERTY ThresholdVelocity : LREAL]]></Declaration>
       <Get Name="Get" Id="{02cc51fd-1552-49da-a92a-6edba1c95096}">
         <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-
-	ThresholdVelocity		:= internalThresholdVelocity;]]></ST>
+          <ST><![CDATA[ThresholdVelocity := internalThresholdVelocity;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{dfd5cdd4-fa57-4379-b145-1e679363cb0e}">
         <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[
-
-
-	internalThresholdVelocity		:= ThresholdVelocity;]]></ST>
+          <ST><![CDATA[internalThresholdVelocity := ThresholdVelocity;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -92,34 +81,17 @@ END_VAR
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="SpeedTrigger.CurrentMover.Get">
-      <LineId Id="13" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="9" Count="1" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="11" Count="1" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="22" Count="4" />
+      <LineId Id="37" Count="14" />
       <LineId Id="21" Count="0" />
     </LineIds>
     <LineIds Name="SpeedTrigger.MoverInVelocity.Get">
-      <LineId Id="5" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="12" Count="1" />
+      <LineId Id="24" Count="7" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="SpeedTrigger.ThresholdVelocity.Get">
-      <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="SpeedTrigger.ThresholdVelocity.Set">
-      <LineId Id="5" Count="2" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

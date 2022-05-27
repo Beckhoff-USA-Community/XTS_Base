@@ -1,87 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <Itf Name="iMoverList" Id="{9cc4a2ad-2506-4bdd-acf3-bfbfde25ab77}">
-    <Declaration><![CDATA[INTERFACE iMoverList
-]]></Declaration>
+    <Declaration><![CDATA[INTERFACE iMoverList]]></Declaration>
     <Method Name="GetMoverByLocation" Id="{08ab6dd2-55e6-476a-991b-26d3f0ccc58d}">
       <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE to Mover
 VAR_INPUT
-	Index		: USINT;	// 0 is find the first closest mover, 1 is find the second closest mover, 2 is find the third, etc. etc. etc.
-	Position	: LREAL;	// Fixed track position from which to search for movers by proximity
-	Direction	: Tc2_MC2.MC_Direction;	// Positive = find the most positive mover whose position is less than the Input. Negative = find the most negative mover whose position is greater than the input
-END_VAR
-]]></Declaration>
+    Index     : USINT;                // 0 is find the first closest mover, 1 is find the second closest mover, 2 is find the third, etc. etc. etc.
+    Position  : LREAL;                // Fixed track position from which to search for movers by proximity
+    Direction : Tc2_MC2.MC_Direction; // Positive = find the most positive mover whose position is less than the Input. Negative = find the most negative mover whose position is greater than the input
+END_VAR]]></Declaration>
     </Method>
     <Method Name="MoveAllToPosition" Id="{745a52d9-fa71-49ff-868a-52a3293e2e2d}">
       <Declaration><![CDATA[METHOD MoveAllToPosition : iMoverList
 VAR_INPUT
 
-	DestinationPosition		: LREAL;		// position on track for all shuttles to move towards	
+    DestinationPosition : LREAL; // position on track for all shuttles to move towards	
 
 END_VAR]]></Declaration>
     </Method>
     <Method Name="MoveAllToStation" Id="{371362e2-fc11-40b6-a0e6-d17b876d5e78}">
       <Declaration><![CDATA[METHOD MoveAllToStation : iMoverList
 VAR_INPUT
-	
-	DestinationStation	: REFERENCE TO Station;
+
+    DestinationStation : REFERENCE TO Station;
 
 END_VAR]]></Declaration>
     </Method>
     <Method Name="MoveAllVelocity" Id="{be6cc2f7-a0ce-45ef-a956-f19486620100}">
       <Declaration><![CDATA[METHOD MoveAllVelocity : iMoverList
 VAR_INPUT
-	
-	Velocity		: LREAL;
-	
-END_VAR
-]]></Declaration>
+
+    Velocity : LREAL;
+
+END_VAR]]></Declaration>
     </Method>
     <Method Name="SetAllAcceleration" Id="{455895b5-97e6-495e-9cb5-6646f55e97b6}">
       <Declaration><![CDATA[METHOD SetAllAcceleration : iMoverList
 VAR_INPUT
-	
-	Acceleration		: LREAL;
 
-END_VAR
-]]></Declaration>
+    Acceleration : LREAL;
+
+END_VAR]]></Declaration>
     </Method>
     <Method Name="SetAllDeceleration" Id="{d14e387e-79be-456d-9c0b-e3f03ddf19f2}">
       <Declaration><![CDATA[METHOD SetAllDeceleration : iMoverList
 VAR_INPUT
-	
-	Deceleration		: LREAL;
-	
+
+    Deceleration : LREAL;
+
 END_VAR]]></Declaration>
     </Method>
     <Method Name="SetAllDirection" Id="{4bfb0de3-28b7-4b24-a865-2cf8e65fcd48}">
       <Declaration><![CDATA[METHOD SetAllDirection : iMoverList
 VAR_INPUT
-	
-	Direction		: Tc3_Mc3Definitions.MC_DIRECTION;
-	
-END_VAR
-]]></Declaration>
+
+    Direction : Tc3_Mc3Definitions.MC_DIRECTION;
+
+END_VAR]]></Declaration>
     </Method>
     <Method Name="SetAllJerk" Id="{a91832af-959e-462a-a423-5a2f3601faa8}">
       <Declaration><![CDATA[METHOD SetAllJerk : iMoverList
 VAR_INPUT
-	
-	Jerk			: LREAL;
 
-END_VAR
-]]></Declaration>
+    Jerk : LREAL;
+
+END_VAR]]></Declaration>
     </Method>
     <Method Name="SetAllVelocity" Id="{2027ef8a-c9a4-4e95-be1e-4ccdc273c80d}">
       <Declaration><![CDATA[METHOD SetAllVelocity : iMoverList
 VAR_INPUT
-	
-	Velocity	: LREAL;	
+
+    Velocity : LREAL;
 
 END_VAR]]></Declaration>
     </Method>
     <Property Name="TrackedMovers" Id="{c1d0d30a-4686-4f53-a96b-53d64c99ec16}">
-      <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover]]></Declaration>
+      <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
       <Get Name="Get" Id="{d3d3bfad-1918-438f-8ad5-aa73cc840431}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
