@@ -145,7 +145,7 @@ END_VAR]]></Declaration>
         END_IF
 
     MS_RUN: // ------------------------------------------------------- OPERATING
-
+	
         // Station 0 Logic
         IF Station[0].MoverInPosition THEN
             StationTimer[0](IN := TRUE, PT := T#1000MS);
@@ -248,6 +248,9 @@ END_VAR]]></Declaration>
 
         IF MainCommands.Disable THEN
             MainCommands.Enable := FALSE;
+			FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+				Mover[i].Disable();
+			END_FOR
             MainState           := MS_DISABLING;
         ELSIF MainCommands.Start THEN
             MainCommands.Stop := FALSE;
@@ -307,11 +310,15 @@ PositionTrigger[2].Cyclic();]]></ST>
     <LineIds Name="MAIN">
       <LineId Id="5896" Count="94" />
       <LineId Id="6203" Count="0" />
-      <LineId Id="5991" Count="94" />
+      <LineId Id="5991" Count="8" />
+      <LineId Id="6252" Count="0" />
+      <LineId Id="6001" Count="84" />
       <LineId Id="6195" Count="0" />
       <LineId Id="6086" Count="0" />
       <LineId Id="6197" Count="2" />
-      <LineId Id="6091" Count="65" />
+      <LineId Id="6091" Count="11" />
+      <LineId Id="6241" Count="2" />
+      <LineId Id="6103" Count="53" />
       <LineId Id="2538" Count="0" />
     </LineIds>
   </POU>

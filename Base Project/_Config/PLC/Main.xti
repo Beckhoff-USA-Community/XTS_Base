@@ -1376,6 +1376,26 @@ External Setpoint Generation:
 					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
+					<Name>MAIN.Station[5].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[6].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[7].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[8].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[9].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
 					<Name>MAIN.PositionTrigger[0].ErrorMover.AxisReference.NcToPlc</Name>
 					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
@@ -1487,6 +1507,26 @@ External Setpoint Generation:
 					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 				<Var>
+					<Name>MAIN.Station[5].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[6].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[7].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[8].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[9].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
 					<Name>MAIN.PositionTrigger[0].ErrorMover.AxisReference.PlcToNc</Name>
 					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
@@ -1543,24 +1583,6 @@ External Setpoint Generation:
 					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 			</Vars>
-			<UnrestoredVarLinks ImportTime="2021-12-14T13:12:11">
-				<OwnerA Name="InputDst" Type="1">
-					<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 7">
-						<Link VarA="MAIN.Mover[6].AxisReference.NcToPlc" GrpA="PlcTask Inputs" VarB="Outputs^ToPlc" RestoreInfo="BNotFound"/>
-					</OwnerB>
-					<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 8">
-						<Link VarA="MAIN.Mover[7].AxisReference.NcToPlc" GrpA="PlcTask Inputs" VarB="Outputs^ToPlc" RestoreInfo="BNotFound"/>
-					</OwnerB>
-				</OwnerA>
-				<OwnerA Name="OutputSrc" Type="2">
-					<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 7">
-						<Link VarA="MAIN.Mover[6].AxisReference.PlcToNc" GrpA="PlcTask Outputs" VarB="Inputs^FromPlc" RestoreInfo="BNotFound"/>
-					</OwnerB>
-					<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 8">
-						<Link VarA="MAIN.Mover[7].AxisReference.PlcToNc" GrpA="PlcTask Outputs" VarB="Inputs^FromPlc" RestoreInfo="BNotFound"/>
-					</OwnerB>
-				</OwnerA>
-			</UnrestoredVarLinks>
 			<Contexts>
 				<Context>
 					<Id NeedCalleeCall="true">0</Id>

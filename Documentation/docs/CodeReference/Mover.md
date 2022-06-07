@@ -81,6 +81,23 @@ END_IF
 
 ---
 
+### Halt
+
+*Halt()*
+
+> Immediately stops the commanded mover with the deceleration parameters stored in the Mover object
+
+Halt does not alter the mover's internal axis state, so new movements can be executed at any point to send the mover onwards.
+
+```javascript
+IF xStopSingleMover THEN
+	Mover[0].Halt();
+	xStopSingleMover	:= FALSE;
+END_IF
+```
+
+---
+
 ### MoveToPosition
 
 *MoveToPosition( Destination : LREAL )*
