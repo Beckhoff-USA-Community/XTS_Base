@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.29" ClassName="CDevEtherCATDef" SubType="111">
+	<Device Id="6" DevType="111" DevFlags="#x0001" AmsPort="28678" AmsNetId="10.2.4.226.7.1">
+		<Name>__FILENAME__</Name>
+		<AddressInfo>
+			<Pnp>
+				<DeviceDesc>Local Area Connection 12 (TwinCAT-Intel PCI Etherne</DeviceDesc>
+				<DeviceName>\DEVICE\{2B07B9E3-FE61-46F7-A654-59A7F034B612}</DeviceName>
+				<DeviceData>000105423779</DeviceData>
+			</Pnp>
+		</AddressInfo>
+		<Image Id="3" AddrType="1" ImageType="3">
+			<Name>Image</Name>
+		</Image>
+		<EtherCAT/>
+	</Device>
+</TcSmItem>

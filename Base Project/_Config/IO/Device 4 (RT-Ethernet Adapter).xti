@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.29" ClassName="CDevEthernetAdapterDef" SubType="109">
+	<Device Id="4" Disabled="true" DevType="109" DevFlags="#x0004">
+		<Name>__FILENAME__</Name>
+		<AddressInfo>
+			<Pnp>
+				<DeviceDesc>CU2508 (TwinCAT-Intel PCI Ethernet Adapter (Gigabit</DeviceDesc>
+				<DeviceName>\DEVICE\{1F8603EE-862D-40CB-8C09-4AB48D8FC0D5}</DeviceName>
+				<DeviceData>000105423748</DeviceData>
+			</Pnp>
+		</AddressInfo>
+		<Ethernet DeviceDesc="CU2508 (TwinCAT-Intel PCI Ethernet Adapter (Gigabit" Ports="8" VLanMode="2" TcpIpPort="-1" VLanIds="0a0014001e00280032003c00460050005a0064006e00780082008c009600a000aa00b400be00c800d200dc00e600f000fa0004010e01180122012c01360140014a0154015e01680172017c01860190019a01a401ae01b801c201cc01d601e001ea01f401fe01080212021c02260230023a0244024e02580262026c0276028002">
+			<Esl SyncSlaveProtocolPort="-1"/>
+		</Ethernet>
+	</Device>
+</TcSmItem>

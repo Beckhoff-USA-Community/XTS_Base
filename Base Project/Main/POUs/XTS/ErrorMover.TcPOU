@@ -2,29 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="ErrorMover" Id="{bd3df610-8473-440e-a9dc-a09f811846e0}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'hide_all_locals'}
-FUNCTION_BLOCK ErrorMover EXTENDS Mover IMPLEMENTS iMover
-
-VAR
-	
-	// vars to store system times of most recent method calls, to filter spamming the ads log
-	// stores an independent timestamp for every different method call
-	
-	lastCallCyclic		: LREAL;
-	lastCallDisable		: LREAL;
-	lastCallEnable		: LREAL;
-	lastCallGroupStop	: LREAL;
-	lastCallMovePos		: LREAL;
-	lastCallMoveSta		: LREAL;
-	lastCallMoveVel		: LREAL;
-	lastCallReissue		: LREAL;
-	lastCallSetAcc		: LREAL;
-	lastCallSetDec		: LREAL;
-	lastCallSetDir		: LREAL;
-	lastCallSetJerk		: LREAL;
-	lastCallSetVel		: LREAL;
-	lastCallSync		: LREAL;
-
-END_VAR]]></Declaration>
+FUNCTION_BLOCK ErrorMover EXTENDS Mover IMPLEMENTS iMover]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
@@ -153,6 +131,25 @@ IF ( newCallTime - lastCallGroupStop ) > 1 THEN
 END_IF
 
 lastCallGroupStop	:= newCallTime;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Halt" Id="{8cf1fd35-c92c-43a7-89e5-e709149394be}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Halt : iMover
+VAR_INPUT
+END_VAR
+VAR
+	newCallTime: LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// If this method was called within the last second, do not write to ADS
+newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+
+IF ( newCallTime - lastCallHalt ) > 1 THEN
+	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, ' The Halt method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
+END_IF
+
+lastCallHalt	:= newCallTime;]]></ST>
       </Implementation>
     </Method>
     <Property Name="IsSyncedToMover" Id="{6b623c29-8901-4623-afb3-f30839740c89}" FolderPath="Properties\">
@@ -479,6 +476,16 @@ END_IF
       <LineId Id="49" Count="0" />
       <LineId Id="51" Count="0" />
       <LineId Id="50" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.Halt">
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
     </LineIds>
     <LineIds Name="ErrorMover.IsSyncedToMover.Get">
       <LineId Id="9" Count="1" />
