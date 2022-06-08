@@ -8,9 +8,9 @@ VAR
 
     nextStation : USINT := 4;
 
-    lowVelocity    : LREAL := 200;  // mm/s
-    mediumVelocity : LREAL := 800;  // mm/s
-    highVelocity   : LREAL := 2000; // mm/s
+    lowVelocity    : LREAL := 4000;  // mm/s
+    mediumVelocity : LREAL := 4000;  // mm/s
+    highVelocity   : LREAL := 4000; // mm/s
 
     // ========= Helper, State, & Index Variables =========
 
@@ -38,13 +38,16 @@ VAR
     SpeedTrigger    : ARRAY[0..1] OF SpeedTrigger;
     Zone            : ARRAY[0..3] OF Zone;
 
+	MoversHalted: BOOL;
+	AllMoversDisabled: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[CASE MainState OF
     MS_DISABLED: // ------------------------------------------------------- IDLE STATE
 
-        MainCommands.Start := FALSE;
-
+        MainCommands.Start	:= FALSE;
+		MainCommands.Stop	:= FALSE;
+		
         IF MainCommands.Enable THEN
             MainCommands.Disable := FALSE;
             MainState            := MS_INITIALIZING_MOVERS;
@@ -54,15 +57,24 @@ END_VAR]]></Declaration>
 
         FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
             ParameterSet.Jerk         := 1E5; // mm/s3
-            ParameterSet.Acceleration := 1E4; // mm/s2
-            ParameterSet.Deceleration := 1E4; // mm/s2
-            ParameterSet.Velocity     := 1E3; // mm/s
+            ParameterSet.Acceleration := 1E5; // mm/s2
+            ParameterSet.Deceleration := 1E5; // mm/s2
+            ParameterSet.Velocity     := 4E3; // mm/s
             ParameterSet.Direction    := mcDirectionPositive;
 
             Mover[i].MotionParameters := ParameterSet;
         END_FOR
-
-        MainState := MS_ENABLING_MOVERS;
+		
+		IF MainCommands.Disable THEN
+			MainCommands.Enable		:=FALSE;
+		ELSIF MainCommands.Stop	 THEN
+			MainCommands.Stop		:=FALSE;
+			MainCommands.Disable	:=TRUE;
+			MainCommands.Start		:=FALSE;
+			MainState	:= MS_Disabled;
+		ELSIF MainCommands.Enable THEN
+        	MainState 	:= MS_ENABLING_MOVERS;
+		END_IF
 
     MS_ENABLING_MOVERS: // ----------------------------------------------- RESETTING AND ENABLING AXES
 
@@ -77,7 +89,21 @@ END_VAR]]></Declaration>
         END_FOR
 
         IF allMoversEnabled THEN
-            MainState := MS_INITIALIZING_OBJECTIVES;
+
+			IF MainCommands.Disable THEN
+				MainCommands.Enable		:=FALSE;
+
+				FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+					Mover[i].Disable();
+				END_FOR
+
+            	MainState	:= MS_DISABLING;
+			ELSIF MainCommands.Stop	 THEN
+				MainCommands.Start		:=FALSE;
+				MainState	:= MS_STOPPING;
+			ELSIF MainCommands.Enable THEN
+	        	MainState 	:= MS_INITIALIZING_OBJECTIVES;
+			END_IF
         END_IF
 
     MS_INITIALIZING_OBJECTIVES: // --------------------------------------- WRITING OBJECTIVE PARAMETERS
@@ -139,9 +165,9 @@ END_VAR]]></Declaration>
 			MainCommands.Stop	:= FALSE;
             MainState			:= MS_RUN;
 
-        ELSIF MainCommands.Disable THEN
+        ELSIF MainCommands.Disable OR MainCommands.Stop THEN
             MainCommands.Enable := FALSE;
-            MainState           := MS_DISABLING;
+            MainState           := MS_STOPPED;
         END_IF
 
     MS_RUN: // ------------------------------------------------------- OPERATING
@@ -233,15 +259,24 @@ END_VAR]]></Declaration>
     MS_STOPPING: // --------------------------------------------------- STOPPING MOVERS
 
 		// Stop all movers
+		MoversHalted:=TRUE;
 		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 			Mover[i].Halt();
+			Mover[i].AxisReference.ReadStatus();
+			IF Mover[i].AxisReference.Status.Moving THEN
+				MoversHalted:=FALSE;
+			END_IF
 		END_FOR
+		
+		
 
         IF MainCommands.Disable THEN
             MainCommands.Enable := FALSE;
             MainState           := MS_DISABLING;
         ELSE
-            MainState := MS_STOPPED;
+			IF MoversHalted THEN
+            	MainState := MS_STOPPED;
+			END_IF
         END_IF
 
     MS_STOPPED: // --------------------------------------------------- Stop Command has been sent, hold here
@@ -256,6 +291,31 @@ END_VAR]]></Declaration>
             MainCommands.Stop := FALSE;
             MainState         := MS_ENABLING_MOVERS;
         END_IF
+
+
+	    // Reinit nextStation
+        nextStation := 4;
+
+        // Unregister everything from all stations
+        FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
+            Station[i].UnregisterAll();
+        END_FOR
+
+        // Unregister everything from all Pos Trigs
+        FOR i := 0 TO SIZEOF(PositionTrigger) / SIZEOF(PositionTrigger[0]) - 1 DO
+            PositionTrigger[i].UnregisterAll();
+        END_FOR
+
+        // Unregister everything from all speed trigs
+        FOR i := 0 TO SIZEOF(SpeedTrigger) / SIZEOF(SpeedTrigger[0]) - 1 DO
+            SpeedTrigger[i].UnregisterAll();
+        END_FOR
+
+        // Unregister everything from all zones
+        FOR i := 0 TO SIZEOF(Zone) / SIZEOF(Zone[0]) - 1 DO
+            Zone[i].UnregisterAll();
+        END_FOR
+		
 
     MS_DISABLING: // --------------------------------------------------- DISABLING MOVERS
 
@@ -281,8 +341,16 @@ END_VAR]]></Declaration>
         FOR i := 0 TO SIZEOF(Zone) / SIZEOF(Zone[0]) - 1 DO
             Zone[i].UnregisterAll();
         END_FOR
-
-        IF (* all movers are disabled *) TRUE THEN
+		
+		AllMoversDisabled:=TRUE;
+		
+		FOR i := 0 TO gvl.NUM_MOVERS-1 DO
+			IF NOT Mover[i].AxisReference.Status.Disabled THEN 
+				AllMoversDisabled:= FALSE;
+			END_IF
+		END_FOR
+ 
+        IF AllMoversDisabled THEN
             MainState := MS_DISABLED;
         END_IF
 
@@ -295,6 +363,7 @@ END_CASE;
 // Call all mover function blocks cyclically
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
     Mover[i].Cyclic(GroupRef);
+	Mover[i].AxisReference.ReadStatus();
 END_FOR;
 
 // Call all station function blocks cyclically
@@ -308,17 +377,60 @@ PositionTrigger[1].Cyclic();
 PositionTrigger[2].Cyclic();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="5896" Count="94" />
+      <LineId Id="5896" Count="4" />
+      <LineId Id="6290" Count="0" />
+      <LineId Id="5901" Count="16" />
+      <LineId Id="6291" Count="0" />
+      <LineId Id="6294" Count="1" />
+      <LineId Id="6297" Count="0" />
+      <LineId Id="6296" Count="0" />
+      <LineId Id="6298" Count="2" />
+      <LineId Id="5918" Count="1" />
+      <LineId Id="6301" Count="0" />
+      <LineId Id="5920" Count="12" />
+      <LineId Id="6322" Count="0" />
+      <LineId Id="6303" Count="0" />
+      <LineId Id="6318" Count="0" />
+      <LineId Id="6323" Count="0" />
+      <LineId Id="6321" Count="0" />
+      <LineId Id="6319" Count="1" />
+      <LineId Id="6324" Count="0" />
+      <LineId Id="6304" Count="0" />
+      <LineId Id="6306" Count="0" />
+      <LineId Id="6309" Count="4" />
+      <LineId Id="5934" Count="56" />
       <LineId Id="6203" Count="0" />
       <LineId Id="5991" Count="8" />
       <LineId Id="6252" Count="0" />
       <LineId Id="6001" Count="84" />
       <LineId Id="6195" Count="0" />
       <LineId Id="6086" Count="0" />
-      <LineId Id="6197" Count="2" />
-      <LineId Id="6091" Count="11" />
+      <LineId Id="6197" Count="0" />
+      <LineId Id="6386" Count="0" />
+      <LineId Id="6198" Count="0" />
+      <LineId Id="6388" Count="3" />
+      <LineId Id="6199" Count="0" />
+      <LineId Id="6384" Count="1" />
+      <LineId Id="6091" Count="4" />
+      <LineId Id="6392" Count="0" />
+      <LineId Id="6395" Count="0" />
+      <LineId Id="6394" Count="0" />
+      <LineId Id="6097" Count="5" />
       <LineId Id="6241" Count="2" />
-      <LineId Id="6103" Count="53" />
+      <LineId Id="6103" Count="4" />
+      <LineId Id="6417" Count="1" />
+      <LineId Id="6396" Count="20" />
+      <LineId Id="6382" Count="1" />
+      <LineId Id="6108" Count="25" />
+      <LineId Id="6423" Count="0" />
+      <LineId Id="6421" Count="1" />
+      <LineId Id="6425" Count="0" />
+      <LineId Id="6427" Count="1" />
+      <LineId Id="6426" Count="0" />
+      <LineId Id="6424" Count="0" />
+      <LineId Id="6134" Count="12" />
+      <LineId Id="6419" Count="0" />
+      <LineId Id="6147" Count="9" />
       <LineId Id="2538" Count="0" />
     </LineIds>
   </POU>
