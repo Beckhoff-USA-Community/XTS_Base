@@ -8,9 +8,9 @@ VAR
 
     nextStation : USINT := 4;
 
-    lowVelocity    : LREAL := 4000;  // mm/s
-    mediumVelocity : LREAL := 4000;  // mm/s
-    highVelocity   : LREAL := 4000; // mm/s
+    lowVelocity    : LREAL := 200;  // mm/s
+    mediumVelocity : LREAL := 800;  // mm/s
+    highVelocity   : LREAL := 2000; // mm/s
 
     // ========= Helper, State, & Index Variables =========
 
@@ -57,9 +57,9 @@ END_VAR]]></Declaration>
 
         FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
             ParameterSet.Jerk         := 1E5; // mm/s3
-            ParameterSet.Acceleration := 1E5; // mm/s2
-            ParameterSet.Deceleration := 1E5; // mm/s2
-            ParameterSet.Velocity     := 4E3; // mm/s
+            ParameterSet.Acceleration := 1E4; // mm/s2
+            ParameterSet.Deceleration := 1E4; // mm/s2
+            ParameterSet.Velocity     := 1E3; // mm/s
             ParameterSet.Direction    := mcDirectionPositive;
 
             Mover[i].MotionParameters := ParameterSet;
