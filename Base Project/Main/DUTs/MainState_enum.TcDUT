@@ -3,17 +3,20 @@
   <DUT Name="MainState_enum" Id="{62255fa4-5620-44dc-b5d1-8a2be4061452}">
     <Declaration><![CDATA[{attribute 'strict'}
 TYPE MainState_enum : (
-        MS_DISABLED                := 0,
-        MS_INITIALIZING_MOVERS     := 10,
-        MS_ENABLING_MOVERS         := 20,
-        MS_INITIALIZING_OBJECTIVES := 30,
-        MS_ENABLED                 := 40,
-        MS_RUN                     := 50,
-        MS_STOPPING                := 60,
-        MS_STOPPED                 := 70,
-        MS_DISABLING               := 80,
-        MS_ERROR                   := 90,
-        MS_DEBUG                   := 1000
+        MS_DISABLED					:= 0,
+        MS_INITIALIZING_MOVERS		:= 10,
+		MS_ONESHOT_ENABLE			:= 20,
+        MS_ENABLING_MOVERS			:= 30,
+        MS_INITIALIZING_OBJECTIVES	:= 40,
+        MS_ENABLED					:= 50,
+        MS_RUN						:= 60,
+		MS_ONESHOT_STOP				:= 70,
+        MS_STOPPING					:= 80,
+        MS_STOPPED					:= 90,
+		MS_ONESHOT_DISABLE			:= 100,
+        MS_DISABLING				:= 110,
+        MS_ERROR					:= 120,
+        MS_DEBUG					:= 1000
     );
 END_TYPE]]></Declaration>
   </DUT>
