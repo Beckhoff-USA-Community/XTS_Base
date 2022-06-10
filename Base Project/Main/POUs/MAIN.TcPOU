@@ -67,7 +67,8 @@ END_VAR]]></Declaration>
 		
 		IF MainCommands.Disable THEN
 			MainCommands.Enable		:=FALSE;
-		ELSIF MainCommands.Stop	 THEN
+			MainState:= MS_Disabled;
+		ELSIF MainCommands.Stop THEN
 			MainCommands.Stop		:=FALSE;
 			MainCommands.Disable	:=TRUE;
 			MainCommands.Start		:=FALSE;
@@ -167,7 +168,7 @@ END_VAR]]></Declaration>
 
         ELSIF MainCommands.Disable OR MainCommands.Stop THEN
             MainCommands.Enable := FALSE;
-            MainState           := MS_STOPPED;
+            MainState           := MS_STOPPING;
         END_IF
 
     MS_RUN: // ------------------------------------------------------- OPERATING
@@ -270,19 +271,18 @@ END_VAR]]></Declaration>
 		
 		
 
-        IF MainCommands.Disable THEN
-            MainCommands.Enable := FALSE;
-            MainState           := MS_DISABLING;
-        ELSE
-			IF MoversHalted THEN
-            	MainState := MS_STOPPED;
-			END_IF
-        END_IF
+		MainCommands.Start	:= FALSE;
+ 
+		IF MoversHalted THEN
+           	MainState := MS_STOPPED;
+		END_IF
+        
 
     MS_STOPPED: // --------------------------------------------------- Stop Command has been sent, hold here
 
         IF MainCommands.Disable THEN
             MainCommands.Enable := FALSE;
+			MainCommands.Start:=FALSE;
 			FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 				Mover[i].Disable();
 			END_FOR
@@ -292,7 +292,7 @@ END_VAR]]></Declaration>
             MainState         := MS_ENABLING_MOVERS;
         END_IF
 
-
+		// For this sample, recovering from a stop is like booting fresh. Another option would be a Reissuing Commands state from which we could resume. 
 	    // Reinit nextStation
         nextStation := 4;
 
@@ -381,7 +381,9 @@ PositionTrigger[2].Cyclic();]]></ST>
       <LineId Id="6290" Count="0" />
       <LineId Id="5901" Count="16" />
       <LineId Id="6291" Count="0" />
-      <LineId Id="6294" Count="1" />
+      <LineId Id="6294" Count="0" />
+      <LineId Id="6508" Count="0" />
+      <LineId Id="6295" Count="0" />
       <LineId Id="6297" Count="0" />
       <LineId Id="6296" Count="0" />
       <LineId Id="6298" Count="2" />
@@ -411,11 +413,14 @@ PositionTrigger[2].Cyclic();]]></ST>
       <LineId Id="6388" Count="3" />
       <LineId Id="6199" Count="0" />
       <LineId Id="6384" Count="1" />
-      <LineId Id="6091" Count="4" />
+      <LineId Id="6091" Count="0" />
+      <LineId Id="6509" Count="0" />
+      <LineId Id="6094" Count="0" />
       <LineId Id="6392" Count="0" />
       <LineId Id="6395" Count="0" />
       <LineId Id="6394" Count="0" />
       <LineId Id="6097" Count="5" />
+      <LineId Id="6549" Count="0" />
       <LineId Id="6241" Count="2" />
       <LineId Id="6103" Count="4" />
       <LineId Id="6417" Count="1" />
