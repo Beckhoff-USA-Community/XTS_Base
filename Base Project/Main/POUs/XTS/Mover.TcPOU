@@ -606,7 +606,9 @@ fbWriteM1Detect();
 VAR_INPUT
 END_VAR
 VAR
-	MsgCreate	: FB_TcMessage;
+END_VAR
+VAR_INST
+	MsgCreate	: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -631,7 +633,9 @@ Disable		:= THIS^;
 VAR_INPUT
 END_VAR
 VAR
-	MsgCreate	: FB_TcMessage;
+END_VAR
+VAR_INST
+	MsgCreate	: FB_TcMessage;	
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -658,8 +662,10 @@ Enable := THIS^;
 VAR_INPUT
 END_VAR
 VAR
-	MsgCreate: FB_TcMessage;
 	newCallTime	: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate	: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -700,11 +706,11 @@ GroupStop		:= THIS^;]]></ST>
       <Declaration><![CDATA[METHOD Halt : iMover
 VAR_INPUT
 END_VAR
-
-
 VAR
-	MsgCreate: FB_TcMessage;
 	newCallTime: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -773,9 +779,10 @@ VAR_INPUT
 	String2 : STRING;	// Second content section of user-event message
 	String3 : STRING;	// Third content section of user-event message
 END_VAR
-
 VAR
-	MsgCreate: FB_TcMessage;
+END_VAR
+VAR_INST
+	MsgCreate: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -808,14 +815,13 @@ END_IF]]></ST>
     <Method Name="MoveToPosition" Id="{c28d081f-5f21-4357-8651-768a8cf4ef0e}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
 VAR_INPUT
-	
 	DestinationPosition		: LREAL;	// position on track for a shuttle to move towards
-
 END_VAR
-
 VAR
-	MsgCreate: FB_TcMessage;
-	newCallTime: LREAL;
+	newCallTime		: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate		: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -893,8 +899,10 @@ VAR_INPUT
 	DestinationStation	: REFERENCE TO Station;	
 END_VAR
 VAR
-	MsgCreate: FB_TcMessage;
-	newCallTime: LREAL;
+	newCallTime			: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate			: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -976,11 +984,12 @@ MoveToStation		:= THIS^;
 VAR_INPUT
 	DesiredVelocity : LREAL;		//The velocity to be commanded [mm/s]
 END_VAR
-
 VAR
-	negativeCommand: BOOL;
-	MsgCreate: FB_TcMessage;
-	newCallTime: LREAL;
+	negativeCommand	: BOOL;
+	newCallTime		: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate		: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT ( ready ) THEN
@@ -1113,10 +1122,11 @@ ReissueCommand		:= THIS^;]]></ST>
 VAR_INPUT
 	Acceleration	: LREAL;
 END_VAR
-
 VAR
-	MsgCreate: FB_TcMessage;
-	newCallTime: LREAL;
+	newCallTime		: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate		: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -1144,10 +1154,11 @@ SetAcceleration		:= THIS^;]]></ST>
 VAR_INPUT
 	Deceleration	: LREAL;
 END_VAR
-
 VAR
-	MsgCreate: FB_TcMessage;
-	newCallTime: LREAL;
+	newCallTime		: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate		: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -1175,10 +1186,11 @@ SetDeceleration		:= THIS^;]]></ST>
 VAR_INPUT
 	Direction		: Tc3_Mc3Definitions.MC_Direction;
 END_VAR
-
 VAR
-	MsgCreate: FB_TcMessage;
-	newCallTime: LREAL;
+	newCallTime		: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate		: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -1206,10 +1218,11 @@ SetDirection		:= THIS^;]]></ST>
 VAR_INPUT
 	Jerk		: LREAL;
 END_VAR
-
 VAR
-	MsgCreate: FB_TcMessage;
-	newCallTime: LREAL;
+	newCallTime	: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate	: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -1239,9 +1252,11 @@ VAR_INPUT
 END_VAR
 VAR
 	logstr			: STRING(200);		// method variable containing an event log message for the command
-	LogEvent: INT;
-	MsgCreate: FB_TcMessage;
-	newCallTime: LREAL;
+	LogEvent		: INT;
+	newCallTime		: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate		: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -1267,18 +1282,17 @@ SetVelocity		:= THIS^;]]></ST>
     <Method Name="SyncToMover" Id="{c1dddc96-f9c0-4f4e-b1ac-4bb8d23d72f1}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SyncToMover : iMover
 VAR_INPUT
-
-	MasterMover		: REFERENCE TO Mover;	// Synchronization master mover, whose position to follow. Further motion commands break the pairing
-	Gap				: LREAL;				// Gap distance to lead mover. Positive values indicate following, negative values indicate leading
-
+	MasterMover			: REFERENCE TO Mover;	// Synchronization master mover, whose position to follow. Further motion commands break the pairing
+	Gap					: LREAL;				// Gap distance to lead mover. Positive values indicate following, negative values indicate leading
 END_VAR
-
 VAR
-	CWDistToSync: LREAL;
-	CWDistToMaster: LREAL;
-	syncPos: LREAL;
-	MsgCreate: FB_TcMessage;
-	newCallTime: LREAL;
+	CWDistToSync		: LREAL;
+	CWDistToMaster		: LREAL;
+	syncPos				: LREAL;
+	newCallTime			: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate			: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT( Ready ) THEN
@@ -1318,7 +1332,7 @@ ELSE	// let 'er rip
 		fbGearInPosCA[0].Deceleration			:= MotionParameters.Deceleration;
 		fbGearInPosCA[0].Jerk					:= MotionParameters.Jerk;
 		
-		fbGearInPosCA[0].BufferMode				:= MC_Aborting;
+		fbGearInPosCA[0].BufferMode				:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
 		
 		fbGearInPosCA[0]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
 		
@@ -1342,7 +1356,7 @@ ELSE	// let 'er rip
 		fbGearInPosCA[1].Deceleration			:= MotionParameters.Deceleration;
 		fbGearInPosCA[1].Jerk					:= MotionParameters.Jerk;
 		
-		fbGearInPosCA[1].BufferMode				:= MC_Aborting;
+		fbGearInPosCA[1].BufferMode				:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
 		
 		
 		fbGearInPosCA[1]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
@@ -1373,475 +1387,5 @@ SyncToMover		:= THIS^;
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="Mover">
-      <LineId Id="110" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.CurrentDestinationPosition.Get">
-      <LineId Id="20" Count="0" />
-      <LineId Id="15" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.CurrentMoveType.Get">
-      <LineId Id="13" Count="0" />
-      <LineId Id="12" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.CurrentObjective.Get">
-      <LineId Id="9" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.Cyclic">
-      <LineId Id="688" Count="0" />
-      <LineId Id="696" Count="0" />
-      <LineId Id="694" Count="1" />
-      <LineId Id="689" Count="0" />
-      <LineId Id="458" Count="0" />
-      <LineId Id="690" Count="3" />
-      <LineId Id="459" Count="4" />
-      <LineId Id="6" Count="10" />
-      <LineId Id="319" Count="0" />
-      <LineId Id="474" Count="0" />
-      <LineId Id="320" Count="0" />
-      <LineId Id="323" Count="0" />
-      <LineId Id="321" Count="0" />
-      <LineId Id="20" Count="11" />
-      <LineId Id="481" Count="0" />
-      <LineId Id="32" Count="127" />
-      <LineId Id="161" Count="3" />
-      <LineId Id="166" Count="7" />
-      <LineId Id="509" Count="0" />
-      <LineId Id="511" Count="7" />
-      <LineId Id="547" Count="4" />
-      <LineId Id="553" Count="1" />
-      <LineId Id="568" Count="3" />
-      <LineId Id="552" Count="0" />
-      <LineId Id="555" Count="1" />
-      <LineId Id="561" Count="1" />
-      <LineId Id="557" Count="0" />
-      <LineId Id="563" Count="3" />
-      <LineId Id="510" Count="0" />
-      <LineId Id="487" Count="0" />
-      <LineId Id="483" Count="0" />
-      <LineId Id="194" Count="20" />
-      <LineId Id="333" Count="0" />
-      <LineId Id="215" Count="0" />
-      <LineId Id="335" Count="1" />
-      <LineId Id="334" Count="0" />
-      <LineId Id="216" Count="2" />
-      <LineId Id="457" Count="0" />
-      <LineId Id="219" Count="0" />
-      <LineId Id="322" Count="0" />
-      <LineId Id="220" Count="12" />
-      <LineId Id="707" Count="1" />
-      <LineId Id="728" Count="0" />
-      <LineId Id="722" Count="0" />
-      <LineId Id="233" Count="0" />
-      <LineId Id="745" Count="0" />
-      <LineId Id="234" Count="2" />
-      <LineId Id="701" Count="0" />
-      <LineId Id="748" Count="0" />
-      <LineId Id="239" Count="25" />
-      <LineId Id="464" Count="3" />
-      <LineId Id="709" Count="3" />
-      <LineId Id="730" Count="2" />
-      <LineId Id="726" Count="0" />
-      <LineId Id="265" Count="0" />
-      <LineId Id="746" Count="0" />
-      <LineId Id="637" Count="16" />
-      <LineId Id="655" Count="27" />
-      <LineId Id="633" Count="0" />
-      <LineId Id="619" Count="12" />
-      <LineId Id="572" Count="0" />
-      <LineId Id="634" Count="0" />
-      <LineId Id="440" Count="0" />
-      <LineId Id="413" Count="0" />
-      <LineId Id="412" Count="0" />
-      <LineId Id="415" Count="0" />
-      <LineId Id="414" Count="0" />
-      <LineId Id="416" Count="2" />
-      <LineId Id="344" Count="0" />
-      <LineId Id="274" Count="7" />
-      <LineId Id="419" Count="3" />
-      <LineId Id="282" Count="0" />
-      <LineId Id="284" Count="5" />
-      <LineId Id="468" Count="0" />
-      <LineId Id="470" Count="2" />
-      <LineId Id="469" Count="0" />
-      <LineId Id="480" Count="0" />
-      <LineId Id="473" Count="0" />
-      <LineId Id="290" Count="4" />
-      <LineId Id="370" Count="0" />
-      <LineId Id="749" Count="0" />
-      <LineId Id="438" Count="0" />
-      <LineId Id="295" Count="1" />
-      <LineId Id="498" Count="0" />
-      <LineId Id="297" Count="0" />
-      <LineId Id="396" Count="0" />
-      <LineId Id="546" Count="0" />
-      <LineId Id="299" Count="1" />
-      <LineId Id="499" Count="0" />
-      <LineId Id="301" Count="6" />
-      <LineId Id="719" Count="0" />
-      <LineId Id="706" Count="0" />
-      <LineId Id="727" Count="0" />
-      <LineId Id="308" Count="6" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.Disable">
-      <LineId Id="48" Count="1" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="24" Count="2" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="42" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.Enable">
-      <LineId Id="27" Count="1" />
-      <LineId Id="6" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="17" Count="3" />
-      <LineId Id="30" Count="1" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="29" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.GroupStop">
-      <LineId Id="7" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="28" Count="2" />
-      <LineId Id="22" Count="2" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="56" Count="2" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="33" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.Halt">
-      <LineId Id="10" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="13" Count="3" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="95" Count="0" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="94" Count="0" />
-      <LineId Id="96" Count="2" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="87" Count="4" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="45" Count="1" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="84" Count="0" />
-      <LineId Id="83" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="41" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.IsSyncedToMover.Get">
-      <LineId Id="5" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.LogUserEvent">
-      <LineId Id="7" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="27" Count="1" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="26" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.MasterMover.Get">
-      <LineId Id="14" Count="1" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="18" Count="1" />
-      <LineId Id="17" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.MoveToPosition">
-      <LineId Id="9" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="150" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="201" Count="1" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="84" Count="2" />
-      <LineId Id="88" Count="7" />
-      <LineId Id="176" Count="1" />
-      <LineId Id="96" Count="2" />
-      <LineId Id="143" Count="0" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="101" Count="6" />
-      <LineId Id="109" Count="3" />
-      <LineId Id="178" Count="1" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="83" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="151" Count="3" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="203" Count="0" />
-      <LineId Id="187" Count="3" />
-      <LineId Id="204" Count="0" />
-      <LineId Id="208" Count="0" />
-      <LineId Id="207" Count="0" />
-      <LineId Id="206" Count="0" />
-      <LineId Id="205" Count="0" />
-      <LineId Id="169" Count="0" />
-      <LineId Id="168" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.MoveToStation">
-      <LineId Id="126" Count="2" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="130" Count="2" />
-      <LineId Id="276" Count="1" />
-      <LineId Id="133" Count="2" />
-      <LineId Id="211" Count="0" />
-      <LineId Id="136" Count="3" />
-      <LineId Id="201" Count="0" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="202" Count="0" />
-      <LineId Id="144" Count="4" />
-      <LineId Id="249" Count="1" />
-      <LineId Id="149" Count="2" />
-      <LineId Id="212" Count="0" />
-      <LineId Id="152" Count="3" />
-      <LineId Id="203" Count="0" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="204" Count="0" />
-      <LineId Id="160" Count="4" />
-      <LineId Id="252" Count="0" />
-      <LineId Id="251" Count="0" />
-      <LineId Id="165" Count="1" />
-      <LineId Id="227" Count="0" />
-      <LineId Id="229" Count="7" />
-      <LineId Id="259" Count="0" />
-      <LineId Id="168" Count="0" />
-      <LineId Id="279" Count="0" />
-      <LineId Id="266" Count="3" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="285" Count="0" />
-      <LineId Id="284" Count="0" />
-      <LineId Id="282" Count="0" />
-      <LineId Id="281" Count="0" />
-      <LineId Id="243" Count="0" />
-      <LineId Id="242" Count="0" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.MoveVelocity">
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="10" Count="1" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="138" Count="1" />
-      <LineId Id="111" Count="0" />
-      <LineId Id="106" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="61" Count="1" />
-      <LineId Id="18" Count="2" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="23" Count="2" />
-      <LineId Id="27" Count="2" />
-      <LineId Id="98" Count="1" />
-      <LineId Id="30" Count="2" />
-      <LineId Id="63" Count="1" />
-      <LineId Id="33" Count="2" />
-      <LineId Id="37" Count="3" />
-      <LineId Id="42" Count="2" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="84" Count="0" />
-      <LineId Id="86" Count="1" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="72" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="126" Count="3" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="146" Count="0" />
-      <LineId Id="145" Count="0" />
-      <LineId Id="144" Count="0" />
-      <LineId Id="143" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="91" Count="0" />
-      <LineId Id="90" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.Payload.Get">
-      <LineId Id="9" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.Payload.Set">
-      <LineId Id="12" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.ReissueCommand">
-      <LineId Id="11" Count="0" />
-      <LineId Id="14" Count="3" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="21" Count="4" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="36" Count="1" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="31" Count="1" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.SetAcceleration">
-      <LineId Id="53" Count="1" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="38" Count="2" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="24" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.SetDeceleration">
-      <LineId Id="41" Count="1" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="30" Count="3" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="23" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.SetDirection">
-      <LineId Id="33" Count="1" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="22" Count="3" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="14" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.SetJerk">
-      <LineId Id="38" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="27" Count="3" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="20" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.SetVelocity">
-      <LineId Id="72" Count="0" />
-      <LineId Id="6" Count="1" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="60" Count="3" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="47" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.SyncToMover">
-      <LineId Id="188" Count="6" />
-      <LineId Id="307" Count="0" />
-      <LineId Id="306" Count="0" />
-      <LineId Id="195" Count="0" />
-      <LineId Id="275" Count="0" />
-      <LineId Id="196" Count="63" />
-      <LineId Id="310" Count="0" />
-      <LineId Id="288" Count="0" />
-      <LineId Id="290" Count="2" />
-      <LineId Id="311" Count="0" />
-      <LineId Id="316" Count="0" />
-      <LineId Id="315" Count="0" />
-      <LineId Id="313" Count="0" />
-      <LineId Id="312" Count="0" />
-      <LineId Id="314" Count="0" />
-      <LineId Id="260" Count="2" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

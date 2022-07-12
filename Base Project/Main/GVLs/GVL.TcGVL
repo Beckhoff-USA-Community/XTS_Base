@@ -9,7 +9,7 @@ VAR_GLOBAL CONSTANT
     TRACK_LENGTH : LREAL := 4000; // This should be set to the exact length [mm] of the track system
 
     {attribute 'TcInitSymbol'}
-    pXtsProcessingUnit : OTCID; // This pointer needs to be initialized in the Main Instance, under Symbol Initialization
+    pXtsProcessingUnit : OTCID:=0; // This pointer needs to be initialized in the Main Instance, under Symbol Initialization
 
 END_VAR
 VAR_GLOBAL

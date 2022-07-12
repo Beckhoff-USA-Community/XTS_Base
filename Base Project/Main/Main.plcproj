@@ -16,6 +16,7 @@
     <Implicit_Jitter_Distribution>{1aeed109-e54f-4b73-b529-dc7320750764}</Implicit_Jitter_Distribution>
     <LibraryReferences>{96cd68c3-4e06-47fb-98c0-7e5446cc95fb}</LibraryReferences>
     <Released>false</Released>
+    <CombineIds>true</CombineIds>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\MainCommands_typ.TcDUT">

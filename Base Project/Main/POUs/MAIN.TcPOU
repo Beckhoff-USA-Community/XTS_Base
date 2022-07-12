@@ -208,6 +208,7 @@ END_VAR]]></Declaration>
             StationTimer[2](IN := TRUE, PT := T#750MS);
 
             IF StationTimer[2].Q THEN
+				StationTimer[2](IN := FALSE);
                 PositionTrigger[0].RegisterMover(Station[2].CurrentMover);
                 PositionTrigger[0].RegisterMover(Station[3].CurrentMover);
                 PositionTrigger[0].RegisterMover(Station[4].CurrentMover);
@@ -384,86 +385,8 @@ END_FOR
 // Call trigger function blocks cyclically
 PositionTrigger[0].Cyclic();
 PositionTrigger[1].Cyclic();
-PositionTrigger[2].Cyclic();]]></ST>
+PositionTrigger[2].Cyclic();
+]]></ST>
     </Implementation>
-    <LineIds Name="MAIN">
-      <LineId Id="5896" Count="4" />
-      <LineId Id="6290" Count="0" />
-      <LineId Id="5901" Count="5" />
-      <LineId Id="6594" Count="0" />
-      <LineId Id="6589" Count="4" />
-      <LineId Id="5907" Count="1" />
-      <LineId Id="5915" Count="2" />
-      <LineId Id="6291" Count="0" />
-      <LineId Id="6294" Count="0" />
-      <LineId Id="6508" Count="0" />
-      <LineId Id="6295" Count="0" />
-      <LineId Id="6297" Count="0" />
-      <LineId Id="6296" Count="0" />
-      <LineId Id="6298" Count="2" />
-      <LineId Id="5918" Count="1" />
-      <LineId Id="6602" Count="0" />
-      <LineId Id="6301" Count="0" />
-      <LineId Id="6599" Count="0" />
-      <LineId Id="6595" Count="2" />
-      <LineId Id="6600" Count="0" />
-      <LineId Id="6598" Count="0" />
-      <LineId Id="6601" Count="0" />
-      <LineId Id="5920" Count="4" />
-      <LineId Id="5927" Count="5" />
-      <LineId Id="6303" Count="0" />
-      <LineId Id="6318" Count="0" />
-      <LineId Id="6304" Count="0" />
-      <LineId Id="6306" Count="0" />
-      <LineId Id="6309" Count="4" />
-      <LineId Id="5934" Count="32" />
-      <LineId Id="6658" Count="0" />
-      <LineId Id="5967" Count="0" />
-      <LineId Id="6659" Count="0" />
-      <LineId Id="5968" Count="22" />
-      <LineId Id="6203" Count="0" />
-      <LineId Id="5992" Count="7" />
-      <LineId Id="6252" Count="0" />
-      <LineId Id="6001" Count="82" />
-      <LineId Id="6642" Count="2" />
-      <LineId Id="6649" Count="0" />
-      <LineId Id="6645" Count="1" />
-      <LineId Id="6084" Count="0" />
-      <LineId Id="6647" Count="1" />
-      <LineId Id="6085" Count="0" />
-      <LineId Id="6195" Count="0" />
-      <LineId Id="6086" Count="0" />
-      <LineId Id="6197" Count="0" />
-      <LineId Id="6386" Count="0" />
-      <LineId Id="6388" Count="3" />
-      <LineId Id="6199" Count="0" />
-      <LineId Id="6384" Count="0" />
-      <LineId Id="6509" Count="0" />
-      <LineId Id="6094" Count="0" />
-      <LineId Id="6392" Count="0" />
-      <LineId Id="6395" Count="0" />
-      <LineId Id="6394" Count="0" />
-      <LineId Id="6097" Count="5" />
-      <LineId Id="6549" Count="0" />
-      <LineId Id="6103" Count="4" />
-      <LineId Id="6417" Count="1" />
-      <LineId Id="6396" Count="20" />
-      <LineId Id="6382" Count="1" />
-      <LineId Id="6650" Count="4" />
-      <LineId Id="6656" Count="0" />
-      <LineId Id="6108" Count="0" />
-      <LineId Id="6657" Count="0" />
-      <LineId Id="6109" Count="24" />
-      <LineId Id="6423" Count="0" />
-      <LineId Id="6421" Count="1" />
-      <LineId Id="6425" Count="0" />
-      <LineId Id="6427" Count="1" />
-      <LineId Id="6426" Count="0" />
-      <LineId Id="6424" Count="0" />
-      <LineId Id="6134" Count="12" />
-      <LineId Id="6419" Count="0" />
-      <LineId Id="6147" Count="9" />
-      <LineId Id="2538" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
