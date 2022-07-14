@@ -6,40 +6,41 @@ VAR
 
     // ========= Example Application Variables =========
 
-    nextStation : USINT := 4;
-
-    lowVelocity    : LREAL := 200;  // mm/s
-    mediumVelocity : LREAL := 800;  // mm/s
-    highVelocity   : LREAL := 2000; // mm/s
+    nextStation 		: USINT := 4;
+                    	
+    lowVelocity    		: LREAL := 200;  // mm/s
+    mediumVelocity 		: LREAL := 800;  // mm/s
+    highVelocity   		: LREAL := 2000; // mm/s
 
     // ========= Helper, State, & Index Variables =========
 
-    i                : UINT; // index variable; gets reused in various FOR loops
-    n                : UINT; // secondary index variable, for enabling movers
-    allMoversEnabled : BOOL; // helper flag for verifying enable status of all movers
+    i                	: UINT; // index variable; gets reused in various FOR loops
+    n                	: UINT; // secondary index variable, for enabling movers
+    allMoversEnabled 	: BOOL; // helper flag for verifying enable status of all movers
 
-    StationTimer : ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells
-
-    MainState    : MainState_enum;   // enumeration for the Main state machine
-    MainCommands : MainCommands_typ; // command struct for cycling thru the state machine
+    StationTimer 		: ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells
+                 		
+    MainState    		: MainState_enum;   // enumeration for the Main state machine
+	MainStateDisplay	: T_MaxString;		//Display the current state on the HMI.
+    MainCommands 		: MainCommands_typ; // command struct for cycling thru the state machine
 
     // ========= Linked NC Variables & References =========
 
-    GroupRef : AXES_GROUP_REF;                        // linked to the Collision Avoidance group and passed cyclically to every Mover object
-    Mover    : ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; // instantiation of Mover objects. Matches the number of movers on the system
+    GroupRef 			: AXES_GROUP_REF;                        // linked to the Collision Avoidance group and passed cyclically to every Mover object
+    Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; // instantiation of Mover objects. Matches the number of movers on the system
 
     // ========= Objectives & Parameters =========
 
-    MoverList    : MoverList;
-    ParameterSet : MotionParameters_typ;
+    MoverList    		: MoverList;
+    ParameterSet 		: MotionParameters_typ;
 
-    Station         : ARRAY[0..GVL.NUM_STATIONS - 1] OF Station;
-    PositionTrigger : ARRAY[0..3] OF PositionTrigger;
-    SpeedTrigger    : ARRAY[0..1] OF SpeedTrigger;
-    Zone            : ARRAY[0..3] OF Zone;
+    Station         	: ARRAY[0..GVL.NUM_STATIONS - 1] OF Station;
+    PositionTrigger 	: ARRAY[0..3] OF PositionTrigger;
+    SpeedTrigger    	: ARRAY[0..1] OF SpeedTrigger;
+    Zone            	: ARRAY[0..3] OF Zone;
 
-	MoversHalted: BOOL;
-	AllMoversDisabled: BOOL;
+	MoversHalted		: BOOL;
+	AllMoversDisabled	: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[CASE MainState OF
@@ -110,7 +111,7 @@ END_VAR]]></Declaration>
     MS_INITIALIZING_OBJECTIVES: // --------------------------------------- WRITING OBJECTIVE PARAMETERS
 
         // Initialize station positions
-        Station[0].TrackPosition := 0;
+        Station[0].TrackPosition := 5;
         Station[1].TrackPosition := 750;
         Station[2].TrackPosition := 1200;
         Station[3].TrackPosition := 1300;
@@ -370,6 +371,9 @@ END_VAR]]></Declaration>
     MS_DEBUG: // ------------------------------------------------------- DEV USE ONLY
 
 END_CASE;
+
+//Display on the HMI the current state
+MainStateDisplay	:= TO_STRING(MainState);
 
 // Call all mover function blocks cyclically
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO

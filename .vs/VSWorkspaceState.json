@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Base Project",
+    "\\Base Project\\Main",
+    "\\Base Project\\Main\\DUTs",
+    "\\Base Project\\Main\\GVLs",
+    "\\Base Project\\Main\\POUs",
+    "\\Base Project\\Main\\POUs\\XTS"
+  ],
+  "SelectedNode": "\\Base Project\\Main\\DUTs\\MainState_enum.TcDUT",
+  "PreviewInSolutionExplorer": false
+}
