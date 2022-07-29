@@ -76,9 +76,8 @@ END_IF
       <Declaration><![CDATA[METHOD Disable : iMover
 VAR_INPUT
 END_VAR
-
 VAR
-	newCallTime: LREAL;
+	newCallTime		: LREAL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -97,7 +96,6 @@ END_IF
       <Declaration><![CDATA[METHOD Enable : iMover
 VAR_INPUT
 END_VAR
-
 VAR
 	newCallTime: LREAL;
 END_VAR]]></Declaration>
@@ -182,13 +180,10 @@ ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The MasterMover Get method has been called on 
     <Method Name="MoveToPosition" Id="{06584b48-b7d7-45ec-b670-d5553ed7efde}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
 VAR_INPUT
-	
 	DestinationPosition		: LREAL;	// position on track for a shuttle to move towards
-
 END_VAR
-
 VAR
-	newCallTime: LREAL;
+	newCallTime				: LREAL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -417,195 +412,5 @@ END_IF
 	]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="ErrorMover">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.CurrentDestinationPosition.Get">
-      <LineId Id="23" Count="1" />
-      <LineId Id="15" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.CurrentMoveType.Get">
-      <LineId Id="17" Count="1" />
-      <LineId Id="12" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.CurrentObjective.Get">
-      <LineId Id="12" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Cyclic">
-      <LineId Id="756" Count="0" />
-      <LineId Id="744" Count="0" />
-      <LineId Id="737" Count="0" />
-      <LineId Id="752" Count="0" />
-      <LineId Id="751" Count="0" />
-      <LineId Id="755" Count="0" />
-      <LineId Id="759" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="758" Count="0" />
-      <LineId Id="757" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Disable">
-      <LineId Id="21" Count="2" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="30" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Enable">
-      <LineId Id="22" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="30" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.GroupStop">
-      <LineId Id="42" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="50" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Halt">
-      <LineId Id="6" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="12" Count="1" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.IsSyncedToMover.Get">
-      <LineId Id="9" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.MasterMover.Get">
-      <LineId Id="22" Count="1" />
-      <LineId Id="17" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.MoveToPosition">
-      <LineId Id="194" Count="0" />
-      <LineId Id="186" Count="0" />
-      <LineId Id="195" Count="0" />
-      <LineId Id="200" Count="0" />
-      <LineId Id="196" Count="0" />
-      <LineId Id="187" Count="0" />
-      <LineId Id="204" Count="0" />
-      <LineId Id="201" Count="0" />
-      <LineId Id="203" Count="0" />
-      <LineId Id="202" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.MoveToStation">
-      <LineId Id="272" Count="0" />
-      <LineId Id="265" Count="0" />
-      <LineId Id="273" Count="0" />
-      <LineId Id="276" Count="0" />
-      <LineId Id="274" Count="0" />
-      <LineId Id="266" Count="0" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="277" Count="0" />
-      <LineId Id="279" Count="0" />
-      <LineId Id="278" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.MoveVelocity">
-      <LineId Id="134" Count="0" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="135" Count="0" />
-      <LineId Id="138" Count="0" />
-      <LineId Id="136" Count="0" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="139" Count="0" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="140" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Payload.Get">
-      <LineId Id="13" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Payload.Set">
-      <LineId Id="16" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.ReissueCommand">
-      <LineId Id="46" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="54" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SetAcceleration">
-      <LineId Id="36" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="43" Count="2" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SetDeceleration">
-      <LineId Id="35" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="42" Count="1" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SetDirection">
-      <LineId Id="27" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="34" Count="2" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SetJerk">
-      <LineId Id="32" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="39" Count="1" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SetVelocity">
-      <LineId Id="16" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="23" Count="1" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SyncToMover">
-      <LineId Id="302" Count="0" />
-      <LineId Id="288" Count="0" />
-      <LineId Id="303" Count="0" />
-      <LineId Id="308" Count="0" />
-      <LineId Id="304" Count="0" />
-      <LineId Id="289" Count="0" />
-      <LineId Id="309" Count="0" />
-      <LineId Id="312" Count="0" />
-      <LineId Id="311" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

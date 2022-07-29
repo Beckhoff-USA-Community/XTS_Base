@@ -2,27 +2,23 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="Objective" Id="{72371872-54aa-4f25-a82d-ba585015a7c5}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
+{attribute 'hide_all_locals'}
 FUNCTION_BLOCK ABSTRACT Objective
 VAR_INPUT
 END_VAR
 VAR
 
-    {attribute 'hide'}
-    internalTrackedMoverCount : USINT;
-    //{attribute 'hide'}
-    internalTrackedMovers : ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover;
+    internalTrackedMoverCount 	: USINT;
+   
+    internalTrackedMovers 		: ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover;
 
-    {attribute 'TcNoSymbol'}
-    ErrorMover : ErrorMover;
-
-END_VAR
-VAR_OUTPUT
-
+    ErrorMover 					: ErrorMover;
+	
     {attribute 'instance-path'}
     {attribute 'noinit'}
-    {attribute 'hide'}
-    InstancePath : STRING; // Unique variable path of the instance
-
+    InstancePath 				: STRING; // Unique variable path of the instance	
+END_VAR
+VAR_OUTPUT
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -207,40 +203,5 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="Objective">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.CurrentMover.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.RegisterMover">
-      <LineId Id="88" Count="29" />
-      <LineId Id="23" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.RegisterMoverList">
-      <LineId Id="58" Count="12" />
-      <LineId Id="19" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.TrackedMoverCount.Get">
-      <LineId Id="21" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.TrackedMoverCount.Set">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.TrackedMovers.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterAll">
-      <LineId Id="30" Count="0" />
-      <LineId Id="12" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterCurrent">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterMover">
-      <LineId Id="63" Count="24" />
-      <LineId Id="12" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
