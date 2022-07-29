@@ -1319,7 +1319,7 @@ ELSE	// let 'er rip
 		fbGearInPosCA[0].RatioNumerator			:= 1;
 		fbGearInPosCA[0].RatioDenumerator		:= 1;
 		
-		fbGearInPosCA[0].MasterSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
+		fbGearInPosCA[0].MasterSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos;
 		fbGearInPosCA[0].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
 		
 		fbGearInPosCA[0].SyncStrategy			:= mcSyncStrategyEarly;		
@@ -1343,7 +1343,7 @@ ELSE	// let 'er rip
 		fbGearInPosCA[1].RatioNumerator			:= 1;
 		fbGearInPosCA[1].RatioDenumerator		:= 1;
 		
-		fbGearInPosCA[1].MasterSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH);
+		fbGearInPosCA[1].MasterSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos;
 		fbGearInPosCA[1].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
 		
 		fbGearInPosCA[1].SyncStrategy			:= mcSyncStrategyEarly;
@@ -1387,5 +1387,100 @@ SyncToMover		:= THIS^;
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="Mover">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentDestinationPosition.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentMoveType.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentObjective.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Cyclic">
+      <LineId Id="3" Count="442" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Disable">
+      <LineId Id="3" Count="13" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Enable">
+      <LineId Id="3" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.GroupStop">
+      <LineId Id="3" Count="30" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Halt">
+      <LineId Id="3" Count="41" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsSyncedToMover.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.LogUserEvent">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MasterMover.Get">
+      <LineId Id="3" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveToPosition">
+      <LineId Id="3" Count="65" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveToStation">
+      <LineId Id="3" Count="70" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveVelocity">
+      <LineId Id="3" Count="72" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Payload.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Payload.Set">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.ReissueCommand">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetAcceleration">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetDeceleration">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetDirection">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetJerk">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetVelocity">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SyncToMover">
+      <LineId Id="3" Count="88" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
