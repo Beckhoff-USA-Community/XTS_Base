@@ -18,6 +18,8 @@ Typically, calling methods on these *invalid references* would result in a Pagef
 
 ## Axis Linking
 
-ErrorMovers contain AXIS_REFERENCEs and will appear in the list of potential linkable objects when connecting NC Axes to PLC axes. Be sure to avoid accidentally linking these ErrorMover objects, or the project will not operate correctly.
+If ErrorMovers appear in the list of potentially linkable objects when connecting NC Axes to PLC axes, ensure that these objects are not selected.
+
+By default, ErrorMovers are removed from the PLC Process Image to prevent them appearing in this list.
 
 ![MappingErrorMovers](../Images/MappingErrorMovers.png)
