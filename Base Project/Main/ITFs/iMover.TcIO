@@ -145,6 +145,19 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="SyncToAxis" Id="{5a310de1-52da-0514-1130-76a03f36818d}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SyncToAxis : iMover
+VAR_INPUT
+	
+	MasterAxis		: REFERENCE TO AXIS_REF;
+	MasterSyncPos	: LREAL;	// Master sync position (nonmodulo), where the input axis will be located when first synchronized
+	SlaveSyncPos	: LREAL;	// Mover sync position, where the mover will be located when first synchronized
+	SyncStrategy	: MC_SYNC_STRATEGY;	// Direction input
+	
+END_VAR
+
+]]></Declaration>
+    </Method>
     <Method Name="SyncToMover" Id="{818e2706-7bf4-42d7-a370-2480751106b6}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SyncToMover : iMover
 VAR_INPUT

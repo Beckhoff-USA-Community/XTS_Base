@@ -74,6 +74,13 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
+    <Property Name="TrackedMoverCount" Id="{368f6c76-4224-03b5-39ed-4f46132302d9}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TrackedMoverCount : USINT]]></Declaration>
+      <Get Name="Get" Id="{a4e1bb20-cd42-038c-1a1e-a8f5b0110892}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="TrackedMovers" Id="{c1d0d30a-4686-4f53-a96b-53d64c99ec16}">
       <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
       <Get Name="Get" Id="{d3d3bfad-1918-438f-8ad5-aa73cc840431}">

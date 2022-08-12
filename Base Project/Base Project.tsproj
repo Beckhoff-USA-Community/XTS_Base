@@ -4015,102 +4015,6 @@ and will return to Group State Standby when the situation permits.
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{96C264BF-48D4-4CEB-A4F8-9410F36814BF}" PersistentType="true">XtsBaseEventClass</Name>
-			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
-			<EventId>
-				<Name Id="1">UserEvent</Name>
-				<DisplayName TxtId=""><![CDATA[{0} | {1} | {2}]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="2">MoverDisable</Name>
-				<DisplayName TxtId=""><![CDATA[{0} Disable command issued. Source: {1}]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="3">MoverEnable</Name>
-				<DisplayName TxtId=""><![CDATA[{0} Enable command issued. Source: {1}]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="4">MoverGroupStop</Name>
-				<DisplayName TxtId=""><![CDATA[{0} GroupStop command issued. Source: {1}]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="5">MoverMoveToPosition</Name>
-				<DisplayName TxtId=""><![CDATA[{0} MoveToPosition command issued. Commanded Position = {2}. Source: {1}]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="6">MoverMoveToStation</Name>
-				<DisplayName TxtId=""><![CDATA[{0} MoveToStation command issued. Commanded Station = {2}. Source: {1}]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="7">MoverMoveVelocity</Name>
-				<DisplayName TxtId=""><![CDATA[{0} MoveVelocity command issued. Commanded Velocity = {2}. Source: {1}]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="8">MoverSetAcceleration</Name>
-				<DisplayName TxtId=""><![CDATA[{0} SetAcceleration command issued. Commanded Acceleration = {2}. Source: {1}]]></DisplayName>
-				<Severity>Verbose</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="9">MoverSetDeceleration</Name>
-				<DisplayName TxtId=""><![CDATA[{0} SetDeceleration command issued. Commanded Decelaration = {2}. Source: {1}]]></DisplayName>
-				<Severity>Verbose</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="10">MoverSetDirection</Name>
-				<DisplayName TxtId=""><![CDATA[{0} SetDirection command issued. Commanded Direction = {2}. Source: {1}]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="11">MoverSetJerk</Name>
-				<DisplayName TxtId=""><![CDATA[{0} SetJerk command issued. Commanded Jerk = {2}. Source: {1}]]></DisplayName>
-				<Severity>Verbose</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="12">MoverSetVelocity</Name>
-				<DisplayName TxtId=""><![CDATA[{0} SetVelocity command issued. Commanded Velocity = {2}. Source: {1}]]></DisplayName>
-				<Severity>Verbose</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="13">MoverSyncToMover</Name>
-				<DisplayName TxtId=""><![CDATA[{0} SyncToMover command issued. MasterMover = {2}. GapDistance = {3}. Source: {1}]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="14">MoverHalt</Name>
-				<DisplayName TxtId=""><![CDATA[{0} Halt command issued. Commanded Deceleration = {2}. Source: {1}]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<Hides>
-				<Hide GUID="{05156EAA-0F28-483B-B3ED-0A061BA2DDE9}"/>
-				<Hide GUID="{18E0FAE1-EDAC-4CEB-9B5F-AEA0EA7CB0BB}"/>
-				<Hide GUID="{66FA28C4-0FB7-4DA6-859C-B54827CE2395}"/>
-				<Hide GUID="{F63352B1-8E7F-48CB-953D-546E45AE1B11}"/>
-				<Hide GUID="{88411A0E-3484-41DC-B698-335B0EEFF131}"/>
-				<Hide GUID="{1EE55F7A-50B7-4AA5-B092-894E8021A00A}"/>
-				<Hide GUID="{A18DCF2F-BCD4-4147-BD48-F6D11150D63F}"/>
-				<Hide GUID="{5E8436AE-C6FB-4E0A-BFF7-F43CB35E58AA}"/>
-				<Hide GUID="{4852EB5D-97BF-461F-8343-CF2477892A8F}"/>
-				<Hide GUID="{2FD29EE4-1D32-4B75-B06E-2D24E279484A}"/>
-				<Hide GUID="{3EB692ED-E25C-47B0-AB1B-3AB7FD5B694D}"/>
-				<Hide GUID="{F4F1A9D5-39FA-4084-81D0-5937B07DBB2A}"/>
-				<Hide GUID="{C87D4290-25E0-445A-84DC-BA530CBBB6A0}"/>
-				<Hide GUID="{1208FAF5-31D9-4802-AAD9-28CD0C6B4F87}"/>
-				<Hide GUID="{9FC18FAC-071B-4D21-8C13-3C4FC1984385}"/>
-				<Hide GUID="{268DC8AE-1F44-49D7-9156-E8C31A62132B}"/>
-				<Hide GUID="{33635654-A58A-437D-877F-7553D357C9DF}"/>
-				<Hide GUID="{B43881BB-A77B-4C1D-B790-E1343B180300}"/>
-				<Hide GUID="{F72A7747-C2A5-4AB8-BC55-EA3D58D76268}"/>
-				<Hide GUID="{B67A5FE6-4FCA-4C1E-831A-66538297DABD}"/>
-			</Hides>
-		</DataType>
-		<DataType>
 			<Name GUID="{F72A7747-C2A5-4AB8-BC55-EA3D58D76268}" PersistentType="true">XtsBaseEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
 			<EventId>
@@ -4197,6 +4101,109 @@ and will return to Group State Standby when the situation permits.
 				<Hide GUID="{268DC8AE-1F44-49D7-9156-E8C31A62132B}"/>
 				<Hide GUID="{33635654-A58A-437D-877F-7553D357C9DF}"/>
 				<Hide GUID="{B43881BB-A77B-4C1D-B790-E1343B180300}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{39AA31FB-FB59-426D-B910-B0818D31633E}" PersistentType="true">XtsBaseEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="1">UserEvent</Name>
+				<DisplayName TxtId=""><![CDATA[{0} | {1} | {2}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">MoverDisable</Name>
+				<DisplayName TxtId=""><![CDATA[{0} Disable command issued. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">MoverEnable</Name>
+				<DisplayName TxtId=""><![CDATA[{0} Enable command issued. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">MoverGroupStop</Name>
+				<DisplayName TxtId=""><![CDATA[{0} GroupStop command issued. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">MoverMoveToPosition</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveToPosition command issued. Commanded Position = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">MoverMoveToStation</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveToStation command issued. Commanded Station = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">MoverMoveVelocity</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveVelocity command issued. Commanded Velocity = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">MoverSetAcceleration</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetAcceleration command issued. Commanded Acceleration = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9">MoverSetDeceleration</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetDeceleration command issued. Commanded Decelaration = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="10">MoverSetDirection</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetDirection command issued. Commanded Direction = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="11">MoverSetJerk</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetJerk command issued. Commanded Jerk = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="12">MoverSetVelocity</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetVelocity command issued. Commanded Velocity = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="13">MoverSyncToMover</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SyncToMover command issued. MasterMover = {2}. GapDistance = {3}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="14">MoverHalt</Name>
+				<DisplayName TxtId=""><![CDATA[{0} Halt command issued. Commanded Deceleration = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="15">MoverSyncToAxis</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SyncToAxis command issued. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{05156EAA-0F28-483B-B3ED-0A061BA2DDE9}"/>
+				<Hide GUID="{18E0FAE1-EDAC-4CEB-9B5F-AEA0EA7CB0BB}"/>
+				<Hide GUID="{66FA28C4-0FB7-4DA6-859C-B54827CE2395}"/>
+				<Hide GUID="{F63352B1-8E7F-48CB-953D-546E45AE1B11}"/>
+				<Hide GUID="{88411A0E-3484-41DC-B698-335B0EEFF131}"/>
+				<Hide GUID="{1EE55F7A-50B7-4AA5-B092-894E8021A00A}"/>
+				<Hide GUID="{A18DCF2F-BCD4-4147-BD48-F6D11150D63F}"/>
+				<Hide GUID="{5E8436AE-C6FB-4E0A-BFF7-F43CB35E58AA}"/>
+				<Hide GUID="{4852EB5D-97BF-461F-8343-CF2477892A8F}"/>
+				<Hide GUID="{2FD29EE4-1D32-4B75-B06E-2D24E279484A}"/>
+				<Hide GUID="{3EB692ED-E25C-47B0-AB1B-3AB7FD5B694D}"/>
+				<Hide GUID="{F4F1A9D5-39FA-4084-81D0-5937B07DBB2A}"/>
+				<Hide GUID="{C87D4290-25E0-445A-84DC-BA530CBBB6A0}"/>
+				<Hide GUID="{1208FAF5-31D9-4802-AAD9-28CD0C6B4F87}"/>
+				<Hide GUID="{9FC18FAC-071B-4D21-8C13-3C4FC1984385}"/>
+				<Hide GUID="{268DC8AE-1F44-49D7-9156-E8C31A62132B}"/>
+				<Hide GUID="{33635654-A58A-437D-877F-7553D357C9DF}"/>
+				<Hide GUID="{B43881BB-A77B-4C1D-B790-E1343B180300}"/>
+				<Hide GUID="{F72A7747-C2A5-4AB8-BC55-EA3D58D76268}"/>
+				<Hide GUID="{B67A5FE6-4FCA-4C1E-831A-66538297DABD}"/>
+				<Hide GUID="{96C264BF-48D4-4CEB-A4F8-9410F36814BF}"/>
+				<Hide GUID="{04AF0647-E539-4190-8BCA-97E33F2AD038}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

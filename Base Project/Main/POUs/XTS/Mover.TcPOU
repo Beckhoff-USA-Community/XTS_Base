@@ -45,6 +45,7 @@ VAR
 	internalState			: MoverState_enum;		// Internal state variable
 	
 	internalMasterMover				: REFERENCE TO Mover;	// Internal reference to a target master mover
+	internalMasterAxis				: REFERENCE TO AXIS_REF;	// Internal reference to a target master external axis
 	internalGap						: LREAL;	// Gap distance to master mover during sync
 	
 	// Configurable Payload description	
@@ -61,7 +62,8 @@ VAR
 	fbAddToGroup			: MC_AddAxisToGroup;
 	fbRemoveFromGroup		: MC_RemoveAxisFromGroup;
 	
-	fbGearInPosCA			: ARRAY[0..1] OF MC_GearInPosCA;
+	fbGearInPosAxisCA		: ARRAY[0..1] OF MC_GearInPosCA;
+	fbGearInPosMoverCA		: ARRAY[0..1] OF MC_GearInPosCA;
 	
 	fbGroupStatus			: MC_GroupReadStatus;
 	fbGroupEnable			: MC_GroupEnable;
@@ -417,10 +419,14 @@ CASE internalState OF
 			fbMoveRelCA[0].Execute		:= FALSE;
 		ELSIF fbMoveRelCA[1].Busy OR fbMoveRelCA[1].CommandAborted THEN
 			fbMoveRelCA[1].Execute		:= FALSE;
-		ELSIF fbGearInPosCA[0].Busy OR fbGearInPosCA[0].CommandAborted THEN
-			fbGearInPosCA[0].Execute	:= FALSE;
-		ELSIF fbGearInPosCA[1].Busy OR fbGearInPosCA[1].CommandAborted THEN
-			fbGearInPosCA[1].Execute	:= FALSE;
+		ELSIF fbGearInPosMoverCA[0].Busy OR fbGearInPosMoverCA[0].CommandAborted THEN
+			fbGearInPosMoverCA[0].Execute	:= FALSE;
+		ELSIF fbGearInPosMoverCA[1].Busy OR fbGearInPosMoverCA[1].CommandAborted THEN
+			fbGearInPosMoverCA[1].Execute	:= FALSE;
+		ELSIF fbGearInPosAxisCA[0].Busy OR fbGearInPosAxisCA[0].CommandAborted THEN
+			fbGearInPosAxisCA[0].Execute	:= FALSE;
+		ELSIF fbGearInPosAxisCA[1].Busy OR fbGearInPosAxisCA[1].CommandAborted THEN
+			fbGearInPosAxisCA[1].Execute	:= FALSE;
 		ELSIF fbHaltCA.Busy OR fbHaltCA.CommandAborted OR fbHaltCA.Done THEN
 			fbHaltCA.Execute			:= FALSE;
 		// This is different than the other similar cases, since a Stop command should prevent other commands from overriding it, thus
@@ -458,14 +464,22 @@ CASE internalState OF
 			ErrorID					:= fbReadStatus.Status.ErrorID;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbReadStatus' );
 			internalState			:= MV_ERROR;
-		ELSIF fbGearInPosCA[0].Error THEN
-			ErrorID					:= fbGearInPosCA[0].ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosCA[0]');
+		ELSIF fbGearInPosMoverCA[0].Error THEN
+			ErrorID					:= fbGearInPosMoverCA[0].ErrorId;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosMoverCA[0]');
 			internalState			:= MV_ERROR;
-		ELSIF fbGearInPosCA[1].Error THEN
-			ErrorID					:= fbGearInPosCA[1].ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosCA[1]');
+		ELSIF fbGearInPosMoverCA[1].Error THEN
+			ErrorID					:= fbGearInPosMoverCA[1].ErrorId;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosMoverCA[1]');
 			internalState			:= MV_ERROR;
+		ELSIF fbGearInPosAxisCA[0].Error THEN
+			ErrorID					:= fbGearInPosAxisCA[0].ErrorId;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosAxisCA[0]');
+			internalState			:= MV_ERROR;
+		ELSIF fbGearInPosAxisCA[1].Error THEN
+			ErrorID					:= fbGearInPosAxisCA[1].ErrorId;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosAxisCA[1]');
+			internalState			:= MV_ERROR;			
 		END_IF
 		
 	MV_BEGIN_HALTING:	// --------------------------------------------------- begin stopping process
@@ -589,8 +603,11 @@ fbReadStatus( Enable := TRUE, Axis := AxisReference );
 fbMoveRelCA[0] ( Axis := AxisReference );
 fbMoveRelCA[1] ( Axis := AxisReference );
 
-fbGearInPosCA[0]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
-fbGearInPosCA[1]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
+fbGearInPosMoverCA[0]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
+fbGearInPosMoverCA[1]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
+
+fbGearInPosAxisCA[0]( Master := internalMasterAxis, Slave := THIS^.AxisReference );
+fbGearInPosAxisCA[1]( Master := internalMasterAxis, Slave := THIS^.AxisReference );
 
 fbReadM1DetectMode();
 fbReadM1DetectValid();
@@ -612,7 +629,7 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-IF internalState = MV_RUN THEN
+IF internalState = MV_RUN OR internalState = MV_ERROR THEN
 
 	// Sets an internal flag to advance the state machine
 	internalDisable		:= TRUE;
@@ -758,6 +775,20 @@ Halt	:= THIS^;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="IsSyncedToAxis" Id="{f2757d0f-8cc6-01d8-3ce1-c233354ecef8}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsSyncedToAxis : BOOL]]></Declaration>
+      <Get Name="Get" Id="{1582f1e6-442b-0b9d-21b6-52b967b5912b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+IsSyncedToAxis		:= fbGearInPosAxisCA[0].InSync OR fbGearInPosAxisCA[1].InSync;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="IsSyncedToMover" Id="{b02e7e76-e41b-42cd-ad2a-fd14e80d7543}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY IsSyncedToMover : BOOL]]></Declaration>
@@ -768,7 +799,7 @@ END_VAR
         <Implementation>
           <ST><![CDATA[
 
-IsSyncedToMover		:= fbGearInPosCA[0].InSync OR fbGearInPosCA[1].InSync;]]></ST>
+IsSyncedToMover		:= fbGearInPosMoverCA[0].InSync OR fbGearInPosMoverCA[1].InSync;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -804,7 +835,7 @@ END_VAR
         <Implementation>
           <ST><![CDATA[
 
-IF THIS^.internalCurrentMoveType = MOVETYPE_SYNC THEN
+IF THIS^.internalCurrentMoveType = MOVETYPE_SYNC_MOVER THEN
 	MasterMover		REF= internalMasterMover;
 ELSE
 	MasterMover		REF= 0;
@@ -1109,8 +1140,10 @@ CASE internalCurrentMoveType OF
 		THIS^.MoveToStation( internalCurrentDestStation );
 	MOVETYPE_VELOCITY:
 		THIS^.MoveVelocity( MotionParameters.Velocity );
-	MOVETYPE_SYNC:
+	MOVETYPE_SYNC_MOVER:
 		THIS^.SyncToMover( internalMasterMover, internalGap );
+	MOVETYPE_SYNC_AXIS:
+		// This command should perhaps not be compatible with Reissue command
 END_CASE
 
 
@@ -1279,6 +1312,116 @@ lastCallSetVel	:= newCallTime;
 SetVelocity		:= THIS^;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SyncToAxis" Id="{6776bdec-2c5f-03ab-27c8-402842cfde2e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SyncToAxis : iMover
+VAR_INPUT
+	
+	MasterAxis		: REFERENCE TO AXIS_REF;
+	MasterSyncPos	: LREAL;	// Master sync position (nonmodulo), where the input axis will be located when first synchronized
+	SlaveSyncPos	: LREAL;	// Mover sync position, where the mover will be located when first synchronized
+	SyncStrategy	: MC_SYNC_STRATEGY;	// Direction input
+	
+END_VAR
+VAR
+	newCallTime		: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate		: FB_TcMessage;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+IF NOT( Ready ) THEN
+	
+	internalState		:= MV_ERROR;
+	ErrorID				:= 19201;
+	
+ELSE
+	
+	newCallTime			:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+	
+	internalMasterAxis		REF= MasterAxis;
+	
+	IF fbGearInPosAxisCA[0].Busy = FALSE THEN
+		
+		fbGearInPosAxisCA[0].Execute			:= TRUE;
+		
+		fbGearInPosAxisCA[0].RatioNumerator		:= 1;
+		fbGearInPosAxisCA[0].RatioDenumerator	:= 1;
+		
+		fbGearInPosAxisCA[0].MasterSyncPosition	:= MasterSyncPos;	// This needs to be nonmodulo
+		fbGearInPosAxisCA[0].SlaveSyncPosition	:= SlaveSyncPos;
+		
+		fbGearInPosAxisCA[0].SyncStrategy		:= SyncStrategy;
+		
+		IF MotionParameters.Direction = mcDirectionPositive THEN
+			fbGearInPosAxisCA[0].SyncMode		:= mcSyncModePositive;
+		ELSIF MotionParameters.Direction = mcDirectionNegative THEN
+			fbGearInPosAxisCA[0].SyncMode		:= mcSyncModeNegative;
+		END_IF
+		
+		fbGearInPosAxisCA[0].Velocity			:= MotionParameters.Velocity;
+		fbGearInPosAxisCA[0].Acceleration		:= MotionParameters.Acceleration;
+		fbGearInPosAxisCA[0].Deceleration		:= MotionParameters.Deceleration;
+		fbGearInPosAxisCA[0].Jerk				:= MotionParameters.Jerk;
+		
+		fbGearInPosAxisCA[0].BufferMode			:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
+		
+		fbGearInPosAxisCA[0]( Master := MasterAxis, Slave := THIS^.AxisReference );		
+		
+	ELSIF fbGearInPosAxisCA[1].Busy = FALSE THEN
+		
+		fbGearInPosAxisCA[1].Execute			:= TRUE;
+		
+		fbGearInPosAxisCA[1].RatioNumerator		:= 1;
+		fbGearInPosAxisCA[1].RatioDenumerator	:= 1;
+		
+		fbGearInPosAxisCA[1].MasterSyncPosition	:= MasterSyncPos;	// This needs to be nonmodulo
+		fbGearInPosAxisCA[1].SlaveSyncPosition	:= SlaveSyncPos;
+		
+		fbGearInPosAxisCA[1].SyncStrategy		:= SyncStrategy;
+		
+		IF MotionParameters.Direction = mcDirectionPositive THEN
+			fbGearInPosAxisCA[1].SyncMode		:= mcSyncModePositive;
+		ELSIF MotionParameters.Direction = mcDirectionNegative THEN
+			fbGearInPosAxisCA[1].SyncMode		:= mcSyncModeNegative;				
+		END_IF
+		
+		fbGearInPosAxisCA[1].Velocity			:= MotionParameters.Velocity;
+		fbGearInPosAxisCA[1].Acceleration		:= MotionParameters.Acceleration;
+		fbGearInPosAxisCA[1].Deceleration		:= MotionParameters.Deceleration;
+		fbGearInPosAxisCA[1].Jerk				:= MotionParameters.Jerk;
+		
+		fbGearInPosAxisCA[1].BufferMode			:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
+		
+		fbGearInPosAxisCA[1]( Master := MasterAxis, Slave := THIS^.AxisReference );
+		
+	END_IF
+	
+END_IF
+
+internalCurrentMoveType			:= MOVETYPE_SYNC_AXIS;
+internalCurrentDestPosition		:= 1E300;
+
+memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
+internalCurrentDestStation		REF= 0;
+
+IF ( newCallTime - lastCallSync ) > 1 THEN
+	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSyncToAxis, 0 );
+	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+	MsgCreate.Send(0);
+END_IF
+
+THIS^.SourceInstancePath		:= 'Direct access';
+
+lastCallSync	:= newCallTime;
+
+SyncToAxis		:= THIS^;
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SyncToMover" Id="{c1dddc96-f9c0-4f4e-b1ac-4bb8d23d72f1}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SyncToMover : iMover
 VAR_INPUT
@@ -1312,60 +1455,60 @@ ELSE	// let 'er rip
 	CWDistToSync	:= MODABS( syncPos - THIS^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
 	CWDistToMaster	:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - THIS^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
 		
-	IF fbGearInPosCA[0].Busy = FALSE THEN
+	IF fbGearInPosMoverCA[0].Busy = FALSE THEN
 		
-		fbGearInPosCA[0].Execute				:= TRUE;
+		fbGearInPosMoverCA[0].Execute				:= TRUE;
 			
-		fbGearInPosCA[0].RatioNumerator			:= 1;
-		fbGearInPosCA[0].RatioDenumerator		:= 1;
+		fbGearInPosMoverCA[0].RatioNumerator			:= 1;
+		fbGearInPosMoverCA[0].RatioDenumerator		:= 1;
 		
-		fbGearInPosCA[0].MasterSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos;
-		fbGearInPosCA[0].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
+		fbGearInPosMoverCA[0].MasterSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos;
+		fbGearInPosMoverCA[0].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
 		
-		fbGearInPosCA[0].SyncStrategy			:= mcSyncStrategyEarly;		
-		fbGearInPosCA[0].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
+		fbGearInPosMoverCA[0].SyncStrategy			:= mcSyncStrategyEarly;		
+		fbGearInPosMoverCA[0].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
 				
-		//fbGearInPosCA[0].Options.MinimalSlavePosition	:= -1E300;
+		//fbGearInPosMoverCA[0].Options.MinimalSlavePosition	:= -1E300;
 		
-		fbGearInPosCA[0].Velocity				:= MotionParameters.Velocity;
-		fbGearInPosCA[0].Acceleration			:= MotionParameters.Acceleration;
-		fbGearInPosCA[0].Deceleration			:= MotionParameters.Deceleration;
-		fbGearInPosCA[0].Jerk					:= MotionParameters.Jerk;
+		fbGearInPosMoverCA[0].Velocity				:= MotionParameters.Velocity;
+		fbGearInPosMoverCA[0].Acceleration			:= MotionParameters.Acceleration;
+		fbGearInPosMoverCA[0].Deceleration			:= MotionParameters.Deceleration;
+		fbGearInPosMoverCA[0].Jerk					:= MotionParameters.Jerk;
 		
-		fbGearInPosCA[0].BufferMode				:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
+		fbGearInPosMoverCA[0].BufferMode				:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
 		
-		fbGearInPosCA[0]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
+		fbGearInPosMoverCA[0]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
 		
-	ELSIF fbGearInPosCA[1].Busy = FALSE THEN
+	ELSIF fbGearInPosMoverCA[1].Busy = FALSE THEN
 		
-		fbGearInPosCA[1].Execute				:= TRUE;
+		fbGearInPosMoverCA[1].Execute				:= TRUE;
 		
-		fbGearInPosCA[1].RatioNumerator			:= 1;
-		fbGearInPosCA[1].RatioDenumerator		:= 1;
+		fbGearInPosMoverCA[1].RatioNumerator			:= 1;
+		fbGearInPosMoverCA[1].RatioDenumerator		:= 1;
 		
-		fbGearInPosCA[1].MasterSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos;
-		fbGearInPosCA[1].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
+		fbGearInPosMoverCA[1].MasterSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos;
+		fbGearInPosMoverCA[1].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
 		
-		fbGearInPosCA[1].SyncStrategy			:= mcSyncStrategyEarly;
-		fbGearInPosCA[1].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
+		fbGearInPosMoverCA[1].SyncStrategy			:= mcSyncStrategyEarly;
+		fbGearInPosMoverCA[1].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
 		
-		//fbGearInPosCA[1].Options.MinimalSlavePosition	:= -1E300;
+		//fbGearInPosMoverCA[1].Options.MinimalSlavePosition	:= -1E300;
 		
-		fbGearInPosCA[1].Velocity				:= MotionParameters.Velocity;
-		fbGearInPosCA[1].Acceleration			:= MotionParameters.Acceleration;
-		fbGearInPosCA[1].Deceleration			:= MotionParameters.Deceleration;
-		fbGearInPosCA[1].Jerk					:= MotionParameters.Jerk;
+		fbGearInPosMoverCA[1].Velocity				:= MotionParameters.Velocity;
+		fbGearInPosMoverCA[1].Acceleration			:= MotionParameters.Acceleration;
+		fbGearInPosMoverCA[1].Deceleration			:= MotionParameters.Deceleration;
+		fbGearInPosMoverCA[1].Jerk					:= MotionParameters.Jerk;
 		
-		fbGearInPosCA[1].BufferMode				:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
+		fbGearInPosMoverCA[1].BufferMode				:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
 		
 		
-		fbGearInPosCA[1]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
+		fbGearInPosMoverCA[1]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
 		
 	END_IF
 
 END_IF;
 
-internalCurrentMoveType			:= MOVETYPE_SYNC;
+internalCurrentMoveType			:= MOVETYPE_SYNC_MOVER;
 internalCurrentDestPosition		:= 1E300;
 
 memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
@@ -1403,7 +1546,16 @@ SyncToMover		:= THIS^;
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Cyclic">
-      <LineId Id="3" Count="442" />
+      <LineId Id="3" Count="265" />
+      <LineId Id="450" Count="3" />
+      <LineId Id="269" Count="44" />
+      <LineId Id="454" Count="3" />
+      <LineId Id="459" Count="3" />
+      <LineId Id="314" Count="124" />
+      <LineId Id="464" Count="0" />
+      <LineId Id="463" Count="0" />
+      <LineId Id="465" Count="0" />
+      <LineId Id="439" Count="6" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Disable">
@@ -1421,6 +1573,11 @@ SyncToMover		:= THIS^;
     <LineIds Name="Mover.Halt">
       <LineId Id="3" Count="41" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsSyncedToAxis.Get">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
     </LineIds>
     <LineIds Name="Mover.IsSyncedToMover.Get">
       <LineId Id="3" Count="1" />
@@ -1455,7 +1612,9 @@ SyncToMover		:= THIS^;
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.ReissueCommand">
-      <LineId Id="3" Count="16" />
+      <LineId Id="3" Count="13" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="17" Count="2" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetAcceleration">
@@ -1477,6 +1636,17 @@ SyncToMover		:= THIS^;
     <LineIds Name="Mover.SetVelocity">
       <LineId Id="3" Count="16" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SyncToAxis">
+      <LineId Id="19" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="26" Count="4" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="35" Count="74" />
+      <LineId Id="22" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SyncToMover">
       <LineId Id="3" Count="88" />
