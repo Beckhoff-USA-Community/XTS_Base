@@ -44,10 +44,15 @@ Mover[4].SetVelocity( 2000 );	// so long as the the Mover is parked as above
 
 
 ---
+<br>
+<br>
 
 ## Common Methods
 
 The objects listed above all share some common methods, which are implemented in the parent *Objective* base class.
+
+<br>
+<br>
 
 ### RegisterMover
 
@@ -69,6 +74,8 @@ Mover[1].MoveToStation( Station[1] );
 Stations include some unique features regarding mover registration. See [Station Object](Station.md) for more details.
 
 ---
+<br>
+<br>
 
 ### UnregisterMover
 
@@ -88,6 +95,8 @@ Mover[1].MoveToPosition( Station[1].TrackPosition );
 ```
 
 ---
+<br>
+<br>
 
 ### UnregisterCurrent
 
@@ -111,6 +120,8 @@ END_IF
 ```
 
 ---
+<br>
+<br>
 
 ### UnregisterAll
 
@@ -123,4 +134,35 @@ IF xClearTrigger THEN
 	PositionTrigger[2].UnregisterAll();
 	xClearTrigger	:= FALSE;
 END_IF
+```
+
+---
+<br>
+<br>
+
+## Method Chaining
+
+Most methods in the project return *the current object itself*, allowing for additional method calls on the same line of code. This approach is often referred to as a *fluent interface*. For example:
+
+```javascript
+// All these method calls apply to Mover 0 in sequence
+Mover[0].SetVelocity( 2000 ).SetAcceleration( 20000).MoveToPosition( 1000 );
+```
+
+In some cases, the *order* of the methods calls must be carefully considered. In the following example, the *CurrentMover* of *Station#0* is commanded to move to *Station#1*. At this point, it is no longer considered the *CurrentMover* of *Station#0*. As a result, the *SetVelocity* method does not apply to the intended Mover object.
+
+```javascript
+IF Station[0].MoverInPosition THEN
+	// This line will return an ErrorMover and will not function as intended
+	Station[0].CurrentMover.MoveToStation(Station[1]).SetVelocity(1000);
+END_IF;
+```
+
+However, the following example will work as intended:
+
+```javascript
+IF Station[0].MoverInPosition THEN
+	// This line of code will function correctly
+	Station[0].CurrentMover.SetVelocity(1000).MoveToStation(Station[1]);
+END_IF;
 ```

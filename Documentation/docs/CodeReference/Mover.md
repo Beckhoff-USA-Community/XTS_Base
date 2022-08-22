@@ -33,7 +33,6 @@ END_FOR
 
 ## Methods
 
-
 ### Enable
 
 *Enable()*
@@ -51,6 +50,8 @@ Mover[1].Enable();
 ```
 
 ---
+<br>
+<br>
 
 ### Disable
 
@@ -80,6 +81,8 @@ END_IF
 ```
 
 ---
+<br>
+<br>
 
 ### Halt
 
@@ -97,6 +100,8 @@ END_IF
 ```
 
 ---
+<br>
+<br>
 
 ### MoveToPosition
 
@@ -112,6 +117,8 @@ END_IF
 ```
 
 ---
+<br>
+<br>
 
 ### MoveToStation
 
@@ -127,6 +134,8 @@ END_IF
 ```
 
 ---
+<br>
+<br>
 
 ### MoveVelocity
 
@@ -142,6 +151,41 @@ END_IF
 ```
 
 ---
+<br>
+<br>
+
+### SyncToAxis
+
+*SyncToAxis( MasterAxis : AXIS_REFERENCE, MasterSyncPos : LREAL, SlaveSyncPos : LREAL, SyncStrategy : MC_SYNC_STRATEGY )*
+
+> Pairs the current mover with an external axis (real or virtual) with a specified Master & Slave Sync Positions. The current mover will synchronize according to the parameter SyncStrategy and a 1:1 gear ratio.
+The synchronization can be ended by executing a call on the slave for any other motion command, e.g. MoveToPosition.
+
+**MasterAxis** is a reference to the NC axis object that the mover should synchronize with, real or virtual.
+
+**MasterSyncPos** is the position of the Master at which point the mover will be *InSync* and will have the correct gear ratio (1:1).
+
+**SlaveSyncPos** is the position of the mover at which point it is *InSync*
+
+**SyncStrategy** defines the type of calculation used to blend the movements and establish the synchronization. Simply put, the mover should synchronize *immediately & aggressively*, *as late as possible and aggressively*, or *as gently as possible*.
+
+> For more information on these inputs, see InfoSys documentation for the underlying [MC_GearInPosCA](https://infosys.beckhoff.com/english.php?content=../content/1033/tf5410_tc3_collision_avoidance/1534969995.html&id=) Function Block
+
+
+> See also:
+> [Mover.IsSyncedToAxis](Mover.md#issyncedtoaxis)
+
+```javascript
+IF xCmdSyncToAxis THEN
+	xCmdSyncToAxis	:= FALSE;
+	MasterSyncPos	:= ConveyorAxis.NcToPlc.ActPos + 400;
+	Mover[0].SyncToAxis( ConveyorAxis, MasterSyncPos, 1500, mcSyncStrategyEarly );
+END_IF;
+```
+
+---
+<br>
+<br>
 
 ### SyncToMover
 
@@ -154,6 +198,9 @@ END_IF
 
 
 Additional calls to this method can be used to update the gap between paired movers.
+
+> See also:
+> [Mover.IsSyncedToMover](Mover.md#issyncedtomover) and [Mover.MasterMover](Mover.md#mastermover)
 
 
 ```javascript
@@ -182,6 +229,8 @@ END_IF;
 ```
 
 ---
+<br>
+<br>
 
 ### ReissueCommand
 
@@ -207,6 +256,8 @@ END_IF
 ```
 
 ---
+<br>
+<br>
 
 ### LogUserEvent
 
@@ -221,6 +272,8 @@ END_IF;
 ```
 
 ---
+<br>
+<br>
 
 ### SetAcceleration
 
@@ -236,6 +289,8 @@ END_IF
 ```
 
 ---
+<br>
+<br>
 
 ### SetDeceleration
 
@@ -251,6 +306,8 @@ END_IF
 ```
 
 ---
+<br>
+<br>
 
 ### SetDirection
 
@@ -270,6 +327,8 @@ END_IF
 ```
 
 ---
+<br>
+<br>
 
 ### SetJerk
 
@@ -285,6 +344,8 @@ END_IF
 ```
 
 ---
+<br>
+<br>
 
 ### SetVelocity
 
@@ -315,6 +376,8 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 > Provides the current (last executed) type of movement command issued to the Mover
 
 ---
+<br>
+<br>
 
 #### .CurrentDestinationPosition
 
@@ -323,6 +386,8 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 > Provides the current destination position for the last movement command issued to the Mover. For Station commands, this will be the TrackPosition of the Station. For Velocity commands with no real destination position, the value is set to +/-1E300.
 
 ---
+<br>
+<br>
 
 #### .MotionParameters
 
@@ -333,6 +398,8 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 *Note: despite listing this value as a Property here in the documentation, MotionParameters are actually defined as a regular Input to the Mover object. This allows component access to the members of the STRUCT, which is not possible for Properties.*
 
 ---
+<br>
+<br>
 
 #### .CurrentObjective
 
@@ -341,6 +408,8 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 > Provides the current Objective destination for the Mover. Right now this is only valid when the Mover is destined for a Station objective, and provides a string name for that station.
 
 ---
+<br>
+<br>
 
 #### .IsSyncedToMover
 
@@ -348,8 +417,19 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 
 > Returns true if the mover is slaved to another mover and has successfully reached the following position specified by the Gap.
 
+---
+<br>
+<br>
+
+#### .IsSyncedToAxis
+
+*BOOL*
+
+> Returns true if the mover is slaved to an external axis and has successfully reached the following position specified by the Master & Slave Sync Positions
 
 ---
+<br>
+<br>
 
 #### .MasterMover
 
@@ -362,12 +442,16 @@ When this mover is not slaved to another mover, .MasterMover is an invalid refer
 It is recommended that all evaluations are nested inside IF checks for .IsSyncedToMover OR by calling __ISVALIDREF
 
 ---
+<br>
+<br>
 
 #### .Payload
 
 > !!! Under Construction !!! At the moment, this property is a placeholder for application specific information regarding the current status of products onboard the mover, and can be modified as needed for your application.
 
 ---
+<br>
+<br>
 
 ## Extra Examples
 

@@ -4,6 +4,8 @@
 > Speed Trigger objects monitor movers until they have exceeded a specified velocity.
 
 ---
+<br>
+<br>
 
 ## Setup & Execution
 
@@ -18,6 +20,8 @@ SpeedTriggerA.ThresholdVelocity		:= 800;
 ```
 
 ---
+<br>
+<br>
 
 ## Properties
 
@@ -26,24 +30,30 @@ SpeedTriggerA.ThresholdVelocity		:= 800;
 > Status boolean indicating that at least one mover is currently exceeding the threshold velocity
 
 ---
+<br>
+<br>
 
 ### .CurrentMover
 
 > Reference variable that refers to the earliest registered mover to exceed the threshold velocity since being registered
 
-- If no movers are tracked, or no tracked movers currently satisfy the objective, then .CurrentMover is an invalid reference. In this case, an ErrorMover will replace the invalid reference. The user will receive notifications when this happens in the TwinCAT event logs. See Diagnostics>ErrorMovers for more information. 
+- If no movers are tracked, or no tracked movers currently satisfy the objective, then .CurrentMover is an invalid reference. In this case, an ErrorMover will replace the invalid reference. The user will receive notifications when this happens in the TwinCAT event logs. See Diagnostics>ErrorMovers for more information.
 
 - It is recommended that all evaluations are nested inside IF check for .MoverInVelocity.
 
 - It is possible that multiple registered movers simultaneously exceed the threshold velocity. Only the least recently valid mover handle is provided by .CurrentMover. To access more recent events, deregister the current mover with *SpeedTrigger.UnregisterCurrent()*
 
 ---
+<br>
+<br>
 
 ### .ThresholdVelocity
 
 > Current velocity, above which a mover is considered 'In Velocity'
 
 ---
+<br>
+<br>
 
 ## Extra Examples
 

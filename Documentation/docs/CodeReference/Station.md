@@ -4,6 +4,8 @@
 > The Station object provides a fixed location for a Mover to stop at until it is ready to be released. A Station is a type of Objective, and provides a handle to the Mover object that is currently docked with the Station, allowing further motion commands to be issued to the Mover.
 
 ---
+<br>
+<br>
 
 ## Setup & Execution
 
@@ -27,6 +29,8 @@ END_FOR
 ```
 
 ---
+<br>
+<br>
 
 ## Mover Registration
 
@@ -47,9 +51,10 @@ Mover[2].MoveToPosition( Station[3].TrackPosition );
 Here, the Station will not report *MoverInPosition*.
 
 ---
+<br>
+<br>
 
 ## Methods
-
 
 ### Cyclic
 
@@ -64,6 +69,8 @@ END_FOR
 ```
 
 ---
+<br>
+<br>
 
 ## Properties
 
@@ -72,28 +79,36 @@ END_FOR
 > Status boolean indicating that a mover is currently docked with the Station
 
 ---
+<br>
+<br>
 
 #### .CurrentMover
 
 > Reference variable that refers to the Mover that is docked with the Station
 
-When no mover is present in the Station, .CurrentMover is an invalid reference. In this case, an ErrorMover will replace the invalid reference. The user will receive notifications when this happens in the TwinCAT Event Logs. 
+When no mover is present in the Station, .CurrentMover is an invalid reference. In this case, an ErrorMover will replace the invalid reference. The user will receive notifications when this happens in the TwinCAT Event Logs.
 
 It is recommended that all evaluations are nested inside IF checks for .MoverInPosition.
 
 ---
+<br>
+<br>
 
 #### .TrackedMoverCount
 
 > Simply reports the number of Movers that are currently registered with the Station. Because Stations automatically deregister movers that are not currently destined for this Station, this value also represents the current number of incoming movers
 
 ---
+<br>
+<br>
 
 #### .TrackPosition
 
 > Current placement of the Station along the track
 
 ---
+<br>
+<br>
 
 ## Extra Examples
 

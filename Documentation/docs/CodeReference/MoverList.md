@@ -4,6 +4,8 @@
 > The Mover List object provides a way to group Movers together and issue commands to every Mover in the list. Alternatively, commands can be sent to individual movers within the list based on their geographic proximity to a track position
 
 ---
+<br>
+<br>
 
 ## Setup & Execution
 
@@ -25,9 +27,10 @@ MoverListA.UnregisterAll();
 ```
 
 ---
+<br>
+<br>
 
 ## Methods
-
 
 ### GetMoverByLocation
 
@@ -57,6 +60,8 @@ MoverListA.GetMoverByLocation( 2, 3000, MC_Negative_Direction ).SetAcceleration(
 ```
 
 ---
+<br>
+<br>
 
 ### MoveAllToPosition
 
@@ -69,6 +74,8 @@ MoverListA.MoveAllToPosition( 1200 );
 ```
 
 ---
+<br>
+<br>
 
 ### MoveAllToStation
 
@@ -81,6 +88,8 @@ MoverListA.MoveAllToStation( Station[3] );
 ```
 
 ---
+<br>
+<br>
 
 ### MoveAllVelocity
 
@@ -93,6 +102,8 @@ MoverListA.MoveAllVelocity( 300 );
 ```
 
 ---
+<br>
+<br>
 
 ### SetAllAcceleration
 
@@ -105,6 +116,8 @@ MoverListA.SetAllAcceleration( 1E3 );
 ```
 
 ---
+<br>
+<br>
 
 ### SetAllDeceleration
 
@@ -117,6 +130,8 @@ MoverListA.SetAllDeceleration( 15000 );
 ```
 
 ---
+<br>
+<br>
 
 ### SetAllDirection
 
@@ -129,6 +144,8 @@ MoverListA.SetAllDirection( mcDirectionPositive );
 ```
 
 ---
+<br>
+<br>
 
 ### SetAllJerk
 
@@ -141,6 +158,8 @@ MoverListA.SetAllJerk( 1e5 );
 ```
 
 ---
+<br>
+<br>
 
 ### SetAllVelocity
 
@@ -153,6 +172,8 @@ MoverListA.SetAllVelocity( 2000 );
 ```
 
 ---
+<br>
+<br>
 
 ### StopAll
 
@@ -165,6 +186,8 @@ MoverListA.StopAll();
 ```
 
 ---
+<br>
+<br>
 
 ### UnregisterAll
 

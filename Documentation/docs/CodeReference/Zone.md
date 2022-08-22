@@ -4,6 +4,8 @@
 > The Zone object provides a method for grabbing all Movers within a specified geographic area on the track. A Zone is defined by a Start Position and an End Position, and returns every mover between these points. Zones are especially useful for programming recovery scenarios.
 
 ---
+<br>
+<br>
 
 ## Setup & Execution
 
@@ -22,6 +24,8 @@ ZoneRightSide.EndPosition	:= 4000;
 ```
 
 ---
+<br>
+<br>
 
 ## Methods
 
@@ -42,9 +46,10 @@ ZoneRightSide.GetMover( 3, MC_Negative_Direction ).SetVelocity( 1200 );
 ```
 
 ---
+<br>
+<br>
 
 ## Properties
-
 
 #### .CurrentMoverList
 
