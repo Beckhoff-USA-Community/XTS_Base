@@ -139,7 +139,8 @@ CurrentMoveType		:= internalCurrentMoveType;]]></ST>
       </Get>
     </Property>
     <Property Name="CurrentObjective" Id="{b06cf2ff-b1dd-4afb-af24-76820a9809f8}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentObjective : String]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentObjective : String]]></Declaration>
       <Get Name="Get" Id="{39f22891-e1d0-4fbf-9032-2bbc45b18310}">
         <Declaration><![CDATA[VAR
 END_VAR
