@@ -47,7 +47,7 @@ END_VAR]]></Declaration>
 
 --- XTS Starter Project ---
 
-This MAIN (PRG) is intended to serve as an example, which should be modified to suit your specific application.
+This MAIN (PRG) is intended to serve as an example, which can be modified to suit your specific application.
 
 No programming changes should be necessary inside the provided XTS objects / function block definitions.
 They are intended to be simply instantiated and controlled via the provided methods and properties.
@@ -408,34 +408,5 @@ PositionTrigger[1].Cyclic();
 PositionTrigger[2].Cyclic();
 ]]></ST>
     </Implementation>
-    <LineIds Name="MAIN">
-      <LineId Id="397" Count="0" />
-      <LineId Id="405" Count="0" />
-      <LineId Id="431" Count="0" />
-      <LineId Id="430" Count="0" />
-      <LineId Id="427" Count="0" />
-      <LineId Id="418" Count="0" />
-      <LineId Id="422" Count="0" />
-      <LineId Id="421" Count="0" />
-      <LineId Id="423" Count="0" />
-      <LineId Id="432" Count="0" />
-      <LineId Id="425" Count="0" />
-      <LineId Id="424" Count="0" />
-      <LineId Id="426" Count="0" />
-      <LineId Id="433" Count="1" />
-      <LineId Id="419" Count="0" />
-      <LineId Id="407" Count="0" />
-      <LineId Id="406" Count="0" />
-      <LineId Id="3" Count="160" />
-      <LineId Id="390" Count="0" />
-      <LineId Id="164" Count="32" />
-      <LineId Id="391" Count="0" />
-      <LineId Id="197" Count="5" />
-      <LineId Id="392" Count="0" />
-      <LineId Id="203" Count="52" />
-      <LineId Id="257" Count="73" />
-      <LineId Id="334" Count="15" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
