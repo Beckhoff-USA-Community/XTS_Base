@@ -19,7 +19,7 @@ PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{590174cc-2a32-4e82-86cf-1c2eff136812}">
         <Declaration><![CDATA[VAR
 
-    i          : ulint;
+    i          : ULINT;
     difference : LREAL;
 
 END_VAR]]></Declaration>
@@ -79,7 +79,7 @@ PROPERTY MoverInPosition : BOOL]]></Declaration>
       <Get Name="Get" Id="{11118b5e-d8b3-4427-a8f3-470e1381cae5}">
         <Declaration><![CDATA[VAR
 
-    i          : ulint;
+    i          : ULINT;
     difference : LREAL;
 
 END_VAR]]></Declaration>
@@ -123,26 +123,5 @@ END_VAR]]></Declaration>
         </Implementation>
       </Set>
     </Property>
-    <LineIds Name="Station">
-      <LineId Id="221" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.CurrentMover.Get">
-      <LineId Id="94" Count="24" />
-      <LineId Id="64" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.Cyclic">
-      <LineId Id="29" Count="9" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.MoverInPosition.Get">
-      <LineId Id="63" Count="16" />
-      <LineId Id="42" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.TrackPosition.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.TrackPosition.Set">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

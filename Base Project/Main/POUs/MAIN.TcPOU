@@ -40,6 +40,7 @@ VAR
     SpeedTrigger    	: ARRAY[0..1] OF SpeedTrigger;
     Zone            	: ARRAY[0..3] OF Zone;
 	
+	testVar: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -174,12 +175,21 @@ CASE MainState OF
                 Zone[1].RegisterMover( Mover[i] );
                 Zone[2].RegisterMover( Mover[i] );
                 Zone[3].RegisterMover( Mover[i] );
+				
+				PositionTrigger[0].RegisterMover( Mover[i] );
+				PositionTrigger[1].RegisterMover( Mover[i] );
+				
+				Mover[i].MoveVelocity( 500 );
             END_FOR
-
+			
+			(*
             Zone[0].CurrentMoverList.SetAllVelocity(800).MoveAllToStation(Station[0]);
             Zone[1].CurrentMoverList.SetAllVelocity(600).MoveAllToStation(Station[0]);
             Zone[2].CurrentMoverList.SetAllVelocity(400).MoveAllToStation(Station[0]);
             Zone[3].CurrentMoverList.SetAllVelocity(200).MoveAllToStation(Station[0]);
+			*)
+			
+			
 
             // ===== END =====
 
@@ -192,85 +202,21 @@ CASE MainState OF
 
     MS_RUN: // --------------------------------------------------------------- OPERATING
 	
-        // =========== Station 0 Logic
-        IF Station[0].MoverInPosition THEN
-            StationTimer[0](IN := TRUE, PT := T#1000MS);
-
-            IF StationTimer[0].Q THEN
-                Station[0].CurrentMover.SetVelocity(mediumVelocity);
-                Station[0].CurrentMover.MoveToStation(Station[1]);
-
-            END_IF
-        ELSE
-            StationTimer[0](IN := FALSE);
-        END_IF
-
-        // =========== Station 1 Logic		
-        IF Station[1].MoverInPosition THEN
-            StationTimer[1](IN := TRUE, PT := T#250MS);
-
-            IF StationTimer[1].Q THEN
-                Station[1].CurrentMover.SetVelocity(mediumVelocity);
-                Station[1].CurrentMover.MoveToStation(Station[nextStation]);
-                nextStation := nextStation - 1;
-
-                IF nextStation = 1 THEN
-                    nextStation := 4;
-                END_IF
-            END_IF
-        ELSE
-            StationTimer[1](IN := FALSE);
-        END_IF
-
-		// =========== Station 2, 3, and 4 Logic
-        IF Station[2].MoverInPosition AND Station[3].MoverInPosition AND Station[4].MoverInPosition THEN
-            StationTimer[2](IN := TRUE, PT := T#750MS);
-
-            IF StationTimer[2].Q THEN
-				StationTimer[2](IN := FALSE);
-                PositionTrigger[0].RegisterMover(Station[2].CurrentMover);
-                PositionTrigger[0].RegisterMover(Station[3].CurrentMover);
-                PositionTrigger[0].RegisterMover(Station[4].CurrentMover);
-
-                Station[2].CurrentMover.MoveVelocity(500);
-                Station[3].CurrentMover.MoveVelocity(500);
-                Station[4].CurrentMover.MoveVelocity(500);
-            END_IF
-        END_IF
-
-        // =========== Position Trigger 0 Logic
-        IF PositionTrigger[0].MoverPassedPosition THEN
-            PositionTrigger[1].RegisterMover(PositionTrigger[0].CurrentMover);
-
-            PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
-
-            PositionTrigger[0].UnregisterCurrent();
-        END_IF
-
-        // =========== Position Trigger 1 Logic
-        IF PositionTrigger[1].MoverPassedPosition THEN
-            SpeedTrigger[0].RegisterMover(PositionTrigger[1].CurrentMover);
-
-            PositionTrigger[1].CurrentMover.SetVelocity(highVelocity);
-
-            PositionTrigger[1].UnregisterCurrent();
-        END_IF
-
-		// =========== Speed Trigger 0 Logic
-        IF SpeedTrigger[0].MoverInVelocity THEN
-            SpeedTrigger[0].CurrentMover.SetVelocity(mediumVelocity);
-            PositionTrigger[2].RegisterMover(SpeedTrigger[0].CurrentMover);
-            SpeedTrigger[0].UnregisterCurrent();
-        END_IF
-
-		// =========== Position Trigger 2 Logic
-        IF PositionTrigger[2].MoverPassedPosition THEN
-
-            PositionTrigger[2].CurrentMover.SetVelocity(lowVelocity);
-            PositionTrigger[2].CurrentMover.MoveToStation(Station[0]);
-
-            PositionTrigger[2].UnregisterCurrent();
-        END_IF
+	
+	
+		IF PositionTrigger[0].MoverPassedPosition THEN
+			PositionTrigger[0].CurrentMover.MoveVelocity( 200 );
+			PositionTrigger[0].MuteCurrent();
+		END_IF
+		
+		IF PositionTrigger[1].MoverPassedPosition THEN
+			PositionTrigger[1].CurrentMover.MoveVelocity( 500 );
+			PositionTrigger[1].MuteCurrent();
+		END_IF
+		
+		
+		
+		
 
         IF MainCommands.Stop THEN
             MainCommands.Start 	:= FALSE;
