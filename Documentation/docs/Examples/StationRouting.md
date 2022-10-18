@@ -1,7 +1,7 @@
 
 # Station Routing
 
-> This example demonstrates the most basic Station to Station type routing. There are two stations, which each dwell for a period of time before forwarding movers to the next station in the sequence
+> This example demonstrates the most basic Station to Station routing. There are two stations which dwell for a period of time before sending movers to the next station in the sequence
 
 ```javascript
 
