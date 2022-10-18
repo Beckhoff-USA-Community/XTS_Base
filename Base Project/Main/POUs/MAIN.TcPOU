@@ -10,7 +10,7 @@ VAR
                     	
     lowVelocity    		: LREAL := 200;  	// mm/s
     mediumVelocity 		: LREAL := 800;  	// mm/s
-    highVelocity   		: LREAL := 2000; 	// mm/s
+    highVelocity   		: LREAL := 1200; 	// mm/s
 
     // ========= Helper, State, & Index Variables =========
 
@@ -26,7 +26,7 @@ VAR
     MainCommands 		: MainCommands_typ; 	// command struct for cycling thru the state machine
 
     // ========= Linked NC Variables & References =========
-
+	
     GroupRef 			: AXES_GROUP_REF;                       	 // linked to the Collision Avoidance group and passed cyclically to every Mover object
     Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
 
@@ -40,7 +40,6 @@ VAR
     SpeedTrigger    	: ARRAY[0..1] OF SpeedTrigger;
     Zone            	: ARRAY[0..3] OF Zone;
 	
-	testVar: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -57,13 +56,18 @@ However the objects are provided as open-source for modification and extension a
 Documentation for these objects can be found online at:
 https://beckhoff-usa-community.github.io/XTS_Base/
 
-- XTS US Product Management Team
+Bug reports, new feature requests, and general feedback is always welcome on our Github page.
+For any other questions, please reach out to your local Application Engineer.
+
+- Beckhoff USA Advanced Applications Group
 
 ====================================================================================== *)
 
 CASE MainState OF
     MS_DISABLED: // --------------------------------------------------------- IDLE STATE
-
+		(*Wait here until an operator issues a MainCommand to Enable the system. 
+		Disallow Start and Stop commands until the system has been Enabled*)
+	
         MainCommands.Start		:= FALSE;
 		MainCommands.Stop		:= FALSE;
 		
@@ -73,7 +77,9 @@ CASE MainState OF
         END_IF
 
     MS_INITIALIZING_MOVERS: // --------------------------------------------- SET MOVER MOTION PARAMETERS
-
+		(*Initialize Mover motion parameters via a Parameter Set. Once complete, step
+		forward to begin Enabling movers on the system*)
+		
 		ParameterSet.Jerk         := 1E5; // mm/s3
 		ParameterSet.Acceleration := 1E4; // mm/s2
 		ParameterSet.Deceleration := 1E4; // mm/s2
@@ -97,6 +103,8 @@ CASE MainState OF
 		END_IF
 
 	MS_ONESHOT_ENABLE:	// -------------------------------------------------- SINGLE-CYCLE ISSUE ENABLE COMMANDS
+		(*Begin Enabling movers by calling Mover.Enable(). Methods in this project
+		are intended to be called once, although they will function correctly if called repeatedly*)
 
 		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 			Mover[i].Enable();
@@ -105,6 +113,11 @@ CASE MainState OF
 		MainState		:= MS_ENABLING_MOVERS;
 	
     MS_ENABLING_MOVERS: // -------------------------------------------------- RESETTING AND ENABLING AXES
+		(*Wait here until all movers have Enabled. This means that the Axis has
+		fully energized, and also that all Collision Avoidance grouping and Mover 1 detection
+		has finished. If the state machine gets stuck in this state, check the Error output
+		of an individual Mover to see what the issue is. A common cause is forgetting to link
+		Mover NC Axes to the AXIS_REF inside the PLC*)
 
         allMoversEnabled := TRUE; // default ...
 
@@ -127,6 +140,7 @@ CASE MainState OF
         END_IF
 
     MS_INITIALIZING_OBJECTIVES: // --------------------------------------------- WRITING OBJECTIVE PARAMETERS
+		(*Initialize Station positions, Position Trigger positions, Zones etc. *)
 
         // Initialize station positions
         Station[0].TrackPosition := 5;
@@ -139,8 +153,6 @@ CASE MainState OF
         PositionTrigger[1].TrackPosition := 2000;
         PositionTrigger[2].TrackPosition := 3500;
         PositionTrigger[3].TrackPosition := 4000;
-
-        SpeedTrigger[0].ThresholdVelocity := 2000;
 
         Zone[0].StartPosition := 3750;
         Zone[0].EndPosition   := 750;
@@ -157,6 +169,9 @@ CASE MainState OF
         MainState := MS_ENABLED;
 
     MS_ENABLED: // ------------------------------------------------------------- MOVERS ENABLED, STOPPED
+		(*In this state, Movers should be energized and holding their position. They should wait
+		until a Start command is issued. This is also a good state to include basic Recovery steps.
+		Our example shows a simple use-case involving Zones for localized recovery*)
 
 		MainCommands.Stop	:= FALSE;
 	
@@ -178,18 +193,15 @@ CASE MainState OF
 				
 				PositionTrigger[0].RegisterMover( Mover[i] );
 				PositionTrigger[1].RegisterMover( Mover[i] );
-				
-				Mover[i].MoveVelocity( 500 );
+				PositionTrigger[2].RegisterMover( Mover[i] );
+				PositionTrigger[3].RegisterMover( Mover[i] );
             END_FOR
 			
-			(*
             Zone[0].CurrentMoverList.SetAllVelocity(800).MoveAllToStation(Station[0]);
             Zone[1].CurrentMoverList.SetAllVelocity(600).MoveAllToStation(Station[0]);
             Zone[2].CurrentMoverList.SetAllVelocity(400).MoveAllToStation(Station[0]);
             Zone[3].CurrentMoverList.SetAllVelocity(200).MoveAllToStation(Station[0]);
-			*)
-			
-			
+
 
             // ===== END =====
 
@@ -201,22 +213,71 @@ CASE MainState OF
         END_IF
 
     MS_RUN: // --------------------------------------------------------------- OPERATING
+		(*Mover routing logic should be written here to define the system's operating behavior.
+		Station implementations, Position Trigger logic, etc. In general, you can remove the example code
+		here down to the short line break that looks like this: // ============= *)
 	
-	
-	
-		IF PositionTrigger[0].MoverPassedPosition THEN
-			PositionTrigger[0].CurrentMover.MoveVelocity( 200 );
-			PositionTrigger[0].MuteCurrent();
-		END_IF
+        // Station 0 Logic
+        IF Station[0].MoverInPosition THEN
+            StationTimer[0](IN := TRUE, PT := T#1000MS);
+            IF StationTimer[0].Q THEN
+                Station[0].CurrentMover.SetVelocity(mediumVelocity);
+                Station[0].CurrentMover.MoveToStation(Station[1]);
+            END_IF
+        ELSE
+            StationTimer[0](IN := FALSE);
+        END_IF
 		
-		IF PositionTrigger[1].MoverPassedPosition THEN
-			PositionTrigger[1].CurrentMover.MoveVelocity( 500 );
-			PositionTrigger[1].MuteCurrent();
-		END_IF
+        // Station 1 Logic		
+        IF Station[1].MoverInPosition THEN
+            StationTimer[1](IN := TRUE, PT := T#250MS);
+            IF StationTimer[1].Q THEN
+                Station[1].CurrentMover.SetVelocity(mediumVelocity);
+                Station[1].CurrentMover.MoveToStation(Station[nextStation]);
+                nextStation := nextStation - 1;
+                IF nextStation = 1 THEN
+                    nextStation := 4;
+                END_IF
+            END_IF
+        ELSE
+            StationTimer[1](IN := FALSE);
+        END_IF
+		
+		// Group of Stations 2, 3, and 4 Logic
+        IF Station[2].MoverInPosition AND Station[3].MoverInPosition AND Station[4].MoverInPosition THEN
+            StationTimer[2](IN := TRUE, PT := T#750MS);
+            IF StationTimer[2].Q THEN
+				StationTimer[2](IN := FALSE);
+
+                Station[2].CurrentMover.MoveVelocity(500);
+                Station[3].CurrentMover.MoveVelocity(500);
+                Station[4].CurrentMover.MoveVelocity(500);
+            END_IF
+        END_IF
+		
+        // Position Trigger 0 Logic
+        IF PositionTrigger[0].MoverPassedPosition THEN
+            PositionTrigger[1].RegisterMover(PositionTrigger[0].CurrentMover);
+            PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
+            PositionTrigger[0].MuteCurrent();
+        END_IF
+		
+        // Position Trigger 1 Logic
+        IF PositionTrigger[1].MoverPassedPosition THEN
+            PositionTrigger[1].CurrentMover.SetVelocity(highVelocity);
+            PositionTrigger[1].MuteCurrent();
+        END_IF
+
+		// Position Trigger 2 Logic
+        IF PositionTrigger[2].MoverPassedPosition THEN
+            PositionTrigger[2].CurrentMover.SetVelocity(lowVelocity);
+            PositionTrigger[2].CurrentMover.MoveToStation(Station[0]);
+            PositionTrigger[2].MuteCurrent();
+        END_IF
+
 		
 		
-		
-		
+		// =============
 
         IF MainCommands.Stop THEN
             MainCommands.Start 	:= FALSE;
@@ -227,6 +288,7 @@ CASE MainState OF
         END_IF
 		
 	MS_ONESHOT_STOP:	// --------------------------------------------------- SINGLE-CYCLE ISSUE HALT COMMANDS
+		(*Issue a halt command, then change states right away to wait for Movers to carry out the instruction*)
 	
 		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 			Mover[i].Halt();
@@ -235,6 +297,7 @@ CASE MainState OF
 		MainState					:= MS_STOPPING;
 	
     MS_STOPPING: // ---------------------------------------------------------- STOPPING MOVERS
+		(*Movers are coming to a stop here in this state*)
 
 		// Stop all movers
 		allMoversHalted				:= TRUE;
@@ -253,6 +316,7 @@ CASE MainState OF
         
 
     MS_STOPPED: // ------------------------------------------------------------ Stop Command has been sent, hold here
+		(*Movers are now stopped, and further Main Commands can be issued to the system*)
 
         IF MainCommands.Disable THEN
             MainCommands.Enable 	:= FALSE;
@@ -287,7 +351,7 @@ CASE MainState OF
         END_FOR
 	
 	MS_ONESHOT_DISABLE:	// ------------------------------------------------------- SINGLE CYCLE ISSUE DISABLE COMMANDS
-	
+		(*Mover disable commands are issued here, followed by a state tranisition to await completion of the Disabling*)
 		FOR i := 0 TO GVL.NUM_MOVERS DO
 			Mover[i].Disable();
 		END_FOR
@@ -295,7 +359,9 @@ CASE MainState OF
 		MainState					:=	MS_DISABLING;
 	
     MS_DISABLING: // --------------------------------------------------- DISABLING MOVERS
-
+		(*Movers are Disabling. During this step, we also Unregister movers from relevant Objectives
+		to ensure proper startup behavior*)
+		
         // Reinit nextStation
         nextStation := 4;
 
@@ -332,8 +398,13 @@ CASE MainState OF
         END_IF
 
     MS_ERROR: // --------------------------------------------------- ERRORSTATE
+		(*A reset command can be included here to clear Mover errors, etc. and return
+		to a controlled state*)
 
     MS_DEBUG: // ------------------------------------------------------- DEV USE ONLY
+		(*This state is intentionally left blank, 
+		for optional use by a developer during programming*)
+	
 
 END_CASE;
 

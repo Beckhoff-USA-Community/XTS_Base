@@ -32,6 +32,23 @@ MoverListA.UnregisterAll();
 
 ## Methods
 
+### Contains
+
+*Contains( Mover: Mover )*
+
+> Returns TRUE if the MoverList already contains the input Mover
+
+```javascript
+IF MoverListA.Contains( Mover[4] ) THEN
+	// Yes, Mover 4 must exist in MoverListA
+END_IF
+```
+
+---
+<br>
+<br>
+<br>
+
 ### GetMoverByLocation
 
 *GetMoverByLocation( Index : USINT, Position : LREAL, Direction : Tc2_MC2.MC_Direction ) : REFERENCE TO Mover*

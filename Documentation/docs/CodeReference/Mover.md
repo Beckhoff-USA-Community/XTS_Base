@@ -158,7 +158,7 @@ END_IF
 
 *SyncToAxis( MasterAxis : AXIS_REFERENCE, MasterSyncPos : LREAL, SlaveSyncPos : LREAL, SyncStrategy : MC_SYNC_STRATEGY )*
 
-> Pairs the current mover with an external axis (real or virtual) with a specified Master & Slave Sync Positions. The current mover will synchronize according to the parameter SyncStrategy and a 1:1 gear ratio.
+> Pairs the current mover with an external axis (real or virtual) with specified Master & Slave Sync Positions. The current mover will synchronize according to the parameter SyncStrategy and a 1:1 gear ratio.
 The synchronization can be ended by executing a call on the slave for any other motion command, e.g. MoveToPosition.
 
 **MasterAxis** is a reference to the NC axis object that the mover should synchronize with, real or virtual.
