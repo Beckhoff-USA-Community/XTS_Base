@@ -40,9 +40,20 @@ VAR
     SpeedTrigger    	: ARRAY[0..1] OF SpeedTrigger;
     Zone            	: ARRAY[0..3] OF Zone;
 	
+	// ========= XTS Utility Diagnostics =========
+	
+	VisuDiag						: FB_VisuXtsDiag;
+	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
+	fbXtsEnvironmentVisu			: FB_XtsEnvironmentVisu;
+	stXtsEnvironmentConfiguration	: ST_XtsEnvironmentConfiguration;
+	nEnvironmentState				: INT;
+	
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[	
+
+
+
 (* ======================================================================================
 
 --- XTS Starter Project ---
@@ -62,6 +73,10 @@ For any other questions, please reach out to your local Application Engineer.
 - Beckhoff USA Advanced Applications Group
 
 ====================================================================================== *)
+
+
+
+
 
 CASE MainState OF
     MS_DISABLED: // --------------------------------------------------------- IDLE STATE
@@ -275,7 +290,10 @@ CASE MainState OF
             PositionTrigger[2].MuteCurrent();
         END_IF
 
-		
+		// Example call to XTS Utility library. See Diagnostics section of docs for more info
+		(*
+		myMoverMileage	:= fbXtsEnvironment.XpuTcIo(1).MoverTcIo(2).GetDistanceDriven();
+		*)
 		
 		// =============
 
@@ -408,6 +426,9 @@ CASE MainState OF
 
 END_CASE;
 
+// Initialize and update diagnostic features
+InitializeUtilityLibrary();
+
 // Call all mover function blocks cyclically
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
     Mover[i].Cyclic(GroupRef);
@@ -425,5 +446,60 @@ PositionTrigger[1].Cyclic();
 PositionTrigger[2].Cyclic();
 ]]></ST>
     </Implementation>
+    <Action Name="InitializeUtilityLibrary" Id="{4ac3b602-bbee-0af7-24db-b9d89bbd3ae5}">
+      <Implementation>
+        <ST><![CDATA[
+
+
+CASE nEnvironmentState OF
+	0:	// ----------------------------------------- Enable Init Items
+	
+		// Enable init Info Server if needed
+		stXtsEnvironmentConfiguration.bEnableInitInfoServer		:= TRUE;
+		
+		// Enable init CA Group if needed
+		stXtsEnvironmentConfiguration.bEnableInitCaGroupe		:= TRUE;
+		
+		// Set configuration of XtsUtility init
+		fbXtsEnvironment.P_XtsEnvironmentConfiguration			:= stXtsEnvironmentConfiguration;
+		
+		// Next step
+		nEnvironmentState	:= 1;
+		
+	1:	// ------------------------------------------ Init Environment
+		
+		// Start init
+		IF fbXtsEnvironment.Init(TRUE) THEN
+			// stop init
+			fbXtsEnvironment.Init(FALSE);
+			
+			// next step
+			nEnvironmentState	:= 2;
+		END_IF
+		
+	2:	// ------------------------------------------ Check for success
+	
+		// Check IsInitialized property
+		IF fbXtsEnvironment.P_IsInitialized THEN
+			// next step
+			nEnvironmentState	:= 3;
+		END_IF
+		
+	3:	// ------------------------------------------- Init Visu
+	
+		fbXtsEnvironmentVisu( ipTcIoXtsEnvironment := fbXtsEnvironment );
+		
+		// next step
+		nEnvironmentState	:= 4;
+		
+	4:	// ------------------------------------------- Init done
+
+		fbXtsEnvironmentVisu.Cycle();
+		
+END_CASE
+
+]]></ST>
+      </Implementation>
+    </Action>
   </POU>
 </TcPlcObject>
