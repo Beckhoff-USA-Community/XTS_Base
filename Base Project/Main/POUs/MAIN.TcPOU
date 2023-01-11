@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="MAIN" Id="{0790caa7-8a3f-4f91-b0f8-9ebb3db3858d}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -458,7 +458,7 @@ CASE nEnvironmentState OF
 		stXtsEnvironmentConfiguration.bEnableInitInfoServer		:= TRUE;
 		
 		// Enable init CA Group if needed
-		stXtsEnvironmentConfiguration.bEnableInitCaGroupe		:= TRUE;
+		stXtsEnvironmentConfiguration.bEnableInitCaGroup		:= TRUE;
 		
 		// Set configuration of XtsUtility init
 		fbXtsEnvironment.P_XtsEnvironmentConfiguration			:= stXtsEnvironmentConfiguration;
