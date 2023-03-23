@@ -44,68 +44,70 @@ VAR_INPUT
 END_VAR
 
 VAR
-    positionSort : ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover; // array copied from tracked movers, to be sorted by position
-    sortbuffer   : ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover; // temporary array, just to simplify sorting operation
-    currentLeast : POINTER TO Mover;
-    ringOffset   : dint;
+	SortBuffer		: ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover;	// initially empty array of movers, sorted in order by the position search
+	PopBuffer		: ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover; // temporary array, which simplifies the sorting operation at the minor cost of memory
+
+	currentLowDistance		: LREAL;
+	currentMover			: POINTER TO Mover;
+	directionalDistance		: LREAL;
     leastIDX     : DINT;
     i            : DINT;
     j            : DINT;
+
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// copy tracked movers into temporary array
-memcpy(ADR(sortbuffer), ADR(internalTrackedMovers), SIZEOF(internalTrackedMovers));
+memcpy(ADR(PopBuffer), ADR(internalTrackedMovers), SIZEOF(internalTrackedMovers));
 
-// sort temp array based on mover position (simple insertion sort)
-FOR i := 0 TO SIZEOF(positionSort) / SIZEOF(positionSort[0]) - 1 DO
 
-    leastIDX     := 0;
-    currentLeast := 0;
-
-    FOR j := 0 TO SIZEOF(sortBuffer) / SIZEOF(sortBuffer[0]) - 1 DO
-        IF currentLeast = 0 THEN
-            currentLeast := sortbuffer[j];
-            leastIDX     := j;
-        ELSIF sortbuffer[j] <> 0 AND_THEN sortbuffer[j]^.AxisReference.NcToPlc.ModuloActPos < currentLeast^.AxisReference.NcToPlc.ModuloActPos THEN
-            currentLeast := sortbuffer[j];
-            leastIDX     := j;
-        END_IF;
-    END_FOR
-
-    memcpy(ADR(positionSort[i]), ADR(currentLeast), SIZEOF(currentLeast));
-    memset(ADR(sortBuffer[leastIDX]), 0, SIZEOF(sortBuffer[0]));
-
-END_FOR;
-
-// determine offset where position exists
-ringOffset := 0;
-
-FOR i := 0 TO SIZEOF(positionSort) / SIZEOF(positionSort[0]) - 1 DO
-    IF positionSort[i] <> 0 AND_THEN positionSort[i]^.AxisReference.NcToPlc.ModuloActPos < Position THEN
-        IF Direction = MC_Positive_Direction THEN
-            ringOffset := i - Index;
-        ELSIF Direction = MC_Negative_Direction THEN
-            ringOffset := i + 1 + Index;
-        END_IF
-    END_IF
+// For every entry in the sorted buffer...
+FOR i := 0 TO SIZEOF( PopBuffer ) / SIZEOF( PopBuffer[0] ) - 1 DO
+	
+	leastIDX			:= 0;
+	currentMover		:= 0;	
+	currentLowDistance	:= 0;
+	
+	// ... find the mover with the least directional distance to the input Position, including rollover
+	FOR j := 0 TO SIZEOF( PopBuffer ) / SIZEOF( PopBuffer[0] ) - 1 DO
+		
+		IF Direction = MC_Positive_Direction THEN
+			// Calculate a directional distance from the input position to each mover, positive search
+			IF PopBuffer[j] <> 0 AND_THEN PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos <= Position THEN
+				directionalDistance 	:= Position - PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos;
+			ELSIF PopBuffer[j] <> 0 AND_THEN PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos > Position THEN
+				directionalDistance		:= Position + ( GVL.TRACK_LENGTH - PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos );
+			END_IF
+		
+		ELSIF Direction = MC_Negative_Direction THEN
+			// Calculate a directional distance from the input position to each mover, negative search
+			IF PopBuffer[j] <> 0 AND_THEN PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos <= Position THEN
+				directionalDistance		:= PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos + ( GVL.TRACK_LENGTH - Position );
+			ELSIF PopBuffer[j] <> 0 AND_THEN PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos > Position THEN
+				directionalDistance		:= PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos - Position;
+			END_IF			
+		END_IF
+	
+		// If the current mover is closer than the staged one, stage that instead
+		IF PopBuffer[j] <> 0 AND ( currentLowDistance = 0 OR directionalDistance < currentLowDistance ) THEN
+			currentMover			:= PopBuffer[j];
+			currentLowDistance		:= directionalDistance;
+			leastIDX				:= j;
+		END_IF
+	END_FOR
+	
+	// ForLoop concludes with the next mover in currentMover slot. add it to the sorted buffer
+	memcpy( ADR( SortBuffer[i] ), ADR( currentMover ), SIZEOF( currentMover ) );
+	memset( ADR( PopBuffer[leastIDX] ), 0, SIZEOF( PopBuffer[0] ) );
+	
 END_FOR
 
-IF ringOffset < 0 THEN
-    ringOffset := ringOffset + THIS^.TrackedMoverCount;
-ELSIF ringOffset >= THIS^.TrackedMoverCount THEN
-    ringOffset := ringOffset - THIS^.TrackedMoverCount;
+// Output the proper indexed mover from the sorted list
+IF Index < 0 OR Index >= THIS^.TrackedMoverCount THEN
+	GetMoverByLocation REF= 0;
+ELSE
+	GetMoverByLocation REF= SortBuffer[Index]^;
 END_IF
 
-// count off either direction to return the proper mover
-IF Index < 0 OR Index >= THIS^.TrackedMoverCount THEN
-    GetMoverByLocation REF= 0;
-ELSIF Direction = MC_Positive_Direction AND positionSort[ringOffset] <> 0 THEN
-    GetMoverByLocation REF= positionSort[ringOffset]^;
-ELSIF Direction = MC_Negative_Direction AND positionSort[ringOffset] <> 0 THEN
-    GetMoverByLocation REF= positionSort[ringOffset]^;
-ELSE
-    GetMoverByLocation REF= 0;
-END_IF
 
 // If the MoverList has no proper mover to return, then return an imposter ErrorMover, whose method calls all trigger an error message
 IF __ISVALIDREF(GetMoverByLocation) = FALSE THEN
