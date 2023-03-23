@@ -4,6 +4,26 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 
+	// ========= System Control / FSM Variables =========
+	
+	MainCommands 		: MainCommands_typ; 	// command struct for cycling thru the state machine
+	MainState    		: MainState_enum;   	// enumeration for the Main state machine
+
+	// ========= Linked NC Variables & References =========
+	
+	Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
+    GroupRef 			: AXES_GROUP_REF;                       	 // linked to the Collision Avoidance group and passed cyclically to every Mover object
+
+	// ========= Objectives & Parameters =========
+
+    MoverList    		: MoverList;
+    ParameterSet 		: MotionParameters_typ;
+
+    Station         	: ARRAY[0..GVL.NUM_STATIONS - 1] OF Station;
+    PositionTrigger 	: ARRAY[0..3] OF PositionTrigger;
+    SpeedTrigger    	: ARRAY[0..1] OF SpeedTrigger;
+    Zone            	: ARRAY[0..3] OF Zone;
+	
     // ========= Example Application Variables =========
 
     nextStation 		: USINT := 4;
@@ -13,32 +33,14 @@ VAR
     highVelocity   		: LREAL := 1200; 	// mm/s
 
     // ========= Helper, State, & Index Variables =========
-
+	
     i                	: UINT; 	// index variable; gets reused in various FOR loops
     n                	: UINT; 	// secondary index variable, for enabling movers
     allMoversEnabled 	: BOOL; 	// helper flag for verifying enable status of all movers
 	allMoversDisabled	: BOOL;		// helper flag for verifying disable status of all movers
 	allMoversHalted		: BOOL;		// helper flag for verifying halt status of all movers
 
-    StationTimer 		: ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells
-                 		
-    MainState    		: MainState_enum;   	// enumeration for the Main state machine
-    MainCommands 		: MainCommands_typ; 	// command struct for cycling thru the state machine
-
-    // ========= Linked NC Variables & References =========
-	
-    GroupRef 			: AXES_GROUP_REF;                       	 // linked to the Collision Avoidance group and passed cyclically to every Mover object
-    Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
-
-    // ========= Objectives & Parameters =========
-
-    MoverList    		: MoverList;
-    ParameterSet 		: MotionParameters_typ;
-
-    Station         	: ARRAY[0..GVL.NUM_STATIONS - 1] OF Station;
-    PositionTrigger 	: ARRAY[0..3] OF PositionTrigger;
-    SpeedTrigger    	: ARRAY[0..1] OF SpeedTrigger;
-    Zone            	: ARRAY[0..3] OF Zone;
+    StationTimer 		: ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells	
 	
 	// ========= XTS Utility Diagnostics =========
 	
