@@ -31,7 +31,12 @@ END_VAR]]></Declaration>
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[
+// If no real mover can be returned as Current, return an imposter instead to output error messages
+IF __ISVALIDREF( CurrentMover ) = FALSE THEN
+	ErrorMover.SourceInstancePath	:= THIS^.InstancePath;
+	CurrentMover					REF= ErrorMover;
+END_IF]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -196,37 +201,5 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="Objective">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.CurrentMover.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.RegisterMover">
-      <LineId Id="3" Count="29" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.RegisterMoverList">
-      <LineId Id="3" Count="12" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.TrackedMoverCount.Get">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.TrackedMovers.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterAll">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterCurrent">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterMover">
-      <LineId Id="3" Count="24" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
