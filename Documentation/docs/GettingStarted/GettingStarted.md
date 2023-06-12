@@ -7,8 +7,8 @@ For new projects, the latest versions of TwinCAT and XTS software should be util
 
 All XTS projects will require:
 
-- [TF5850](https://www.beckhoff.com/en-en/products/automation/twincat/tfxxxx-twincat-3-functions/tf5xxx-tc3-motion-control/tf5850.html)
-- [TF5410](https://www.beckhoff.com/en-en/products/automation/twincat/tfxxxx-twincat-3-functions/tf5xxx-tc3-motion-control/tf5410.html)
+- [TF5850](https://www.beckhoff.com/en-us/products/automation/twincat/tfxxxx-twincat-3-functions/tf5xxx-motion/tf5850.html)
+- [TF5410](https://www.beckhoff.com/en-us/products/automation/twincat/tfxxxx-twincat-3-functions/tf5xxx-motion/tf5410.html)
 
 ## Configuring XTS Hardware
 
