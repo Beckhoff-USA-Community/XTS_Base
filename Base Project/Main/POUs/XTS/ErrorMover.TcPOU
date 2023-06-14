@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="ErrorMover" Id="{bd3df610-8473-440e-a9dc-a09f811846e0}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'hide_all_locals'}
 FUNCTION_BLOCK ErrorMover EXTENDS Mover IMPLEMENTS iMover]]></Declaration>
@@ -47,6 +47,19 @@ END_VAR
           <ST><![CDATA[
 
 ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The CurrentObjective Get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="CurrentTrack" Id="{9bc4654e-1097-0e57-303b-26deb5d985c1}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentTrack : POINTER TO track]]></Declaration>
+      <Get Name="Get" Id="{00e132d6-ae6d-07ef-39af-0aace549cb59}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The CurrentTrack Get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -455,6 +468,10 @@ END_IF
     </LineIds>
     <LineIds Name="ErrorMover.CurrentObjective.Get">
       <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.CurrentTrack.Get">
+      <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="ErrorMover.Cyclic">

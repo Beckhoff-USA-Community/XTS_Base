@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <Itf Name="iTrack" Id="{41e6f11d-1951-01da-13f4-8ac69ce6b873}">
+    <Declaration><![CDATA[INTERFACE iTrack
+]]></Declaration>
+    <Folder Name="Methods" Id="{cc616af7-fa5e-0721-3c8e-d062b484e0c8}" />
+    <Folder Name="Properties" Id="{332f2434-e8e7-012d-221e-b1241870310e}" />
+    <Method Name="GetMoverList" Id="{f748bf2f-5001-02a1-16ad-0f0bee2d1f9c}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD GetMoverList : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Id" Id="{e69e0034-eced-090a-3e7c-cb98c2c8ba20}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Id : INT]]></Declaration>
+      <Get Name="Get" Id="{fda8bdc8-fe34-01b4-33d1-6cb2adf3c8b1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{eedf83fb-7109-04ab-2166-7221f61f50a7}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="OTCID" Id="{f6ce1703-ab1e-0aac-1a01-d494ff9596d6}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY OTCID : OTCID]]></Declaration>
+      <Get Name="Get" Id="{cabf5557-da38-0c45-31d8-9a1af06122f6}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{d259f521-eb96-028c-3abd-b12cfa876b7e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

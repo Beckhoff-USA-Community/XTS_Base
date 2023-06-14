@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 {attribute 'hide_all_locals'}
@@ -24,13 +24,15 @@ VAR_OUTPUT
 	IdentInGroup	: UDINT;		// IDX within group, for knowing which movers are adjacent
 	
 	AxisReference	: AXIS_REF;		// Motion link variable. Left as output so the link can be made directly, and accessed by external code
+	
+	TrackInfo		: TrackInfo;	// Track information as read from MC_ReadTrackPositions
 
 END_VAR
 VAR
 
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
-	{attribute 'hide'}
+	// TODO hide {attribute 'hide'}
 	InstancePath		: STRING;	// instance naming, for diagnostics purposes
 	
 	internalEnable		: BOOL;		// moves the axis from Disabled to Standstill, adds Axis to CA group, and triggers M1 Detection if configured
@@ -50,6 +52,12 @@ VAR
 	
 	// Configurable Payload description	
 	internalPayload			: USINT;	// E.g. 0: No Product, 1: Product Loaded, 2: Product Reject. Can be modified for application
+	
+	// Track management
+	internalTrack			: POINTER TO Track;	// Internal current track
+	internalTrackIsReady	: BOOL := TRUE;			// track is ready for commands (off when .ActivateTrack is working)
+	internalActivatingTrack : POINTER TO Track;	// while NOT .internalTrackIsReady the in-transition-to track is held here
+	internalActivateTrackFlag	: BOOL;				// activate track requested
 	
 	// Internal function blocks	
 	fbPower					: MC_Power;
@@ -72,6 +80,8 @@ VAR
 	
 	fbReadStatus			: MC_ReadStatus;
 	fbMoveRelCA				: ARRAY[0..1] OF MC_MoveRelativeCA;
+	
+	fbActivateTrack			: MC_ActivateTrack;
 	
 	fbReadM1DetectMode		: ADSREAD;
 	fbReadM1DetectValid		: ADSREAD;
@@ -111,6 +121,35 @@ END_VAR]]></Declaration>
     </Implementation>
     <Folder Name="Methods" Id="{d146b766-1176-40b7-a641-ffa579406c77}" />
     <Folder Name="Properties" Id="{9b9301bf-13c1-4ce0-91ab-e61950dfd74a}" />
+    <Method Name="ActivateTrack" Id="{2cd7eff7-09ea-0845-346b-196f53ea2e60}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ActivateTrack : BOOL
+VAR_INPUT
+	Track	: REFERENCE TO Track;
+END_VAR
+VAR
+	newCallTime			: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate			: FB_TcMessage;	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// active the track for this mover
+// THIS ROUTINE IS NOT CHAINABLE wait for .IsTrackReady before issuing additional motion commands
+
+// this routine only stores data and sets flags
+// actual work of activating the track is done in .CyclicTrack()
+internalActivatingTrack := ADR(Track);
+internalTrack := ADR(GVL.ERROR_TRACK);
+internalTrackIsReady := FALSE;
+internalActivateTrackFlag := TRUE;
+
+IF ( newCallTime - lastCallMoveSta ) > 1 THEN
+	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrack,0 );
+	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(internalActivatingTrack^.Id).AddString(THIS^.SourceInstancePath).AddString(Track.InstancePath);
+	MsgCreate.Send(0);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="CurrentDestinationPosition" Id="{6d470b15-bd31-4ad6-8559-906c2c8d720c}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY CurrentDestinationPosition : LREAL]]></Declaration>
@@ -148,6 +187,17 @@ END_VAR
         <Implementation>
           <ST><![CDATA[
 CurrentObjective		:= internalCurrentDestObjective;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="CurrentTrack" Id="{57746913-d241-0290-0366-208479410de1}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentTrack : POINTER TO Track]]></Declaration>
+      <Get Name="Get" Id="{845db4a8-12f5-01df-23b2-2ce5c8663c6a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentTrack := internalTrack;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -435,6 +485,8 @@ CASE internalState OF
 		ELSIF fbGroupStop.Done THEN
 			fbGroupStop.Execute			:= FALSE;
 		END_IF;
+		
+		CyclicTrack();
 
 		// And catch all internal function block errors
 		IF fbMoveAbsCA[0].Error THEN
@@ -481,6 +533,10 @@ CASE internalState OF
 			ErrorID					:= fbGearInPosAxisCA[1].ErrorId;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosAxisCA[1]');
 			internalState			:= MV_ERROR;			
+		ELSIF fbActivateTrack.Error THEN
+			ErrorID					:= fbActivateTrack.ErrorId;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbActivateTrack');
+			internalState			:= MV_ERROR;
 		END_IF
 		
 	MV_BEGIN_HALTING:	// --------------------------------------------------- begin stopping process
@@ -617,6 +673,100 @@ fbWriteM1Detect();
 
 
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CyclicTrack" Id="{f91ef8d2-f744-0809-3990-5a057546bb09}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD CyclicTrack : BOOL
+VAR
+	// state machine
+	iState 				: DINT;
+	
+	// timers
+	tonDoneDelay 		: TON;
+	
+	// funciton blocks
+	fbReadTrackPositions: MC_ReadTrackPositions;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// called by .Cyclic() to handle the MC_ActivateTrack call's required state machine
+// this is only called while the mover is in the RUN state within .Cyclic() by design
+// calling the track management functions on disabled, errored or movers that are not
+// assigned to a group just causes the track management functions to throw more errors
+
+CASE iState OF
+	// wait for command
+	0:
+		IF (internalActivateTrackFlag) THEN
+			// set flags
+			internalTrack := ADR(GVL.ERROR_TRACK);
+			internalTrackIsReady := FALSE;
+			internalActivateTrackFlag := FALSE;
+
+			// advance state
+			iState := 100;
+		END_IF
+		
+	// setup and call the function
+	100:
+		fbActivateTrack.TrackId := internalActivatingTrack^.OTCID;
+		fbActivateTrack.Execute := TRUE;
+	
+	// monitor response	
+	110:
+		IF (fbActivateTrack.Error) THEN
+			iState := 9000;
+		ELSIF (fbActivateTrack.Done) THEN
+			iState := 200;
+		END_IF;
+	
+	// required delay
+	200:
+		tonDoneDelay.IN := TRUE;
+		IF (tonDoneDelay.Q) THEN
+			tonDoneDelay.IN := FALSE;
+			iState := 300;
+		END_IF;
+	
+	// clean up flags
+	300:
+		internalTrack := internalActivatingTrack;
+		internalActivatingTrack := ADR(GVL.ERROR_TRACK);
+		internalTrackIsReady := TRUE;
+		iState := 0;
+		
+	9000:
+		// reset execute
+		fbActivateTrack.Execute := FALSE;
+		// GVL.ERROR_TRACK is intentionally left in place
+		// internalTrackIsReady is left at false
+		// TODO report error
+		iState := 0;
+END_CASE
+
+// read back track information
+IF (internalTrackIsReady) THEN
+	// track info should be stable, call the block
+	fbReadTrackPositions.Enable := TRUE;
+	// copy data when ready
+	IF (fbReadTrackPositions.Valid) THEN
+		TrackInfo.TrackPosition := fbReadTrackPositions.TrackPosition;
+		TrackInfo.PartPosition := fbReadTrackPositions.PartPosition;
+		TrackInfo.TrackId := fbReadTrackPositions.TrackId;
+		TrackInfo.PartId := fbReadTrackPositions.PartId;
+	END_IF
+ELSE
+	// don't call function block to allow it to reset
+	fbReadTrackPositions.Enable := FALSE;
+END_IF
+
+
+// call function blocks
+fbActivateTrack(Axis := AxisReference);
+fbReadTrackPositions(Axis := AxisReference);
+
+// a delay is required after MC_ActivateTrack returns .Done
+tonDoneDelay(PT := T#10MS);]]></ST>
       </Implementation>
     </Method>
     <Method Name="Disable" Id="{2aa14795-54cd-46b8-a131-b1a8801c005f}" FolderPath="Methods\">
@@ -804,6 +954,17 @@ IsSyncedToMover		:= fbGearInPosMoverCA[0].InSync OR fbGearInPosMoverCA[1].InSync
         </Implementation>
       </Get>
     </Property>
+    <Property Name="IsTrackReady" Id="{cd5c6866-73e3-00ad-2292-5fe936355763}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsTrackReady : BOOL]]></Declaration>
+      <Get Name="Get" Id="{1b14d83a-1ec1-0d2f-1616-ce7f9ce5cce5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsTrackReady := internalTrackIsReady;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="LogUserEvent" Id="{2ade5417-e15a-4da8-a731-8eb7341e5999}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD LogUserEvent : iMover
 VAR_INPUT
@@ -873,6 +1034,8 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
 		fbMoveAbsCA[0].Position		:= DestinationPosition;
 		
@@ -891,6 +1054,9 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+
 		
 		fbMoveAbsCA[1].Position		:= DestinationPosition;
 		
@@ -954,6 +1120,9 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+
 		
 		fbMoveAbsCA[0].Position		:= DestinationStation.Position;
 		
@@ -972,6 +1141,8 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
 		fbMoveAbsCA[1].Position		:= DestinationStation.Position;
 		
@@ -1357,6 +1528,10 @@ ELSE
 		
 		fbGearInPosAxisCA[0].SyncStrategy		:= SyncStrategy;
 		
+		fbGearInPosAxisCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		fbGearInPosAxisCA[0].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
+
+		
 		IF MotionParameters.Direction = mcDirectionPositive THEN
 			fbGearInPosAxisCA[0].SyncMode		:= mcSyncModePositive;
 		ELSIF MotionParameters.Direction = mcDirectionNegative THEN
@@ -1383,6 +1558,9 @@ ELSE
 		fbGearInPosAxisCA[1].SlaveSyncPosition	:= SlaveSyncPos;
 		
 		fbGearInPosAxisCA[1].SyncStrategy		:= SyncStrategy;
+		
+		fbGearInPosAxisCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		fbGearInPosAxisCA[1].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
 		
 		IF MotionParameters.Direction = mcDirectionPositive THEN
 			fbGearInPosAxisCA[1].SyncMode		:= mcSyncModePositive;
@@ -1531,5 +1709,200 @@ SyncToMover		:= THIS^;
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="Mover">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.ActivateTrack">
+      <LineId Id="5" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="7" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="17" Count="4" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentDestinationPosition.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentMoveType.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentObjective.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentTrack.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Cyclic">
+      <LineId Id="3" Count="276" />
+      <LineId Id="465" Count="1" />
+      <LineId Id="280" Count="45" />
+      <LineId Id="468" Count="2" />
+      <LineId Id="467" Count="0" />
+      <LineId Id="326" Count="134" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CyclicTrack">
+      <LineId Id="5" Count="0" />
+      <LineId Id="104" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="23" Count="2" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="48" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="56" Count="3" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="60" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="88" Count="1" />
+      <LineId Id="95" Count="3" />
+      <LineId Id="100" Count="2" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="92" Count="2" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Disable">
+      <LineId Id="3" Count="13" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Enable">
+      <LineId Id="3" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.GroupStop">
+      <LineId Id="3" Count="30" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Halt">
+      <LineId Id="3" Count="41" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsSyncedToAxis.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsSyncedToMover.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsTrackReady.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.LogUserEvent">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MasterMover.Get">
+      <LineId Id="3" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveToPosition">
+      <LineId Id="3" Count="16" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="20" Count="17" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="38" Count="30" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveToStation">
+      <LineId Id="3" Count="16" />
+      <LineId Id="84" Count="1" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="20" Count="17" />
+      <LineId Id="86" Count="1" />
+      <LineId Id="38" Count="35" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveVelocity">
+      <LineId Id="3" Count="72" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Payload.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Payload.Set">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.ReissueCommand">
+      <LineId Id="3" Count="18" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetAcceleration">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetDeceleration">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetDirection">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetJerk">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetVelocity">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SyncToAxis">
+      <LineId Id="3" Count="23" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="27" Count="26" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="54" Count="36" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SyncToMover">
+      <LineId Id="3" Count="88" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

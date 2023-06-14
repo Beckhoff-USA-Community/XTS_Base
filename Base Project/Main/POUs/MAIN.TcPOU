@@ -50,6 +50,9 @@ VAR
 	stXtsEnvironmentConfiguration	: ST_XtsEnvironmentConfiguration;
 	nEnvironmentState				: INT;
 	
+	// ======== Track management ========
+	Track		: ARRAY [0..GVL.NUM_TRACKS] OF Track;
+
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[	
@@ -182,6 +185,15 @@ CASE MainState OF
 
         Zone[3].StartPosition := 2750;
         Zone[3].EndPosition   := 3750;
+		
+		// give all tracks their ID number
+		FOR i := 0 TO GVL.NUM_TRACKS DO
+			Track[i].Id := UINT_TO_INT(i);
+		END_FOR
+		
+		// If a single logical track is used (typically aa closed loop) then tracks to not need to be initialized
+		Track[0].OTCID := 0;				// special "absolute reference" case for a single closed loop
+//		Track[1].OTCID:= 16#01010080;		// value copied from XtsProcessingUnit1 > Track x > Object > Object Id field
 
         MainState := MS_ENABLED;
 
@@ -503,5 +515,20 @@ END_CASE
 ]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="MAIN">
+      <LineId Id="3" Count="129" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="457" Count="3" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="453" Count="0" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="133" Count="263" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.InitializeUtilityLibrary">
+      <LineId Id="2" Count="49" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

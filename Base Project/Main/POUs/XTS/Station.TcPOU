@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Station" Id="{5b67f0b3-4286-49f2-9b21-1e637f521584}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective
 VAR
 
     {attribute 'hide'}
     Position : LREAL;
+	internalTrackId : DINT; 
 
 END_VAR]]></Declaration>
     <Implementation>
@@ -33,14 +34,15 @@ FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) -
     // e.g. On a 4m track, if the Station is at 0.34mm and the Mover is at 3999.8mm, then this is considered 'in position'	
 
     IF internalTrackedMovers[i] <> 0 THEN
-
-        // difference	:= ABS( MODABS( TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH ) - THIS^.TrackPosition );
-        difference := ABS(internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos - TrackPosition);
-
-        IF MIN(difference, GVL.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
-            CurrentMover                    REF= internalTrackedMovers[i]^;
-            CurrentMover.SourceInstancePath := THIS^.InstancePath;
-        END_IF
+		IF (internalTrackedMovers[i]^.CurrentTrack^.Id = internalTrackId) THEN
+			// difference	:= ABS( MODABS( TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH ) - THIS^.TrackPosition );
+			difference := ABS(internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos - TrackPosition);
+	
+			IF MIN(difference, GVL.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
+				CurrentMover                    REF= internalTrackedMovers[i]^;
+				CurrentMover.SourceInstancePath := THIS^.InstancePath;
+			END_IF
+		END_IF
     END_IF
 
 END_FOR
@@ -105,6 +107,25 @@ END_FOR]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Property Name="TrackId" Id="{14a41bad-1d09-07ae-078b-0a0128d8288a}">
+      <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
+      <Get Name="Get" Id="{77f9f1dd-eadb-000e-2c9f-0345f3cc552b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TrackId := internalTrackId;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{74ab2d01-c326-0260-17cc-59b298fe9ee9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[internalTrackId := TrackId;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="TrackPosition" Id="{a036a85b-a6ff-4e53-924d-8183c40c2111}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY TrackPosition : LREAL]]></Declaration>
@@ -123,5 +144,34 @@ END_VAR]]></Declaration>
         </Implementation>
       </Set>
     </Property>
+    <LineIds Name="Station">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.CurrentMover.Get">
+      <LineId Id="3" Count="16" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="20" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.Cyclic">
+      <LineId Id="3" Count="9" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.MoverInPosition.Get">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.TrackId.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.TrackId.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.TrackPosition.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.TrackPosition.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
