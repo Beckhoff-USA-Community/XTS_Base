@@ -37,6 +37,9 @@
     <Compile Include="DUTs\TrackInfo.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\TrackState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>

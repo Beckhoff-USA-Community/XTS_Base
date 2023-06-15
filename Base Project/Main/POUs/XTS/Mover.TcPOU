@@ -45,6 +45,8 @@ VAR
 	internalCurrentDestStation		: REFERENCE TO Station;		// Reference to a destination station, if that is the current movetype
 
 	internalState			: MoverState_enum;		// Internal state variable
+	internalTrackState		: TrackState;			// Internal state variable for track
+	internalTrackStateDelay : TON;					// Internal timer for activate track delay
 	
 	internalMasterMover				: REFERENCE TO Mover;	// Internal reference to a target master mover
 	internalMasterAxis				: REFERENCE TO AXIS_REF;	// Internal reference to a target master external axis
@@ -82,6 +84,7 @@ VAR
 	fbMoveRelCA				: ARRAY[0..1] OF MC_MoveRelativeCA;
 	
 	fbActivateTrack			: MC_ActivateTrack;
+	fbReadTrackPositions	: MC_ReadTrackPositions;
 	
 	fbReadM1DetectMode		: ADSREAD;
 	fbReadM1DetectValid		: ADSREAD;
@@ -490,7 +493,7 @@ CASE internalState OF
 			fbGroupStop.Execute			:= FALSE;
 		END_IF;
 		
-		CyclicTrack();
+		THIS^.CyclicTrack();
 
 		// And catch all internal function block errors
 		IF fbMoveAbsCA[0].Error THEN
@@ -682,14 +685,6 @@ fbWriteM1Detect();
     <Method Name="CyclicTrack" Id="{f91ef8d2-f744-0809-3990-5a057546bb09}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD CyclicTrack : BOOL
 VAR
-	// state machine
-	iState 				: DINT;
-	
-	// timers
-	tonDoneDelay 		: TON;
-	
-	// funciton blocks
-	fbReadTrackPositions: MC_ReadTrackPositions;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -698,9 +693,9 @@ END_VAR
 // calling the track management functions on disabled, errored or movers that are not
 // assigned to a group just causes the track management functions to throw more errors
 
-CASE iState OF
+CASE internalTrackState OF
 	// wait for command
-	0:
+	TrackState.WAIT_FOR_COMMAND:
 		IF (internalActivateTrackFlag) THEN
 			// unregister mover from current track (logical tracking)
 			internalTrack^.UnregisterMover(THIS^);
@@ -711,47 +706,51 @@ CASE iState OF
 			internalActivateTrackFlag := FALSE;
 
 			// advance state
-			iState := 100;
+			internalTrackState := TrackState.SETUP_FUNCTION;
 		END_IF
 		
 	// setup and call the function
-	100:
+	TrackState.SETUP_FUNCTION:
 		fbActivateTrack.TrackId := internalActivatingTrack^.OTCID;
 		fbActivateTrack.Execute := TRUE;
+		IF (fbActivateTrack.Busy) THEN
+			fbActivateTrack.Execute := FALSE;
+			internalTrackState := TrackState.MONITOR_RESPONSE;
+		END_IF
 	
 	// monitor response	
-	110:
+	TrackState.MONITOR_RESPONSE:
 		IF (fbActivateTrack.Error) THEN
-			iState := 9000;
+			internalTrackState := TrackState.ERROR;
 		ELSIF (fbActivateTrack.Done) THEN
-			iState := 200;
+			internalTrackState := TrackState.REQUIRED_DELAY;
 		END_IF;
 	
 	// required delay
-	200:
-		tonDoneDelay.IN := TRUE;
-		IF (tonDoneDelay.Q) THEN
-			tonDoneDelay.IN := FALSE;
-			iState := 300;
+	TrackState.REQUIRED_DELAY:
+		internalTrackStateDelay.IN := TRUE;
+		IF (internalTrackStateDelay.Q) THEN
+			internalTrackStateDelay.IN := FALSE;
+			internalTrackState := TrackState.CLEAN_UP;
 		END_IF;
 	
 	// clean up flags
-	300:
+	TrackState.CLEAN_UP:
 		internalTrack := internalActivatingTrack;
 		internalActivatingTrack := ADR(GVL.ERROR_TRACK);
 		internalTrackIsReady := TRUE;
-		iState := 0;
+		internalTrackState := 0;
 		
 		// register mover
 		internalTrack^.RegisterMover(THIS^);
 		
-	9000:
+	TrackState.ERROR:
 		// reset execute
 		fbActivateTrack.Execute := FALSE;
 		// GVL.ERROR_TRACK is intentionally left in place
 		// internalTrackIsReady is left at false
 		// TODO report error
-		iState := 0;
+		internalTrackState := 0;
 END_CASE
 
 // read back track information
@@ -776,7 +775,7 @@ fbActivateTrack(Axis := AxisReference);
 fbReadTrackPositions(Axis := AxisReference);
 
 // a delay is required after MC_ActivateTrack returns .Done
-tonDoneDelay(PT := T#10MS);]]></ST>
+internalTrackStateDelay(PT := T#10MS);]]></ST>
       </Implementation>
     </Method>
     <Method Name="Disable" Id="{2aa14795-54cd-46b8-a131-b1a8801c005f}" FolderPath="Methods\">
@@ -1777,8 +1776,12 @@ SyncToMover		:= THIS^;
       <LineId Id="27" Count="0" />
       <LineId Id="26" Count="0" />
       <LineId Id="36" Count="0" />
-      <LineId Id="43" Count="1" />
-      <LineId Id="47" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="114" Count="1" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="118" Count="0" />
       <LineId Id="45" Count="1" />
       <LineId Id="48" Count="1" />
       <LineId Id="52" Count="0" />

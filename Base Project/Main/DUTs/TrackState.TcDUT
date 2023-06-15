@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="TrackState" Id="{b8cf507c-0268-0834-24f4-900859769bcf}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE TrackState :
+(
+	WAIT_FOR_COMMAND	:= 0,
+	SETUP_FUNCTION		:= 100,
+	MONITOR_RESPONSE	:= 110,
+	REQUIRED_DELAY		:= 200,
+	CLEAN_UP			:= 300,
+	ERROR				:= 9000
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
