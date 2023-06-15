@@ -165,27 +165,40 @@ CASE MainState OF
 
         // Initialize station positions
         Station[0].TrackPosition := 5;
+		Station[0].TrackId 		 := 1;
         Station[1].TrackPosition := 750;
+		Station[1].TrackId 		 := 1;
         Station[2].TrackPosition := 1200;
+		Station[2].TrackId 		 := 1;
         Station[3].TrackPosition := 1300;
+		Station[3].TrackId 		 := 1;
         Station[4].TrackPosition := 1400;
+		Station[4].TrackId := 1;
 
         PositionTrigger[0].TrackPosition := 1500;
+		PositionTrigger[0].TrackId 		 := 1;
         PositionTrigger[1].TrackPosition := 2000;
+		PositionTrigger[1].TrackId 		 := 1;
         PositionTrigger[2].TrackPosition := 3500;
+		PositionTrigger[2].TrackId 		 := 1;
         PositionTrigger[3].TrackPosition := 4000;
+		PositionTrigger[3].TrackId 		 := 1;
 
         Zone[0].StartPosition := 3750;
         Zone[0].EndPosition   := 750;
+		Zone[0].TrackId		  := 1;
 
         Zone[1].StartPosition := 750;
         Zone[1].EndPosition   := 1750;
+		Zone[1].TrackId		  := 1;
 
         Zone[2].StartPosition := 1750;
         Zone[2].EndPosition   := 2750;
+		Zone[2].TrackId		  := 1;
 
         Zone[3].StartPosition := 2750;
         Zone[3].EndPosition   := 3750;
+		Zone[3].TrackId		  := 1;
 		
 		// give all tracks their ID number
 		FOR i := 0 TO GVL.NUM_TRACKS DO
@@ -194,14 +207,14 @@ CASE MainState OF
 		
 		// If a single logical track is used (typically aa closed loop) then tracks to not need to be initialized
 		Track[0].OTCID := 0;				// special "absolute reference" case for a single closed loop
-//		Track[1].OTCID:= 16#01010080;		// value copied from XtsProcessingUnit1 > Track x > Object > Object Id field
+		Track[1].OTCID:= 16#010100A0;		// value copied from XtsProcessingUnit1 > Track x > Object > Object Id field
 
 		MainState := MS_ACTIVATE_TRACKS;
 		
 	MS_ACTIVATE_TRACKS:
 		// activate all movers on track[0]
 		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-            Mover[i].ActivateTrack(Track[0]);
+            Mover[i].ActivateTrack(Track[1]);
         END_FOR
 		
 		MainState := MS_WAIT_FOR_TRACKS;
@@ -538,7 +551,32 @@ END_CASE
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="3" Count="129" />
+      <LineId Id="3" Count="108" />
+      <LineId Id="593" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="595" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="597" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="596" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="598" Count="0" />
+      <LineId Id="116" Count="1" />
+      <LineId Id="599" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="600" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="601" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="602" Count="0" />
+      <LineId Id="121" Count="2" />
+      <LineId Id="603" Count="0" />
+      <LineId Id="124" Count="2" />
+      <LineId Id="604" Count="0" />
+      <LineId Id="127" Count="2" />
+      <LineId Id="605" Count="0" />
+      <LineId Id="130" Count="2" />
+      <LineId Id="606" Count="0" />
       <LineId Id="449" Count="0" />
       <LineId Id="457" Count="3" />
       <LineId Id="456" Count="0" />
