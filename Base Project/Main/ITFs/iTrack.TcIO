@@ -5,12 +5,18 @@
 ]]></Declaration>
     <Folder Name="Methods" Id="{cc616af7-fa5e-0721-3c8e-d062b484e0c8}" />
     <Folder Name="Properties" Id="{332f2434-e8e7-012d-221e-b1241870310e}" />
-    <Method Name="GetMoverList" Id="{f748bf2f-5001-02a1-16ad-0f0bee2d1f9c}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD GetMoverList : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
+    <Property Name="CurrentMoverCount" Id="{7706471b-0127-0e08-2769-e211435d9cd2}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentMoverCount : DINT]]></Declaration>
+      <Get Name="Get" Id="{f904841d-fff0-0874-075a-461b289a34a3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="CurrentMoverList" Id="{53b54c82-4385-0644-3c7a-fe140dee0acc}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentMoverList : iMoverList]]></Declaration>
+      <Get Name="Get" Id="{f55b5545-5b8d-060b-31cd-65f766a1eda0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="Id" Id="{e69e0034-eced-090a-3e7c-cb98c2c8ba20}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Id : INT]]></Declaration>
       <Get Name="Get" Id="{fda8bdc8-fe34-01b4-33d1-6cb2adf3c8b1}">
