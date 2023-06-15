@@ -37,6 +37,7 @@ VAR
     i                	: UINT; 	// index variable; gets reused in various FOR loops
     n                	: UINT; 	// secondary index variable, for enabling movers
     allMoversEnabled 	: BOOL; 	// helper flag for verifying enable status of all movers
+	allMoverTracksEnabled : BOOL;	// helper flag for verifying track active status of all movers
 	allMoversDisabled	: BOOL;		// helper flag for verifying disable status of all movers
 	allMoversHalted		: BOOL;		// helper flag for verifying halt status of all movers
 
@@ -195,7 +196,28 @@ CASE MainState OF
 		Track[0].OTCID := 0;				// special "absolute reference" case for a single closed loop
 //		Track[1].OTCID:= 16#01010080;		// value copied from XtsProcessingUnit1 > Track x > Object > Object Id field
 
-        MainState := MS_ENABLED;
+		MainState := MS_ACTIVATE_TRACKS;
+		
+	MS_ACTIVATE_TRACKS:
+		// activate all movers on track[0]
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+            Mover[i].ActivateTrack(Track[0]);
+        END_FOR
+		
+		MainState := MS_WAIT_FOR_TRACKS;
+	
+	MS_WAIT_FOR_TRACKS:
+		// wait for all movers to activate their tracks
+		
+		allMoverTracksEnabled := TRUE;
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+			IF (NOT Mover[i].IsTrackReady) THEN
+            	allMoverTracksEnabled := FALSE;
+			END_IF;
+        END_FOR
+		IF (allMoverTracksEnabled) THEN
+			MainState := MS_ENABLED;	
+		END_IF
 
     MS_ENABLED: // ------------------------------------------------------------- MOVERS ENABLED, STOPPED
 		(*In this state, Movers should be energized and holding their position. They should wait
@@ -523,7 +545,20 @@ END_CASE
       <LineId Id="450" Count="0" />
       <LineId Id="453" Count="0" />
       <LineId Id="452" Count="0" />
-      <LineId Id="133" Count="263" />
+      <LineId Id="513" Count="3" />
+      <LineId Id="518" Count="0" />
+      <LineId Id="520" Count="1" />
+      <LineId Id="519" Count="0" />
+      <LineId Id="524" Count="4" />
+      <LineId Id="539" Count="0" />
+      <LineId Id="533" Count="0" />
+      <LineId Id="531" Count="0" />
+      <LineId Id="534" Count="0" />
+      <LineId Id="532" Count="0" />
+      <LineId Id="535" Count="0" />
+      <LineId Id="529" Count="0" />
+      <LineId Id="536" Count="2" />
+      <LineId Id="135" Count="261" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="MAIN.InitializeUtilityLibrary">

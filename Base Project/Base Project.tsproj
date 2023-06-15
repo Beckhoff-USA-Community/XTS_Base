@@ -4433,21 +4433,22 @@ and will return to Group State Standby when the situation permits.
 	</ImageDatas>
 	<Project ProjectGUID="{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
-			<Settings MaxCpus="4" NonWinCpus="2">
+			<Settings MaxCpus="4">
 				<Cpu CpuId="2" BaseTime="2500"/>
-				<Cpu CpuId="3" BaseTime="2500"/>
-				<IoIdleTask Priority="10" Affinity="#x00000008"/>
+				<Cpu CpuId="3"/>
+				<IoIdleTask Priority="10"/>
 			</Settings>
 			<Licenses>
 				<Target>
+					<ManualSelect>{57BD9670-089D-434A-85CF-90A857EE0EFF}</ManualSelect>
 					<ManualSelect>{E8CE55B5-3125-49FB-B21B-4CB7A751D68B}</ManualSelect>
 				</Target>
 			</Licenses>
 			<Tasks>
-				<Task Id="3" Priority="6" CycleTime="10000" AmsPort="350" Affinity="#x00000008" AdtTasks="true">
+				<Task Id="3" Priority="6" CycleTime="10000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
-				<Task Id="7" Priority="32" Affinity="#x00000008" AdtTasks="true" JobTask="true">
+				<Task Id="7" Priority="32" AdtTasks="true" JobTask="true">
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
@@ -33628,7 +33629,7 @@ and will return to Group State Standby when the situation permits.
 		</System>
 		<Motion>
 			<NC>
-				<SafTask Priority="8" CycleTime="20000" AmsPort="501" Affinity="#x00000008" IoAtBegin="true" SafTaskInfo="256">
+				<SafTask Priority="8" CycleTime="20000" AmsPort="501" IoAtBegin="true" SafTaskInfo="256">
 					<Name>NC SAF</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -33640,7 +33641,7 @@ and will return to Group State Standby when the situation permits.
 						<Name>Image</Name>
 					</Image>
 				</SafTask>
-				<SvbTask Priority="12" CycleTime="100000" AmsPort="511" Affinity="#x00000008">
+				<SvbTask Priority="12" CycleTime="100000" AmsPort="511">
 					<Name>NC SVB</Name>
 				</SvbTask>
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
@@ -54293,7 +54294,6 @@ and will return to Group State Standby when the situation permits.
 		</Motion>
 		<Plc>
 			<Project File="Main.xti"/>
-			<PlcAuxTask Affinity="#x00000008"/>
 		</Plc>
 		<Io>
 			<Device File="Device 1.xti" Id="1"/>
