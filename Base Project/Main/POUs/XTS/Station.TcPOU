@@ -5,7 +5,7 @@
 VAR
 
     {attribute 'hide'}
-    Position : LREAL;
+    internalPosition : LREAL;
 	internalTrackId : DINT; 
 
 END_VAR]]></Declaration>
@@ -120,6 +120,24 @@ END_FOR]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Property Name="Position" Id="{a036a85b-a6ff-4e53-924d-8183c40c2111}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Position : LREAL]]></Declaration>
+      <Get Name="Get" Id="{9b1fb402-d994-4b37-826c-4ff94e3f9cbc}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Position := internalPosition;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{6983000b-95aa-45e5-9d08-48de77decd80}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[internalPosition := Position;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="TrackId" Id="{14a41bad-1d09-07ae-078b-0a0128d8288a}">
       <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
       <Get Name="Get" Id="{77f9f1dd-eadb-000e-2c9f-0345f3cc552b}">
@@ -136,24 +154,6 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[internalTrackId := TrackId;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
-    <Property Name="TrackPosition" Id="{a036a85b-a6ff-4e53-924d-8183c40c2111}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY TrackPosition : LREAL]]></Declaration>
-      <Get Name="Get" Id="{9b1fb402-d994-4b37-826c-4ff94e3f9cbc}">
-        <Declaration><![CDATA[VAR
-END_VAR]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[TrackPosition := Position;]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{6983000b-95aa-45e5-9d08-48de77decd80}">
-        <Declaration><![CDATA[VAR
-END_VAR]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[Position := TrackPosition;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -185,16 +185,16 @@ END_VAR]]></Declaration>
       <LineId Id="18" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="Station.Position.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.Position.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
     <LineIds Name="Station.TrackId.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Station.TrackId.Set">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.TrackPosition.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.TrackPosition.Set">
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

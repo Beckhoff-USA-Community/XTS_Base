@@ -164,15 +164,15 @@ CASE MainState OF
 		(*Initialize Station positions, Position Trigger positions, Zones etc. *)
 
         // Initialize station positions
-        Station[0].TrackPosition := 5;
+        Station[0].Position := 5;
 		Station[0].TrackId 		 := 1;
-        Station[1].TrackPosition := 750;
+        Station[1].Position := 750;
 		Station[1].TrackId 		 := 1;
-        Station[2].TrackPosition := 1200;
+        Station[2].Position := 1200;
 		Station[2].TrackId 		 := 1;
-        Station[3].TrackPosition := 1300;
+        Station[3].Position := 1300;
 		Station[3].TrackId 		 := 1;
-        Station[4].TrackPosition := 1400;
+        Station[4].Position := 1400;
 		Station[4].TrackId := 1;
 
         PositionTrigger[0].TrackPosition := 1500;

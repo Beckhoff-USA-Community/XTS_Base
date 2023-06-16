@@ -1117,8 +1117,7 @@ VAR_INST
 	MsgCreate			: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-IF NOT( Ready ) AND NOT(__ISVALIDREF( DestinationStation )) THEN	// if the mover is not ready & able to accept a moveabs command...
+        <ST><![CDATA[IF NOT( Ready ) AND NOT(__ISVALIDREF( DestinationStation )) THEN	// if the mover is not ready & able to accept a moveabs command...
 	
 	internalState	:= MV_ERROR;
 	ErrorID			:= 19201;
@@ -1137,7 +1136,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
-		fbMoveAbsCA[0].Position		:= DestinationStation.Position;
+		fbMoveAbsCA[0].Position		:= DestinationStation.internalPosition;
 		
 		fbMoveAbsCA[0].BufferMode	:= mcAborting;
 		fbMoveAbsCA[0].Execute		:= TRUE;
@@ -1157,7 +1156,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
-		fbMoveAbsCA[1].Position		:= DestinationStation.Position;
+		fbMoveAbsCA[1].Position		:= DestinationStation.internalPosition;
 		
 		fbMoveAbsCA[1].BufferMode	:= mcAborting;
 		fbMoveAbsCA[1].Execute		:= TRUE;
@@ -1170,7 +1169,7 @@ ELSE	// otherwise let 'er rip
 	END_IF
 	
 	// Set the current destination object to the instance path of the objective, or 0 if unassigned
-	internalCurrentDestPosition		:= DestinationStation.TrackPosition;
+	internalCurrentDestPosition		:= DestinationStation.Position;
 	internalCurrentDestObjective	:= SEL( __ISVALIDREF( DestinationStation ), '', DestinationStation.InstancePath );
 	internalCurrentDestStation		REF= DestinationStation;
 	internalCurrentMoveType			:= MOVETYPE_STATION;
@@ -1869,11 +1868,7 @@ SyncToMover		:= THIS^;
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToStation">
-      <LineId Id="3" Count="16" />
-      <LineId Id="84" Count="1" />
-      <LineId Id="20" Count="17" />
-      <LineId Id="86" Count="1" />
-      <LineId Id="38" Count="35" />
+      <LineId Id="97" Count="73" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveVelocity">
