@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-{attribute 'hide_all_locals'}
+// TODO hide {attribute 'hide_all_locals'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
 
 VAR_INPUT
@@ -686,7 +686,9 @@ fbWriteM1Detect();
       <Declaration><![CDATA[METHOD CyclicTrack : BOOL
 VAR
 END_VAR
-]]></Declaration>
+VAR_INST
+	MsgCreate			: FB_TcMessage;	
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// called by .Cyclic() to handle the MC_ActivateTrack call's required state machine
 // this is only called while the mover is in the RUN state within .Cyclic() by design
@@ -736,6 +738,9 @@ CASE internalTrackState OF
 	
 	// clean up flags
 	TrackState.CLEAN_UP:
+		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrackComplete, 0);
+		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(internalActivatingTrack^.Id).AddString(THIS^.SourceInstancePath);
+		MsgCreate.Send(0);
 		internalTrack := internalActivatingTrack;
 		internalActivatingTrack := ADR(GVL.ERROR_TRACK);
 		internalTrackIsReady := TRUE;
@@ -1131,7 +1136,6 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
 		fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
-
 		
 		fbMoveAbsCA[0].Position		:= DestinationStation.Position;
 		
@@ -1794,6 +1798,8 @@ SyncToMover		:= THIS^;
       <LineId Id="67" Count="0" />
       <LineId Id="70" Count="0" />
       <LineId Id="28" Count="0" />
+      <LineId Id="123" Count="1" />
+      <LineId Id="122" Count="0" />
       <LineId Id="69" Count="0" />
       <LineId Id="73" Count="0" />
       <LineId Id="71" Count="0" />
@@ -1865,7 +1871,6 @@ SyncToMover		:= THIS^;
     <LineIds Name="Mover.MoveToStation">
       <LineId Id="3" Count="16" />
       <LineId Id="84" Count="1" />
-      <LineId Id="83" Count="0" />
       <LineId Id="20" Count="17" />
       <LineId Id="86" Count="1" />
       <LineId Id="38" Count="35" />

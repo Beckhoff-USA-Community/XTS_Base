@@ -35,10 +35,14 @@ FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) -
 
     IF internalTrackedMovers[i] <> 0 THEN
 		IF (internalTrackedMovers[i]^.CurrentTrack^.Id = internalTrackId) THEN
-			// difference	:= ABS( MODABS( TrackedMovers[i]^.AxisReference.NcToPlc.ActPos,GVL.TRACK_LENGTH ) - THIS^.TrackPosition );
-			difference := ABS(internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos - TrackPosition);
+
+			difference := Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition;
+			// un-wrap if necessary
+			IF (difference < 0) THEN 
+				difference := difference + GVL.TRACK_LENGTH;
+			END_IF
 	
-			IF MIN(difference, GVL.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
+			IF (difference < 1.0) AND NOT internalTrackedMovers[i]^.Busy THEN
 				CurrentMover                    REF= internalTrackedMovers[i]^;
 				CurrentMover.SourceInstancePath := THIS^.InstancePath;
 			END_IF
@@ -96,11 +100,17 @@ FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) -
 
     // todo: make in-position tolerance adjustable. add condition that mover is stopped?
     IF internalTrackedMovers[i] <> 0 THEN
-        difference := ABS(MODABS(internalTrackedMovers[i]^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH) - THIS^.TrackPosition);
+		IF (internalTrackedMovers[i]^.CurrentTrack^.Id = internalTrackId) THEN
+			difference := Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition;
+			// un-wrap if necessary
+			IF (difference < 0) THEN 
+				difference := difference + GVL.TRACK_LENGTH;
+			END_IF
 
-        IF (MIN(difference, GVL.TRACK_LENGTH - difference) < 1.0) AND NOT internalTrackedMovers[i]^.Busy THEN
-            MoverInPosition := TRUE;
-        END_IF
+			IF (difference < 1.0) AND NOT internalTrackedMovers[i]^.Busy THEN
+				MoverInPosition := TRUE;
+			END_IF
+		END_IF;
     END_IF;
 
 END_FOR]]></ST>
@@ -148,7 +158,9 @@ END_VAR]]></Declaration>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Station.CurrentMover.Get">
-      <LineId Id="3" Count="16" />
+      <LineId Id="3" Count="9" />
+      <LineId Id="39" Count="6" />
+      <LineId Id="16" Count="3" />
       <LineId Id="33" Count="0" />
       <LineId Id="20" Count="7" />
       <LineId Id="2" Count="0" />
@@ -158,7 +170,13 @@ END_VAR]]></Declaration>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Station.MoverInPosition.Get">
-      <LineId Id="3" Count="16" />
+      <LineId Id="3" Count="9" />
+      <LineId Id="27" Count="4" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="18" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Station.TrackId.Get">

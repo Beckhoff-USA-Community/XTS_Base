@@ -4311,7 +4311,7 @@ and will return to Group State Standby when the situation permits.
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{C1F56B6B-2FA5-4868-B3DD-F95A36FCCFBF}" PersistentType="true">XtsBaseEventClass</Name>
+			<Name GUID="{A46942AB-8119-469F-8FB9-31307702CB5F}" PersistentType="true">XtsBaseEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
 			<EventId>
 				<Name Id="1">UserEvent</Name>
@@ -4393,6 +4393,11 @@ and will return to Group State Standby when the situation permits.
 				<DisplayName TxtId=""><![CDATA[{0} ActivateTrack command issued. TrackId: {1} Source: {2}]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
+			<EventId>
+				<Name Id="17">MoverActivateTrackComplete</Name>
+				<DisplayName TxtId=""><![CDATA[{0} ActivateTrack command complete. TrackId: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
 			<Hides>
 				<Hide GUID="{05156EAA-0F28-483B-B3ED-0A061BA2DDE9}"/>
 				<Hide GUID="{18E0FAE1-EDAC-4CEB-9B5F-AEA0EA7CB0BB}"/>
@@ -4418,6 +4423,8 @@ and will return to Group State Standby when the situation permits.
 				<Hide GUID="{04AF0647-E539-4190-8BCA-97E33F2AD038}"/>
 				<Hide GUID="{39AA31FB-FB59-426D-B910-B0818D31633E}"/>
 				<Hide GUID="{2B435041-8BE5-4A36-B2B9-02DDB0A46756}"/>
+				<Hide GUID="{C1F56B6B-2FA5-4868-B3DD-F95A36FCCFBF}"/>
+				<Hide GUID="{42F400CB-95A8-4C06-BFF7-C26D2D0E2F33}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
@@ -4434,7 +4441,7 @@ and will return to Group State Standby when the situation permits.
 	</ImageDatas>
 	<Project ProjectGUID="{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
-			<Settings MaxCpus="4">
+			<Settings MaxCpus="4" RouterMemory="1073741824" MaxStackSize="256">
 				<Cpu CpuId="2" BaseTime="2500"/>
 				<Cpu CpuId="3"/>
 				<IoIdleTask Priority="10" Affinity="#x00000008"/>
@@ -5313,11 +5320,11 @@ and will return to Group State Standby when the situation permits.
 							<Parameter OnlineParameter="true" ReadOnly="true" Group="Mover Detection">
 								<Name>MoverPositions</Name>
 								<Comment><![CDATA[Returns an array containing the actual positions of all movers.]]></Comment>
-								<BitSize>1280</BitSize>
+								<BitSize>768</BitSize>
 								<BaseType GUID="{283AABF9-D69F-474D-96EC-640C4E757556}">MoverPosition</BaseType>
 								<ArrayInfo>
 									<LBound>0</LBound>
-									<Elements Min="1" Max="500">10</Elements>
+									<Elements Min="1" Max="500">6</Elements>
 								</ArrayInfo>
 								<PTCID>#x0308020d</PTCID>
 								<ContextId>1</ContextId>
@@ -5349,11 +5356,11 @@ and will return to Group State Standby when the situation permits.
 							<Parameter OnlineParameter="true" ReadOnly="true" Group="Mover ID Detection">
 								<Name>MoverIds</Name>
 								<Comment><![CDATA[Returns an array containing the IDs of all movers.]]></Comment>
-								<BitSize>320</BitSize>
+								<BitSize>192</BitSize>
 								<BaseType GUID="{18071995-0000-0000-0000-000100000003}">STRING(3)</BaseType>
 								<ArrayInfo>
 									<LBound>0</LBound>
-									<Elements Min="1" Max="500">10</Elements>
+									<Elements Min="1" Max="500">6</Elements>
 								</ArrayInfo>
 								<PTCID>#x0308027c</PTCID>
 								<ContextId>1</ContextId>
@@ -5377,11 +5384,11 @@ and will return to Group State Standby when the situation permits.
 							<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
 								<Name>PartOrigins</Name>
 								<Comment><![CDATA[Returns an array containing all the origin transforms of the parts.]]></Comment>
-								<BitSize>96</BitSize>
+								<BitSize>192</BitSize>
 								<BaseType GUID="{E0B22A9F-54C2-4B0C-86B3-A8BB45899BF4}">Transform2D</BaseType>
 								<ArrayInfo>
 									<LBound>0</LBound>
-									<Elements Min="1" Max="100">1</Elements>
+									<Elements Min="1" Max="100">2</Elements>
 								</ArrayInfo>
 								<PTCID>#x03080261</PTCID>
 								<ContextId>1</ContextId>
@@ -6608,54 +6615,6 @@ and will return to Group State Standby when the situation permits.
 								<Value>0</Value>
 							</Value>
 							<Value>
-								<Name>MoverPositions[6].partPosition</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[6].partObjectId</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[6].trackObjectId</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[7].partPosition</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[7].partObjectId</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[7].trackObjectId</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[8].partPosition</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[8].partObjectId</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[8].trackObjectId</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[9].partPosition</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[9].partObjectId</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverPositions[9].trackObjectId</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
 								<Name>HasIdDetectionError</Name>
 								<EnumText>FALSE</EnumText>
 							</Value>
@@ -6692,22 +6651,6 @@ and will return to Group State Standby when the situation permits.
 								<String></String>
 							</Value>
 							<Value>
-								<Name>MoverIds[6]</Name>
-								<String></String>
-							</Value>
-							<Value>
-								<Name>MoverIds[7]</Name>
-								<String></String>
-							</Value>
-							<Value>
-								<Name>MoverIds[8]</Name>
-								<String></String>
-							</Value>
-							<Value>
-								<Name>MoverIds[9]</Name>
-								<String></String>
-							</Value>
-							<Value>
 								<Name>AdsServicePort</Name>
 								<Value>0</Value>
 							</Value>
@@ -6725,6 +6668,18 @@ and will return to Group State Standby when the situation permits.
 							</Value>
 							<Value>
 								<Name>PartOrigins[0].Alpha</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>PartOrigins[1].X</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>PartOrigins[1].Y</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>PartOrigins[1].Alpha</Name>
 								<Value>0</Value>
 							</Value>
 							<Value>
@@ -31372,11 +31327,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
 									<Name>PartInfoItems</Name>
 									<Comment><![CDATA[Returns an array of Part information items containing the Part object id, the Part polarity within the Track, the Part offset in the Track and the actual Part length.]]></Comment>
-									<BitSize>192</BitSize>
+									<BitSize>384</BitSize>
 									<BaseType GUID="{A2D072DD-872D-4A7C-A872-D1E20739B9EE}">TrackPartInfoItem</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="1" Max="100">1</Elements>
+										<Elements Min="1" Max="100">2</Elements>
 									</ArrayInfo>
 									<PTCID>#x03080205</PTCID>
 									<ContextId>1</ContextId>
@@ -31402,7 +31357,7 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>IsClosed</Name>
-									<EnumText>FALSE</EnumText>
+									<EnumText>TRUE</EnumText>
 								</Value>
 								<Value>
 									<Name>IsIncludedInDetection</Name>
@@ -31458,6 +31413,22 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>PartInfoItems[0].Length</Name>
+									<Value>0</Value>
+								</Value>
+								<Value>
+									<Name>PartInfoItems[1].ObjectID</Name>
+									<Value>0</Value>
+								</Value>
+								<Value>
+									<Name>PartInfoItems[1].Polarity</Name>
+									<EnumText>Positive</EnumText>
+								</Value>
+								<Value>
+									<Name>PartInfoItems[1].Offset</Name>
+									<Value>0</Value>
+								</Value>
+								<Value>
+									<Name>PartInfoItems[1].Length</Name>
 									<Value>0</Value>
 								</Value>
 							</ParameterValues>
@@ -33599,7 +33570,7 @@ and will return to Group State Standby when the situation permits.
 									<PTCID>#x030802b6</PTCID>
 									<ContextId>1</ContextId>
 								</Parameter>
-								<Parameter OnlineParameter="true" ReadOnly="true" Group="Mover Detection">
+								<Parameter OnlineParameter="true" ShowSubItems="true" ReadOnly="true" Group="Mover Detection">
 									<Name>PositionInfo</Name>
 									<Comment><![CDATA[Returns the part and track position as well as their object IDs.]]></Comment>
 									<BitSize>192</BitSize>

@@ -31,15 +31,15 @@ FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[0]) - 1 DO
     IF internalTrackedMovers[i] <> 0 THEN
 		IF (internalTrackedMovers[i]^.CurrentTrack^.Id = internalTrackId) THEN
 			IF internalStartPosition < internalEndPosition
-				   AND internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition
-				   AND internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition THEN
+				   AND internalTrackedMovers[i]^.TrackInfo.TrackPosition > internalStartPosition
+				   AND internalTrackedMovers[i]^.TrackInfo.TrackPosition < internalEndPosition THEN
 				// Zone does NOT contain the rollover point, and DOES contain the mover
 	
 				internalMoverList.RegisterMover(internalTrackedMovers[i]^);
 	
 			ELSIF internalStartPosition > internalEndPosition
-					  AND (internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos > internalStartPosition
-					  OR internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos < internalEndPosition) THEN
+					  AND (internalTrackedMovers[i]^.TrackInfo.TrackPosition > internalStartPosition
+					  OR internalTrackedMovers[i]^.TrackInfo.TrackPosition < internalEndPosition) THEN
 				// Zone DOES contain the rollover point, and DOES contain the mover
 	
 				internalMoverList.RegisterMover(internalTrackedMovers[i]^);
