@@ -20,7 +20,7 @@ VAR
     ParameterSet 		: MotionParameters_typ;
 
     Station         	: ARRAY[0..GVL.NUM_STATIONS - 1] OF Station;
-    PositionTrigger 	: ARRAY[0..3] OF PositionTrigger;
+    PositionTrigger 	: ARRAY[0..2] OF PositionTrigger;
     SpeedTrigger    	: ARRAY[0..1] OF SpeedTrigger;
     Zone            	: ARRAY[0..3] OF Zone;
 	
@@ -176,13 +176,11 @@ CASE MainState OF
 		Station[4].TrackId := 1;
 
         PositionTrigger[0].Position := 1500;
-		PositionTrigger[0].TrackId 		 := 1;
+		PositionTrigger[0].TrackId 	:= 1;
         PositionTrigger[1].Position := 2000;
-		PositionTrigger[1].TrackId 		 := 1;
+		PositionTrigger[1].TrackId 	:= 1;
         PositionTrigger[2].Position := 3500;
-		PositionTrigger[2].TrackId 		 := 1;
-        PositionTrigger[3].Position := 4000;
-		PositionTrigger[3].TrackId 		 := 1;
+		PositionTrigger[2].TrackId 	:= 1;
 
         Zone[0].StartPosition := 3750;
         Zone[0].EndPosition   := 750;
@@ -258,7 +256,6 @@ CASE MainState OF
 				PositionTrigger[0].RegisterMover( Mover[i] );
 				PositionTrigger[1].RegisterMover( Mover[i] );
 				PositionTrigger[2].RegisterMover( Mover[i] );
-				PositionTrigger[3].RegisterMover( Mover[i] );
             END_FOR
 			
             Zone[0].CurrentMoverList.SetAllVelocity(800).MoveAllToStation(Station[0]);
@@ -321,7 +318,6 @@ CASE MainState OF
 		
         // Position Trigger 0 Logic
         IF PositionTrigger[0].MoverPassedPosition THEN
-            PositionTrigger[1].RegisterMover(PositionTrigger[0].CurrentMover);
             PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
             PositionTrigger[0].MuteCurrent();
         END_IF
@@ -551,7 +547,10 @@ END_CASE
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="660" Count="436" />
+      <LineId Id="660" Count="124" />
+      <LineId Id="787" Count="74" />
+      <LineId Id="863" Count="61" />
+      <LineId Id="926" Count="170" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="MAIN.InitializeUtilityLibrary">

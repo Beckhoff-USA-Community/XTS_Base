@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="PositionTrigger" Id="{2be242dd-21c3-49cc-ab16-707ac1bbd2e6}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'hide_all_locals'}
+    <Declaration><![CDATA[// TODO hide {attribute 'hide_all_locals'}
 FUNCTION_BLOCK PositionTrigger EXTENDS Objective
 
 VAR
@@ -73,14 +73,14 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 			// Look for movers passing over the threshold this cycle and assign it to the
 			// InternalCurrentMover output, which should latch until it is cleared
 			IF TriggerDirection = MC_Positive_Direction AND moverLastPos[i] < internalPosition AND
-				internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos >= internalPosition THEN
+				internalTrackedMovers[i]^.TrackInfo.TrackPosition >= internalPosition THEN
 				
 				// Position trigger event detected in the positive direction
 				internalMoverPassedPosition		:= TRUE;
 				internalCurrentMover			:= internalTrackedMovers[i];
 				
 			ELSIF TriggerDirection = MC_Negative_Direction AND moverLastPos[i] > internalPosition AND
-				internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos <= internalPosition THEN
+				internalTrackedMovers[i]^.TrackInfo.TrackPosition <= internalPosition THEN
 				
 				// Position trigger event detecte in the negative direction
 				internalMoverPassedPosition		:= TRUE;
@@ -95,7 +95,7 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 				currentIsRegistered		:= TRUE;
 			END_IF
 	
-			moverLastPos[i] 		:= internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos;
+			moverLastPos[i] 		:= internalTrackedMovers[i]^.TrackInfo.TrackPosition;
 	
 		ELSE
 			IF TriggerDirection = MC_Negative_Direction THEN
