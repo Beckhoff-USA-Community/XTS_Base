@@ -47,14 +47,15 @@ VAR
 	
     i                       	: INT;	
 	currentIsRegistered			: BOOL;
-	
+	moverTrackId				: INT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[currentIsRegistered		:= FALSE;
 
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
     IF internalTrackedMovers[i] <> 0 THEN
-		IF (internalTrackedMovers[i]^.CurrentTrack^.Id = internalTrackId) THEN
+		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
+		IF (moverTrackId = internalTrackId) THEN
 	
 		
 			// Determine if a position rollover occured in the last cycle
@@ -206,7 +207,9 @@ END_VAR]]></Declaration>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.Cyclic">
-      <LineId Id="86" Count="65" />
+      <LineId Id="86" Count="3" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="90" Count="61" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.MoverPassedPosition.Get">
