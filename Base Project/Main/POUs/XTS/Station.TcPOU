@@ -23,6 +23,7 @@ PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
     i          : ULINT;
     difference : LREAL;
 
+	moverTrackId: INT;
 END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[// default to unassigned
@@ -34,7 +35,8 @@ FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) -
     // e.g. On a 4m track, if the Station is at 0.34mm and the Mover is at 3999.8mm, then this is considered 'in position'	
 
     IF internalTrackedMovers[i] <> 0 THEN
-		IF (internalTrackedMovers[i]^.CurrentTrack^.Id = internalTrackId) THEN
+		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
+		IF (moverTrackId = internalTrackId) THEN
 
 			difference := Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition;
 			// un-wrap if necessary
@@ -87,7 +89,7 @@ PROPERTY MoverInPosition : BOOL]]></Declaration>
 
     i          : ULINT;
     difference : LREAL;
-
+	moverTrackId: INT;
 END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[// default to false
@@ -100,7 +102,8 @@ FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) -
 
     // todo: make in-position tolerance adjustable. add condition that mover is stopped?
     IF internalTrackedMovers[i] <> 0 THEN
-		IF (internalTrackedMovers[i]^.CurrentTrack^.Id = internalTrackId) THEN
+		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
+		IF (moverTrackId = internalTrackId) THEN
 			difference := Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition;
 			// un-wrap if necessary
 			IF (difference < 0) THEN 
@@ -158,7 +161,9 @@ END_VAR]]></Declaration>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Station.CurrentMover.Get">
-      <LineId Id="3" Count="9" />
+      <LineId Id="3" Count="8" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="12" Count="0" />
       <LineId Id="39" Count="6" />
       <LineId Id="16" Count="3" />
       <LineId Id="33" Count="0" />
@@ -171,6 +176,7 @@ END_VAR]]></Declaration>
     </LineIds>
     <LineIds Name="Station.MoverInPosition.Get">
       <LineId Id="3" Count="9" />
+      <LineId Id="33" Count="0" />
       <LineId Id="27" Count="4" />
       <LineId Id="13" Count="1" />
       <LineId Id="25" Count="1" />
