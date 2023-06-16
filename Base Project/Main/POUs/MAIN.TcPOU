@@ -175,13 +175,13 @@ CASE MainState OF
         Station[4].Position := 1400;
 		Station[4].TrackId := 1;
 
-        PositionTrigger[0].TrackPosition := 1500;
+        PositionTrigger[0].Position := 1500;
 		PositionTrigger[0].TrackId 		 := 1;
-        PositionTrigger[1].TrackPosition := 2000;
+        PositionTrigger[1].Position := 2000;
 		PositionTrigger[1].TrackId 		 := 1;
-        PositionTrigger[2].TrackPosition := 3500;
+        PositionTrigger[2].Position := 3500;
 		PositionTrigger[2].TrackId 		 := 1;
-        PositionTrigger[3].TrackPosition := 4000;
+        PositionTrigger[3].Position := 4000;
 		PositionTrigger[3].TrackId 		 := 1;
 
         Zone[0].StartPosition := 3750;
@@ -551,52 +551,7 @@ END_CASE
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="3" Count="108" />
-      <LineId Id="593" Count="0" />
-      <LineId Id="112" Count="0" />
-      <LineId Id="595" Count="0" />
-      <LineId Id="113" Count="0" />
-      <LineId Id="597" Count="0" />
-      <LineId Id="114" Count="0" />
-      <LineId Id="596" Count="0" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="598" Count="0" />
-      <LineId Id="116" Count="1" />
-      <LineId Id="599" Count="0" />
-      <LineId Id="118" Count="0" />
-      <LineId Id="600" Count="0" />
-      <LineId Id="119" Count="0" />
-      <LineId Id="601" Count="0" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="602" Count="0" />
-      <LineId Id="121" Count="2" />
-      <LineId Id="603" Count="0" />
-      <LineId Id="124" Count="2" />
-      <LineId Id="604" Count="0" />
-      <LineId Id="127" Count="2" />
-      <LineId Id="605" Count="0" />
-      <LineId Id="130" Count="2" />
-      <LineId Id="606" Count="0" />
-      <LineId Id="449" Count="0" />
-      <LineId Id="457" Count="3" />
-      <LineId Id="456" Count="0" />
-      <LineId Id="450" Count="0" />
-      <LineId Id="453" Count="0" />
-      <LineId Id="452" Count="0" />
-      <LineId Id="513" Count="3" />
-      <LineId Id="518" Count="0" />
-      <LineId Id="520" Count="1" />
-      <LineId Id="519" Count="0" />
-      <LineId Id="524" Count="4" />
-      <LineId Id="539" Count="0" />
-      <LineId Id="533" Count="0" />
-      <LineId Id="531" Count="0" />
-      <LineId Id="534" Count="0" />
-      <LineId Id="532" Count="0" />
-      <LineId Id="535" Count="0" />
-      <LineId Id="529" Count="0" />
-      <LineId Id="536" Count="2" />
-      <LineId Id="135" Count="261" />
+      <LineId Id="660" Count="436" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="MAIN.InitializeUtilityLibrary">
