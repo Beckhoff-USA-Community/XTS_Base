@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="MoverList" Id="{6a6492c3-5dac-4c49-8708-8eab34cf4a1d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK MoverList EXTENDS Objective IMPLEMENTS iMoverList
 VAR_INPUT
@@ -13,6 +13,28 @@ END_VAR]]></Declaration>
     </Implementation>
     <Folder Name="Methods" Id="{f0610894-1931-4d0e-a817-1d1b4c8212b1}" />
     <Folder Name="Properties" Id="{3fdda14a-1516-48f6-a734-917962304085}" />
+    <Method Name="ActivateAllTrack" Id="{ad8953ff-aa85-09f3-0f73-09c72fab1fb2}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ActivateAllTrack : iMoverList
+VAR_INPUT
+	Track	: REFERENCE TO Track;
+END_VAR
+VAR
+    i : ULINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// For every valid mover in the list, pass it a ActivateTrack command
+FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+
+    IF internalTrackedMovers[i] <> 0 THEN
+        internalTrackedMovers[i]^.ActivateTrack(Track);
+    END_IF
+
+END_FOR
+
+ActivateAllTrack := THIS^; // return this, to allow method chaining]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Contains" Id="{3b6e6689-5a0d-0fe5-1be4-c87805ffbb32}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Contains : BOOL
 VAR_INPUT
@@ -116,6 +138,29 @@ IF __ISVALIDREF(GetMoverByLocation) = FALSE THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="IsAllTrackReady" Id="{6e2cc0c2-f637-0149-0661-22b5c671a702}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsAllTrackReady : BOOL]]></Declaration>
+      <Get Name="Get" Id="{cf4fcf50-2d73-046b-2dbd-7c13f3f0f631}">
+        <Declaration><![CDATA[VAR
+	i : ULINT;
+	allReady : BOOL;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[// For every valid mover in the list, sum up IsTrackReady
+allReady := true;
+FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+
+    IF internalTrackedMovers[i] <> 0 THEN
+        allReady := allReady AND internalTrackedMovers[i]^.IsTrackReady;
+    END_IF
+
+END_FOR
+
+IsAllTrackReady := allReady; // return result]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="MoveAllToPosition" Id="{bd912cae-8475-45f4-9366-6d4e3f45dbfd}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MoveAllToPosition : iMoverList
 VAR_INPUT
@@ -322,5 +367,62 @@ END_FOR
 // Nope!]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="MoverList">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.ActivateAllTrack">
+      <LineId Id="6" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.Contains">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.GetMoverByLocation">
+      <LineId Id="3" Count="56" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.IsAllTrackReady.Get">
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="6" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.MoveAllToPosition">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.MoveAllToStation">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.MoveAllVelocity">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllAcceleration">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllDeceleration">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllDirection">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllJerk">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllVelocity">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.UnregisterAll">
+      <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

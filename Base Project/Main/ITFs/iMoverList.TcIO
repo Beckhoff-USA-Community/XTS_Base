@@ -1,7 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <Itf Name="iMoverList" Id="{9cc4a2ad-2506-4bdd-acf3-bfbfde25ab77}">
     <Declaration><![CDATA[INTERFACE iMoverList]]></Declaration>
+    <Method Name="ActivateAllTrack" Id="{214d853b-c1b8-0faa-14bf-a2670bf33012}">
+      <Declaration><![CDATA[METHOD ActivateAllTrack : iMoverList
+VAR_INPUT
+	Track	: REFERENCE TO Track;
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="GetMoverByLocation" Id="{08ab6dd2-55e6-476a-991b-26d3f0ccc58d}">
       <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE to Mover
 VAR_INPUT
@@ -10,6 +17,12 @@ VAR_INPUT
     Direction : Tc2_MC2.MC_Direction; // Positive = find the most positive mover whose position is less than the Input. Negative = find the most negative mover whose position is greater than the input
 END_VAR]]></Declaration>
     </Method>
+    <Property Name="IsAllTrackReady" Id="{a3e4944a-7607-0f5a-10b2-64b1616a1317}">
+      <Declaration><![CDATA[PROPERTY IsAllTrackReady : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c87cec46-e2a4-0a12-2b5e-a6b05f1caa93}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="MoveAllToPosition" Id="{745a52d9-fa71-49ff-868a-52a3293e2e2d}">
       <Declaration><![CDATA[METHOD MoveAllToPosition : iMoverList
 VAR_INPUT
