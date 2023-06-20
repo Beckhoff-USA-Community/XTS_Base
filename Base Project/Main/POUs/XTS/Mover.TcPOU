@@ -141,20 +141,23 @@ END_VAR]]></Declaration>
 
 // this routine only stores data and sets flags
 // actual work of activating the track is done in .CyclicTrack()
-internalActivatingTrack := ADR(Track);
-internalTrack := ADR(GVL.ERROR_TRACK);
-internalTrackIsReady := FALSE;
+// to enable this to be called on every scan, a check is made here for not busy as MC_ActivateTrack does not handle multiple calls efficently
+// .CyclicTrack() monitors for a falling edge on internalActivateTrack before allowing another command
 internalActivateTrackFlag := TRUE;
-
-newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-
-IF ( newCallTime - lastCallMoveSta ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrack,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(internalActivatingTrack^.Id).AddString(THIS^.SourceInstancePath).AddString(Track.InstancePath);
-	MsgCreate.Send(0);
-END_IF
-
-lastCallMovePos		:= newCallTime;]]></ST>
+IF (internalTrackState = TrackState.WAIT_FOR_COMMAND) THEN
+	internalActivatingTrack := ADR(Track);
+	internalTrackIsReady := FALSE;
+	
+	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+	
+	IF ( newCallTime - lastCallMoveSta ) > 1 THEN
+		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrack,0 );
+		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(internalActivatingTrack^.Id).AddString(THIS^.SourceInstancePath).AddString(Track.InstancePath);
+		MsgCreate.Send(0);
+	END_IF
+	
+	lastCallMovePos		:= newCallTime;
+END_IF;]]></ST>
       </Implementation>
     </Method>
     <Property Name="CurrentDestinationPosition" Id="{6d470b15-bd31-4ad6-8559-906c2c8d720c}" FolderPath="Properties\">
@@ -678,6 +681,10 @@ fbReadM1DetectValid();
 fbReadM1DetectActive();
 fbWriteM1Detect();
 
+// track management
+fbActivateTrack(Axis := AxisReference);
+fbReadTrackPositions(Axis := AxisReference);
+
 
 ]]></ST>
       </Implementation>
@@ -700,12 +707,13 @@ CASE internalTrackState OF
 	TrackState.WAIT_FOR_COMMAND:
 		IF (internalActivateTrackFlag) THEN
 			// unregister mover from current track (logical tracking)
-			internalTrack^.UnregisterMover(THIS^);
+			IF (internalTrack <> 0) THEN
+				internalTrack^.UnregisterMover(THIS^);
+			END_IF;
 
 			// set flags
 			internalTrack := ADR(GVL.ERROR_TRACK);
 			internalTrackIsReady := FALSE;
-			internalActivateTrackFlag := FALSE;
 
 			// advance state
 			internalTrackState := TrackState.SETUP_FUNCTION;
@@ -738,16 +746,13 @@ CASE internalTrackState OF
 	
 	// clean up flags
 	TrackState.CLEAN_UP:
-		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrackComplete, 0);
-		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(internalActivatingTrack^.Id).AddString(THIS^.SourceInstancePath);
-		MsgCreate.Send(0);
 		internalTrack := internalActivatingTrack;
 		internalActivatingTrack := ADR(GVL.ERROR_TRACK);
 		internalTrackIsReady := TRUE;
-		internalTrackState := 0;
-		
-		// register mover
-		internalTrack^.RegisterMover(THIS^);
+		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrackComplete, 0);
+		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(THIS^.CurrentTrack^.Id);
+		MsgCreate.Send(0);
+		internalTrackState := TrackState.WAIT_END;
 		
 	TrackState.ERROR:
 		// reset execute
@@ -755,7 +760,17 @@ CASE internalTrackState OF
 		// GVL.ERROR_TRACK is intentionally left in place
 		// internalTrackIsReady is left at false
 		// TODO report error
-		internalTrackState := 0;
+		internalTrackState := TrackState.WAIT_END;
+		
+	TrackState.WAIT_END: 
+		// falling edge detection for internalActivateTrackFlag
+		IF (NOT internalActivateTrackFlag) THEN
+			// register mover
+			internalTrack^.RegisterMover(THIS^);
+			internalTrackState := TrackState.WAIT_FOR_COMMAND;	
+		END_IF
+		internalActivateTrackFlag := FALSE;
+
 END_CASE
 
 // read back track information
@@ -774,10 +789,6 @@ ELSE
 	fbReadTrackPositions.Enable := FALSE;
 END_IF
 
-
-// call function blocks
-fbActivateTrack(Axis := AxisReference);
-fbReadTrackPositions(Axis := AxisReference);
 
 // a delay is required after MC_ActivateTrack returns .Done
 internalTrackStateDelay(PT := T#10MS);]]></ST>
@@ -1728,15 +1739,19 @@ SyncToMover		:= THIS^;
       <LineId Id="5" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="14" Count="0" />
-      <LineId Id="7" Count="2" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="12" Count="1" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="0" />
       <LineId Id="32" Count="0" />
       <LineId Id="31" Count="0" />
       <LineId Id="17" Count="4" />
       <LineId Id="16" Count="0" />
       <LineId Id="34" Count="0" />
       <LineId Id="33" Count="0" />
+      <LineId Id="47" Count="0" />
     </LineIds>
     <LineIds Name="Mover.CurrentDestinationPosition.Get">
       <LineId Id="3" Count="0" />
@@ -1759,7 +1774,12 @@ SyncToMover		:= THIS^;
       <LineId Id="280" Count="45" />
       <LineId Id="468" Count="2" />
       <LineId Id="467" Count="0" />
-      <LineId Id="326" Count="134" />
+      <LineId Id="326" Count="132" />
+      <LineId Id="476" Count="0" />
+      <LineId Id="475" Count="0" />
+      <LineId Id="478" Count="0" />
+      <LineId Id="477" Count="0" />
+      <LineId Id="459" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.CyclicTrack">
@@ -1769,11 +1789,13 @@ SyncToMover		:= THIS^;
       <LineId Id="22" Count="0" />
       <LineId Id="19" Count="0" />
       <LineId Id="21" Count="0" />
-      <LineId Id="108" Count="2" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="110" Count="0" />
       <LineId Id="29" Count="1" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="1" />
       <LineId Id="31" Count="0" />
       <LineId Id="23" Count="2" />
       <LineId Id="27" Count="0" />
@@ -1797,17 +1819,19 @@ SyncToMover		:= THIS^;
       <LineId Id="67" Count="0" />
       <LineId Id="70" Count="0" />
       <LineId Id="28" Count="0" />
+      <LineId Id="145" Count="1" />
+      <LineId Id="144" Count="0" />
       <LineId Id="123" Count="1" />
       <LineId Id="122" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="111" Count="2" />
+      <LineId Id="149" Count="0" />
       <LineId Id="68" Count="0" />
       <LineId Id="56" Count="3" />
       <LineId Id="62" Count="0" />
-      <LineId Id="60" Count="1" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="153" Count="7" />
+      <LineId Id="152" Count="0" />
       <LineId Id="20" Count="0" />
       <LineId Id="87" Count="0" />
       <LineId Id="86" Count="0" />
@@ -1817,10 +1841,8 @@ SyncToMover		:= THIS^;
       <LineId Id="99" Count="0" />
       <LineId Id="92" Count="2" />
       <LineId Id="90" Count="0" />
-      <LineId Id="14" Count="2" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="103" Count="0" />
-      <LineId Id="17" Count="1" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="18" Count="0" />
       <LineId Id="6" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Disable">
