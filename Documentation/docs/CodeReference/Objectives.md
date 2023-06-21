@@ -7,7 +7,7 @@ The core concept driving the project structure is that it is useful to address m
 
 To illustrate, consider a scenario of recovering from an E-Stop where a robot is positioned directly in the path of the movers. In this instance, a first step might be to command any movers *downstream* of the robot to move further downstream, and movers *upstream* of the robot should be commanded further upstream in order to create some space for the arm to reset.
 
-As a programmer, one wouldn't seek to specifically command Mover #4 and Mover #5 to carry out those instructions because during the next occurence it may be an entirely different pair of movers in this situation. Instead, the commands are issued to *whichever movers are closest to the robot right now*.
+As a programmer, one wouldn't seek to specifically command Mover #4 and Mover #5 to carry out those instructions because during the next occurrence it may be an entirely different pair of movers in this situation. Instead, the commands are issued to *whichever movers are closest to the robot right now*.
 
 In this sense, we take a list of all movers on the track system, and apply *filters* to help select only the movers we care to command. These filters are applied via a family of objects called Objectives.
 
@@ -61,7 +61,7 @@ The objects listed above all share some common methods, which are implemented in
 > Adds a Mover to the list of Tracked Movers that the objective is currently monitoring. If the input Mover has already been added to the Tracked Movers list, the method call is ignored.
 
 ```javascript
-Mover[1].MoveToPosition( Station[1].TrackPosition );
+Mover[1].MoveToPosition( Station[1].Position );
 Station[1].RegisterMover( Mover[1] );
 ```
 
@@ -91,7 +91,7 @@ Station[1].UnregisterMover( Mover[1] );
 Because the Mover would not be registered with the Station when it arrives, the Station would not report that the Mover is InPosition. The code above is functionally identical to:
 
 ```javascript
-Mover[1].MoveToPosition( Station[1].TrackPosition );
+Mover[1].MoveToPosition( Station[1].Position );
 ```
 
 ---

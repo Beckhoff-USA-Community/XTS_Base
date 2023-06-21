@@ -1,7 +1,7 @@
 
 # Position Trigger Object
 
-> Position Trigger objects monitor movers until they have crossed over a specified location on track, even if they do not stop there. Position Triggers will always point to the most recent registered mover which crossed over the Position Trigger's track position
+> Position Trigger objects monitor movers until they have crossed over a specified location on track, even if they do not stop there. Position Triggers will always point to the most recent registered mover which crossed over the Position Trigger's track position. When using track management the position trigger will only trigger if the mover crosses the specificed location and has a matching TrackId.
 
 ---
 <br>
@@ -16,7 +16,7 @@ PositionTriggerA		: PositionTrigger;
 
 ```javascript
 // Initialization
-PositionTriggerA.TrackPosition		:= 2000;
+PositionTriggerA.Position		:= 2000;
 PositionTriggerA.TriggerDirection	:= mcDirectionPositive;
 ```
 
@@ -84,9 +84,16 @@ Position Triggers are unique in that the Current Mover output *latches* even tho
 <br>
 <br>
 
-### .TrackPosition
+### .Position
 
 > Current placement of the Position Trigger threshold along the track
+
+---
+<br>
+<br>
+
+#### .TrackId
+> Track that the station is assigned to when using track management. See the [Track](Track.md) object.
 
 ---
 <br>
@@ -100,7 +107,7 @@ Position Triggers are unique in that the Current Mover output *latches* even tho
 // Begin monitoring Mover 1
 IF bInit THEN
 	Mover[1].MoveToPosition( 1000 );
-	PositionTrigger.TrackPosition	:= 800;
+	PositionTrigger.Position	:= 800;
 	PositionTrigger.RegisterMover( Mover[1] );
 	bInit	:= FALSE;
 END_IF

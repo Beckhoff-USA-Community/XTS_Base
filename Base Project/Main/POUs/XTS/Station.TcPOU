@@ -138,7 +138,7 @@ END_VAR]]></Declaration>
         </Implementation>
       </Set>
     </Property>
-    <Property Name="TrackId" Id="{14a41bad-1d09-07ae-078b-0a0128d8288a}">
+    <Property Name="TrackId" Id="{14a41bad-1d09-07ae-078b-0a0128d8288a}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
       <Get Name="Get" Id="{77f9f1dd-eadb-000e-2c9f-0345f3cc552b}">
         <Declaration><![CDATA[VAR
