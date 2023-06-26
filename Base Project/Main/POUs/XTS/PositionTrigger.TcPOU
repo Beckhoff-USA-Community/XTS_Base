@@ -96,13 +96,12 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 			END_IF
 	
 			moverLastPos[i] 		:= internalTrackedMovers[i]^.TrackInfo.TrackPosition;
-	
-		ELSE
-			IF TriggerDirection = MC_Negative_Direction THEN
-				moverLastPos[i] := -1E300; // very negative value, to prevent false-positive triggers on first cycle
-			ELSIF TriggerDirection = MC_Positive_Direction THEN
-				moverLastPos[i] := 1E300; // very positive value, to prevent false-positive triggers on first cycle
-			END_IF
+		END_IF	
+	ELSE
+		IF TriggerDirection = MC_Negative_Direction THEN
+			moverLastPos[i] := -1E300; // very negative value, to prevent false-positive triggers on first cycle
+		ELSIF TriggerDirection = MC_Positive_Direction THEN
+			moverLastPos[i] := 1E300; // very positive value, to prevent false-positive triggers on first cycle
 		END_IF
 	END_IF
 
@@ -209,7 +208,8 @@ END_VAR]]></Declaration>
     <LineIds Name="PositionTrigger.Cyclic">
       <LineId Id="86" Count="3" />
       <LineId Id="160" Count="0" />
-      <LineId Id="90" Count="61" />
+      <LineId Id="90" Count="47" />
+      <LineId Id="139" Count="12" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.MoverPassedPosition.Get">
