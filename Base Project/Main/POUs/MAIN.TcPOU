@@ -165,38 +165,26 @@ CASE MainState OF
 
         // Initialize station positions
         Station[0].Position := 5;
-		Station[0].TrackId 		 := 1;
         Station[1].Position := 750;
-		Station[1].TrackId 		 := 1;
         Station[2].Position := 1200;
-		Station[2].TrackId 		 := 1;
         Station[3].Position := 1300;
-		Station[3].TrackId 		 := 1;
         Station[4].Position := 1400;
-		Station[4].TrackId := 1;
 
         PositionTrigger[0].Position := 1500;
-		PositionTrigger[0].TrackId 	:= 1;
         PositionTrigger[1].Position := 2000;
-		PositionTrigger[1].TrackId 	:= 1;
         PositionTrigger[2].Position := 3500;
-		PositionTrigger[2].TrackId 	:= 1;
 
         Zone[0].StartPosition := 3750;
         Zone[0].EndPosition   := 750;
-		Zone[0].TrackId		  := 1;
 
         Zone[1].StartPosition := 750;
         Zone[1].EndPosition   := 1750;
-		Zone[1].TrackId		  := 1;
 
         Zone[2].StartPosition := 1750;
         Zone[2].EndPosition   := 2750;
-		Zone[2].TrackId		  := 1;
 
         Zone[3].StartPosition := 2750;
         Zone[3].EndPosition   := 3750;
-		Zone[3].TrackId		  := 1;
 		
 		// give all tracks their ID number
 		FOR i := 0 TO GVL.NUM_TRACKS DO
@@ -205,14 +193,14 @@ CASE MainState OF
 		
 		// If a single logical track is used (typically aa closed loop) then tracks to not need to be initialized
 		Track[0].OTCID := 0;				// special "absolute reference" case for a single closed loop
-		Track[1].OTCID:= 16#010100A0;		// value copied from XtsProcessingUnit1 > Track x > Object > Object Id field
+//		Track[1].OTCID:= 16#010100A0;		// value copied from XtsProcessingUnit1 > Track x > Object > Object Id field
 
 		MainState := MS_ACTIVATE_TRACKS;
 		
 	MS_ACTIVATE_TRACKS:
 		// activate all movers on track[0]
 		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-            Mover[i].ActivateTrack(Track[1]);
+            Mover[i].ActivateTrack(Track[0]);
         END_FOR
 		
 		MainState := MS_WAIT_FOR_TRACKS;
@@ -547,8 +535,19 @@ END_CASE
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="660" Count="124" />
-      <LineId Id="787" Count="74" />
+      <LineId Id="660" Count="108" />
+      <LineId Id="770" Count="0" />
+      <LineId Id="772" Count="0" />
+      <LineId Id="774" Count="0" />
+      <LineId Id="776" Count="0" />
+      <LineId Id="778" Count="1" />
+      <LineId Id="781" Count="0" />
+      <LineId Id="783" Count="0" />
+      <LineId Id="787" Count="2" />
+      <LineId Id="791" Count="2" />
+      <LineId Id="795" Count="2" />
+      <LineId Id="799" Count="2" />
+      <LineId Id="803" Count="58" />
       <LineId Id="863" Count="61" />
       <LineId Id="926" Count="170" />
       <LineId Id="2" Count="0" />

@@ -5115,11 +5115,11 @@ and will return to Group State Standby when the situation permits.
 							<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
 								<Name>MoverObjectIDs</Name>
 								<Comment><![CDATA[Returns an array containing the object IDs of all movers.]]></Comment>
-								<BitSize>320</BitSize>
+								<BitSize>192</BitSize>
 								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 								<ArrayInfo>
 									<LBound>0</LBound>
-									<Elements Min="1" Max="500">10</Elements>
+									<Elements Min="1" Max="500">6</Elements>
 								</ArrayInfo>
 								<PTCID>#x0308020b</PTCID>
 								<ContextId>1</ContextId>
@@ -5135,11 +5135,11 @@ and will return to Group State Standby when the situation permits.
 							<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
 								<Name>PartObjectIDs</Name>
 								<Comment><![CDATA[Returns an array containing the object IDs of all parts.]]></Comment>
-								<BitSize>32</BitSize>
+								<BitSize>64</BitSize>
 								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 								<ArrayInfo>
 									<LBound>0</LBound>
-									<Elements Min="1" Max="100">1</Elements>
+									<Elements Min="1" Max="100">2</Elements>
 								</ArrayInfo>
 								<PTCID>#x03080224</PTCID>
 								<ContextId>1</ContextId>
@@ -5195,11 +5195,11 @@ and will return to Group State Standby when the situation permits.
 							<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
 								<Name>TrackObjectIDs</Name>
 								<Comment><![CDATA[Returns an array containing the object IDs of all tracks.]]></Comment>
-								<BitSize>32</BitSize>
+								<BitSize>64</BitSize>
 								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 								<ArrayInfo>
 									<LBound>0</LBound>
-									<Elements Min="1" Max="500">1</Elements>
+									<Elements Min="1" Max="500">2</Elements>
 								</ArrayInfo>
 								<PTCID>#x0308020f</PTCID>
 								<ContextId>1</ContextId>
@@ -6438,27 +6438,15 @@ and will return to Group State Standby when the situation permits.
 								<Value>0</Value>
 							</Value>
 							<Value>
-								<Name>MoverObjectIDs[6]</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverObjectIDs[7]</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverObjectIDs[8]</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>MoverObjectIDs[9]</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
 								<Name>PartCount</Name>
 								<Value>0</Value>
 							</Value>
 							<Value>
 								<Name>PartObjectIDs[0]</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>PartObjectIDs[1]</Name>
 								<Value>0</Value>
 							</Value>
 							<Value>
@@ -6483,6 +6471,10 @@ and will return to Group State Standby when the situation permits.
 							</Value>
 							<Value>
 								<Name>TrackObjectIDs[0]</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>TrackObjectIDs[1]</Name>
 								<Value>0</Value>
 							</Value>
 							<Value>
@@ -31243,216 +31235,6 @@ and will return to Group State Standby when the situation permits.
 								<Value>
 									<Name>PartConfigItems[1].ObjectID</Name>
 									<Value>16842928</Value>
-								</Value>
-								<Value>
-									<Name>PartConfigItems[1].Polarity</Name>
-									<EnumText>Positive</EnumText>
-								</Value>
-								<Value>
-									<Name>Length</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>ModuleCount</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>PartCount</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>PartInfoItems[0].ObjectID</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>PartInfoItems[0].Polarity</Name>
-									<EnumText>Positive</EnumText>
-								</Value>
-								<Value>
-									<Name>PartInfoItems[0].Offset</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>PartInfoItems[0].Length</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>PartInfoItems[1].ObjectID</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>PartInfoItems[1].Polarity</Name>
-									<EnumText>Positive</EnumText>
-								</Value>
-								<Value>
-									<Name>PartInfoItems[1].Offset</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>PartInfoItems[1].Length</Name>
-									<Value>0</Value>
-								</Value>
-							</ParameterValues>
-						</TmcDesc>
-					</Module>
-					<Module Id="#x010100a0" KeepUnrestoredLinks="2">
-						<Name>Track 2</Name>
-						<ImageId>1006</ImageId>
-						<TmcDesc GUID="{4EBEBA88-A772-4DC6-8AA0-C3959356823A}">
-							<Name>XtsTrack</Name>
-							<CLSID ClassFactory="TcIoXts">{AAB804B1-26EB-4240-BC7B-2DBE6FE99982}</CLSID>
-							<InitSequence>PSO</InitSequence>
-							<Contexts>
-								<Context>
-									<Id>1</Id>
-								</Context>
-							</Contexts>
-							<Interfaces>
-								<Interface>
-									<Type GUID="{00000012-0000-0000-E000-000000000064}">ITComObject</Type>
-								</Interface>
-								<Interface>
-									<Type GUID="{03000018-0000-0000-E000-000000000064}">ITcWatchSource</Type>
-								</Interface>
-							</Interfaces>
-							<Parameters>
-								<Group><![CDATA[General]]></Group>
-								<Group><![CDATA[Info]]></Group>
-								<Group><![CDATA[Structure]]></Group>
-								<Parameter Group="General">
-									<Name>TaskOID</Name>
-									<BitSize>32</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
-									<PTCID>#x03002060</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>IsClosed</Name>
-									<Comment><![CDATA[Configure if the Track is closed.]]></Comment>
-									<BitSize>8</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-									<PTCID>#x0308021d</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>IsIncludedInDetection</Name>
-									<Comment><![CDATA[Configure if this Track is included in the Mover detection.]]></Comment>
-									<BitSize>8</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-									<PTCID>#x03080226</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>Polarity</Name>
-									<Comment><![CDATA[Configure the direction of the part. Only positive is supported at the moment.]]></Comment>
-									<BitSize>32</BitSize>
-									<BaseType GUID="{81A5642A-C195-4045-8A89-E31FB7115424}">Polarity</BaseType>
-									<PTCID>#x03080201</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>Offset</Name>
-									<Comment><![CDATA[Configure the offset for the Track.]]></Comment>
-									<BitSize>64</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
-									<PTCID>#x03080202</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter ShowSubItems="true" Group="General">
-									<Name>PartConfigItems</Name>
-									<Comment><![CDATA[Configure Part configuration items containing the Part object id and the Part polarity within the Track. Only positive polarity is supported at the moment.]]></Comment>
-									<BitSize>128</BitSize>
-									<BaseType GUID="{1FB245F2-A0D0-4DC2-81C8-7FC44537B350}">TrackPartConfigItem</BaseType>
-									<ArrayInfo>
-										<LBound>0</LBound>
-										<Elements Min="1" Max="100">2</Elements>
-									</ArrayInfo>
-									<PTCID>#x03080204</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
-									<Name>Length</Name>
-									<Comment><![CDATA[Returns the length of the Track.]]></Comment>
-									<BitSize>64</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
-									<Unit><![CDATA[mm]]></Unit>
-									<PTCID>#x03080206</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
-									<Name>ModuleCount</Name>
-									<Comment><![CDATA[Returns the number of modules.]]></Comment>
-									<BitSize>32</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
-									<PTCID>#x03080207</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
-									<Name>PartCount</Name>
-									<Comment><![CDATA[Returns the number of Parts.]]></Comment>
-									<BitSize>32</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
-									<PTCID>#x03080203</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter OnlineParameter="true" ShowSubItems="true" ReadOnly="true" Group="Structure">
-									<Name>PartInfoItems</Name>
-									<Comment><![CDATA[Returns an array of Part information items containing the Part object id, the Part polarity within the Track, the Part offset in the Track and the actual Part length.]]></Comment>
-									<BitSize>384</BitSize>
-									<BaseType GUID="{A2D072DD-872D-4A7C-A872-D1E20739B9EE}">TrackPartInfoItem</BaseType>
-									<ArrayInfo>
-										<LBound>0</LBound>
-										<Elements Min="1" Max="100">2</Elements>
-									</ArrayInfo>
-									<PTCID>#x03080205</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-							</Parameters>
-							<EventMessages>
-								<EventMessage>
-									<Id>9029</Id>
-									<Message><![CDATA[Could not register by {0}.]]></Message>
-								</EventMessage>
-							</EventMessages>
-							<Properties>
-								<Property>
-									<Name>Category</Name>
-									<Value>XtsTrack</Value>
-								</Property>
-							</Properties>
-							<ParentOTCID>#x01010010</ParentOTCID>
-							<ParameterValues>
-								<Value>
-									<Name>TaskOID</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>IsClosed</Name>
-									<EnumText>TRUE</EnumText>
-								</Value>
-								<Value>
-									<Name>IsIncludedInDetection</Name>
-									<EnumText>FALSE</EnumText>
-								</Value>
-								<Value>
-									<Name>Polarity</Name>
-									<EnumText>Positive</EnumText>
-								</Value>
-								<Value>
-									<Name>Offset</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>PartConfigItems[0].ObjectID</Name>
-									<Value>16842928</Value>
-								</Value>
-								<Value>
-									<Name>PartConfigItems[0].Polarity</Name>
-									<EnumText>Positive</EnumText>
-								</Value>
-								<Value>
-									<Name>PartConfigItems[1].ObjectID</Name>
-									<Value>16842896</Value>
 								</Value>
 								<Value>
 									<Name>PartConfigItems[1].Polarity</Name>
