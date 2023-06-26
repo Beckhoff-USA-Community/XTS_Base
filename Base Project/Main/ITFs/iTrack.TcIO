@@ -35,5 +35,29 @@
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
+    <Method Name="RegisterMover" Id="{aa379151-5a94-0a15-244b-4ddcbf268ca8}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD RegisterMover : BOOL
+VAR_INPUT
+    NewMover : REFERENCE TO Mover;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="UnregisterAll" Id="{f2ab22b3-a027-08df-22f2-7e3232cd47f0}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD UnregisterAll : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="UnregisterMover" Id="{c8d25a54-3401-08fd-3ce2-76cee9dd2344}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD UnregisterMover : BOOL
+VAR_INPUT
+    RemovingMover : REFERENCE TO Mover;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>

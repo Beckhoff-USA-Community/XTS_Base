@@ -12,7 +12,6 @@ VAR_GLOBAL CONSTANT
     pXtsProcessingUnit : OTCID:=0; // This pointer needs to be initialized in the Main Instance, under Symbol Initialization
 
 	NUM_TRACKS  : USINT := 1;	// This is the number of logical tracks in the system
-	ERROR_TRACK	: Track;		// track instance used when track is not set or busy
 
 END_VAR
 VAR_GLOBAL

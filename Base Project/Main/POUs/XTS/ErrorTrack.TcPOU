@@ -14,17 +14,32 @@ END_VAR
     </Implementation>
     <Folder Name="Methods" Id="{eeff0d3e-8d73-0d64-379f-cf0d456afc19}" />
     <Folder Name="Properties" Id="{13bdc662-fc7c-04cc-21a6-3ca65662fecd}" />
-    <Method Name="Cyclic" Id="{2f007afa-b200-03a3-0dc1-86e0ff4e5c17}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD Cyclic : BOOL
-VAR_INPUT
+    <Property Name="CurrentMoverCount" Id="{33bc7799-5276-0c26-1ca1-9d07d364e1a1}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentMoverCount : DINT]]></Declaration>
+      <Get Name="Get" Id="{ed94d4d3-8277-0713-23f5-a3ff80dd5525}">
+        <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
+        <Implementation>
+          <ST><![CDATA[
 
-ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Track.Cyclic function was called on an error track.', '');]]></ST>
-      </Implementation>
-    </Method>
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Track.GetCurrentMoverCount property as accessed on an error track.', '');]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="CurrentMoverList" Id="{b190691f-b4b8-0ba1-0821-763dc5d8bf10}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentMoverList : iMoverList]]></Declaration>
+      <Get Name="Get" Id="{f7bc1d95-fb88-0b8f-0c46-ca2451a3ca1b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Track.GetCurrentMoverList property as accessed on an error track.', '');]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Id" Id="{3f245ec6-2d35-0e07-007d-ee805d2b4910}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Id : INT]]></Declaration>
       <Get Name="Get" Id="{8bf80f8b-c4c5-033d-3938-7faf2a4b2089}">
@@ -71,12 +86,57 @@ ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Track.OTCID set property is unavailable wh
         </Implementation>
       </Set>
     </Property>
+    <Method Name="RegisterMover" Id="{4c665ebf-fb7e-0a21-2133-e9b3f174b407}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD RegisterMover : BOOL
+VAR_INPUT
+    NewMover : REFERENCE TO Mover;
+END_VAR
+VAR
+	i : ULINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Track.RegisterMover function was called on an error track.', '');]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UnregisterAll" Id="{b731f48b-54fa-0a81-0269-2584465b6ef9}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD UnregisterAll : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Track.UnregisterAll function was called on an error track.', '');]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UnregisterMover" Id="{c64abf39-b0cc-091a-0a6a-5a9c47d60b9d}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD UnregisterMover : BOOL
+VAR_INPUT
+    RemovingMover : REFERENCE TO Mover;
+END_VAR
+VAR
+	i : ULINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Track.UnregisterMover function was called on an error track.', '');]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="ErrorTrack">
       <LineId Id="9" Count="0" />
     </LineIds>
-    <LineIds Name="ErrorTrack.Cyclic">
-      <LineId Id="6" Count="1" />
-      <LineId Id="5" Count="0" />
+    <LineIds Name="ErrorTrack.CurrentMoverCount.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorTrack.CurrentMoverList.Get">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="ErrorTrack.Id.Get">
       <LineId Id="5" Count="1" />
@@ -93,6 +153,18 @@ ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Track.OTCID set property is unavailable wh
     <LineIds Name="ErrorTrack.OTCID.Set">
       <LineId Id="5" Count="1" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorTrack.RegisterMover">
+      <LineId Id="10" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorTrack.UnregisterAll">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorTrack.UnregisterMover">
+      <LineId Id="10" Count="1" />
+      <LineId Id="9" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="PositionTrigger" Id="{2be242dd-21c3-49cc-ab16-707ac1bbd2e6}" SpecialFunc="None">
-    <Declaration><![CDATA[// TODO hide {attribute 'hide_all_locals'}
+    <Declaration><![CDATA[{attribute 'hide_all_locals'}
 FUNCTION_BLOCK PositionTrigger EXTENDS Objective
 
 VAR

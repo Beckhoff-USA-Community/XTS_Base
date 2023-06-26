@@ -3,7 +3,7 @@
   <Itf Name="iMoverList" Id="{9cc4a2ad-2506-4bdd-acf3-bfbfde25ab77}">
     <Declaration><![CDATA[INTERFACE iMoverList]]></Declaration>
     <Method Name="ActivateAllTrack" Id="{214d853b-c1b8-0faa-14bf-a2670bf33012}">
-      <Declaration><![CDATA[METHOD ActivateAllTrack : iMoverList
+      <Declaration><![CDATA[METHOD ActivateAllTrack : BOOL
 VAR_INPUT
 	Track	: REFERENCE TO Track;
 END_VAR

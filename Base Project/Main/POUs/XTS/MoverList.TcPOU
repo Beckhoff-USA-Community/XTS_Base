@@ -14,7 +14,7 @@ END_VAR]]></Declaration>
     <Folder Name="Methods" Id="{f0610894-1931-4d0e-a817-1d1b4c8212b1}" />
     <Folder Name="Properties" Id="{3fdda14a-1516-48f6-a734-917962304085}" />
     <Method Name="ActivateAllTrack" Id="{ad8953ff-aa85-09f3-0f73-09c72fab1fb2}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD ActivateAllTrack : iMoverList
+      <Declaration><![CDATA[METHOD ActivateAllTrack : BOOL
 VAR_INPUT
 	Track	: REFERENCE TO Track;
 END_VAR
@@ -23,16 +23,17 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// For every valid mover in the list, pass it a ActivateTrack command
+        <ST><![CDATA[// this method is not chainable
+// monitor .IsAllTrackReady before calling additional commands on this list
+
+// For every valid mover in the list, pass it a ActivateTrack command
 FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.ActivateTrack(Track);
     END_IF
 
-END_FOR
-
-ActivateAllTrack := THIS^; // return this, to allow method chaining]]></ST>
+END_FOR]]></ST>
       </Implementation>
     </Method>
     <Method Name="Contains" Id="{3b6e6689-5a0d-0fe5-1be4-c87805ffbb32}" FolderPath="Methods\">
@@ -394,8 +395,9 @@ END_FOR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.ActivateAllTrack">
-      <LineId Id="6" Count="8" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="6" Count="7" />
     </LineIds>
     <LineIds Name="MoverList.Contains">
       <LineId Id="3" Count="6" />

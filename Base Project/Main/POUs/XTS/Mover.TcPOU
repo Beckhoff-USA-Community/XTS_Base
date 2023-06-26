@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-// TODO hide {attribute 'hide_all_locals'}
+{attribute 'hide_all_locals'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
 
 VAR_INPUT
@@ -32,7 +32,7 @@ VAR
 
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
-	// TODO hide {attribute 'hide'}
+	{attribute 'hide'}
 	InstancePath		: STRING;	// instance naming, for diagnostics purposes
 	
 	internalEnable		: BOOL;		// moves the axis from Disabled to Standstill, adds Axis to CA group, and triggers M1 Detection if configured
@@ -143,6 +143,7 @@ END_VAR]]></Declaration>
 // actual work of activating the track is done in .CyclicTrack()
 // to enable this to be called on every scan, a check is made here for not busy as MC_ActivateTrack does not handle multiple calls efficently
 // .CyclicTrack() monitors for a falling edge on internalActivateTrack before allowing another command
+// this functionality mimics motion library commands such as MC_MoveAbsolute
 internalActivateTrackFlag := TRUE;
 IF (internalTrackState = TrackState.WAIT_FOR_COMMAND) THEN
 	internalActivatingTrack := ADR(Track);
@@ -699,7 +700,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// called by .Cyclic() to handle the MC_ActivateTrack call's required state machine
 // this is only called while the mover is in the RUN state within .Cyclic() by design
-// calling the track management functions on disabled, errored or movers that are not
+// calling the track management functions on disabled or errored movers that are not
 // assigned to a group just causes the track management functions to throw more errors
 
 CASE internalTrackState OF
@@ -712,7 +713,7 @@ CASE internalTrackState OF
 			END_IF;
 
 			// set flags
-			internalTrack := ADR(GVL.ERROR_TRACK);
+			internalTrack := ADR(ErrorTrack);
 			internalTrackIsReady := FALSE;
 
 			// advance state
@@ -737,6 +738,7 @@ CASE internalTrackState OF
 		END_IF;
 	
 	// required delay
+	// the FB has returned .Done but the change has not yet propigated to the NC
 	TrackState.REQUIRED_DELAY:
 		internalTrackStateDelay.IN := TRUE;
 		IF (internalTrackStateDelay.Q) THEN
@@ -747,7 +749,7 @@ CASE internalTrackState OF
 	// clean up flags
 	TrackState.CLEAN_UP:
 		internalTrack := internalActivatingTrack;
-		internalActivatingTrack := ADR(GVL.ERROR_TRACK);
+		internalActivatingTrack := ADR(ErrorTrack);
 		internalTrackIsReady := TRUE;
 		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrackComplete, 0);
 		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(THIS^.CurrentTrack^.Id);
@@ -759,7 +761,7 @@ CASE internalTrackState OF
 		fbActivateTrack.Execute := FALSE;
 		// GVL.ERROR_TRACK is intentionally left in place
 		// internalTrackIsReady is left at false
-		// TODO report error
+		// error is recorded in Cyclic()
 		internalTrackState := TrackState.WAIT_END;
 		
 	TrackState.WAIT_END: 
@@ -1741,6 +1743,7 @@ SyncToMover		:= THIS^;
       <LineId Id="14" Count="0" />
       <LineId Id="7" Count="1" />
       <LineId Id="44" Count="1" />
+      <LineId Id="58" Count="0" />
       <LineId Id="48" Count="0" />
       <LineId Id="46" Count="0" />
       <LineId Id="9" Count="0" />
@@ -1812,6 +1815,7 @@ SyncToMover		:= THIS^;
       <LineId Id="52" Count="0" />
       <LineId Id="50" Count="1" />
       <LineId Id="55" Count="0" />
+      <LineId Id="167" Count="0" />
       <LineId Id="53" Count="1" />
       <LineId Id="63" Count="1" />
       <LineId Id="66" Count="0" />
