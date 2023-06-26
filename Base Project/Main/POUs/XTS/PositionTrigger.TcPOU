@@ -11,7 +11,6 @@ VAR
     internalCurrentMover     	 : POINTER TO Mover;
 	internalTrackId				: DINT;
     moverLastPos              	: ARRAY[0..GVL.NUM_MOVERS - 1] OF LREAL; // Positions of tracked movers from last cycle
-    moverLastTurns           	 : ARRAY[0..GVL.NUM_MOVERS - 1] OF DINT;  // Turn count of tracked movers from last cycle
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -48,6 +47,8 @@ VAR
     i                       	: INT;	
 	currentIsRegistered			: BOOL;
 	moverTrackId				: INT;
+	positionDifference			: LREAL;
+	rolloverOccured				: BOOL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[currentIsRegistered		:= FALSE;
@@ -59,16 +60,14 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 	
 		
 			// Determine if a position rollover occured in the last cycle
+			positionDifference := moverLastPos[i] - internalTrackedMovers[i]^.TrackInfo.TrackPosition;
+			rolloverOccured := (positionDifference) > (GVL.TRACK_LENGTH - 0.1);
 			// and if so, modify the stored last position values to be nonmodulo to compensate
-			IF internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns > moverLastTurns[i] THEN
+			IF rolloverOccured AND positionDifference > 0 THEN
 				moverLastPos[i]		:= moverLastPos[i] - GVL.TRACK_LENGTH;
-			ELSIF internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns < moverLastTurns[i] THEN
+			ELSIF rolloverOccured AND positionDifference < 0 THEN
 				moverLastPos[i]		:= moverLastPos[i] + GVL.TRACK_LENGTH;
 			END_IF
-			
-			moverLastTurns[i]	:= internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns;
-		
-		
 		
 			// Look for movers passing over the threshold this cycle and assign it to the
 			// InternalCurrentMover output, which should latch until it is cleared
@@ -208,7 +207,11 @@ END_VAR]]></Declaration>
     <LineIds Name="PositionTrigger.Cyclic">
       <LineId Id="86" Count="3" />
       <LineId Id="160" Count="0" />
-      <LineId Id="90" Count="47" />
+      <LineId Id="90" Count="3" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="94" Count="5" />
+      <LineId Id="104" Count="33" />
       <LineId Id="139" Count="12" />
       <LineId Id="2" Count="0" />
     </LineIds>
