@@ -474,6 +474,7 @@ currentTrackId := Mover[1].CurrentTrack^.Id
 *BOOL*
 
 > Returns true when the ActivateTrack() method has completed successfully. When using track management motion commands should not be issued unless this value is true or the mover will throw an error.
+
 ---
 <br>
 <br>
@@ -503,12 +504,14 @@ It is recommended that all evaluations are nested inside IF checks for .IsSynced
 #### .TrackInfo
 
 > Returns information provided by MC_ReadTrackPositions for use with track management.
-| Member | Type| Description |
+
+| Member | Type | Description |
 |---|---|---|
 | TrackId | OTCID | The hardware ID of the track the mover is assigned to |
 | PartId | OTCID | The hardware ID of the part the mover is physically present on |
 | TrackPosition | LREAL | Position of the mover measured from the zero point of the track. This may differ from Mover.AxisReference.NcToPLC.ActPos in certain track configurations |
 | PartPosition | LREAL | Position of the mover measured from the zero point of the part the mover is physically on|
+
 ---
 <br>
 <br>
