@@ -31413,7 +31413,7 @@ and will return to Group State Standby when the situation permits.
 									<PTCID>#x030802b6</PTCID>
 									<ContextId>1</ContextId>
 								</Parameter>
-								<Parameter OnlineParameter="true" ReadOnly="true" Group="Mover Detection">
+								<Parameter OnlineParameter="true" ShowSubItems="true" ReadOnly="true" Group="Mover Detection">
 									<Name>PositionInfo</Name>
 									<Comment><![CDATA[Returns the part and track position as well as their object IDs.]]></Comment>
 									<BitSize>192</BitSize>

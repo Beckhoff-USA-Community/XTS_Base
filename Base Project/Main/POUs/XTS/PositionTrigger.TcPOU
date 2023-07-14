@@ -48,6 +48,7 @@ VAR
 	currentIsRegistered			: BOOL;
 	moverTrackId				: INT;
 	positionDifference			: LREAL;
+	modTrackPosition			: LREAL;
 	rolloverOccured				: BOOL;
 END_VAR]]></Declaration>
       <Implementation>
@@ -60,7 +61,8 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 	
 		
 			// Determine if a position rollover occured in the last cycle
-			positionDifference := moverLastPos[i] - internalTrackedMovers[i]^.TrackInfo.TrackPosition;
+			modTrackPosition := MODABS( internalTrackedMovers[i]^.TrackInfo.TrackPosition, GVL.TRACK_LENGTH);
+			positionDifference := moverLastPos[i] - modTrackPosition;
 			rolloverOccured := (positionDifference) > (GVL.TRACK_LENGTH - 0.1);
 			// and if so, modify the stored last position values to be nonmodulo to compensate
 			IF rolloverOccured AND positionDifference > 0 THEN
@@ -72,14 +74,14 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 			// Look for movers passing over the threshold this cycle and assign it to the
 			// InternalCurrentMover output, which should latch until it is cleared
 			IF TriggerDirection = MC_Positive_Direction AND moverLastPos[i] < internalPosition AND
-				internalTrackedMovers[i]^.TrackInfo.TrackPosition >= internalPosition THEN
+				modTrackPosition >= internalPosition THEN
 				
 				// Position trigger event detected in the positive direction
 				internalMoverPassedPosition		:= TRUE;
 				internalCurrentMover			:= internalTrackedMovers[i];
 				
 			ELSIF TriggerDirection = MC_Negative_Direction AND moverLastPos[i] > internalPosition AND
-				internalTrackedMovers[i]^.TrackInfo.TrackPosition <= internalPosition THEN
+				modTrackPosition <= internalPosition THEN
 				
 				// Position trigger event detecte in the negative direction
 				internalMoverPassedPosition		:= TRUE;
@@ -94,7 +96,7 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 				currentIsRegistered		:= TRUE;
 			END_IF
 	
-			moverLastPos[i] 		:= internalTrackedMovers[i]^.TrackInfo.TrackPosition;
+			moverLastPos[i] 		:= modTrackPosition;
 		END_IF	
 	ELSE
 		IF TriggerDirection = MC_Negative_Direction THEN
@@ -208,6 +210,7 @@ END_VAR]]></Declaration>
       <LineId Id="86" Count="3" />
       <LineId Id="160" Count="0" />
       <LineId Id="90" Count="3" />
+      <LineId Id="185" Count="0" />
       <LineId Id="172" Count="0" />
       <LineId Id="170" Count="0" />
       <LineId Id="94" Count="5" />
