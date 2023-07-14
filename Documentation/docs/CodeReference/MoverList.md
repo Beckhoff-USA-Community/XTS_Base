@@ -32,6 +32,33 @@ MoverListA.UnregisterAll();
 
 ## Methods
 
+### ActivateAllTrack
+
+*ActivateAllTrack( Track: Track)*
+
+> Issues individual ActivateTrack commands to every mover registered with the list.
+
+The property IsAllTrackReady can be used to query for the completion of this method. Note that ActivateAllTrack and IsAllTrackReady may need to operate on different lists when working with Zone and Track lists as both Zone and Track are track-aware and only return movers that are both assigned to the track that the track or zone is also assigned to.
+
+See [Mover](Mover.md).ActivateTrack and for additional notes about track management.
+
+```javascript
+// state machine
+100:
+	Track[1].CurrentMoverList.ActivateAllTrack(Track[2]);
+	// check track 2 for command completeness as the movers are being reassigned to this track
+	IF (Track[2].CurrentMoverList.IsAllTrackReady) THEN
+		iState := 200;
+	END_IF;
+
+200:
+	// movers on track 2 ready for commands
+```
+
+---
+<br>
+<br>
+
 ### Contains
 
 *Contains( Mover: Mover )*
@@ -59,7 +86,7 @@ END_IF
 
 **Position** specifies the target around which mover proximity should be considered.
 
-**Direction** specifies the direction around the track *from which* the movers are indexed. Therefore MC_Positive_Direction will begin returning movers with the *most positive* absolute position values that are still *less than* the position input.
+**Direction** specifies the direction around the track *from which* the movers are indexed. Therefore MC_Positive_Direction will begin returning movers with the *most positive* absolute position values that are still *less than* the position input. In linear, non-closed tracks MC_Shortest_Way can be used to find movers in both directions using the absolute value of the difference between the fixed Position and the mover position.
 
 ```javascript
 // Select a mover in the MoverList
@@ -215,3 +242,15 @@ MoverListA.StopAll();
 ```javascript
 MoverListA.UnregisterAll();
 ```
+
+## Properties
+
+#### .IsAllTrackReady
+
+*BOOL*
+
+> Queries all movers registered with the mover list for their IsTrackReady property and returns true when all movers have this property set true.
+
+Note: This routine intentionally returns false if no movers are on the track. This is to handle the several scan delay between activating a track and the mover reporting the track is active. In a typical use case .ActivateAllTrack and .IsAllTrackReady are called back to back. Without this exception code folling .IsAllTrackReady would falsely assume the track switch is complete if the track was empty causing mover motion commands to throw errors.
+
+See ActivateAllTrack() for an example.

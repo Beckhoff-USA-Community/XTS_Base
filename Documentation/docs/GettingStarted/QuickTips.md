@@ -27,7 +27,7 @@ END_FOR
 
 - When programming recovery scenarios, be sure to unregister movers from objectives where necessary.
 
-### General Track Tips
+### General Code Tips
 
 More generally, here are some recommendations regarding the architecture of your solution:
 

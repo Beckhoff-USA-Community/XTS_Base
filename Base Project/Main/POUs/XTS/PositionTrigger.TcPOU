@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="PositionTrigger" Id="{2be242dd-21c3-49cc-ab16-707ac1bbd2e6}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'hide_all_locals'}
 FUNCTION_BLOCK PositionTrigger EXTENDS Objective
 
 VAR
-    internalTrackPosition    	 : LREAL;
+    internalPosition    	 : LREAL;
     internalTriggerDirection 	 : Tc2_MC2.MC_Direction;
     internalMoverPassedPosition : BOOL;
     internalCurrentMover     	 : POINTER TO Mover;
+	internalTrackId				: DINT;
     moverLastPos              	: ARRAY[0..GVL.NUM_MOVERS - 1] OF LREAL; // Positions of tracked movers from last cycle
-    moverLastTurns           	 : ARRAY[0..GVL.NUM_MOVERS - 1] OF DINT;  // Turn count of tracked movers from last cycle
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -46,63 +46,65 @@ VAR
 	
     i                       	: INT;	
 	currentIsRegistered			: BOOL;
-	
+	moverTrackId				: INT;
+	positionDifference			: LREAL;
+	modTrackPosition			: LREAL;
+	rolloverOccured				: BOOL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-currentIsRegistered		:= FALSE;
+        <ST><![CDATA[currentIsRegistered		:= FALSE;
 
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
     IF internalTrackedMovers[i] <> 0 THEN
-		
-
+		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
+		IF (moverTrackId = internalTrackId) THEN
 	
-		// Determine if a position rollover occured in the last cycle
-		// and if so, modify the stored last position values to be nonmodulo to compensate
-		IF internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns > moverLastTurns[i] THEN
-			moverLastPos[i]		:= moverLastPos[i] - GVL.TRACK_LENGTH;
-		ELSIF internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns < moverLastTurns[i] THEN
-			moverLastPos[i]		:= moverLastPos[i] + GVL.TRACK_LENGTH;
+		
+			// Determine if a position rollover occured in the last cycle
+			modTrackPosition := MODABS( internalTrackedMovers[i]^.TrackInfo.TrackPosition, GVL.TRACK_LENGTH);
+			positionDifference := moverLastPos[i] - modTrackPosition;
+			rolloverOccured := (positionDifference) > (GVL.TRACK_LENGTH - 0.1);
+			// and if so, modify the stored last position values to be nonmodulo to compensate
+			IF rolloverOccured AND positionDifference > 0 THEN
+				moverLastPos[i]		:= moverLastPos[i] - GVL.TRACK_LENGTH;
+			ELSIF rolloverOccured AND positionDifference < 0 THEN
+				moverLastPos[i]		:= moverLastPos[i] + GVL.TRACK_LENGTH;
+			END_IF
+		
+			// Look for movers passing over the threshold this cycle and assign it to the
+			// InternalCurrentMover output, which should latch until it is cleared
+			IF TriggerDirection = MC_Positive_Direction AND moverLastPos[i] < internalPosition AND
+				modTrackPosition >= internalPosition THEN
+				
+				// Position trigger event detected in the positive direction
+				internalMoverPassedPosition		:= TRUE;
+				internalCurrentMover			:= internalTrackedMovers[i];
+				
+			ELSIF TriggerDirection = MC_Negative_Direction AND moverLastPos[i] > internalPosition AND
+				modTrackPosition <= internalPosition THEN
+				
+				// Position trigger event detecte in the negative direction
+				internalMoverPassedPosition		:= TRUE;
+				internalCurrentMover			:= internalTrackedMovers[i];
+				
+			END_IF
+			
+			
+			
+			// Ensure that the CurrentMover is still registered with the PositionTrigger
+			IF internalCurrentMover <> 0 AND internalTrackedMovers[i] = internalCurrentMover THEN
+				currentIsRegistered		:= TRUE;
+			END_IF
+	
+			moverLastPos[i] 		:= modTrackPosition;
+		END_IF	
+	ELSE
+		IF TriggerDirection = MC_Negative_Direction THEN
+			moverLastPos[i] := -1E300; // very negative value, to prevent false-positive triggers on first cycle
+		ELSIF TriggerDirection = MC_Positive_Direction THEN
+			moverLastPos[i] := 1E300; // very positive value, to prevent false-positive triggers on first cycle
 		END_IF
-		
-		moverLastTurns[i]	:= internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActTurns;
-	
-	
-	
-		// Look for movers passing over the threshold this cycle and assign it to the
-		// InternalCurrentMover output, which should latch until it is cleared
-		IF TriggerDirection = MC_Positive_Direction AND moverLastPos[i] < internalTrackPosition AND
-			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos >= internalTrackPosition THEN
-			
-			// Position trigger event detected in the positive direction
-			internalMoverPassedPosition		:= TRUE;
-			internalCurrentMover			:= internalTrackedMovers[i];
-			
-		ELSIF TriggerDirection = MC_Negative_Direction AND moverLastPos[i] > internalTrackPosition AND
-			internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos <= internalTrackPosition THEN
-			
-			// Position trigger event detecte in the negative direction
-			internalMoverPassedPosition		:= TRUE;
-			internalCurrentMover			:= internalTrackedMovers[i];
-			
-		END_IF
-		
-		
-		
-		// Ensure that the CurrentMover is still registered with the PositionTrigger
-		IF internalCurrentMover <> 0 AND internalTrackedMovers[i] = internalCurrentMover THEN
-			currentIsRegistered		:= TRUE;
-		END_IF
-
-        moverLastPos[i] 		:= internalTrackedMovers[i]^.AxisReference.NcToPlc.ModuloActPos;
-
-    ELSE
-        IF TriggerDirection = MC_Negative_Direction THEN
-            moverLastPos[i] := -1E300; // very negative value, to prevent false-positive triggers on first cycle
-        ELSIF TriggerDirection = MC_Positive_Direction THEN
-            moverLastPos[i] := 1E300; // very positive value, to prevent false-positive triggers on first cycle
-        END_IF
-    END_IF
+	END_IF
 
 END_FOR
 
@@ -141,14 +143,14 @@ internalMoverPassedPosition		:= FALSE;
 internalCurrentMover			:= 0;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="TrackPosition" Id="{ec302377-0190-40b3-b726-4713ec7a403b}" FolderPath="Properties\">
+    <Property Name="Position" Id="{ec302377-0190-40b3-b726-4713ec7a403b}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY TrackPosition : LREAL]]></Declaration>
+PROPERTY Position : LREAL]]></Declaration>
       <Get Name="Get" Id="{ff32a52e-c366-4283-94bb-898d1069bf0a}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[TrackPosition := internalTrackPosition;]]></ST>
+          <ST><![CDATA[Position := internalPosition;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{b77ff2fd-1ee8-41cd-8d5f-9b4c152df435}">
@@ -156,7 +158,26 @@ END_VAR]]></Declaration>
 END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[// todo maybe do a limits check here?
-internalTrackPosition := TrackPosition;]]></ST>
+internalPosition := Position;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TrackId" Id="{127d74ba-df8b-0a03-0926-c5e68e5e3675}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
+      <Get Name="Get" Id="{ffb39293-6b9f-0a6a-06be-511a7a51c7e5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TrackId := internalTrackId;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8ac2de8f-e5ea-0661-0c2c-20e585f6741b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[internalTrackId := TrackId;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -167,16 +188,61 @@ PROPERTY TriggerDirection : Tc2_MC2.MC_Direction]]></Declaration>
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[TriggerDirection := internalTriggerDirection;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{f583cf2c-e716-4e32-994c-ff6c210917d6}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[internalTriggerDirection := TriggerDirection;]]></ST>
         </Implementation>
       </Set>
     </Property>
+    <LineIds Name="PositionTrigger">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.CurrentMover.Get">
+      <LineId Id="3" Count="9" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.Cyclic">
+      <LineId Id="86" Count="3" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="90" Count="3" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="94" Count="5" />
+      <LineId Id="104" Count="33" />
+      <LineId Id="139" Count="12" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.MoverPassedPosition.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.MuteCurrent">
+      <LineId Id="3" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.Position.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.Position.Set">
+      <LineId Id="6" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.TrackId.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.TrackId.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.TriggerDirection.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.TriggerDirection.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

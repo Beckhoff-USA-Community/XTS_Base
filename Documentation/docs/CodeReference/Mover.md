@@ -20,7 +20,7 @@ Mover			: ARRAY [0..GVL.NUM_MOVERS-1] OF Mover;
 ParameterSet	: MoverParameters_typ;
 ```
 
-Movers contain a Cyclic() method that must be called every cycle. This cyclic method must also be given a Collision Avoidance Group reference as an argument.
+Movers contain a Cyclic() method that must be called every cycle. This cyclic method must also be given a Collision Avoidance Group reference as an argument. If track management is used, the CyclicTrack() method must also be called each scan.
 
 ```javascript
 // Call this method cyclically
@@ -360,6 +360,28 @@ IF xCommandSlowMode THEN
 END_IF
 ```
 
+### ActivateTrack
+
+*ActivateTrack( DesiredTrack : Track )*
+
+> Updates the mover's logical track.
+
+This method is used with track management to change the track that the mover is assigned to. Two conditions should be considered when changing tracks.
+- A mover will stop immediately when ActivateTrack is called. It's recommended to only change tracks when the mover is in a stopped position.
+- A mover's position can change when calling ActivateTrack. This will happen if the zero point for the current track and new track are different.
+
+A track change takes several PLC and NC scans. Issuing a motion command while this change is in progress will cause the mover to throw an error. To check if the track change is complete monitor the Mover.IsTrackReady property.
+
+```javascript
+// state machine
+100:
+	Mover[0].ActivateTrack(Track1);
+	IF (Mover[0].IsTrackReady) THEN
+		iState := 200;
+	END_IF;
+200:
+	// mover is ready for additional commands
+```
 ## Properties
 
 #### .CurrentMoveType
@@ -383,7 +405,7 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 
 *LREAL*
 
-> Provides the current destination position for the last movement command issued to the Mover. For Station commands, this will be the TrackPosition of the Station. For Velocity commands with no real destination position, the value is set to +/-1E300.
+> Provides the current destination position for the last movement command issued to the Mover. For Station commands, this will be the Position of the Station. For Velocity commands with no real destination position, the value is set to +/-1E300.
 
 ---
 <br>
@@ -411,6 +433,22 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 <br>
 <br>
 
+#### .CurrentTrack
+
+*POINTER TO Track*
+
+> Returns a pointer to the track that this mover is currently assigned to.
+
+Use the ^ operator to dereference the pointer and query track properties
+
+```javascript
+currentTrackId := Mover[1].CurrentTrack^.Id
+```
+
+---
+<br>
+<br>
+
 #### .IsSyncedToMover
 
 *BOOL*
@@ -426,6 +464,16 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 *BOOL*
 
 > Returns true if the mover is slaved to an external axis and has successfully reached the following position specified by the Master & Slave Sync Positions
+
+---
+<br>
+<br>
+
+#### .IsTrackReady
+
+*BOOL*
+
+> Returns true when the ActivateTrack() method has completed successfully. When using track management motion commands should not be issued unless this value is true or the mover will throw an error.
 
 ---
 <br>
@@ -448,6 +496,21 @@ It is recommended that all evaluations are nested inside IF checks for .IsSynced
 #### .Payload
 
 > !!! Under Construction !!! At the moment, this property is a placeholder for application specific information regarding the current status of products onboard the mover, and can be modified as needed for your application.
+
+---
+<br>
+<br>
+
+#### .TrackInfo
+
+> Returns information provided by MC_ReadTrackPositions for use with track management.
+
+| Member | Type | Description |
+|---|---|---|
+| TrackId | OTCID | The hardware ID of the track the mover is assigned to |
+| PartId | OTCID | The hardware ID of the part the mover is physically present on |
+| TrackPosition | LREAL | Position of the mover measured from the zero point of the track. This may differ from Mover.AxisReference.NcToPLC.ActPos in certain track configurations |
+| PartPosition | LREAL | Position of the mover measured from the zero point of the part the mover is physically on|
 
 ---
 <br>

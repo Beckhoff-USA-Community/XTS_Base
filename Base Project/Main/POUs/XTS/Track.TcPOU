@@ -1,20 +1,181 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Track" Id="{1d568bee-17b0-45d9-8c81-c6842c2a11d5}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK Track
+    <Declaration><![CDATA[FUNCTION_BLOCK Track EXTENDS Objective IMPLEMENTS iTrack
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+	{attribute 'hide'}
+	internalOTCID			: OTCID;	// internal track id for use with MC_ActivateTrack
+	internalId				: INT;	// numeric track desigination i.e. "Track 1"
+	internalMoverList : MoverList;	// working list of movers on this track
+	ErrorTrack				: ErrorTrack;					
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
     <Folder Name="Methods" Id="{39635f7a-3c34-4d67-b666-c6e08a70323b}" />
     <Folder Name="Properties" Id="{5266f954-d54f-4746-897a-a6f4b18b8998}" />
+    <Property Name="CurrentMoverCount" Id="{2d1d239b-a67a-0e41-2ac7-acd8761cf4c8}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentMoverCount : DINT]]></Declaration>
+      <Get Name="Get" Id="{c0df9483-acae-0f74-08b2-039449688a39}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentMoverCount := TrackedMoverCount;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="CurrentMoverList" Id="{359f7362-4b29-0531-16e4-30c0573c9a91}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentMoverList : iMoverList]]></Declaration>
+      <Get Name="Get" Id="{60bc68b5-e5db-0d98-23eb-ecfa5a77a233}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentMoverList := internalMoverList;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Id" Id="{bc141487-48e4-021d-1b8b-19fa2c77c46e}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Id : INT]]></Declaration>
+      <Get Name="Get" Id="{5dbdca49-4776-084f-23a4-b7b52bdccbfc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Id := internalId;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8e0384d9-fde2-0570-1441-0e0a49713398}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[internalId := Id;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="OTCID" Id="{6291d5a9-ab6f-0993-2dbf-1832154b326c}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY OTCID : OTCID]]></Declaration>
+      <Get Name="Get" Id="{6b56faf5-f563-08e5-14ad-8b9811ab1e86}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[OTCID := internalOTCID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{2e4f02ec-95b9-0171-3d64-32136881eb29}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[internalOTCID := OTCID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="RegisterMover" Id="{91ee63c8-16e6-0d11-1bc4-051a0b49e848}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD RegisterMover : BOOL
+VAR_INPUT
+    NewMover : REFERENCE TO Mover;
+END_VAR
+VAR
+	i : ULINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// call the parent function
+SUPER^.RegisterMover(NewMover);
+
+// update the internal MoverList
+// this saves us the time of generating it on every call to CurrentMoverCount
+internalMoverList.UnregisterAll();
+
+FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[0]) - 1 DO
+    IF internalTrackedMovers[i] <> 0 THEN
+		internalMoverList.RegisterMover(internalTrackedMovers[i]^);
+	END_IF
+END_FOR;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UnregisterAll" Id="{331df7c2-5517-0c9f-2789-611ea232bb66}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD UnregisterAll : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// call the parent function
+SUPER^.UnregisterAll();
+
+// update the internal MoverList
+// this saves us the time of generating it on every call to CurrentMoverCount
+internalMoverList.UnregisterAll();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UnregisterMover" Id="{81fa567d-a876-0c41-1aea-870e51858476}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD UnregisterMover : BOOL
+VAR_INPUT
+    RemovingMover : REFERENCE TO Mover;
+END_VAR
+VAR
+	i : ULINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// call the parent function
+SUPER^.UnregisterMover(RemovingMover);
+
+// update the internal MoverList
+// this saves us the time of generating it on every call to CurrentMoverCount
+internalMoverList.UnregisterAll();
+
+FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[0]) - 1 DO
+    IF internalTrackedMovers[i] <> 0 THEN
+		internalMoverList.RegisterMover(internalTrackedMovers[i]^);
+	END_IF
+END_FOR;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="Track">
       <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.CurrentMoverCount.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.CurrentMoverList.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.Id.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.Id.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.OTCID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.OTCID.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.RegisterMover">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="15" Count="2" />
+    </LineIds>
+    <LineIds Name="Track.UnregisterAll">
+      <LineId Id="6" Count="5" />
+    </LineIds>
+    <LineIds Name="Track.UnregisterMover">
+      <LineId Id="6" Count="10" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

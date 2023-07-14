@@ -34,6 +34,12 @@
     <Compile Include="DUTs\MoverState_enum.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\TrackInfo.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\TrackState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
@@ -47,6 +53,9 @@
     <Compile Include="ITFs\iMover.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ITFs\iTrack.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -54,6 +63,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\ErrorMover.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\XTS\ErrorTrack.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\Mover.TcPOU">
@@ -82,6 +94,10 @@
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VISUs\Controls.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
     <Compile Include="VISUs\DiagnosticVisu.TcVIS">
       <SubType>Code</SubType>

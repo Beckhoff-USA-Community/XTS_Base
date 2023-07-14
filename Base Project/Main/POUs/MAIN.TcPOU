@@ -20,7 +20,7 @@ VAR
     ParameterSet 		: MotionParameters_typ;
 
     Station         	: ARRAY[0..GVL.NUM_STATIONS - 1] OF Station;
-    PositionTrigger 	: ARRAY[0..3] OF PositionTrigger;
+    PositionTrigger 	: ARRAY[0..2] OF PositionTrigger;
     SpeedTrigger    	: ARRAY[0..1] OF SpeedTrigger;
     Zone            	: ARRAY[0..3] OF Zone;
 	
@@ -37,6 +37,7 @@ VAR
     i                	: UINT; 	// index variable; gets reused in various FOR loops
     n                	: UINT; 	// secondary index variable, for enabling movers
     allMoversEnabled 	: BOOL; 	// helper flag for verifying enable status of all movers
+	allMoverTracksEnabled : BOOL;	// helper flag for verifying track active status of all movers
 	allMoversDisabled	: BOOL;		// helper flag for verifying disable status of all movers
 	allMoversHalted		: BOOL;		// helper flag for verifying halt status of all movers
 
@@ -50,6 +51,9 @@ VAR
 	stXtsEnvironmentConfiguration	: ST_XtsEnvironmentConfiguration;
 	nEnvironmentState				: INT;
 	
+	// ======== Track management ========
+	Track		: ARRAY [0..GVL.NUM_TRACKS] OF Track;
+
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[	
@@ -160,16 +164,15 @@ CASE MainState OF
 		(*Initialize Station positions, Position Trigger positions, Zones etc. *)
 
         // Initialize station positions
-        Station[0].TrackPosition := 5;
-        Station[1].TrackPosition := 750;
-        Station[2].TrackPosition := 1200;
-        Station[3].TrackPosition := 1300;
-        Station[4].TrackPosition := 1400;
+        Station[0].Position := 5;
+        Station[1].Position := 750;
+        Station[2].Position := 1200;
+        Station[3].Position := 1300;
+        Station[4].Position := 1400;
 
-        PositionTrigger[0].TrackPosition := 1500;
-        PositionTrigger[1].TrackPosition := 2000;
-        PositionTrigger[2].TrackPosition := 3500;
-        PositionTrigger[3].TrackPosition := 4000;
+        PositionTrigger[0].Position := 1500;
+        PositionTrigger[1].Position := 2000;
+        PositionTrigger[2].Position := 3500;
 
         Zone[0].StartPosition := 3750;
         Zone[0].EndPosition   := 750;
@@ -182,8 +185,38 @@ CASE MainState OF
 
         Zone[3].StartPosition := 2750;
         Zone[3].EndPosition   := 3750;
+		
+		// give all tracks their ID number
+		FOR i := 0 TO GVL.NUM_TRACKS DO
+			Track[i].Id := UINT_TO_INT(i);
+		END_FOR
+		
+		// If a single logical track is used (typically aa closed loop) then tracks to not need to be initialized
+		Track[0].OTCID := 0;				// special "absolute reference" case for a single closed loop
+//		Track[1].OTCID:= 16#010100A0;		// value copied from XtsProcessingUnit1 > Track x > Object > Object Id field
 
-        MainState := MS_ENABLED;
+		MainState := MS_ACTIVATE_TRACKS;
+		
+	MS_ACTIVATE_TRACKS:
+		// activate all movers on track[0]
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+            Mover[i].ActivateTrack(Track[0]);
+        END_FOR
+		
+		MainState := MS_WAIT_FOR_TRACKS;
+	
+	MS_WAIT_FOR_TRACKS:
+		// wait for all movers to activate their tracks
+		
+		allMoverTracksEnabled := TRUE;
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+			IF (NOT Mover[i].IsTrackReady) THEN
+            	allMoverTracksEnabled := FALSE;
+			END_IF;
+        END_FOR
+		IF (allMoverTracksEnabled) THEN
+			MainState := MS_ENABLED;	
+		END_IF
 
     MS_ENABLED: // ------------------------------------------------------------- MOVERS ENABLED, STOPPED
 		(*In this state, Movers should be energized and holding their position. They should wait
@@ -211,7 +244,6 @@ CASE MainState OF
 				PositionTrigger[0].RegisterMover( Mover[i] );
 				PositionTrigger[1].RegisterMover( Mover[i] );
 				PositionTrigger[2].RegisterMover( Mover[i] );
-				PositionTrigger[3].RegisterMover( Mover[i] );
             END_FOR
 			
             Zone[0].CurrentMoverList.SetAllVelocity(800).MoveAllToStation(Station[0]);
@@ -274,7 +306,6 @@ CASE MainState OF
 		
         // Position Trigger 0 Logic
         IF PositionTrigger[0].MoverPassedPosition THEN
-            PositionTrigger[1].RegisterMover(PositionTrigger[0].CurrentMover);
             PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
             PositionTrigger[0].MuteCurrent();
         END_IF
@@ -503,5 +534,27 @@ END_CASE
 ]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="MAIN">
+      <LineId Id="660" Count="108" />
+      <LineId Id="770" Count="0" />
+      <LineId Id="772" Count="0" />
+      <LineId Id="774" Count="0" />
+      <LineId Id="776" Count="0" />
+      <LineId Id="778" Count="1" />
+      <LineId Id="781" Count="0" />
+      <LineId Id="783" Count="0" />
+      <LineId Id="787" Count="2" />
+      <LineId Id="791" Count="2" />
+      <LineId Id="795" Count="2" />
+      <LineId Id="799" Count="2" />
+      <LineId Id="803" Count="58" />
+      <LineId Id="863" Count="61" />
+      <LineId Id="926" Count="170" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.InitializeUtilityLibrary">
+      <LineId Id="2" Count="49" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

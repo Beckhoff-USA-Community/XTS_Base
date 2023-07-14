@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <GVL Name="GVL" Id="{ba655886-9947-4787-bd10-a16d0603440f}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
@@ -10,6 +10,8 @@ VAR_GLOBAL CONSTANT
 
     {attribute 'TcInitSymbol'}
     pXtsProcessingUnit : OTCID:=0; // This pointer needs to be initialized in the Main Instance, under Symbol Initialization
+
+	NUM_TRACKS  : USINT := 1;	// This is the number of logical tracks in the system
 
 END_VAR
 VAR_GLOBAL

@@ -42,6 +42,7 @@ nav:
             - Position Trigger:     CodeReference/PositionTrigger.md
             - Speed Trigger:        CodeReference/SpeedTrigger.md
             - Station:              CodeReference/Station.md
+            - Track:                CodeReference/Track.md
             - Zone:                 CodeReference/Zone.md
         - Diagnostics:
             - Basics:           CodeReference/Diagnostics.md

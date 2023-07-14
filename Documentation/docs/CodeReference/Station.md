@@ -16,9 +16,9 @@ Station		: ARRAY [0..GVL.NUM_STATIONS-1] OF Station;
 
 ```javascript
 // Initialization
-Station[1].TrackPosition		:= 250;
-Station[2].TrackPosition		:= 500;
-Station[3].TrackPosition		:= 750;
+Station[1].Position		:= 250;
+Station[2].Position		:= 500;
+Station[3].Position		:= 750;
 ```
 
 ```javascript
@@ -45,7 +45,7 @@ Stations also automatically *unregister* movers that have been redirected with a
 
 ```javascript
 Mover[2].MoveToStation( Station[3] );
-Mover[2].MoveToPosition( Station[3].TrackPosition );
+Mover[2].MoveToPosition( Station[3].Position );
 ```
 
 Here, the Station will not report *MoverInPosition*.
@@ -96,19 +96,27 @@ It is recommended that all evaluations are nested inside IF checks for .MoverInP
 
 #### .TrackedMoverCount
 
-> Simply reports the number of Movers that are currently registered with the Station. Because Stations automatically deregister movers that are not currently destined for this Station, this value also represents the current number of incoming movers
+> Simply reports the number of Movers that are currently registered with the Station. Because Stations automatically deregister movers that are not currently destined for this Station, this value also represents the current number of incoming movers.
 
 ---
 <br>
 <br>
 
-#### .TrackPosition
+#### .Position
 
 > Current placement of the Station along the track
 
 ---
 <br>
 <br>
+
+#### .TrackId
+*DINT*
+> Track that the station is assigned to when using track management. See the [Track](Track.md) object.
+---
+<br>
+<br>
+
 
 ## Extra Examples
 
