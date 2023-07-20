@@ -8,6 +8,8 @@
 
 ## Use
 
+Tracks are a software defined group of motor modules that can be grouped together independently of the physical machine layout. Tracks allow you to switch movers between different groups of otherwise disconnected motor modules. A common use case is an oval system layout with a reject spur. Movers typically travel around the oval during normal production, but stop at a track "switch" which moves between the oval and a separate reject spur.  
+
 The track object is only necessary when using track management. For most applications that utilize a single, closed loop track the Track object does not need to be addressed directly. Movers, zones, stations and position triggers all reference a track internally but are set with defaults of TrackID 0 which is a special case that eliminates the need for the Track object in these situations.
 
 ---
@@ -20,11 +22,11 @@ It is recommended, but not required, to declare Tracks as an array. Starting at 
 Track			: ARRAY [0..GVL.NUM_TRACKS] OF Track;
 
 ```
-Tracks then need to have an ID and OTCID assigned to them. Index 0 should use 0 for both values as this is a special case for the absolute hardware position that may be useful during startup or recovers of some track configurations.
+Tracks then need to have an ID and OTCID assigned to them. Index 0 should use 0 for both values as this is a special case for the absolute hardware position that may be useful during startup or recovery of some track configurations.
 
-OTCID is found in System > TcCOM Objects > XTS Processing Unit 1 > Track # and is labeled Object ID on the Object tab. Note that the value displayed uses the "0x" hex notation, but needs to be entered using "16#" hex notation in the code
+OTCID is found in System > TcCOM Objects > XTS Processing Unit 1 > Track # and is labeled Object ID on the Object tab. Note that the value displayed uses the "0x" hex notation, but needs to be entered using "16#" hex notation in the code.
 
-For simplicity ID should match the array index. This application already includes code that assigns the ID to match the array index of the track.
+For simplicity the ID should match the array index. This application already includes code that assigns the ID to match the array index of the track.
 
 
 ```javascript
@@ -37,7 +39,7 @@ For simplicity ID should match the array index. This application already include
 ```
 ## Use
 
-Tracks are used in three ways:
+Tracks are used in three ways in software:
 
 - Parameters to other objects
 - Managing movers on a track
