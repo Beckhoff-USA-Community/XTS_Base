@@ -91,6 +91,7 @@ VAR
 	fbReadM1DetectValid		: ADSREAD;
 	fbReadM1DetectActive	: ADSREAD;
 	fbWriteM1Detect			: ADSWRITE;
+	fbDelayM1Timer			: TON;
 	IdDetectionMode			: DINT;			// 0: Standard 1: Mover1
 	IsIdDetectionValid		: BOOL;			// M1 Detection has completed
 	IsIdDetectionActive		: BOOL;			// M1 Detection currently underway
@@ -361,7 +362,21 @@ CASE internalState OF
 		fbWriteM1Detect.IDXOFFS			:= 16#03080250;
 		fbWriteM1Detect.WRITE			:= TRUE;
 		
-		internalState	:= MV_M1_READSTATUS;	// go back to Read M1 Detect status to confirm it has completed
+		internalState	:= MV_M1_DELAY;	// go back to Read M1 Detect status to confirm it has completed
+		
+	MV_M1_DELAY:	// ------------------------------------------------------ delay to allow M1 Detect Completion
+	
+		Ready	:= FALSE;
+		Busy	:= TRUE;
+		Error	:= FALSE;
+		ErrorID	:= 0;
+		
+		fbDelayM1Timer( IN := TRUE, PT := T#500MS );
+		
+		IF fbDelayM1Timer.Q THEN
+			fbDelayM1Timer( IN := FALSE );
+			internalState	:= MV_M1_READSTATUS;
+		END_IF
 			
 	MV_ENABLING: // ------------------------------------------------------- axis is enabling
 	
@@ -1805,7 +1820,9 @@ SyncToMover		:= THIS^;
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Cyclic">
-      <LineId Id="3" Count="276" />
+      <LineId Id="3" Count="140" />
+      <LineId Id="507" Count="13" />
+      <LineId Id="144" Count="135" />
       <LineId Id="465" Count="1" />
       <LineId Id="483" Count="1" />
       <LineId Id="487" Count="14" />
