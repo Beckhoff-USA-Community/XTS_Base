@@ -39,6 +39,7 @@ VAR
 	internalDisable		: BOOL;		// moves the axis from Standstill to Disabled, removes Axis from CA Group
 	
 	internalCurrentMoveType			: MoverCommandType_enum;	// Most recent move command type
+	internalReissue					: BOOL;						// reissue last command flag alows summing of all reissue commands per-scan
 	
 	internalCurrentDestPosition		: LREAL;	// Track position of the current motion destination;
 	internalCurrentDestObjective	: STRING;	// Instance path of the current destination objective
@@ -90,6 +91,7 @@ VAR
 	fbReadM1DetectValid		: ADSREAD;
 	fbReadM1DetectActive	: ADSREAD;
 	fbWriteM1Detect			: ADSWRITE;
+	fbDelayM1Timer			: TON;
 	IdDetectionMode			: DINT;			// 0: Standard 1: Mover1
 	IsIdDetectionValid		: BOOL;			// M1 Detection has completed
 	IsIdDetectionActive		: BOOL;			// M1 Detection currently underway
@@ -360,7 +362,21 @@ CASE internalState OF
 		fbWriteM1Detect.IDXOFFS			:= 16#03080250;
 		fbWriteM1Detect.WRITE			:= TRUE;
 		
-		internalState	:= MV_M1_READSTATUS;	// go back to Read M1 Detect status to confirm it has completed
+		internalState	:= MV_M1_DELAY;	// go back to Read M1 Detect status to confirm it has completed
+		
+	MV_M1_DELAY:	// ------------------------------------------------------ delay to allow M1 Detect Completion
+	
+		Ready	:= FALSE;
+		Busy	:= TRUE;
+		Error	:= FALSE;
+		ErrorID	:= 0;
+		
+		fbDelayM1Timer( IN := TRUE, PT := T#500MS );
+		
+		IF fbDelayM1Timer.Q THEN
+			fbDelayM1Timer( IN := FALSE );
+			internalState	:= MV_M1_READSTATUS;
+		END_IF
 			
 	MV_ENABLING: // ------------------------------------------------------- axis is enabling
 	
@@ -498,6 +514,26 @@ CASE internalState OF
 		END_IF;
 		
 		THIS^.CyclicTrack();
+		
+		IF (internalReissue) THEN
+			THIS^.SourceInstancePath	:= 'ReissueCommand';
+
+			CASE internalCurrentMoveType OF
+				MOVETYPE_NONE:
+					// No current command to reissue	
+				MOVETYPE_POSITION:
+					THIS^.MoveToPosition( internalCurrentDestPosition );
+				MOVETYPE_STATION:
+					THIS^.MoveToStation( internalCurrentDestStation );
+				MOVETYPE_VELOCITY:
+					THIS^.MoveVelocity( MotionParameters.Velocity );
+				MOVETYPE_SYNC_MOVER:
+					THIS^.SyncToMover( internalMasterMover, internalGap );
+				MOVETYPE_SYNC_AXIS:
+					// This command should perhaps not be compatible with Reissue command
+			END_CASE
+			internalReissue := FALSE;
+		END_IF
 
 		// And catch all internal function block errors
 		IF fbMoveAbsCA[0].Error THEN
@@ -1053,6 +1089,7 @@ IF NOT( Ready ) THEN	// if the mover is not ready & able to accept a moveabs com
 ELSE	// otherwise let 'er rip
 	
 	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+	internalReissue := FALSE;	// reissue no longer necessary
 	
 	IF fbMoveAbsCA[0].Busy = FALSE THEN
 		
@@ -1095,6 +1132,10 @@ ELSE	// otherwise let 'er rip
 		
 		fbMoveAbsCA[1]( Axis := AxisReference );
 		 
+	ELSE
+		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveToPositionOverload,0 );
+		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(DestinationPosition);
+		MsgCreate.Send(0);
 	END_IF
 	
 END_IF
@@ -1138,6 +1179,7 @@ END_VAR]]></Declaration>
 ELSE	// otherwise let 'er rip
 	
 	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+	internalReissue := FALSE;	// reissue no longer necessary
 	
 	IF fbMoveAbsCA[0].Busy = FALSE THEN
 		
@@ -1179,6 +1221,11 @@ ELSE	// otherwise let 'er rip
 
 		fbMoveAbsCA[1]( Axis := AxisReference );	
 
+	ELSE
+		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveToStationOverload,0 );
+		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(DestinationStation.InstancePath);
+		MsgCreate.Send(0);
+		
 	END_IF
 	
 	// Set the current destination object to the instance path of the objective, or 0 if unassigned
@@ -1228,6 +1275,7 @@ END_VAR]]></Declaration>
 ELSE
 	
 	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+	internalReissue := FALSE;	// reissue no longer necessary
 	
 	negativeCommand					:= SEL( DesiredVelocity < 0, FALSE, TRUE );
 	MotionParameters.Velocity		:= ABS( DesiredVelocity );
@@ -1265,8 +1313,11 @@ ELSE
 		fbMoveRelCA[1].Execute		:= TRUE;		// execute this block, and...
 		fbMoveRelCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
 
-		fbMoveRelCA[1]( Axis := AxisReference );		
-
+		fbMoveRelCA[1]( Axis := AxisReference );
+	ELSE
+		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveVelocityOverload,0 );
+		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(DesiredVelocity);
+		MsgCreate.Send(0);
 	END_IF
 
 END_IF
@@ -1326,22 +1377,8 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-THIS^.SourceInstancePath	:= 'ReissueCommand';
-
-CASE internalCurrentMoveType OF
-	MOVETYPE_NONE:
-		// No current command to reissue	
-	MOVETYPE_POSITION:
-		THIS^.MoveToPosition( internalCurrentDestPosition );
-	MOVETYPE_STATION:
-		THIS^.MoveToStation( internalCurrentDestStation );
-	MOVETYPE_VELOCITY:
-		THIS^.MoveVelocity( MotionParameters.Velocity );
-	MOVETYPE_SYNC_MOVER:
-		THIS^.SyncToMover( internalMasterMover, internalGap );
-	MOVETYPE_SYNC_AXIS:
-		// This command should perhaps not be compatible with Reissue command
-END_CASE
+// set flag for use in .Cyclic()
+internalReissue := TRUE;
 
 
 ReissueCommand		:= THIS^;]]></ST>
@@ -1538,6 +1575,7 @@ IF NOT( Ready ) THEN
 ELSE
 	
 	newCallTime			:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+	internalReissue := FALSE;	// reissue no longer necessary
 	
 	internalMasterAxis		REF= MasterAxis;
 	
@@ -1601,7 +1639,11 @@ ELSE
 		fbGearInPosAxisCA[1].BufferMode			:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
 		
 		fbGearInPosAxisCA[1]( Master := MasterAxis, Slave := THIS^.AxisReference );
-		
+
+	ELSE
+		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSyncToAxisOverload, 0 );
+		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+		MsgCreate.Send(0);
 	END_IF
 	
 END_IF
@@ -1650,6 +1692,7 @@ END_VAR]]></Declaration>
 ELSE	// let 'er rip
 	
 	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+	internalReissue := FALSE;	// reissue no longer necessary
 
 	internalMasterMover		REF= MasterMover;
 	internalGap				:= Gap;
@@ -1707,6 +1750,11 @@ ELSE	// let 'er rip
 		
 		
 		fbGearInPosMoverCA[1]( Master := internalMasterMover.AxisReference, Slave := THIS^.AxisReference );
+		
+	ELSE
+		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSyncToMoverOverload,0 );
+		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(MasterMover.InstancePath).AddLReal(Gap);
+		MsgCreate.Send(0);
 		
 	END_IF
 
@@ -1772,8 +1820,15 @@ SyncToMover		:= THIS^;
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Cyclic">
-      <LineId Id="3" Count="276" />
+      <LineId Id="3" Count="140" />
+      <LineId Id="507" Count="13" />
+      <LineId Id="144" Count="135" />
       <LineId Id="465" Count="1" />
+      <LineId Id="483" Count="1" />
+      <LineId Id="487" Count="14" />
+      <LineId Id="485" Count="0" />
+      <LineId Id="502" Count="0" />
+      <LineId Id="486" Count="0" />
       <LineId Id="280" Count="45" />
       <LineId Id="468" Count="2" />
       <LineId Id="467" Count="0" />
@@ -1885,20 +1940,39 @@ SyncToMover		:= THIS^;
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToPosition">
-      <LineId Id="3" Count="16" />
+      <LineId Id="3" Count="8" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="12" Count="7" />
       <LineId Id="78" Count="1" />
       <LineId Id="20" Count="17" />
       <LineId Id="81" Count="1" />
       <LineId Id="80" Count="0" />
-      <LineId Id="38" Count="30" />
+      <LineId Id="38" Count="10" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="95" Count="1" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="49" Count="19" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToStation">
-      <LineId Id="97" Count="73" />
+      <LineId Id="97" Count="7" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="105" Count="39" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="184" Count="1" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="145" Count="25" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveVelocity">
-      <LineId Id="3" Count="72" />
+      <LineId Id="3" Count="7" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="11" Count="37" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="50" Count="25" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Payload.Get">
@@ -1910,7 +1984,9 @@ SyncToMover		:= THIS^;
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.ReissueCommand">
-      <LineId Id="3" Count="18" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="19" Count="2" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetAcceleration">
@@ -1934,7 +2010,9 @@ SyncToMover		:= THIS^;
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SyncToAxis">
-      <LineId Id="3" Count="23" />
+      <LineId Id="3" Count="9" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="13" Count="13" />
       <LineId Id="107" Count="0" />
       <LineId Id="109" Count="1" />
       <LineId Id="108" Count="0" />
@@ -1942,11 +2020,22 @@ SyncToMover		:= THIS^;
       <LineId Id="111" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="112" Count="0" />
-      <LineId Id="54" Count="36" />
+      <LineId Id="54" Count="14" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="133" Count="1" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="70" Count="20" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SyncToMover">
-      <LineId Id="3" Count="88" />
+      <LineId Id="3" Count="7" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="11" Count="56" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="68" Count="23" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

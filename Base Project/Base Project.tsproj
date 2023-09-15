@@ -3904,7 +3904,7 @@ External Setpoint Generation:
 		</DataType>
 		<DataType>
 			<Name GUID="{FA8688D6-9668-4845-AED5-C25BE790FF69}" Namespace="MC" TcBaseType="true">MC_GearInPosDefaultDynamicsAfterSync</Name>
-			<Comment TxtId=""><![CDATA[Specifies the default dynamics used for MC_GearInPosCA command after the slave axis has become synchronous for the first time.]]></Comment>
+			<Comment TxtId=""><![CDATA[Specifies the default dynamics used for MC_GearInPosCA command after the slave axis has become synchronous for the first time. (see GearInPosCAOptions)]]></Comment>
 			<BitSize>32</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
 			<EnumInfo>
@@ -4001,6 +4001,13 @@ and will return to Group State Standby when the situation permits.
 				<Comment><![CDATA[Indicate whether all axes are physically standing, i.e. velocity and acceleration are zero. This definition differs from the definition of the GroupStateMoving, which indicates whether a Motion Command is currently active.]]></Comment>
 				<BitSize>1</BitSize>
 				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>InPosition</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<Comment><![CDATA[Indicates whether the group is in position.]]></Comment>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
 			</SubItem>
 		</DataType>
 		<DataType>
@@ -4311,7 +4318,7 @@ and will return to Group State Standby when the situation permits.
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{A46942AB-8119-469F-8FB9-31307702CB5F}" PersistentType="true">XtsBaseEventClass</Name>
+			<Name GUID="{1859B616-1305-42C4-9209-A1CDBA9AFBC6}" PersistentType="true">XtsBaseEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
 			<EventId>
 				<Name Id="1">UserEvent</Name>
@@ -4398,6 +4405,31 @@ and will return to Group State Standby when the situation permits.
 				<DisplayName TxtId=""><![CDATA[{0} ActivateTrack command complete. TrackId: {1}]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
+			<EventId>
+				<Name Id="18">MoverMoveToPositionOverload</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveToPosition command overloaded buffer. Commanded Position = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="19">MoverMoveToStationOverload</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveToStation command overloaded buffer. Commanded Station = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="20">MoverSyncToMoverOverload</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SyncToMover command overloaded buffer. MasterMover = {2}. GapDistance = {3}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="21">MoverSyncToAxisOverload</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SyncToAxis command overloaded buffer. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="22">MoverMoveVelocityOverload</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveVelocity command overloaded buffer. Commanded Velocity = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
 			<Hides>
 				<Hide GUID="{05156EAA-0F28-483B-B3ED-0A061BA2DDE9}"/>
 				<Hide GUID="{18E0FAE1-EDAC-4CEB-9B5F-AEA0EA7CB0BB}"/>
@@ -4425,6 +4457,8 @@ and will return to Group State Standby when the situation permits.
 				<Hide GUID="{2B435041-8BE5-4A36-B2B9-02DDB0A46756}"/>
 				<Hide GUID="{C1F56B6B-2FA5-4868-B3DD-F95A36FCCFBF}"/>
 				<Hide GUID="{42F400CB-95A8-4C06-BFF7-C26D2D0E2F33}"/>
+				<Hide GUID="{A46942AB-8119-469F-8FB9-31307702CB5F}"/>
+				<Hide GUID="{55A1315C-BCCD-427F-89D8-C9CE2941C762}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

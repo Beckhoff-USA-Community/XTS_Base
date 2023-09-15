@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <DUT Name="MoverState_enum" Id="{89a812d1-f23a-47af-b019-1e4ee25dac44}">
     <Declaration><![CDATA[{attribute 'strict'}
 TYPE MoverState_enum : (
@@ -10,6 +10,7 @@ TYPE MoverState_enum : (
         MV_M1_READSTATUS   := 40,
         MV_M1_EVALSTATUS   := 50,
         MV_M1_DETECT       := 60,
+		MV_M1_DELAY		   := 65,
         MV_ENABLING        := 70,
         MV_ADDTOGROUP      := 80,
         MV_READGROUPSTATUS := 90,
