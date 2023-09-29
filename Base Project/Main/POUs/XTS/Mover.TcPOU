@@ -430,8 +430,8 @@ CASE internalState OF
 		fbGroupStatus.Enable			:= TRUE;
 		
 		fbGroupStatus( AxesGroup := GroupReference );	// get current information
-		
-		IF fbGroupStatus.Valid AND fbGroupStatus.GroupErrorStop THEN
+		// trigger reset for group only if this is the first mover in the group
+		IF fbGroupStatus.Valid AND fbGroupStatus.GroupErrorStop AND IdentInGroup = 0 THEN
 			fbGroupReset.Execute		:= TRUE;
 		ELSIF fbGroupStatus.Valid AND fbGroupStatus.GroupDisabled THEN
 			fbGroupReset.Execute		:= FALSE;
@@ -446,7 +446,7 @@ CASE internalState OF
 			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupStatus' );
 			internalState				:= MV_ERROR;
 		ELSIF fbGroupReset.Error THEN
-			ErrorID						:= fbGroupStatus.ErrorId;
+			ErrorID						:= fbGroupReset.ErrorId;
 			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupReset' );
 			internalState				:= MV_ERROR;
 		END_IF
