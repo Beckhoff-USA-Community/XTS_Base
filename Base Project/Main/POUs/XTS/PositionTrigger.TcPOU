@@ -9,7 +9,7 @@ VAR
     internalTriggerDirection 	 : Tc2_MC2.MC_Direction;
     internalMoverPassedPosition : BOOL;
     internalCurrentMover     	 : POINTER TO Mover;
-	internalTrackId				: DINT;
+	internalTrackId				: DINT := 1;
     moverLastPos              	: ARRAY[0..GVL.NUM_MOVERS - 1] OF LREAL; // Positions of tracked movers from last cycle
 END_VAR]]></Declaration>
     <Implementation>

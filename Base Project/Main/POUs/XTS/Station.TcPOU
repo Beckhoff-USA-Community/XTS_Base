@@ -6,7 +6,7 @@ VAR
 
     {attribute 'hide'}
     internalPosition : LREAL;
-	internalTrackId : DINT; 
+	internalTrackId : DINT := 1; 
 
 END_VAR]]></Declaration>
     <Implementation>

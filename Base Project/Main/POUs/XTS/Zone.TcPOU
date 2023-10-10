@@ -8,7 +8,7 @@ VAR
     internalStartPosition : LREAL;
     internalEndPosition   : LREAL;
     internalDirection     : Tc2_MC2.MC_Direction;
-	internalTrackId : DINT; 
+	internalTrackId : DINT := 1; 
 
     internalMoverList : MoverList;
 
