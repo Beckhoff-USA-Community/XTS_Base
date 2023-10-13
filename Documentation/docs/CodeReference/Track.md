@@ -10,7 +10,7 @@
 
 Tracks are a software defined group of motor modules that can be grouped together independently of the physical machine layout. Tracks allow you to switch movers between different groups of otherwise disconnected motor modules. A common use case is an oval system layout with a reject spur. Movers typically travel around the oval during normal production, but stop at a track "switch" which moves between the oval and a separate reject spur.  
 
-The track object is only necessary when using track management. For most applications that utilize a single, closed loop track the Track object does not need to be addressed directly. Movers, zones, stations and position triggers all reference a track internally but are set with defaults of TrackID 0 which is a special case that eliminates the need for the Track object in these situations.
+The track object is only necessary when using track management. For most applications that utilize a single, closed loop track the Track object does not need to be addressed directly. Movers, zones, stations and position triggers all reference a track internally but are set with defaults of TrackID 1 which is generated automatically by the configuration tool.
 
 ---
 
@@ -30,11 +30,10 @@ For simplicity the ID should match the array index. This application already inc
 
 
 ```javascript
-		// If a single logical track is used (typically aa closed loop) then tracks to not need to be initialized
-		Track[0].OTCID := 0;				// special "absolute reference" case for a single closed loop
-		Track[1].OTCID := 16#010100B0;
-		Track[2].OTCID := 16#010100D0;
-		// additional tracks
+		Track[0].OTCID := 0;				// special "absolute reference" case, not typically used
+		Track[1].OTCID := 16#010100B0;	// default track used by code
+		Track[2].OTCID := 16#010100D0;	// additional track
+		// ... additional tracks
 
 ```
 ## Use
@@ -135,7 +134,7 @@ The methods listed below are used internally within the base code and should not
 
 ### CurrentMoverList
 
-*MoverList (Ready Only)*
+*MoverList (Read Only)*
 
 > Provides a MoverList object reference, containing all Movers that are currently assigned to this track. As a MoverList, methods are provided to command all movers as a group. See [MoverList](MoverList.md) for more information
 
