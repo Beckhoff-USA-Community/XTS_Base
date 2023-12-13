@@ -115,6 +115,7 @@ VAR
 	lastCallSetVel		: LREAL;
 	lastCallSync		: LREAL;
 	lastCallValidateTrack : LREAL;
+	lastCallSetGap		: LREAL;
 	
 END_VAR
 VAR_IN_OUT
@@ -1119,6 +1120,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[0].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
@@ -1139,6 +1141,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[1].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 
@@ -1212,6 +1215,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[0].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
@@ -1232,6 +1236,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[1].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
@@ -1321,7 +1326,7 @@ ELSE
 		fbMoveRelCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
 		fbMoveRelCA[0].Distance		:= SEL( negativeCommand, RelDistance, -RelDistance );
-		
+		fbMoveRelCA[0].Gap			:= MotionParameters.Gap;
 		      
 		fbMoveRelCA[0].BufferMode	:= mcAborting;
 		      
@@ -1339,7 +1344,7 @@ ELSE
 		fbMoveRelCA[1].Velocity		:= MotionParameters.Velocity;
 		fbMoveRelCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveRelCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
-		
+		fbMoveRelCA[1].Gap			:= MotionParameters.Gap;
 		fbMoveRelCA[1].Distance		:= SEL( negativeCommand, RelDistance, -RelDistance );
 		      
 		fbMoveRelCA[1].BufferMode	:= mcAborting;
@@ -1512,6 +1517,37 @@ THIS^.SourceInstancePath	:= 'Direct access';
 lastCallSetDir		:= newCallTime;
 
 SetDirection		:= THIS^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetGap" Id="{b046818d-e6b7-0786-00d1-dec2154637f1}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetGap : iMover
+VAR_INPUT
+	Gap	: LREAL;
+END_VAR
+VAR
+	newCallTime		: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate		: FB_TcMessage;	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+
+MotionParameters.Gap		:= LIMIT( 0, Gap, 1E300 );	// upper limit is capped by the axis object parameters
+
+THIS^.ReissueCommand();
+
+IF ( newCallTime - lastCallSetGap ) > 1 THEN
+	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetGap,0 );
+	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Gap);
+	MsgCreate.Send(0);
+END_IF;
+
+THIS^.SourceInstancePath	:= 'Direct access';
+
+lastCallSetGap		:= newCallTime;
+
+SetGap		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetJerk" Id="{de57e13f-25de-42a4-aec6-c6dc8b78d964}" FolderPath="Methods\">
@@ -2018,8 +2054,10 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="9" Count="2" />
       <LineId Id="92" Count="0" />
       <LineId Id="12" Count="7" />
+      <LineId Id="109" Count="0" />
       <LineId Id="78" Count="1" />
       <LineId Id="20" Count="17" />
+      <LineId Id="110" Count="0" />
       <LineId Id="81" Count="1" />
       <LineId Id="80" Count="0" />
       <LineId Id="38" Count="10" />
@@ -2036,7 +2074,11 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="198" Count="0" />
       <LineId Id="102" Count="2" />
       <LineId Id="180" Count="0" />
-      <LineId Id="105" Count="39" />
+      <LineId Id="105" Count="7" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="113" Count="19" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="133" Count="11" />
       <LineId Id="182" Count="0" />
       <LineId Id="181" Count="0" />
       <LineId Id="184" Count="1" />
@@ -2089,6 +2131,10 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
     <LineIds Name="Mover.SetDirection">
       <LineId Id="3" Count="16" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetGap">
+      <LineId Id="14" Count="15" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SetJerk">
       <LineId Id="3" Count="16" />

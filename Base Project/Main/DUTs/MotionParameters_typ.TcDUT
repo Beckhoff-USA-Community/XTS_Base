@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <DUT Name="MotionParameters_typ" Id="{bd3dfc46-8034-4584-b9a8-07f88efb1905}">
     <Declaration><![CDATA[TYPE MotionParameters_typ :
     STRUCT
@@ -9,6 +9,7 @@
         Deceleration : LREAL;                           // mm/s2
         Velocity     : LREAL;                           // mm/s
         Direction    : Tc3_Mc3Definitions.MC_Direction; // MC_Direction
+		Gap			 : LREAL;							// mm
 
     END_STRUCT
 END_TYPE]]></Declaration>

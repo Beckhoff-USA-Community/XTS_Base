@@ -106,6 +106,7 @@ CASE MainState OF
 		ParameterSet.Deceleration := 1E4; // mm/s2
 		ParameterSet.Velocity     := 1E3; // mm/s
 		ParameterSet.Direction    := mcDirectionPositive;
+		ParameterSet.Gap		  := 85.0; // mm
 
         FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
             Mover[i].MotionParameters := ParameterSet;
@@ -535,7 +536,9 @@ END_CASE
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="660" Count="108" />
+      <LineId Id="660" Count="49" />
+      <LineId Id="1150" Count="0" />
+      <LineId Id="710" Count="58" />
       <LineId Id="770" Count="0" />
       <LineId Id="772" Count="0" />
       <LineId Id="774" Count="0" />

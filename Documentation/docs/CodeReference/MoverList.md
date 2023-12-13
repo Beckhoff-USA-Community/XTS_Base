@@ -205,6 +205,20 @@ MoverListA.SetAllDirection( mcDirectionPositive );
 <br>
 <br>
 
+### SetAllGap
+
+*SetAllFap( Gap : LREAL )*
+
+> Sets the gap for every mover in the list
+
+```javascript
+MoverListA.Gap( 65.0 );
+```
+
+---
+<br>
+<br>
+
 ### SetAllJerk
 
 *SetAllJerk( DesiredJerk : LREAL )*

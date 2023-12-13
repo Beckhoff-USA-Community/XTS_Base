@@ -4318,7 +4318,7 @@ and will return to Group State Standby when the situation permits.
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{25436388-0485-4BC1-B33E-D3CECAA7EB09}" PersistentType="true">XtsBaseEventClass</Name>
+			<Name GUID="{7C1A0E4F-F128-492B-8F88-026CC1009159}" PersistentType="true">XtsBaseEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
 			<EventId>
 				<Name Id="1">UserEvent</Name>
@@ -4433,7 +4433,12 @@ and will return to Group State Standby when the situation permits.
 			<EventId>
 				<Name Id="23">ValidateTrackError</Name>
 				<DisplayName TxtId=""><![CDATA[{0} Motion command called on mover with invalid track. Source: {1}]]></DisplayName>
-				<Severity>Verbose</Severity>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="24">MoverSetGap</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetGap command issued. Commanded Gap = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
 			</EventId>
 			<Hides>
 				<Hide GUID="{05156EAA-0F28-483B-B3ED-0A061BA2DDE9}"/>
@@ -4465,6 +4470,7 @@ and will return to Group State Standby when the situation permits.
 				<Hide GUID="{A46942AB-8119-469F-8FB9-31307702CB5F}"/>
 				<Hide GUID="{55A1315C-BCCD-427F-89D8-C9CE2941C762}"/>
 				<Hide GUID="{1859B616-1305-42C4-9209-A1CDBA9AFBC6}"/>
+				<Hide GUID="{25436388-0485-4BC1-B33E-D3CECAA7EB09}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
@@ -5235,11 +5241,11 @@ and will return to Group State Standby when the situation permits.
 							<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
 								<Name>TrackObjectIDs</Name>
 								<Comment><![CDATA[Returns an array containing the object IDs of all tracks.]]></Comment>
-								<BitSize>64</BitSize>
+								<BitSize>32</BitSize>
 								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 								<ArrayInfo>
 									<LBound>0</LBound>
-									<Elements Min="1" Max="500">2</Elements>
+									<Elements Min="1" Max="500">1</Elements>
 								</ArrayInfo>
 								<PTCID>#x0308020f</PTCID>
 								<ContextId>1</ContextId>
@@ -6511,10 +6517,6 @@ and will return to Group State Standby when the situation permits.
 							</Value>
 							<Value>
 								<Name>TrackObjectIDs[0]</Name>
-								<Value>0</Value>
-							</Value>
-							<Value>
-								<Name>TrackObjectIDs[1]</Name>
 								<Value>0</Value>
 							</Value>
 							<Value>
