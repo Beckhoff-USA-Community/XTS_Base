@@ -65,9 +65,6 @@
     <Compile Include="POUs\XTS\ErrorMover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\XTS\ErrorTrack.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\XTS\Mover.TcPOU">
       <SubType>Code</SubType>
     </Compile>

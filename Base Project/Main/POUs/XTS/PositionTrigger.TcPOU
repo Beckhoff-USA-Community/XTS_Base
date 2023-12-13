@@ -55,7 +55,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[currentIsRegistered		:= FALSE;
 
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-    IF internalTrackedMovers[i] <> 0 THEN
+    IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.IsTrackReady THEN
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrackId) THEN
 	
