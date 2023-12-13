@@ -1265,6 +1265,9 @@ VAR
 END_VAR
 VAR_INST
 	MsgCreate		: FB_TcMessage;	
+END_VAR
+VAR CONSTANT
+	RelDistance: LREAL := 1e10;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT ( ready ) THEN
@@ -1288,7 +1291,7 @@ ELSE
 		fbMoveRelCA[0].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveRelCA[0].Velocity		:= MotionParameters.Velocity;
 		
-		fbMoveRelCA[0].Distance		:= SEL( negativeCommand, 1E100, -1E100 );
+		fbMoveRelCA[0].Distance		:= SEL( negativeCommand, RelDistance, -RelDistance );
 		
 		      
 		fbMoveRelCA[0].BufferMode	:= mcAborting;
@@ -1306,7 +1309,7 @@ ELSE
 		fbMoveRelCA[1].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveRelCA[1].Velocity		:= MotionParameters.Velocity;
 		      
-		fbMoveRelCA[1].Distance		:= SEL( negativeCommand, 1E100, -1E100 );
+		fbMoveRelCA[1].Distance		:= SEL( negativeCommand, RelDistance, -RelDistance );
 		      
 		fbMoveRelCA[1].BufferMode	:= mcAborting;
 		      
@@ -1895,7 +1898,8 @@ SyncToMover		:= THIS^;
       <LineId Id="87" Count="0" />
       <LineId Id="86" Count="0" />
       <LineId Id="88" Count="1" />
-      <LineId Id="95" Count="3" />
+      <LineId Id="95" Count="2" />
+      <LineId Id="177" Count="0" />
       <LineId Id="100" Count="2" />
       <LineId Id="99" Count="0" />
       <LineId Id="92" Count="2" />
