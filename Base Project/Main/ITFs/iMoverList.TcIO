@@ -9,6 +9,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="DestinationStation" Id="{5911a55f-1122-0e1b-277d-d8250281482e}">
+      <Declaration><![CDATA[METHOD DestinationStation : iMoverList
+VAR_INPUT
+	Destination	: REFERENCE TO Station;
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="GetMoverByLocation" Id="{08ab6dd2-55e6-476a-991b-26d3f0ccc58d}">
       <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE to Mover
 VAR_INPUT

@@ -177,6 +177,17 @@ CurrentDestinationPosition		:= internalCurrentDestPosition;]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Property Name="CurrentDestinationTrack" Id="{f44717ff-7baf-0aa6-3174-9f719de28f4d}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentDestinationTrack : DINT]]></Declaration>
+      <Get Name="Get" Id="{8c28783f-5955-0092-0fca-8afe86f48bde}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentDestinationTrack := internalCurrentDestStation.TrackId;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="CurrentMoveType" Id="{97c82f4e-fad3-4ecf-8f48-6f47f3a34a61}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY CurrentMoveType : MoverCommandType_enum]]></Declaration>
@@ -797,6 +808,8 @@ CASE internalTrackState OF
 		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrackComplete, 0);
 		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(THIS^.CurrentTrack^.Id);
 		MsgCreate.Send(0);
+		// register mover
+		internalTrack^.RegisterMover(THIS^);
 		internalTrackState := TrackState.WAIT_END;
 		
 	TrackState.ERROR:
@@ -810,8 +823,6 @@ CASE internalTrackState OF
 	TrackState.WAIT_END: 
 		// falling edge detection for internalActivateTrackFlag
 		IF (NOT internalActivateTrackFlag) THEN
-			// register mover
-			internalTrack^.RegisterMover(THIS^);
 			internalTrackState := TrackState.WAIT_FOR_COMMAND;	
 		END_IF
 		internalActivateTrackFlag := FALSE;
@@ -1860,6 +1871,9 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="3" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="Mover.CurrentDestinationTrack.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
     <LineIds Name="Mover.CurrentMoveType.Get">
       <LineId Id="3" Count="0" />
       <LineId Id="2" Count="0" />
@@ -1936,6 +1950,7 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="144" Count="0" />
       <LineId Id="123" Count="1" />
       <LineId Id="122" Count="0" />
+      <LineId Id="192" Count="1" />
       <LineId Id="149" Count="0" />
       <LineId Id="68" Count="0" />
       <LineId Id="56" Count="3" />
@@ -1943,7 +1958,8 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="60" Count="0" />
       <LineId Id="161" Count="0" />
       <LineId Id="132" Count="0" />
-      <LineId Id="153" Count="7" />
+      <LineId Id="153" Count="2" />
+      <LineId Id="158" Count="2" />
       <LineId Id="152" Count="0" />
       <LineId Id="20" Count="0" />
       <LineId Id="87" Count="0" />

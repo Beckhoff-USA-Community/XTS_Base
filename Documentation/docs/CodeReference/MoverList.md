@@ -71,6 +71,20 @@ IF MoverListA.Contains( Mover[4] ) THEN
 END_IF
 ```
 
+
+---
+<br>
+<br>
+<br>
+
+### DestinationStation
+
+*DestinationStation( Destination : REFERENCE TO Station ) : MoverList*
+
+> Filters the mover list to only include movers that have a destination that matches the parameter Destination.
+
+Filtering a mover list by station can be helpful when workings with several movers in a zone. There are two typical use cases. The first is to avoid re-triggering a move to station command after code such as `Zone[1].CurrentMoverList.MoveAllToStation(Station[2])` has executed, but movers are still accelerating out of this zone. The second is to ignore movers that may have a non-typical destination such as a rejected part in an otherwise normal flow of good parts.
+
 ---
 <br>
 <br>

@@ -58,6 +58,44 @@ FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]
 END_FOR]]></ST>
       </Implementation>
     </Method>
+    <Method Name="DestinationStation" Id="{c0547a1c-2297-0060-3112-c0f3bffc12c0}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD DestinationStation : iMoverList
+VAR_INPUT
+	Destination	: REFERENCE TO Station;
+END_VAR
+VAR
+	i : ulint;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// filters this mover list for movers that have the stated destination station
+FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+
+	// test for valid mover
+    IF internalTrackedMovers[i] <> 0 THEN
+		// test for track ready
+		IF internalTrackedMovers[i]^.IsTrackReady THEN
+			// unregister this mover if the track id, movetype or destination position do not match
+			IF internalTrackedMovers[i]^.CurrentDestinationTrack <> Destination.TrackId OR
+			 internalTrackedMovers[i]^.CurrentMoveType <> MOVETYPE_STATION OR
+			 internalTrackedMovers[i]^.CurrentDestinationPosition <> Destination.Position THEN
+				// unregister this mover, the manual way
+				internalTrackedMovers[i]  := 0; // remove the pointer
+                internalTrackedMoverCount := internalTrackedMoverCount - 1;
+			 END_IF;
+		ELSE
+			// track was not ready, unregister this mover
+			// the manual way
+			internalTrackedMovers[i]  := 0; // remove the pointer
+			internalTrackedMoverCount := internalTrackedMoverCount - 1;
+		END_IF;
+	END_IF
+	
+END_FOR;
+
+// return this list for chaining
+DestinationStation := THIS^;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="GetMoverByLocation" Id="{fef36da4-65e6-4a0c-848b-af8a54f15050}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE to Mover
 VAR_INPUT
@@ -402,6 +440,10 @@ END_FOR
     <LineIds Name="MoverList.Contains">
       <LineId Id="3" Count="6" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.DestinationStation">
+      <LineId Id="9" Count="25" />
+      <LineId Id="6" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.GetMoverByLocation">
       <LineId Id="3" Count="28" />
