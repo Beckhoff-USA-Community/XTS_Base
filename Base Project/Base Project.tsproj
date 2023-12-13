@@ -4318,7 +4318,7 @@ and will return to Group State Standby when the situation permits.
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{7C1A0E4F-F128-492B-8F88-026CC1009159}" PersistentType="true">XtsBaseEventClass</Name>
+			<Name GUID="{48E5334D-FBBC-453A-A2C4-840B9BA23234}" PersistentType="true">XtsBaseEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
 			<EventId>
 				<Name Id="1">UserEvent</Name>
@@ -4440,6 +4440,11 @@ and will return to Group State Standby when the situation permits.
 				<DisplayName TxtId=""><![CDATA[{0} SetGap command issued. Commanded Gap = {2}. Source: {1}]]></DisplayName>
 				<Severity>Info</Severity>
 			</EventId>
+			<EventId>
+				<Name Id="25">PositionTriggerMuteCurrent</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MuteCurrent command issued. Mover Number = {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
 			<Hides>
 				<Hide GUID="{05156EAA-0F28-483B-B3ED-0A061BA2DDE9}"/>
 				<Hide GUID="{18E0FAE1-EDAC-4CEB-9B5F-AEA0EA7CB0BB}"/>
@@ -4471,6 +4476,7 @@ and will return to Group State Standby when the situation permits.
 				<Hide GUID="{55A1315C-BCCD-427F-89D8-C9CE2941C762}"/>
 				<Hide GUID="{1859B616-1305-42C4-9209-A1CDBA9AFBC6}"/>
 				<Hide GUID="{25436388-0485-4BC1-B33E-D3CECAA7EB09}"/>
+				<Hide GUID="{7C1A0E4F-F128-492B-8F88-026CC1009159}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
