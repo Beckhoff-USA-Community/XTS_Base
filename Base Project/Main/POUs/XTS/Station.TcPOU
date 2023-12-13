@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Station" Id="{5b67f0b3-4286-49f2-9b21-1e637f521584}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective
@@ -38,13 +38,9 @@ FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) -
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrackId) THEN
 
-			difference := Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition;
-			// un-wrap if necessary
-			IF (difference < 0) THEN 
-				difference := difference + GVL.TRACK_LENGTH;
-			END_IF
-	
-			IF (difference < 1.0) AND NOT internalTrackedMovers[i]^.Busy THEN
+			difference := ABS(internalTrackedMovers[i]^.TrackInfo.TrackPosition - Position);
+
+			IF MIN(difference, GVL.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
 				CurrentMover                    REF= internalTrackedMovers[i]^;
 				CurrentMover.SourceInstancePath := THIS^.InstancePath;
 			END_IF
@@ -105,12 +101,8 @@ FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) -
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrackId) THEN
 			difference := Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition;
-			// un-wrap if necessary
-			IF (difference < 0) THEN 
-				difference := difference + GVL.TRACK_LENGTH;
-			END_IF
 
-			IF (difference < 1.0) AND NOT internalTrackedMovers[i]^.Busy THEN
+			IF MIN(difference, GVL.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
 				MoverInPosition := TRUE;
 			END_IF
 		END_IF;
