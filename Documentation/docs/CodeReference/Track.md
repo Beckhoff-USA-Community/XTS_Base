@@ -89,6 +89,12 @@ Every mover is assigned to a track. Movers can only move to stations and positio
 
 See the property [Mover](Mover.md) for additional information.
 
+### Mover Direction Considerations
+
+When using tracks where some are closed loops (ovals) and others are not (spurs), it is important to pay attention to the direction mode of the mover with `Mover.SetDirection()`. By default this is set to `mcDirectionPositive` which works well for ovals and will automatically wrap positions (modulo) as the mover reaches the rollover point.
+
+When a non-closed section of track is used (such as a rework spur), the mover commands `Mover.MoveToPosition` and `Mover.MoveToStation` as well as the related commands in a `MoverList` do not work with the default direction. When a mover is switched to a non-closed track, `Mover.SetDirection(mcDirectionNonModulo)` should also be called to set the mover's positioning to absolute along this portion of the track. Then when transitioning back to a closed section of track `Mover.SetDirection(mcDirectionPositive)` should be called to revert to the default modulo operation.
+
 ---
 <br>
 <br>
