@@ -11,7 +11,7 @@ VAR
 
 	// ========= Linked NC Variables & References =========
 	
-	Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover(Mediator := Mediator); 	// instantiation of Mover objects. Matches the number of movers on the system
+	Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
 	Mediator			: Mediator;
 	
 	// ========= Objectives & Parameters =========
@@ -22,7 +22,7 @@ VAR
 	PositionTrigger		: ARRAY[0..GVL.NUM_POSITIONTRIGGERS-1] OF PositionTrigger;
 	SpeedTrigger		: ARRAY[0..GVL.NUM_SPEEDTRIGGERS-1] OF SpeedTrigger;
 	Station				: ARRAY[0..GVL.NUM_STATIONS-1] OF Station;
-	Track				: ARRAY[0..GVL.NUM_TRACKS-1] OF Track;
+	Track				: ARRAY[0..GVL.NUM_TRACKS] OF Track;
 	Zone				: ARRAY[0..GVL.NUM_ZONES-1] OF Zone;
 	
     // ========= Example Application Variables =========

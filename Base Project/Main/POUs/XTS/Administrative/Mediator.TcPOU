@@ -45,7 +45,7 @@ END_VAR]]></Declaration>
 
 IF __ISVALIDREF( Mover ) THEN
 	
-	Mover.Mediator			:= THIS^;
+	Mover.Mediator			REF= THIS^;
 
 	duplicateFound			:= FALSE;
 	
@@ -311,27 +311,27 @@ VAR_INPUT
 END_VAR
 
 VAR
-	i: UDINT;
+	i: ULINT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
 // Handle all project cyclic calls
 
-FOR i := 0 TO SIZEOF( MoverArray ) / ( MoverArray[i] ) - 1 DO
+FOR i := 0 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[i] ) - 1 DO
 	IF MoverArray[i] <> 0 THEN
 		MoverArray[i]^.Cyclic( GROUP_REF );			// could make this ca group addition clener
 		MoverArray[i]^.AxisReference.ReadStatus();
 	END_IF
 END_FOR
 
-FOR i := 0 TO SIZEOF( StationArray ) / ( StationArray[i] ) - 1 DO
+FOR i := 0 TO SIZEOF( StationArray ) / SIZEOF( StationArray[i] ) - 1 DO
 	IF StationArray[i] <> 0 THEN
 		StationArray[i]^.Cyclic();
 	END_IF
 END_FOR
 
-FOR i := 0 TO SIZEOF( PositionTriggerArray ) / ( PositionTriggerArray[i] ) - 1 DO
+FOR i := 0 TO SIZEOF( PositionTriggerArray ) / SIZEOF( PositionTriggerArray[i] ) - 1 DO
 	IF PositionTriggerArray[i] <> 0 THEN
 		PositionTriggerArray[i]^.Cyclic();
 	END_IF
