@@ -1,0 +1,427 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Mediator
+VAR_INPUT
+
+	MoverArray				: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Mover;
+	
+	MoverListArray			: ARRAY [0..GVL.NUM_MOVERLISTS-1] OF POINTER TO MoverList;
+	PositionTriggerArray	: ARRAY [0..GVL.NUM_POSITIONTRIGGERS-1] OF POINTER TO PositionTrigger;
+	SpeedTriggerArray		: ARRAY [0..GVL.NUM_SPEEDTRIGGERS-1] OF POINTER TO SpeedTrigger;
+	StationArray			: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Station;
+	ZoneArray				: ARRAY [0..GVL.NUM_ZONES-1] OF POINTER TO Zone;
+	
+	TrackArray				: ARRAY [0..GVL.NUM_TRACKS-1] OF POINTER TO Track;	
+
+	GROUP_REF				: AXES_GROUP_REF;
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddMover" Id="{3437c27c-dd7b-0ac3-07a2-d432fc68235a}">
+      <Declaration><![CDATA[METHOD AddMover : BOOL
+VAR_INPUT
+	
+	Mover		: REFERENCE TO Mover;
+
+END_VAR
+
+VAR
+	duplicateFound		: BOOL;
+	i					: UDINT;
+	emptyIDX			: UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// Check for duplicates
+
+IF __ISVALIDREF( Mover ) THEN
+	
+	Mover.Mediator			:= THIS^;
+
+	duplicateFound			:= FALSE;
+	
+	FOR i := 0 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[0] ) - 1 DO
+		IF MoverArray[i] <> 0 THEN		// verify the element is clear to prevent overwrites
+			IF ADR(Mover) = MoverArray[i] THEN
+				duplicateFound		:= TRUE;	// this mover is already mediated
+			END_IF
+		ELSE
+			emptyIDX	:= i;	// confirmed oopen array element
+		END_IF	
+	END_FOR
+	
+	IF duplicateFound = FALSE THEN
+		THIS^.MoverArray[emptyIDX]		:= ADR( Mover );	// new mover into empty array element
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddMoverList" Id="{fa372345-a99c-01d2-2d94-cc2fd6bab53d}">
+      <Declaration><![CDATA[METHOD AddMoverList : BOOL
+VAR_INPUT
+	
+	MoverList		: REFERENCE TO MoverList;
+
+END_VAR
+
+VAR
+	duplicateFound		: BOOL;
+	i					: UDINT;
+	emptyIDX			: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// Check for duplicates
+IF __ISVALIDREF( MoverList ) THEN
+	
+	MoverList.Mediator			:= THIS^;
+	
+	duplicateFound				:= FALSE;
+	
+	FOR i := 0 TO SIZEOF( MoverListArray ) / SIZEOF( MoverListArray[0] ) - 1 DO
+		IF MoverListArray[i] <> 0 THEN		// verify the element is clear to prevent overwrites
+			IF ADR( MoverList ) = MoverListArray[i] THEN
+				duplicateFound		:= TRUE;		// this moverlist is already mediated
+			END_IF
+		ELSE
+			emptyIDX		:= i;		// confirmed open array element
+		END_IF
+	END_FOR
+	
+	IF duplicateFound = FALSE THEN
+		THIS^.MoverListArray[emptyIDX]		:= ADR( MoverList );
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddPositionTrigger" Id="{37697d0e-c381-0846-3d01-3d7f2d276ad1}">
+      <Declaration><![CDATA[METHOD AddPositionTrigger : BOOL
+VAR_INPUT
+	
+	PositionTrigger		: REFERENCE TO PositionTrigger;
+
+END_VAR
+
+VAR
+	duplicateFound		: BOOL;
+	i					: UDINT;
+	emptyIDX			: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// Check for duplicates
+IF __ISVALIDREF( PositionTrigger ) THEN
+	
+	PositionTrigger.Mediator		:= THIS^;
+	
+	duplicateFound					:= FALSE;
+	
+	FOR i := 0 TO SIZEOF( PositionTriggerArray ) / SIZEOF( PositionTriggerArray[0] ) - 1 DO
+		IF PositionTriggerArray[i] <> 0 THEN		// verify the element is clear to prevent overwrites
+			IF ADR( PositionTrigger ) = PositionTriggerArray[i] THEN
+				duplicateFound		:= TRUE;		// this moverlist is already mediated
+			END_IF
+		ELSE
+			emptyIDX		:= i;		// confirmed open array element
+		END_IF
+	END_FOR
+	
+	IF duplicateFound = FALSE THEN
+		THIS^.PositionTriggerArray[emptyIDX]		:= ADR( PositionTrigger );
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddSpeedTrigger" Id="{29bcda05-25a3-0a03-1839-83d9d45c33ee}">
+      <Declaration><![CDATA[METHOD AddSpeedTrigger : BOOL
+VAR_INPUT
+	
+	SpeedTrigger		: REFERENCE TO SpeedTrigger;
+
+END_VAR
+
+VAR
+	duplicateFound		: BOOL;
+	i					: UDINT;
+	emptyIDX			: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// Check for duplicates
+IF __ISVALIDREF( SpeedTrigger ) THEN
+	
+	SpeedTrigger.Mediator		:= THIS^;
+	
+	duplicateFound				:= FALSE;
+	
+	FOR i := 0 TO SIZEOF( SpeedTriggerArray ) / SIZEOF( SpeedTriggerArray[0] ) - 1 DO
+		IF SpeedTriggerArray[i] <> 0 THEN		// verify the element is clear to prevent overwrites
+			IF ADR( SpeedTrigger ) = SpeedTriggerArray[i] THEN
+				duplicateFound		:= TRUE;		// this moverlist is already mediated
+			END_IF
+		ELSE
+			emptyIDX		:= i;		// confirmed open array element
+		END_IF
+	END_FOR
+	
+	IF duplicateFound = FALSE THEN
+		THIS^.SpeedTriggerArray[emptyIDX]		:= ADR( SpeedTrigger );
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddStation" Id="{158bfd8c-35c0-05f6-1398-0d0a087d099a}">
+      <Declaration><![CDATA[METHOD AddStation : BOOL
+VAR_INPUT
+	
+	Station		: REFERENCE TO Station;
+
+END_VAR
+
+VAR
+	duplicateFound		: BOOL;
+	i					: UDINT;
+	emptyIDX			: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// Check for duplicates
+IF __ISVALIDREF( Station ) THEN
+	
+	Station.Mediator	:= THIS^;
+	
+	duplicateFound		:= FALSE;
+	
+	FOR i := 0 TO SIZEOF( StationArray ) / SIZEOF( StationArray[0] ) - 1 DO
+		IF StationArray[i] <> 0 THEN		// verify the element is clear to prevent overwrites
+			IF ADR( Station ) = StationArray[i] THEN
+				duplicateFound		:= TRUE;		// this moverlist is already mediated
+			END_IF
+		ELSE
+			emptyIDX		:= i;		// confirmed open array element
+		END_IF
+	END_FOR
+	
+	IF duplicateFound = FALSE THEN
+		THIS^.StationArray[emptyIDX]		:= ADR( Station );
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddTrack" Id="{1f5fda23-0b4f-059d-05b7-42b4aba73321}">
+      <Declaration><![CDATA[METHOD AddTrack : BOOL
+VAR_INPUT
+	
+	Track		: REFERENCE TO Track;
+
+END_VAR
+
+VAR
+	duplicateFound		: BOOL;
+	i					: UDINT;
+	emptyIDX			: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// Check for duplicates
+IF __ISVALIDREF( Track ) THEN
+	
+	Track.Mediator		:= THIS^;
+	
+	duplicateFound		:= FALSE;
+	
+	FOR i := 0 TO SIZEOF( TrackArray ) / SIZEOF( TrackArray[0] ) - 1 DO
+		IF TrackArray[i] <> 0 THEN		// verify the element is clear to prevent overwrites
+			IF ADR( Track ) = TrackArray[i] THEN
+				duplicateFound		:= TRUE;		// this moverlist is already mediated
+			END_IF
+		ELSE
+			emptyIDX		:= i;		// confirmed open array element
+		END_IF
+	END_FOR
+	
+	IF duplicateFound = FALSE THEN
+		THIS^.TrackArray[emptyIDX]		:= ADR( Track );
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddZone" Id="{b7275e17-ff08-069c-32b8-5e7a13dacb64}">
+      <Declaration><![CDATA[METHOD AddZone : BOOL
+VAR_INPUT
+	
+	Zone		: REFERENCE TO Zone;
+
+END_VAR
+
+VAR
+	duplicateFound		: BOOL;
+	i					: UDINT;
+	emptyIDX			: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// Check for duplicates
+IF __ISVALIDREF( Zone ) THEN
+	
+	Zone.Mediator		:= THIS^;
+	
+	duplicateFound		:= FALSE;
+	
+	FOR i := 0 TO SIZEOF( ZoneArray ) / SIZEOF( ZoneArray[0] ) - 1 DO
+		IF ZoneArray[i] <> 0 THEN		// verify the element is clear to prevent overwrites
+			IF ADR( Zone ) = ZoneArray[i] THEN
+				duplicateFound		:= TRUE;		// this moverlist is already mediated
+			END_IF
+		ELSE
+			emptyIDX		:= i;		// confirmed open array element
+		END_IF
+	END_FOR
+	
+	IF duplicateFound = FALSE THEN
+		THIS^.ZoneArray[emptyIDX]		:= ADR( Zone );
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Cyclic" Id="{f2264867-ad86-0c96-3c42-ade0fe3bf9e2}">
+      <Declaration><![CDATA[METHOD Cyclic : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i: UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// Handle all project cyclic calls
+
+FOR i := 0 TO SIZEOF( MoverArray ) / ( MoverArray[i] ) - 1 DO
+	IF MoverArray[i] <> 0 THEN
+		MoverArray[i]^.Cyclic( GROUP_REF );			// could make this ca group addition clener
+		MoverArray[i]^.AxisReference.ReadStatus();
+	END_IF
+END_FOR
+
+FOR i := 0 TO SIZEOF( StationArray ) / ( StationArray[i] ) - 1 DO
+	IF StationArray[i] <> 0 THEN
+		StationArray[i]^.Cyclic();
+	END_IF
+END_FOR
+
+FOR i := 0 TO SIZEOF( PositionTriggerArray ) / ( PositionTriggerArray[i] ) - 1 DO
+	IF PositionTriggerArray[i] <> 0 THEN
+		PositionTriggerArray[i]^.Cyclic();
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Mediator">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddMover">
+      <LineId Id="9" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="26" Count="3" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="35" Count="3" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddMoverList">
+      <LineId Id="15" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="3" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="27" Count="3" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="31" Count="3" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddPositionTrigger">
+      <LineId Id="18" Count="3" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="22" Count="15" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddSpeedTrigger">
+      <LineId Id="17" Count="3" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="21" Count="15" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddStation">
+      <LineId Id="36" Count="0" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="20" Count="15" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddTrack">
+      <LineId Id="17" Count="3" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="21" Count="15" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddZone">
+      <LineId Id="17" Count="3" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="21" Count="15" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Cyclic">
+      <LineId Id="6" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

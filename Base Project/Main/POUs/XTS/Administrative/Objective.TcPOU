@@ -2,9 +2,11 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Objective" Id="{72371872-54aa-4f25-a82d-ba585015a7c5}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-{attribute 'hide_all_locals'}
 FUNCTION_BLOCK ABSTRACT Objective
 VAR_INPUT
+
+	Mediator					: Mediator;	
+
 END_VAR
 VAR
 
@@ -81,7 +83,7 @@ IF __ISVALIDREF(NewMover) THEN // validate reference
     END_IF
 
 ELSE
-    ADSLOGSTR(ADSLOG_MSGTYPE_LOG, 'Error: Mover input is invalid', '');
+    ADSLOGSTR(ADSLOG_MSGTYPE_LOG, 'Error: Mover registration input is invalid', '');
 END_IF]]></ST>
       </Implementation>
     </Method>

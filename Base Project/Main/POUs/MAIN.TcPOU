@@ -11,19 +11,19 @@ VAR
 
 	// ========= Linked NC Variables & References =========
 	
+	Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover(Mediator := Mediator); 	// instantiation of Mover objects. Matches the number of movers on the system
 	Mediator			: Mediator;
-	Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
-    GroupRef 			: AXES_GROUP_REF;                       	 // linked to the Collision Avoidance group and passed cyclically to every Mover object
-
+	
 	// ========= Objectives & Parameters =========
 
-    MoverList    		: MoverList;
-    ParameterSet 		: MotionParameters_typ;
-
-    Station         	: ARRAY[0..GVL.NUM_STATIONS - 1] OF Station;
-    PositionTrigger 	: ARRAY[0..2] OF PositionTrigger;
-    SpeedTrigger    	: ARRAY[0..1] OF SpeedTrigger;
-    Zone            	: ARRAY[0..3] OF Zone;
+	ParameterSet		: MotionParameters_typ;
+	
+	MoverList			: ARRAY[0..GVL.NUM_MOVERLISTS-1] OF MoverList;
+	PositionTrigger		: ARRAY[0..GVL.NUM_POSITIONTRIGGERS-1] OF PositionTrigger;
+	SpeedTrigger		: ARRAY[0..GVL.NUM_SPEEDTRIGGERS-1] OF SpeedTrigger;
+	Station				: ARRAY[0..GVL.NUM_STATIONS-1] OF Station;
+	Track				: ARRAY[0..GVL.NUM_TRACKS-1] OF Track;
+	Zone				: ARRAY[0..GVL.NUM_ZONES-1] OF Zone;
 	
     // ========= Example Application Variables =========
 
@@ -52,13 +52,12 @@ VAR
 	stXtsEnvironmentConfiguration	: ST_XtsEnvironmentConfiguration;
 	nEnvironmentState				: INT;
 	
-	// ======== Track management ========
-	Track		: ARRAY [0..GVL.NUM_TRACKS] OF Track;
-
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[	
+      <ST><![CDATA[
 
+// Initialize, connect objects with the mediator, and update diagnostic features
+Initialize();
 
 
 (* ======================================================================================
@@ -81,10 +80,7 @@ For any other questions, please reach out to your local Application Engineer.
 
 ====================================================================================== *)
 
-
-
-
-
+	
 CASE MainState OF
     MS_DISABLED: // --------------------------------------------------------- IDLE STATE
 		(*Wait here until an operator issues a MainCommand to Enable the system. 
@@ -114,18 +110,7 @@ CASE MainState OF
 			Mover[i].Mediator					REF= Mediator;
 			Mover[i].Mediator.MoverArray[i]		:= ADR(Mover[i]);
         END_FOR
-		
-		IF MainCommands.Disable THEN
-			MainCommands.Enable		:= FALSE;
-			MainState				:= MS_DISABLED;
-		ELSIF MainCommands.Stop THEN
-			MainCommands.Stop		:= FALSE;
-			MainCommands.Disable	:= TRUE;
-			MainCommands.Start		:= FALSE;
-			MainState				:= MS_DISABLED;
-		ELSIF MainCommands.Enable THEN
-        	MainState 				:= MS_ONESHOT_ENABLE;
-		END_IF
+
 
 	MS_ONESHOT_ENABLE:	// -------------------------------------------------- SINGLE-CYCLE ISSUE ENABLE COMMANDS
 		(*Begin Enabling movers by calling Mover.Enable(). Methods in this project
@@ -168,27 +153,27 @@ CASE MainState OF
 		(*Initialize Station positions, Position Trigger positions, Zones etc. *)
 
         // Initialize station positions
-        Station[0].Position := 5;
-        Station[1].Position := 750;
-        Station[2].Position := 1200;
-        Station[3].Position := 1300;
-        Station[4].Position := 1400;
+        Station[0].Position 		:= 5;
+        Station[1].Position 		:= 750;
+        Station[2].Position 		:= 1200;
+        Station[3].Position 		:= 1300;
+        Station[4].Position 		:= 1400;
 
         PositionTrigger[0].Position := 1500;
         PositionTrigger[1].Position := 2000;
         PositionTrigger[2].Position := 3500;
 
-        Zone[0].StartPosition := 3750;
-        Zone[0].EndPosition   := 750;
+        Zone[0].StartPosition		:= 3750;
+        Zone[0].EndPosition   		:= 750;
 
-        Zone[1].StartPosition := 750;
-        Zone[1].EndPosition   := 1750;
+        Zone[1].StartPosition 		:= 750;
+        Zone[1].EndPosition   		:= 1750;
 
-        Zone[2].StartPosition := 1750;
-        Zone[2].EndPosition   := 2750;
+        Zone[2].StartPosition 		:= 1750;
+        Zone[2].EndPosition   		:= 2750;
 
-        Zone[3].StartPosition := 2750;
-        Zone[3].EndPosition   := 3750;
+        Zone[3].StartPosition		:= 2750;
+        Zone[3].EndPosition   		:= 3750;
 		
 		// give all tracks their ID number
 		FOR i := 0 TO GVL.NUM_TRACKS DO
@@ -463,29 +448,42 @@ CASE MainState OF
 
 END_CASE;
 
-// Initialize and update diagnostic features
-InitializeUtilityLibrary();
+// It is no longer required to call object.cyclic() methods.
+// Instead, ensure that all Movers, Stations, PositionTriggers, etc. have been added to the Mediator object during Init
+// For example, Mediator.AddStation( myNewStation );
+Mediator.Cyclic();
 
-// Call all mover function blocks cyclically
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-    Mover[i].Cyclic(GroupRef);
-	Mover[i].AxisReference.ReadStatus();
-END_FOR;
 
-// Call all station function blocks cyclically
-FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
-    Station[i].Cyclic();
-END_FOR
-
-// Call trigger function blocks cyclically
-PositionTrigger[0].Cyclic();
-PositionTrigger[1].Cyclic();
-PositionTrigger[2].Cyclic();
 ]]></ST>
     </Implementation>
-    <Action Name="InitializeUtilityLibrary" Id="{4ac3b602-bbee-0af7-24db-b9d89bbd3ae5}">
+    <Action Name="Initialize" Id="{4ac3b602-bbee-0af7-24db-b9d89bbd3ae5}">
       <Implementation>
         <ST><![CDATA[
+
+
+
+FOR i := 0 TO GVL.NUM_MOVERS-1 DO
+	Mediator.AddMover( Mover[i] );	
+END_FOR
+FOR i := 0 TO GVL.NUM_MOVERLISTS-1 DO
+	Mediator.AddMoverList( MoverList[i] );
+END_FOR
+FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS-1 DO
+	Mediator.AddPositionTrigger( PositionTrigger[i] );
+END_FOR
+FOR i := 0 TO GVL.NUM_SPEEDTRIGGERS-1 DO
+	Mediator.AddSpeedTrigger( SpeedTrigger[i] );
+END_FOR
+FOR i := 0 TO GVL.NUM_STATIONS-1 DO
+	Mediator.AddStation( Station[i] );
+END_FOR
+FOR i := 0 TO GVL.NUM_TRACKS-1 DO
+	Mediator.AddTrack( Track[i] );
+END_FOR
+FOR i := 0 TO GVL.NUM_ZONES-1 DO
+	Mediator.AddZone( Zone[i] );
+END_FOR
+
 
 
 CASE nEnvironmentState OF
@@ -539,28 +537,30 @@ END_CASE
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="660" Count="52" />
-      <LineId Id="1153" Count="1" />
-      <LineId Id="1150" Count="0" />
-      <LineId Id="713" Count="55" />
-      <LineId Id="770" Count="0" />
-      <LineId Id="772" Count="0" />
-      <LineId Id="774" Count="0" />
-      <LineId Id="776" Count="0" />
-      <LineId Id="778" Count="1" />
-      <LineId Id="781" Count="0" />
-      <LineId Id="783" Count="0" />
-      <LineId Id="787" Count="2" />
-      <LineId Id="791" Count="2" />
-      <LineId Id="795" Count="2" />
-      <LineId Id="799" Count="2" />
-      <LineId Id="803" Count="58" />
-      <LineId Id="863" Count="61" />
-      <LineId Id="926" Count="170" />
+      <LineId Id="1695" Count="0" />
+      <LineId Id="1282" Count="0" />
+      <LineId Id="1694" Count="0" />
+      <LineId Id="1283" Count="52" />
+      <LineId Id="1698" Count="0" />
+      <LineId Id="1348" Count="335" />
+      <LineId Id="1687" Count="6" />
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="MAIN.InitializeUtilityLibrary">
-      <LineId Id="2" Count="49" />
+    <LineIds Name="MAIN.Initialize">
+      <LineId Id="2" Count="0" />
+      <LineId Id="52" Count="2" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="68" Count="2" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="79" Count="9" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="3" Count="48" />
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

@@ -2,7 +2,6 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-{attribute 'hide_all_locals'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
 
 VAR_INPUT
@@ -46,9 +45,9 @@ VAR
 	internalCurrentDestObjective	: STRING;	// Instance path of the current destination objective
 	internalCurrentDestStation		: REFERENCE TO Station;		// Reference to a destination station, if that is the current movetype
 
-	internalState			: MoverState_enum;		// Internal state variable
-	internalTrackState		: TrackState;			// Internal state variable for track
-	internalTrackStateDelay : TON;					// Internal timer for activate track delay
+	internalState					: MoverState_enum;		// Internal state variable
+	internalTrackState				: TrackState;			// Internal state variable for track
+	internalTrackStateDelay 		: TON;					// Internal timer for activate track delay
 	
 	internalMasterMover				: REFERENCE TO Mover;	// Internal reference to a target master mover
 	internalMasterAxis				: REFERENCE TO AXIS_REF;	// Internal reference to a target master external axis
@@ -58,9 +57,9 @@ VAR
 	internalPayload			: USINT;	// E.g. 0: No Product, 1: Product Loaded, 2: Product Reject. Can be modified for application
 	
 	// Track management
-	internalTrack			: POINTER TO Track;	// Internal current track
-	internalTrackIsReady	: BOOL := TRUE;			// track is ready for commands (off when .ActivateTrack is working)
-	internalActivatingTrack : POINTER TO Track;	// while NOT .internalTrackIsReady the in-transition-to track is held here
+	internalTrack				: POINTER TO Track;	// Internal current track
+	internalTrackIsReady		: BOOL := TRUE;			// track is ready for commands (off when .ActivateTrack is working)
+	internalActivatingTrack 	: POINTER TO Track;	// while NOT .internalTrackIsReady the in-transition-to track is held here
 	internalActivateTrackFlag	: BOOL;				// activate track requested
 	
 	// Internal function blocks	

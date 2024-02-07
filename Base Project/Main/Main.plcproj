@@ -62,13 +62,16 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\XTS\ErrorMover.TcPOU">
+    <Compile Include="POUs\XTS\Administrative\ErrorMover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\XTS\ErrorTrack.TcPOU">
+    <Compile Include="POUs\XTS\Administrative\ErrorTrack.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\XTS\Mediator.TcPOU">
+    <Compile Include="POUs\XTS\Administrative\Mediator.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\XTS\Administrative\Objective.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\Mover.TcPOU">
@@ -84,9 +87,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\Station.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\Objective.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\Track.TcPOU">
@@ -112,6 +112,7 @@
     <Folder Include="GVLs" />
     <Folder Include="ITFs" />
     <Folder Include="POUs\XTS" />
+    <Folder Include="POUs\XTS\Administrative" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>

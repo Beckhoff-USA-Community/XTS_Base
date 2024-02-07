@@ -185,6 +185,89 @@ IsAllTrackReady := allReady; // return result]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Method Name="LogicalComplement" Id="{99897a70-e30e-0da3-0186-cef07523538c}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD LogicalComplement : MoverList
+VAR_INPUT
+END_VAR
+
+VAR
+	i: UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+	
+	IF NOT THIS^.Contains( Mediator.MoverArray[i]^ ) THEN
+		LogicalComplement.RegisterMover( Mediator.MoverArray[i]^ );
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogicalDifference" Id="{28dd98c9-5c2b-06ab-24f3-3fbd8540614a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD LogicalDifference : MoverList
+VAR_INPUT
+	
+	MoverList		: MoverList;
+
+END_VAR
+VAR
+	i				: UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+	
+	IF THIS^.Contains( Mediator.MoverArray[i]^ ) AND NOT MoverList.Contains( Mediator.MoverArray[i]^ ) THEN
+		LogicalDifference.RegisterMover( Mediator.MoverArray[i]^ );
+	END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogicalIntersect" Id="{044089b7-d05a-06ed-1b08-0d7870b3db96}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD LogicalIntersect : MoverList
+VAR_INPUT
+	
+	MoverList		: MoverList;
+
+END_VAR
+
+VAR
+	i				: UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+	
+	IF MoverList.Contains( Mediator.MoverArray[i]^ ) AND THIS^.Contains( Mediator.MoverArray[i]^ ) THEN
+		LogicalIntersect.RegisterMover( Mediator.MoverArray[i]^ );	
+	END_IF
+	
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogicalUnion" Id="{a80cf7c9-101b-0ad9-0af0-3ff72543790d}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD LogicalUnion : MoverList
+VAR_INPUT
+	
+	MoverList		: MoverList;
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+LogicalUnion.RegisterMoverList( MoverList );
+LogicalUnion.RegisterMoverList( THIS^ );
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="MoveAllToPosition" Id="{bd912cae-8475-45f4-9366-6d4e3f45dbfd}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MoveAllToPosition : iMoverList
 VAR_INPUT
@@ -426,6 +509,38 @@ END_FOR
       <LineId Id="35" Count="2" />
       <LineId Id="13" Count="0" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.LogicalComplement">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.LogicalDifference">
+      <LineId Id="12" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.LogicalIntersect">
+      <LineId Id="9" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="11" Count="1" />
+    </LineIds>
+    <LineIds Name="MoverList.LogicalUnion">
+      <LineId Id="9" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.MoveAllToPosition">
       <LineId Id="3" Count="8" />

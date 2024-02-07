@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="ErrorMover" Id="{bd3df610-8473-440e-a9dc-a09f811846e0}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'hide_all_locals'}
-FUNCTION_BLOCK ErrorMover EXTENDS Mover IMPLEMENTS iMover]]></Declaration>
+    <Declaration><![CDATA[FUNCTION_BLOCK ErrorMover EXTENDS Mover IMPLEMENTS iMover]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>

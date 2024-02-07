@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Zone" Id="{de9b5dde-c203-4f4d-abe0-431568995536}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'hide_all_local'}
-FUNCTION_BLOCK Zone EXTENDS Objective
+    <Declaration><![CDATA[FUNCTION_BLOCK Zone EXTENDS Objective
 VAR
 
     internalStartPosition : LREAL;

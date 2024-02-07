@@ -2,6 +2,288 @@
 <TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.55" ClassName="CNestedPlcProjDef">
 	<DataTypes>
 		<DataType>
+			<Name GUID="{DB9169AE-6AF9-4994-9F36-F1067592C967}" Namespace="MC">MC_GROUP_TYPE</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupTypeInvalid]]></Text>
+				<Enum>0</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupTypeCA]]></Text>
+				<Enum>1</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupTypeDxd]]></Text>
+				<Enum>2</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupTypeCM]]></Text>
+				<Enum>3</Enum>
+			</EnumInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{6B93C4EA-DEE3-49CC-86A6-CEF078FEFD24}" Namespace="MC">MC_GROUP_STATE</Name>
+			<BitSize>16</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateInvalid]]></Text>
+				<Enum>0</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateDisabled]]></Text>
+				<Enum>1</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateStandby]]></Text>
+				<Enum>2</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateMoving]]></Text>
+				<Enum>3</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateStopping]]></Text>
+				<Enum>4</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateErrorStop]]></Text>
+				<Enum>5</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateHoming]]></Text>
+				<Enum>6</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateNotReady]]></Text>
+				<Enum>7</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateSuspended]]></Text>
+				<Enum>8</Enum>
+			</EnumInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>IsEnableRequested</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<Comment><![CDATA[Indicates whether Group has been enabled (e.g. via MC_GroupEnable)
+and will return to Group State Standby when the situation permits.
+(This information is usually only relevant when group is in error state.)]]></Comment>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AllAxesStanding</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<Comment><![CDATA[Indicate whether all axes are physically standing, i.e. velocity and acceleration are zero. This definition differs from the definition of the GroupStateMoving, which indicates whether a Motion Command is currently active.]]></Comment>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>InPosition</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<Comment><![CDATA[Indicates whether the group is in position.]]></Comment>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{51F0F443-1D05-4E13-ADFA-62EA48380092}" Namespace="MC">ST_GroupStatus</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>State</Name>
+				<Type GUID="{6B93C4EA-DEE3-49CC-86A6-CEF078FEFD24}" Namespace="MC">MC_GROUP_STATE</Type>
+				<Comment><![CDATA[0 = Invalid	(mcGroupStateInvalid),
+1 = Disabled	(mcGroupStateDisabled),
+2 = Standby	(mcGroupStateStandby),
+3 = Moving	(mcGroupStateMoving),
+4 = Stopping	(mcGroupStateStopping),
+5 = ErrorStop	(mcGroupStateErrorStop),
+6 = Homing	(mcGroupStateHoming),
+7 = NotReady	(mcGroupStateNotReady),
+8 = Suspended	(mcGroupStateSuspended)]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Flags</Name>
+				<Type GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC" TcBaseType="true">MCTOPLC_GROUP_COMMON_PART</Name>
+			<BitSize>512</BitSize>
+			<SubItem>
+				<Name>GroupOID</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
+				<Comment><![CDATA[TcCOM-Object-Id (OID) of this Group]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GroupType</Name>
+				<Type GUID="{DB9169AE-6AF9-4994-9F36-F1067592C967}" Namespace="MC">MC_GROUP_TYPE</Type>
+				<Comment><![CDATA[Actual Type of this Group:
+0 = Invalid            (mcGroupTypeInvalid),
+1 = CollisionAvoidance (mcGroupTypeCA),
+2 = DXD/CNC            (mcGroupTypeDxd),
+3 = CoordinatedMotion  (mcGroupTypeCM)]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GroupStatus</Name>
+				<Type GUID="{51F0F443-1D05-4E13-ADFA-62EA48380092}" Namespace="MC">ST_GroupStatus</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GroupErrorId</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Current Error Identifier (0 = no error)]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GroupAxesCount</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Number of Axes that are currently part of this Group 
+(e.g. added via MC_AddAxisToGroup)]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActOverrideFactor</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<Comment><![CDATA[Actual/Active override factor (1.0 = 100%)]]></Comment>
+				<BitSize>64</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{260A4C07-588B-43A4-9DE1-0381D61130FD}" Namespace="MC" TcBaseType="true">CDT_MCTOPLC_GROUP_CA</Name>
+			<BitSize>1536</BitSize>
+			<SubItem>
+				<Name>Common</Name>
+				<Type GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC">MCTOPLC_GROUP_COMMON_PART</Type>
+				<BitSize>512</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{9EC99A1C-7273-4E44-A010-44B69D237BC7}" Namespace="MC" TcBaseType="true">CDT_MCTOPLC_GROUP_DXD</Name>
+			<BitSize>1536</BitSize>
+			<SubItem>
+				<Name>Common</Name>
+				<Type GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC">MCTOPLC_GROUP_COMMON_PART</Type>
+				<BitSize>512</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PathVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>512</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>InvokeId</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>576</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{EB1F033C-2651-4B56-9F0C-CB33B288FCFC}" Namespace="MC" TcBaseType="true">CDT_MCTOPLC_GROUP_CM</Name>
+			<BitSize>1536</BitSize>
+			<SubItem>
+				<Name>Common</Name>
+				<Type GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC">MCTOPLC_GROUP_COMMON_PART</Type>
+				<BitSize>512</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PathVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>512</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>InvokeId</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>576</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>IsInBlendingSegment</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>608</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>RemainingTimeActiveJob</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>640</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>RemainingCartesianDistanceActiveJob</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>704</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActiveBlockerId</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>768</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>RemainingTimeToSync</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>832</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>RemainingCartesianDistanceToSync</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>896</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{467F4325-10DF-4BC1-88DD-E8240EB4F8E3}" Namespace="MC" TcBaseType="true">CDT_MCTOPLC_GROUP</Name>
+			<BitSize>1536</BitSize>
+			<SubItem>
+				<Name>Common</Name>
+				<Type GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC">MCTOPLC_GROUP_COMMON_PART</Type>
+				<BitSize>512</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CA</Name>
+				<Type GUID="{260A4C07-588B-43A4-9DE1-0381D61130FD}" Namespace="MC">CDT_MCTOPLC_GROUP_CA</Type>
+				<BitSize>1536</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Dxd</Name>
+				<Type GUID="{9EC99A1C-7273-4E44-A010-44B69D237BC7}" Namespace="MC">CDT_MCTOPLC_GROUP_DXD</Type>
+				<BitSize>1536</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CM</Name>
+				<Type GUID="{EB1F033C-2651-4B56-9F0C-CB33B288FCFC}" Namespace="MC">CDT_MCTOPLC_GROUP_CM</Type>
+				<BitSize>1536</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
 			<Name GUID="{CBC83B73-B816-4597-A9E5-2B03263CA131}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE</Name>
 			<BitSize>32</BitSize>
 			<SubItem>
@@ -795,284 +1077,80 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{DB9169AE-6AF9-4994-9F36-F1067592C967}" Namespace="MC">MC_GROUP_TYPE</Name>
-			<BitSize>32</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupTypeInvalid]]></Text>
-				<Enum>0</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupTypeCA]]></Text>
-				<Enum>1</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupTypeDxd]]></Text>
-				<Enum>2</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupTypeCM]]></Text>
-				<Enum>3</Enum>
-			</EnumInfo>
-		</DataType>
-		<DataType>
-			<Name GUID="{6B93C4EA-DEE3-49CC-86A6-CEF078FEFD24}" Namespace="MC">MC_GROUP_STATE</Name>
-			<BitSize>16</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateInvalid]]></Text>
-				<Enum>0</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateDisabled]]></Text>
-				<Enum>1</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateStandby]]></Text>
-				<Enum>2</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateMoving]]></Text>
-				<Enum>3</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateStopping]]></Text>
-				<Enum>4</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateErrorStop]]></Text>
-				<Enum>5</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateHoming]]></Text>
-				<Enum>6</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateNotReady]]></Text>
-				<Enum>7</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateSuspended]]></Text>
-				<Enum>8</Enum>
-			</EnumInfo>
-		</DataType>
-		<DataType>
-			<Name GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Name>
-			<BitSize>16</BitSize>
+			<Name GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC" TcBaseType="true">PLCTOMC_GROUP_COMMON_PART</Name>
+			<BitSize>256</BitSize>
 			<SubItem>
-				<Name>IsEnableRequested</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<Comment><![CDATA[Indicates whether Group has been enabled (e.g. via MC_GroupEnable)
-and will return to Group State Standby when the situation permits.
-(This information is usually only relevant when group is in error state.)]]></Comment>
-				<BitSize>1</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>AllAxesStanding</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<Comment><![CDATA[Indicate whether all axes are physically standing, i.e. velocity and acceleration are zero. This definition differs from the definition of the GroupStateMoving, which indicates whether a Motion Command is currently active.]]></Comment>
-				<BitSize>1</BitSize>
-				<BitOffs>1</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>InPosition</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<Comment><![CDATA[Indicates whether the group is in position.]]></Comment>
-				<BitSize>1</BitSize>
-				<BitOffs>2</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{51F0F443-1D05-4E13-ADFA-62EA48380092}" Namespace="MC">ST_GroupStatus</Name>
-			<BitSize>32</BitSize>
-			<SubItem>
-				<Name>State</Name>
-				<Type GUID="{6B93C4EA-DEE3-49CC-86A6-CEF078FEFD24}" Namespace="MC">MC_GROUP_STATE</Type>
-				<Comment><![CDATA[0 = Invalid	(mcGroupStateInvalid),
-1 = Disabled	(mcGroupStateDisabled),
-2 = Standby	(mcGroupStateStandby),
-3 = Moving	(mcGroupStateMoving),
-4 = Stopping	(mcGroupStateStopping),
-5 = ErrorStop	(mcGroupStateErrorStop),
-6 = Homing	(mcGroupStateHoming),
-7 = NotReady	(mcGroupStateNotReady),
-8 = Suspended	(mcGroupStateSuspended)]]></Comment>
-				<BitSize>16</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Flags</Name>
-				<Type GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>16</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC" TcBaseType="true">MCTOPLC_GROUP_COMMON_PART</Name>
-			<BitSize>512</BitSize>
-			<SubItem>
-				<Name>GroupOID</Name>
-				<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
-				<Comment><![CDATA[TcCOM-Object-Id (OID) of this Group]]></Comment>
-				<BitSize>32</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>GroupType</Name>
-				<Type GUID="{DB9169AE-6AF9-4994-9F36-F1067592C967}" Namespace="MC">MC_GROUP_TYPE</Type>
-				<Comment><![CDATA[Actual Type of this Group:
-0 = Invalid            (mcGroupTypeInvalid),
-1 = CollisionAvoidance (mcGroupTypeCA),
-2 = DXD/CNC            (mcGroupTypeDxd),
-3 = CoordinatedMotion  (mcGroupTypeCM)]]></Comment>
-				<BitSize>32</BitSize>
-				<BitOffs>32</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>GroupStatus</Name>
-				<Type GUID="{51F0F443-1D05-4E13-ADFA-62EA48380092}" Namespace="MC">ST_GroupStatus</Type>
-				<BitSize>32</BitSize>
-				<BitOffs>64</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>GroupErrorId</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
-				<Comment><![CDATA[Current Error Identifier (0 = no error)]]></Comment>
-				<BitSize>32</BitSize>
-				<BitOffs>96</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>GroupAxesCount</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
-				<Comment><![CDATA[Number of Axes that are currently part of this Group 
-(e.g. added via MC_AddAxisToGroup)]]></Comment>
-				<BitSize>32</BitSize>
-				<BitOffs>128</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>ActOverrideFactor</Name>
+				<Name>OverrideFactor</Name>
 				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
-				<Comment><![CDATA[Actual/Active override factor (1.0 = 100%)]]></Comment>
+				<Comment><![CDATA[Desired override factor (1.0 = 100%, default value is 1.0)]]></Comment>
 				<BitSize>64</BitSize>
-				<BitOffs>192</BitOffs>
+				<BitOffs>0</BitOffs>
+				<Default>
+					<Value>1.0</Value>
+				</Default>
 			</SubItem>
+			<Default>
+				<SubItem>
+					<Name>OverrideFactor</Name>
+					<Value>1.0</Value>
+				</SubItem>
+			</Default>
 		</DataType>
 		<DataType>
-			<Name GUID="{260A4C07-588B-43A4-9DE1-0381D61130FD}" Namespace="MC" TcBaseType="true">CDT_MCTOPLC_GROUP_CA</Name>
-			<BitSize>1536</BitSize>
+			<Name GUID="{BAE35DD4-8FAE-4745-9207-33776C056045}" Namespace="MC" TcBaseType="true">CDT_PLCTOMC_GROUP_CA</Name>
+			<BitSize>1024</BitSize>
 			<SubItem>
 				<Name>Common</Name>
-				<Type GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC">MCTOPLC_GROUP_COMMON_PART</Type>
-				<BitSize>512</BitSize>
+				<Type GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC">PLCTOMC_GROUP_COMMON_PART</Type>
+				<BitSize>256</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{9EC99A1C-7273-4E44-A010-44B69D237BC7}" Namespace="MC" TcBaseType="true">CDT_MCTOPLC_GROUP_DXD</Name>
-			<BitSize>1536</BitSize>
+			<Name GUID="{9620535C-083D-4341-A13A-BC04E184C09A}" Namespace="MC" TcBaseType="true">CDT_PLCTOMC_GROUP_DXD</Name>
+			<BitSize>1024</BitSize>
 			<SubItem>
 				<Name>Common</Name>
-				<Type GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC">MCTOPLC_GROUP_COMMON_PART</Type>
-				<BitSize>512</BitSize>
+				<Type GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC">PLCTOMC_GROUP_COMMON_PART</Type>
+				<BitSize>256</BitSize>
 				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>PathVelo</Name>
-				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
-				<BitSize>64</BitSize>
-				<BitOffs>512</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>InvokeId</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
-				<BitSize>32</BitSize>
-				<BitOffs>576</BitOffs>
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{EB1F033C-2651-4B56-9F0C-CB33B288FCFC}" Namespace="MC" TcBaseType="true">CDT_MCTOPLC_GROUP_CM</Name>
-			<BitSize>1536</BitSize>
+			<Name GUID="{762962EF-0BB3-42E3-80C3-82A3958BB33D}" Namespace="MC" TcBaseType="true">CDT_PLCTOMC_GROUP_CM</Name>
+			<BitSize>1024</BitSize>
 			<SubItem>
 				<Name>Common</Name>
-				<Type GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC">MCTOPLC_GROUP_COMMON_PART</Type>
-				<BitSize>512</BitSize>
+				<Type GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC">PLCTOMC_GROUP_COMMON_PART</Type>
+				<BitSize>256</BitSize>
 				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>PathVelo</Name>
-				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
-				<BitSize>64</BitSize>
-				<BitOffs>512</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>InvokeId</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
-				<BitSize>32</BitSize>
-				<BitOffs>576</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>IsInBlendingSegment</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>608</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>RemainingTimeActiveJob</Name>
-				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
-				<BitSize>64</BitSize>
-				<BitOffs>640</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>RemainingCartesianDistanceActiveJob</Name>
-				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
-				<BitSize>64</BitSize>
-				<BitOffs>704</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>ActiveBlockerId</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
-				<BitSize>32</BitSize>
-				<BitOffs>768</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>RemainingTimeToSync</Name>
-				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
-				<BitSize>64</BitSize>
-				<BitOffs>832</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>RemainingCartesianDistanceToSync</Name>
-				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
-				<BitSize>64</BitSize>
-				<BitOffs>896</BitOffs>
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{467F4325-10DF-4BC1-88DD-E8240EB4F8E3}" Namespace="MC" TcBaseType="true">CDT_MCTOPLC_GROUP</Name>
-			<BitSize>1536</BitSize>
+			<Name GUID="{0E2E3852-A98C-4AF3-81E2-209EE128940C}" Namespace="MC" TcBaseType="true">CDT_PLCTOMC_GROUP</Name>
+			<BitSize>1024</BitSize>
 			<SubItem>
 				<Name>Common</Name>
-				<Type GUID="{F40562BB-DCFF-4B18-8E31-192F15F03476}" Namespace="MC">MCTOPLC_GROUP_COMMON_PART</Type>
-				<BitSize>512</BitSize>
+				<Type GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC">PLCTOMC_GROUP_COMMON_PART</Type>
+				<BitSize>256</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>CA</Name>
-				<Type GUID="{260A4C07-588B-43A4-9DE1-0381D61130FD}" Namespace="MC">CDT_MCTOPLC_GROUP_CA</Type>
-				<BitSize>1536</BitSize>
+				<Type GUID="{BAE35DD4-8FAE-4745-9207-33776C056045}" Namespace="MC">CDT_PLCTOMC_GROUP_CA</Type>
+				<BitSize>1024</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>Dxd</Name>
-				<Type GUID="{9EC99A1C-7273-4E44-A010-44B69D237BC7}" Namespace="MC">CDT_MCTOPLC_GROUP_DXD</Type>
-				<BitSize>1536</BitSize>
+				<Type GUID="{9620535C-083D-4341-A13A-BC04E184C09A}" Namespace="MC">CDT_PLCTOMC_GROUP_DXD</Type>
+				<BitSize>1024</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>CM</Name>
-				<Type GUID="{EB1F033C-2651-4B56-9F0C-CB33B288FCFC}" Namespace="MC">CDT_MCTOPLC_GROUP_CM</Type>
-				<BitSize>1536</BitSize>
+				<Type GUID="{762962EF-0BB3-42E3-80C3-82A3958BB33D}" Namespace="MC">CDT_PLCTOMC_GROUP_CM</Type>
+				<BitSize>1024</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
 		</DataType>
@@ -1263,91 +1341,37 @@ and will return to Group State Standby when the situation permits.
 				</Relation>
 			</Relations>
 		</DataType>
-		<DataType>
-			<Name GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC" TcBaseType="true">PLCTOMC_GROUP_COMMON_PART</Name>
-			<BitSize>256</BitSize>
-			<SubItem>
-				<Name>OverrideFactor</Name>
-				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
-				<Comment><![CDATA[Desired override factor (1.0 = 100%, default value is 1.0)]]></Comment>
-				<BitSize>64</BitSize>
-				<BitOffs>0</BitOffs>
-				<Default>
-					<Value>1.0</Value>
-				</Default>
-			</SubItem>
-			<Default>
-				<SubItem>
-					<Name>OverrideFactor</Name>
-					<Value>1.0</Value>
-				</SubItem>
-			</Default>
-		</DataType>
-		<DataType>
-			<Name GUID="{BAE35DD4-8FAE-4745-9207-33776C056045}" Namespace="MC" TcBaseType="true">CDT_PLCTOMC_GROUP_CA</Name>
-			<BitSize>1024</BitSize>
-			<SubItem>
-				<Name>Common</Name>
-				<Type GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC">PLCTOMC_GROUP_COMMON_PART</Type>
-				<BitSize>256</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{9620535C-083D-4341-A13A-BC04E184C09A}" Namespace="MC" TcBaseType="true">CDT_PLCTOMC_GROUP_DXD</Name>
-			<BitSize>1024</BitSize>
-			<SubItem>
-				<Name>Common</Name>
-				<Type GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC">PLCTOMC_GROUP_COMMON_PART</Type>
-				<BitSize>256</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{762962EF-0BB3-42E3-80C3-82A3958BB33D}" Namespace="MC" TcBaseType="true">CDT_PLCTOMC_GROUP_CM</Name>
-			<BitSize>1024</BitSize>
-			<SubItem>
-				<Name>Common</Name>
-				<Type GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC">PLCTOMC_GROUP_COMMON_PART</Type>
-				<BitSize>256</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{0E2E3852-A98C-4AF3-81E2-209EE128940C}" Namespace="MC" TcBaseType="true">CDT_PLCTOMC_GROUP</Name>
-			<BitSize>1024</BitSize>
-			<SubItem>
-				<Name>Common</Name>
-				<Type GUID="{2DF9018F-144A-47C3-8291-E6F4AFD6BD62}" Namespace="MC">PLCTOMC_GROUP_COMMON_PART</Type>
-				<BitSize>256</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>CA</Name>
-				<Type GUID="{BAE35DD4-8FAE-4745-9207-33776C056045}" Namespace="MC">CDT_PLCTOMC_GROUP_CA</Type>
-				<BitSize>1024</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Dxd</Name>
-				<Type GUID="{9620535C-083D-4341-A13A-BC04E184C09A}" Namespace="MC">CDT_PLCTOMC_GROUP_DXD</Type>
-				<BitSize>1024</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>CM</Name>
-				<Type GUID="{762962EF-0BB3-42E3-80C3-82A3958BB33D}" Namespace="MC">CDT_PLCTOMC_GROUP_CM</Type>
-				<BitSize>1024</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-		</DataType>
 	</DataTypes>
 	<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="Main" PrjFilePath="..\..\Main\Main.plcproj" TmcFilePath="..\..\Main\Main.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Main\Main.tmc" TmcHash="{F9A74253-82DA-EC0B-6A65-ADB4DEDADCE4}">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Main\Main.tmc" TmcHash="{AAE9922B-640B-1054-8608-776B1346414A}">
 			<Name>Main Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="1">
 				<Name>PlcTask Inputs</Name>
+				<Var>
+					<Name>MAIN.GroupRef.NcToPlc</Name>
+					<Type GUID="{467F4325-10DF-4BC1-88DD-E8240EB4F8E3}" Namespace="MC">CDT_MCTOPLC_GROUP</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.SpeedTrigger[0].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.SpeedTrigger[1].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.PositionTrigger[0].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.PositionTrigger[1].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.PositionTrigger[2].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
 				<Var>
 					<Name>MAIN.Mover[0].AxisReference.NcToPlc</Name>
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
@@ -1373,12 +1397,164 @@ and will return to Group State Standby when the situation permits.
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
-					<Name>MAIN.GroupRef.NcToPlc</Name>
-					<Type GUID="{467F4325-10DF-4BC1-88DD-E8240EB4F8E3}" Namespace="MC">CDT_MCTOPLC_GROUP</Type>
+					<Name>MAIN.MoverList[0].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[1].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[2].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[3].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[4].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[5].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[6].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[7].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[8].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[9].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[10].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[0].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[1].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[2].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[3].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[4].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[5].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[6].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[7].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[8].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[9].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[0].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[0].internalMoverList.ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[1].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[1].internalMoverList.ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[2].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[2].internalMoverList.ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[3].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[3].internalMoverList.ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[0].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[0].internalMoverList.ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[1].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[1].internalMoverList.ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 			</Vars>
 			<Vars VarGrpType="2" AreaNo="1">
 				<Name>PlcTask Outputs</Name>
+				<Var>
+					<Name>MAIN.GroupRef.PlcToNc</Name>
+					<Type GUID="{0E2E3852-A98C-4AF3-81E2-209EE128940C}" Namespace="MC">CDT_PLCTOMC_GROUP</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.SpeedTrigger[0].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.SpeedTrigger[1].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.PositionTrigger[0].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.PositionTrigger[1].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.PositionTrigger[2].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
 				<Var>
 					<Name>MAIN.Mover[0].AxisReference.PlcToNc</Name>
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
@@ -1404,8 +1580,136 @@ and will return to Group State Standby when the situation permits.
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 				<Var>
-					<Name>MAIN.GroupRef.PlcToNc</Name>
-					<Type GUID="{0E2E3852-A98C-4AF3-81E2-209EE128940C}" Namespace="MC">CDT_PLCTOMC_GROUP</Type>
+					<Name>MAIN.MoverList[0].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[1].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[2].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[3].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[4].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[5].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[6].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[7].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[8].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[9].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.MoverList[10].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[0].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[1].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[2].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[3].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[4].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[5].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[6].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[7].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[8].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Station[9].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[0].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[0].internalMoverList.ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[1].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[1].internalMoverList.ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[2].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[2].internalMoverList.ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[3].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Zone[3].internalMoverList.ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[0].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[0].internalMoverList.ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[1].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[1].internalMoverList.ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 			</Vars>
 			<Contexts>
