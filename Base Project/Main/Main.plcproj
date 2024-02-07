@@ -34,6 +34,9 @@
     <Compile Include="DUTs\MoverState_enum.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\PositionTriggerStats_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\StationStats_typ.TcDUT">
       <SubType>Code</SubType>
     </Compile>

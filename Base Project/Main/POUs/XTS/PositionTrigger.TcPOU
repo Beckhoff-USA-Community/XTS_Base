@@ -4,12 +4,17 @@
     <Declaration><![CDATA[FUNCTION_BLOCK PositionTrigger EXTENDS Objective
 
 VAR
-    internalPosition    	 : LREAL;
-    internalTriggerDirection 	 : Tc2_MC2.MC_Direction;
-    internalMoverPassedPosition : BOOL;
-    internalCurrentMover     	 : POINTER TO Mover;
-	internalTrackId				: DINT := 1;
-    moverLastPos              	: ARRAY[0..GVL.NUM_MOVERS - 1] OF LREAL; // Positions of tracked movers from last cycle
+    internalPosition    	 			: LREAL;
+    internalTriggerDirection 			: Tc2_MC2.MC_Direction;
+    internalMoverPassedPosition 		: BOOL;
+	internalLastMoverPassedPosition		: BOOL;
+	internalInterarrivalTimer			: TON;
+    internalCurrentMover     	 		: POINTER TO Mover;
+	internalTrackId						: DINT := 1;
+    moverLastPos              			: ARRAY[0..GVL.NUM_MOVERS - 1] OF LREAL; // Positions of tracked movers from last cycle
+END_VAR
+VAR_OUTPUT
+	Statistics							: PositionTriggerStats_typ;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -49,6 +54,15 @@ VAR
 	positionDifference			: LREAL;
 	modTrackPosition			: LREAL;
 	rolloverOccured				: BOOL;
+	alphaEMA					: LREAL := 0.1;
+	
+END_VAR
+VAR_INST
+
+	velocityCount				: UDINT;
+	velocitySum					: LREAL;
+	internalRingBufferIDX		: UDINT;
+
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[currentIsRegistered		:= FALSE;
@@ -114,6 +128,47 @@ IF currentIsRegistered = FALSE THEN
 	internalCurrentMover			:= 0;
 END_IF
 
+// Calculate stats
+IF THIS^.MoverPassedPosition AND internalLastMoverPassedPosition = FALSE THEN
+	Statistics.ProcessedMoverCount									:= Statistics.ProcessedMoverCount + 1;
+	Statistics.InterarrivalTimeHistory[internalRingBufferIDX]		:= internalInterarrivalTimer.ET;
+	Statistics.MoverVelocityHistory[internalRingBufferIDX]			:= THIS^.CurrentMover.AxisReference.NcToPlc.ActVelo;
+	internalRingBufferIDX											:= internalRingBufferIDX + 1;
+	Statistics.LatestMoverVelocity									:= THIS^.CurrentMover.AxisReference.NcToPlc.ActVelo;
+	Statistics.AverageInterarrivalTime	:= LREAL_TO_TIME(( alphaEMA * TIME_TO_LREAL(internalInterarrivalTimer.ET )) + (( 1 - alphaEMA) * TIME_TO_LREAL( Statistics.AverageInterarrivalTime )));
+	internalInterarrivalTimer( IN := FALSE );	
+END_IF
+internalLastMoverPassedPosition		:= THIS^.MoverPassedPosition;
+internalInterarrivalTimer( IN := TRUE, PT := T#40D, ET => Statistics.InterarrivalTime );
+
+IF internalRingBufferIDX = ( SIZEOF( Statistics.InterarrivalTimeHistory ) / SIZEOF( Statistics.InterarrivalTimeHistory[0] )) THEN
+	internalRingBufferIDX		:= 0;
+END_IF
+
+IF Statistics.AverageInterarrivalTime <> T#0S THEN
+	Statistics.AverageMoversPerMinute		:= 60000 / TIME_TO_LREAL( Statistics.AverageInterarrivalTime );
+END_IF
+
+velocitySum		:= 0;
+velocityCount	:= 0;
+
+FOR i := 0 TO SIZEOF( Statistics.MoverVelocityHistory ) / SIZEOF( Statistics.MoverVelocityHistory[0] ) DO
+	IF Statistics.MoverVelocityHistory[i] <> 0 THEN
+		velocityCount		:= velocityCount + 1;
+		velocitySum			:= velocitySum + Statistics.MoverVelocityHistory[i];
+	END_IF
+END_FOR
+IF velocityCount <> 0 THEN // protect div0
+	Statistics.AverageMoverVelocity		:= velocitySum / velocityCount;
+END_IF 
+	
+
+
+
+
+
+
+
 
 
 ]]></ST>
@@ -161,6 +216,26 @@ internalPosition := Position;]]></ST>
         </Implementation>
       </Set>
     </Property>
+    <Method Name="ResetStatistics" Id="{81dc9311-da3d-0455-0c85-807d7603399c}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ResetStatistics : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+Statistics.AverageInterarrivalTime		:= T#0S;
+Statistics.AverageMoversPerMinute		:= 0;
+Statistics.AverageMoverVelocity			:= 0;
+Statistics.InterarrivalTime				:= T#0S;
+
+memset(ADR(Statistics.InterarrivalTimeHistory),0,SIZEOF(Statistics.InterarrivalTimeHistory));
+memset(ADR(Statistics.MoverVelocityHistory),0,SIZEOF(Statistics.MoverVelocityHistory));
+
+Statistics.LatestMoverVelocity			:= 0;
+Statistics.ProcessedMoverCount			:= 0;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="TrackId" Id="{127d74ba-df8b-0a03-0926-c5e68e5e3675}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
       <Get Name="Get" Id="{ffb39293-6b9f-0a6a-06be-511a7a51c7e5}">
@@ -214,7 +289,43 @@ END_VAR]]></Declaration>
       <LineId Id="170" Count="0" />
       <LineId Id="94" Count="5" />
       <LineId Id="104" Count="33" />
-      <LineId Id="139" Count="12" />
+      <LineId Id="139" Count="9" />
+      <LineId Id="256" Count="0" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="258" Count="0" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="257" Count="0" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="261" Count="1" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="235" Count="1" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="208" Count="4" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="149" Count="2" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.MoverPassedPosition.Get">
@@ -230,6 +341,17 @@ END_VAR]]></Declaration>
     <LineIds Name="PositionTrigger.Position.Set">
       <LineId Id="6" Count="0" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PositionTrigger.ResetStatistics">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.TrackId.Get">
       <LineId Id="2" Count="0" />
