@@ -110,7 +110,18 @@ CASE MainState OF
 			Mover[i].Mediator					REF= Mediator;
 			Mover[i].Mediator.MoverArray[i]		:= ADR(Mover[i]);
         END_FOR
-
+		
+		IF MainCommands.Disable THEN
+			MainCommands.Enable		:= FALSE;
+			MainState				:= MS_DISABLED;
+		ELSIF MainCommands.Stop THEN
+			MainCommands.Stop		:= FALSE;
+			MainCommands.Disable	:= TRUE;
+			MainCommands.Start		:= FALSE;
+			MainState				:= MS_DISABLED;
+		ELSIF MainCommands.Enable THEN
+        	MainState 				:= MS_ONESHOT_ENABLE;
+		END_IF
 
 	MS_ONESHOT_ENABLE:	// -------------------------------------------------- SINGLE-CYCLE ISSUE ENABLE COMMANDS
 		(*Begin Enabling movers by calling Mover.Enable(). Methods in this project
@@ -541,7 +552,9 @@ END_CASE
       <LineId Id="1282" Count="0" />
       <LineId Id="1694" Count="0" />
       <LineId Id="1283" Count="52" />
-      <LineId Id="1698" Count="0" />
+      <LineId Id="1750" Count="0" />
+      <LineId Id="1752" Count="9" />
+      <LineId Id="1751" Count="0" />
       <LineId Id="1348" Count="335" />
       <LineId Id="1687" Count="6" />
       <LineId Id="2" Count="0" />
