@@ -7,6 +7,7 @@ FUNCTION_BLOCK Mover IMPLEMENTS iMover;
 
 VAR_INPUT
 	
+	Mediator				: REFERENCE TO Mediator;
 	MotionParameters		: MotionParameters_typ;		// Motion parameters used by internal motion function blocks
 	SourceInstancePath		: STRING	:= 'Direct access';					// Used internally to temporarily store the source of a Mover method call for logging purposes. Don't read or write
 
@@ -1347,6 +1348,37 @@ MoveVelocity		:= THIS^;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="NextMover" Id="{852f964d-8625-0223-189c-c4fa1a4b313d}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY NextMover : Reference To Mover]]></Declaration>
+      <Get Name="Get" Id="{af159a86-85bb-082d-3056-88b1545f1281}">
+        <Declaration><![CDATA[VAR
+	i						: UINT;
+	currentDifference		: LREAL;
+	minimumDifference		: LREAL;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+minimumDifference		:= 1E300;
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO	
+	IF Mediator.MoverArray[i] <> 0 THEN		// pointer validity
+		currentDifference			:= Mediator.MoverArray[i]^.AxisReference.NcToPlc.SetPos - THIS^.AxisReference.NcToPlc.SetPos;
+						
+		// remain within the same lap
+		IF currentDifference < 0 THEN
+			currentDifference 		:= currentDifference + GVL.TRACK_LENGTH;
+		END_IF
+	
+		IF currentDifference < minimumDifference THEN
+			NextMover				:= Mediator.MoverArray[i]^;
+			minimumDifference		:= currentDifference;
+		END_IF
+	END_IF	
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Payload" Id="{5caf95a6-ad6c-448d-8947-8c8c07ab0a26}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Payload : USINT]]></Declaration>
       <Get Name="Get" Id="{8a73f5fd-2b02-4094-9725-10c35f9f9334}">
@@ -1369,6 +1401,39 @@ END_VAR
 internalPayload	:= Payload;]]></ST>
         </Implementation>
       </Set>
+    </Property>
+    <Property Name="PreviousMover" Id="{831a5835-1520-04bd-1df4-b0219fd1d25b}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY PreviousMover : REFERENCE TO Mover]]></Declaration>
+      <Get Name="Get" Id="{a5a30b40-f29c-03c3-3ba4-ac79951c1881}">
+        <Declaration><![CDATA[VAR
+	
+	i					: UINT;
+	currentDifference	: LREAL;
+	minimumDifference	: LREAL;
+
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+minimumDifference		:= 1E300;
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+	IF Mediator.MoverArray[i] <> 0 THEN		// pointer validity
+		currentDifference			:= THIS^.AxisReference.NcToPlc.SetPos - Mediator.MoverArray[i]^.AxisReference.NcToPlc.SetAcc;
+		
+		// remain within the same lap
+		IF currentDifference < 0 THEN
+			currentDifference		:= currentDifference + GVL.TRACK_LENGTH;
+		END_IF
+		
+		IF currentDifference < minimumDifference THEN
+			PreviousMover			:= Mediator.MoverArray[i]^;
+			minimumDifference		:= currentDifference;
+		END_IF
+	END_IF
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
     </Property>
     <Method Name="ReissueCommand" Id="{195ecbe2-3d92-4d60-b9b5-7e1a3292ea5b}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ReissueCommand : iMover
@@ -1975,6 +2040,22 @@ SyncToMover		:= THIS^;
       <LineId Id="50" Count="25" />
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="Mover.NextMover.Get">
+      <LineId Id="18" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="30" Count="3" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
     <LineIds Name="Mover.Payload.Get">
       <LineId Id="3" Count="1" />
       <LineId Id="2" Count="0" />
@@ -1982,6 +2063,20 @@ SyncToMover		:= THIS^;
     <LineIds Name="Mover.Payload.Set">
       <LineId Id="3" Count="1" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.PreviousMover.Get">
+      <LineId Id="10" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="22" Count="2" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="14" Count="0" />
     </LineIds>
     <LineIds Name="Mover.ReissueCommand">
       <LineId Id="25" Count="0" />

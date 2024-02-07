@@ -11,6 +11,7 @@ VAR
 
 	// ========= Linked NC Variables & References =========
 	
+	Mediator			: Mediator;
 	Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
     GroupRef 			: AXES_GROUP_REF;                       	 // linked to the Collision Avoidance group and passed cyclically to every Mover object
 
@@ -108,7 +109,10 @@ CASE MainState OF
 		ParameterSet.Direction    := mcDirectionPositive;
 
         FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-            Mover[i].MotionParameters := ParameterSet;
+            Mover[i].MotionParameters 			:= ParameterSet;
+			
+			Mover[i].Mediator					REF= Mediator;
+			Mover[i].Mediator.MoverArray[i]		:= ADR(Mover[i]);
         END_FOR
 		
 		IF MainCommands.Disable THEN
@@ -535,7 +539,10 @@ END_CASE
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="660" Count="108" />
+      <LineId Id="660" Count="52" />
+      <LineId Id="1153" Count="1" />
+      <LineId Id="1150" Count="0" />
+      <LineId Id="713" Count="55" />
       <LineId Id="770" Count="0" />
       <LineId Id="772" Count="0" />
       <LineId Id="774" Count="0" />
