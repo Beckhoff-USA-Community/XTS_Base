@@ -1846,6 +1846,35 @@ SyncToMover		:= THIS^;
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="UnregisterFromAll" Id="{f143e1ea-77ff-0f0f-21c3-e86b5d1cb377}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD UnregisterFromAll : BOOL
+VAR_INPUT
+	i		: ULINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+FOR i := 0 TO GVL.NUM_MOVERLISTS-1 DO
+	Mediator.MoverListArray[i]^.UnregisterMover( THIS^ );
+END_FOR
+
+FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS-1 DO
+	Mediator.PositionTriggerArray[i]^.UnregisterMover( THIS^ );
+END_FOR
+
+FOR i := 0 TO GVL.NUM_SPEEDTRIGGERS-1 DO
+	Mediator.SpeedTriggerArray[i]^.UnregisterMover( THIS^ );
+END_FOR
+
+FOR i := 0 TO GVL.NUM_STATIONS-1 DO
+	Mediator.StationArray[i]^.UnregisterMover( THIS^ );
+END_FOR
+
+FOR i := 0 TO GVL.NUM_ZONES-1 DO
+	Mediator.ZoneArray[i]^.UnregisterMover( THIS^ );
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="Mover">
       <LineId Id="2" Count="0" />
     </LineIds>
@@ -2131,6 +2160,26 @@ SyncToMover		:= THIS^;
       <LineId Id="108" Count="0" />
       <LineId Id="68" Count="23" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.UnregisterFromAll">
+      <LineId Id="9" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
