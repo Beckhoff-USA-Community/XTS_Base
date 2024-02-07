@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="StationStats_typ" Id="{36fcac96-6d65-0bca-1053-23e60876e2ff}">
+    <Declaration><![CDATA[TYPE StationStats_typ :
+STRUCT
+	
+	TimeOccupied				: TIME;						// Current amount of time that the station has had a MoverInPosition
+	TimeEmpty					: TIME;						// Current amount of time where MoverInPosition is FALSE
+	
+	OccupiedTimeHistory			: ARRAY[0..63] OF TIME;		// Ring buffer of recent TimeOccupied values 
+	EmptyTimeHistory			: ARRAY[0..63] OF TIME;		// Ring buffer of recent TimeEmpty values
+		
+	AverageTimeOccupied			: TIME;						// Average of all nonzero TimeOccupied values in the ring buffer
+	AverageTimeEmpty			: TIME;						// Average of all nonzero TimeEmpty values in the ring buffer
+	
+	AverageTimeBetweenMovers	: TIME;						// Sum of average TimeOccupied + AverageTimeEmpty
+	AverageUtilizationFactor	: LREAL;					// Percentage value equal to AverageTimeOccupied / AverageTimeBetweenMovers
+	AverageMoversPerMinute		: LREAL;					// MPM Throughput value, equal to 60 / AverageTimeBetweenMovers [s]
+	
+	ProcessedMoverCount		: UDINT;						// Total number of movers processed by this station
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
