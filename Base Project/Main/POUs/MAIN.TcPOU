@@ -404,7 +404,7 @@ CASE MainState OF
 	
 	MS_ONESHOT_DISABLE:	// ------------------------------------------------------- SINGLE CYCLE ISSUE DISABLE COMMANDS
 		(*Mover disable commands are issued here, followed by a state tranisition to await completion of the Disabling*)
-		FOR i := 0 TO GVL.NUM_MOVERS DO
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 			Mover[i].Disable();
 		END_FOR
 
@@ -423,17 +423,17 @@ CASE MainState OF
         END_FOR
 
         // Unregister everything from all Position triggers
-        FOR i := 0 TO SIZEOF(PositionTrigger) / SIZEOF(PositionTrigger[0]) - 1 DO
+        FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
             PositionTrigger[i].UnregisterAll();
         END_FOR
 
         // Unregister everything from all speed triggers
-        FOR i := 0 TO SIZEOF(SpeedTrigger) / SIZEOF(SpeedTrigger[0]) - 1 DO
+        FOR i := 0 TO GVL.NUM_SPEEDTRIGGERS - 1 DO
             SpeedTrigger[i].UnregisterAll();
         END_FOR
 
         // Unregister everything from all zones
-        FOR i := 0 TO SIZEOF(Zone) / SIZEOF(Zone[0]) - 1 DO
+        FOR i := 0 TO GVL.NUM_ZONES - 1 DO
             Zone[i].UnregisterAll();
         END_FOR
 		
