@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="PositionTrigger" Id="{2be242dd-21c3-49cc-ab16-707ac1bbd2e6}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK PositionTrigger EXTENDS Objective
@@ -8,6 +8,7 @@ VAR
     internalTriggerDirection 	 : Tc2_MC2.MC_Direction;
     internalMoverPassedPosition : BOOL;
     internalCurrentMover     	 : POINTER TO Mover;
+	internalLastMoverPassedPosition		: BOOL;
 	internalTrackId				: DINT := 1;
     moverLastPos              	: ARRAY[0..GVL.NUM_MOVERS - 1] OF LREAL; // Positions of tracked movers from last cycle
 	moverInitialized			: ARRAY [0..(GVL.NUM_MOVERS-1)] OF BOOL; // first scan-like flag to prevent erronious triggers on first scan
@@ -307,6 +308,12 @@ END_VAR]]></Declaration>
       <LineId Id="104" Count="33" />
       <LineId Id="139" Count="12" />
       <LineId Id="2" Count="0" />
+      <LineId Id="74" Count="11" />
+      <LineId Id="203" Count="4" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="208" Count="7" />
+      <LineId Id="100" Count="3" />
+      <LineId Id="216" Count="4" />
     </LineIds>
     <LineIds Name="PositionTrigger.MoverPassedPosition.Get">
       <LineId Id="2" Count="0" />
