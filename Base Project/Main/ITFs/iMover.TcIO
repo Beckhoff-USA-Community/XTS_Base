@@ -18,6 +18,12 @@ PROPERTY CurrentDestinationPosition : LREAL]]></Declaration>
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Property Name="CurrentDestinationTrack" Id="{0cd493a5-70c3-0b26-10e2-afc4686688d0}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentDestinationTrack : DINT]]></Declaration>
+      <Get Name="Get" Id="{00d9b1b4-eea1-0aa1-077f-9311696a0d3e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="CurrentMoveType" Id="{f31956ff-9981-42ba-a963-53182be5a6a1}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY CurrentMoveType : MoverCommandType_enum]]></Declaration>

@@ -2,14 +2,23 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <Itf Name="iMoverList" Id="{9cc4a2ad-2506-4bdd-acf3-bfbfde25ab77}">
     <Declaration><![CDATA[INTERFACE iMoverList]]></Declaration>
-    <Method Name="ActivateAllTrack" Id="{214d853b-c1b8-0faa-14bf-a2670bf33012}">
+    <Folder Name="Methods" Id="{82f0078e-13af-0a56-283e-d65bfe6ce910}" />
+    <Folder Name="Properties" Id="{3e76f92b-d626-067b-3e4d-3f719b91b8c3}" />
+    <Method Name="ActivateAllTrack" Id="{214d853b-c1b8-0faa-14bf-a2670bf33012}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ActivateAllTrack : BOOL
 VAR_INPUT
 	Track	: REFERENCE TO Track;
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="GetMoverByLocation" Id="{08ab6dd2-55e6-476a-991b-26d3f0ccc58d}">
+    <Method Name="DestinationStation" Id="{5911a55f-1122-0e1b-277d-d8250281482e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD DestinationStation : iMoverList
+VAR_INPUT
+	Destination	: REFERENCE TO Station;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="GetMoverByLocation" Id="{08ab6dd2-55e6-476a-991b-26d3f0ccc58d}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE to Mover
 VAR_INPUT
     Index     : USINT;                // 0 is find the first closest mover, 1 is find the second closest mover, 2 is find the third, etc. etc. etc.
@@ -17,13 +26,13 @@ VAR_INPUT
     Direction : Tc2_MC2.MC_Direction; // Positive = find the most positive mover whose position is less than the Input. Negative = find the most negative mover whose position is greater than the input
 END_VAR]]></Declaration>
     </Method>
-    <Property Name="IsAllTrackReady" Id="{a3e4944a-7607-0f5a-10b2-64b1616a1317}">
+    <Property Name="IsAllTrackReady" Id="{a3e4944a-7607-0f5a-10b2-64b1616a1317}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY IsAllTrackReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{c87cec46-e2a4-0a12-2b5e-a6b05f1caa93}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="MoveAllToPosition" Id="{745a52d9-fa71-49ff-868a-52a3293e2e2d}">
+    <Method Name="MoveAllToPosition" Id="{745a52d9-fa71-49ff-868a-52a3293e2e2d}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MoveAllToPosition : iMoverList
 VAR_INPUT
 
@@ -31,7 +40,7 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="MoveAllToStation" Id="{371362e2-fc11-40b6-a0e6-d17b876d5e78}">
+    <Method Name="MoveAllToStation" Id="{371362e2-fc11-40b6-a0e6-d17b876d5e78}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MoveAllToStation : iMoverList
 VAR_INPUT
 
@@ -39,7 +48,7 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="MoveAllVelocity" Id="{be6cc2f7-a0ce-45ef-a956-f19486620100}">
+    <Method Name="MoveAllVelocity" Id="{be6cc2f7-a0ce-45ef-a956-f19486620100}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MoveAllVelocity : iMoverList
 VAR_INPUT
 
@@ -47,7 +56,7 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="SetAllAcceleration" Id="{455895b5-97e6-495e-9cb5-6646f55e97b6}">
+    <Method Name="SetAllAcceleration" Id="{455895b5-97e6-495e-9cb5-6646f55e97b6}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAllAcceleration : iMoverList
 VAR_INPUT
 
@@ -55,7 +64,7 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="SetAllDeceleration" Id="{d14e387e-79be-456d-9c0b-e3f03ddf19f2}">
+    <Method Name="SetAllDeceleration" Id="{d14e387e-79be-456d-9c0b-e3f03ddf19f2}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAllDeceleration : iMoverList
 VAR_INPUT
 
@@ -63,7 +72,7 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="SetAllDirection" Id="{4bfb0de3-28b7-4b24-a865-2cf8e65fcd48}">
+    <Method Name="SetAllDirection" Id="{4bfb0de3-28b7-4b24-a865-2cf8e65fcd48}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAllDirection : iMoverList
 VAR_INPUT
 
@@ -71,7 +80,14 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="SetAllJerk" Id="{a91832af-959e-462a-a423-5a2f3601faa8}">
+    <Method Name="SetAllGap" Id="{709fc908-8909-09f7-110c-f6e060d6d9df}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetAllGap : iMoverList
+VAR_INPUT
+	Gap : LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="SetAllJerk" Id="{a91832af-959e-462a-a423-5a2f3601faa8}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAllJerk : iMoverList
 VAR_INPUT
 
@@ -79,7 +95,7 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
-    <Method Name="SetAllVelocity" Id="{2027ef8a-c9a4-4e95-be1e-4ccdc273c80d}">
+    <Method Name="SetAllVelocity" Id="{2027ef8a-c9a4-4e95-be1e-4ccdc273c80d}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAllVelocity : iMoverList
 VAR_INPUT
 
@@ -87,20 +103,20 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
-    <Property Name="TrackedMoverCount" Id="{368f6c76-4224-03b5-39ed-4f46132302d9}">
+    <Property Name="TrackedMoverCount" Id="{368f6c76-4224-03b5-39ed-4f46132302d9}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY TrackedMoverCount : USINT]]></Declaration>
       <Get Name="Get" Id="{a4e1bb20-cd42-038c-1a1e-a8f5b0110892}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="TrackedMovers" Id="{c1d0d30a-4686-4f53-a96b-53d64c99ec16}">
+    <Property Name="TrackedMovers" Id="{c1d0d30a-4686-4f53-a96b-53d64c99ec16}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
       <Get Name="Get" Id="{d3d3bfad-1918-438f-8ad5-aa73cc840431}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="UnregisterAll" Id="{77dd6571-5452-49cc-817d-10e46daccff7}">
+    <Method Name="UnregisterAll" Id="{77dd6571-5452-49cc-817d-10e46daccff7}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD UnregisterAll : BOOL
 VAR_INPUT
 END_VAR]]></Declaration>

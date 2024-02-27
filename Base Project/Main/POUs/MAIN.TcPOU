@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="MAIN" Id="{0790caa7-8a3f-4f91-b0f8-9ebb3db3858d}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
@@ -103,6 +103,7 @@ CASE MainState OF
 		ParameterSet.Deceleration := 1E4; // mm/s2
 		ParameterSet.Velocity     := 1E3; // mm/s
 		ParameterSet.Direction    := mcDirectionPositive;
+		ParameterSet.Gap		  := 85.0; // mm
 
         FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
             Mover[i].MotionParameters 			:= ParameterSet;

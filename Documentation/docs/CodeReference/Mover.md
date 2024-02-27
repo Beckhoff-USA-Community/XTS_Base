@@ -382,6 +382,24 @@ A track change takes several PLC and NC scans. Issuing a motion command while th
 200:
 	// mover is ready for additional commands
 ```
+
+---
+<br>
+<br>
+
+### SetGap
+
+*SetGap( Gap : LREAL )*
+
+> Sets the collision avoidance gap for the specified mover in mm. This takes effect immediately.
+
+Caution: This method can cause unexpected motion. If setting a larger gap for a mover that currently has movers within the new gap distance (on either side of the mover). Each affected mover will immediately attempt to adjust for the new gap which may result in movers moving forwards or backwards. When increasing the gap between movers it's recommended to do this one mover at a time only when the space in front of the mover is clear for at least the new gap distance. This can be accomplished with either a PositionTrigger or Zone.
+
+```javascript
+Mover[1].SetGap( 65.0 );
+```
+
+
 ## Properties
 
 #### .CurrentMoveType

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
@@ -114,6 +114,8 @@ VAR
 	lastCallSetJerk		: LREAL;
 	lastCallSetVel		: LREAL;
 	lastCallSync		: LREAL;
+	lastCallValidateTrack : LREAL;
+	lastCallSetGap		: LREAL;
 	
 END_VAR
 VAR_IN_OUT
@@ -173,6 +175,17 @@ END_VAR
         <Implementation>
           <ST><![CDATA[
 CurrentDestinationPosition		:= internalCurrentDestPosition;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="CurrentDestinationTrack" Id="{f44717ff-7baf-0aa6-3174-9f719de28f4d}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentDestinationTrack : DINT]]></Declaration>
+      <Get Name="Get" Id="{8c28783f-5955-0092-0fca-8afe86f48bde}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentDestinationTrack := internalCurrentDestStation.TrackId;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -739,6 +752,14 @@ END_VAR]]></Declaration>
 // calling the track management functions on disabled or errored movers that are not
 // assigned to a group just causes the track management functions to throw more errors
 
+// .internalTrack and thus the property .CurrentTrack are not updated until the track transition is complete
+// this is deliberate. The timing of a track change reuqires at least 2 PLC scans. If .internalTrack were
+// to be set to an invalid track number during these transitions checking for mover presence at
+// stations and zones would cause movers to "disappear" during the transition which may cause
+// upstream movers to be released erroniously because the station/zone momentarily appears clear
+
+// in user code .IsTrackReady and .CurrentTrack should be queried together before issuing commands to a mover
+
 CASE internalTrackState OF
 	// wait for command
 	TrackState.WAIT_FOR_COMMAND:
@@ -749,7 +770,6 @@ CASE internalTrackState OF
 			END_IF;
 
 			// set flags
-			internalTrack := ADR(ErrorTrack);
 			internalTrackIsReady := FALSE;
 
 			// advance state
@@ -785,11 +805,12 @@ CASE internalTrackState OF
 	// clean up flags
 	TrackState.CLEAN_UP:
 		internalTrack := internalActivatingTrack;
-		internalActivatingTrack := ADR(ErrorTrack);
 		internalTrackIsReady := TRUE;
 		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrackComplete, 0);
 		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(THIS^.CurrentTrack^.Id);
 		MsgCreate.Send(0);
+		// register mover
+		internalTrack^.RegisterMover(THIS^);
 		internalTrackState := TrackState.WAIT_END;
 		
 	TrackState.ERROR:
@@ -803,8 +824,6 @@ CASE internalTrackState OF
 	TrackState.WAIT_END: 
 		// falling edge detection for internalActivateTrackFlag
 		IF (NOT internalActivateTrackFlag) THEN
-			// register mover
-			internalTrack^.RegisterMover(THIS^);
 			internalTrackState := TrackState.WAIT_FOR_COMMAND;	
 		END_IF
 		internalActivateTrackFlag := FALSE;
@@ -1085,6 +1104,9 @@ IF NOT( Ready ) THEN	// if the mover is not ready & able to accept a moveabs com
 	
 	internalState	:= MV_ERROR;
 	ErrorID			:= 19201;
+
+ELSIF (NOT THIS^.ValidateTrack()) THEN
+	;	// validate track posts error
 	
 ELSE	// otherwise let 'er rip
 	
@@ -1098,6 +1120,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[0].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
@@ -1118,6 +1141,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[1].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 
@@ -1175,7 +1199,10 @@ END_VAR]]></Declaration>
 	
 	internalState	:= MV_ERROR;
 	ErrorID			:= 19201;
-	
+
+ELSIF (NOT THIS^.ValidateTrack()) THEN
+	;	// validate track posts error
+
 ELSE	// otherwise let 'er rip
 	
 	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
@@ -1188,6 +1215,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[0].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
@@ -1208,6 +1236,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
+		fbMoveAbsCA[1].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
@@ -1265,13 +1294,19 @@ VAR
 END_VAR
 VAR_INST
 	MsgCreate		: FB_TcMessage;	
+END_VAR
+VAR CONSTANT
+	RelDistance: LREAL := 1e10;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT ( ready ) THEN
 	
 	internalState	:= MV_ERROR;
 	ErrorID			:= 19201;
-	
+
+ELSIF (NOT THIS^.ValidateTrack()) THEN
+	;	// validate track posts error
+
 ELSE
 	
 	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
@@ -1287,9 +1322,11 @@ ELSE
 		fbMoveRelCA[0].Acceleration	:= MotionParameters.Acceleration;
 		fbMoveRelCA[0].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveRelCA[0].Velocity		:= MotionParameters.Velocity;
+		fbMoveRelCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveRelCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
 		
-		fbMoveRelCA[0].Distance		:= SEL( negativeCommand, 1E100, -1E100 );
-		
+		fbMoveRelCA[0].Distance		:= SEL( negativeCommand, RelDistance, -RelDistance );
+		fbMoveRelCA[0].Gap			:= MotionParameters.Gap;
 		      
 		fbMoveRelCA[0].BufferMode	:= mcAborting;
 		      
@@ -1305,8 +1342,10 @@ ELSE
 		fbMoveRelCA[1].Acceleration	:= MotionParameters.Acceleration;
 		fbMoveRelCA[1].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveRelCA[1].Velocity		:= MotionParameters.Velocity;
-		      
-		fbMoveRelCA[1].Distance		:= SEL( negativeCommand, 1E100, -1E100 );
+		fbMoveRelCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveRelCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveRelCA[1].Gap			:= MotionParameters.Gap;
+		fbMoveRelCA[1].Distance		:= SEL( negativeCommand, RelDistance, -RelDistance );
 		      
 		fbMoveRelCA[1].BufferMode	:= mcAborting;
 		      
@@ -1542,6 +1581,37 @@ THIS^.SourceInstancePath	:= 'Direct access';
 lastCallSetDir		:= newCallTime;
 
 SetDirection		:= THIS^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetGap" Id="{b046818d-e6b7-0786-00d1-dec2154637f1}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetGap : iMover
+VAR_INPUT
+	Gap	: LREAL;
+END_VAR
+VAR
+	newCallTime		: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate		: FB_TcMessage;	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+
+MotionParameters.Gap		:= LIMIT( 0, Gap, 1E300 );	// upper limit is capped by the axis object parameters
+
+THIS^.ReissueCommand();
+
+IF ( newCallTime - lastCallSetGap ) > 1 THEN
+	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetGap,0 );
+	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Gap);
+	MsgCreate.Send(0);
+END_IF;
+
+THIS^.SourceInstancePath	:= 'Direct access';
+
+lastCallSetGap		:= newCallTime;
+
+SetGap		:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetJerk" Id="{de57e13f-25de-42a4-aec6-c6dc8b78d964}" FolderPath="Methods\">
@@ -1846,6 +1916,35 @@ SyncToMover		:= THIS^;
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="ValidateTrack" Id="{230f15af-f744-0e9b-0384-784f5f4f41dd}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ValidateTrack : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	newCallTime: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate			: FB_TcMessage;	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// confirms that a valid track is selected and return true
+// otherwise throws error and returns false, to be handled by higher-level code
+IF internalTrackIsReady THEN
+	ValidateTrack := TRUE;
+ELSE
+	ValidateTrack := FALSE;
+		newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+		
+	IF ( newCallTime - lastCallValidateTrack ) > 1 THEN
+		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.ValidateTrackError,0 );
+		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
+		MsgCreate.Send(0);
+	END_IF	
+END_IF
+
+lastCallValidateTrack		:= newCallTime;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="UnregisterFromAll" Id="{f143e1ea-77ff-0f0f-21c3-e86b5d1cb377}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD UnregisterFromAll : BOOL
 VAR_INPUT
@@ -1901,6 +2000,9 @@ END_FOR]]></ST>
       <LineId Id="3" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="Mover.CurrentDestinationTrack.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
     <LineIds Name="Mover.CurrentMoveType.Get">
       <LineId Id="3" Count="0" />
       <LineId Id="2" Count="0" />
@@ -1935,7 +2037,9 @@ END_FOR]]></ST>
     </LineIds>
     <LineIds Name="Mover.CyclicTrack">
       <LineId Id="5" Count="0" />
-      <LineId Id="104" Count="3" />
+      <LineId Id="104" Count="2" />
+      <LineId Id="184" Count="7" />
+      <LineId Id="107" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="22" Count="0" />
       <LineId Id="19" Count="0" />
@@ -1945,7 +2049,7 @@ END_FOR]]></ST>
       <LineId Id="109" Count="0" />
       <LineId Id="148" Count="0" />
       <LineId Id="110" Count="0" />
-      <LineId Id="29" Count="1" />
+      <LineId Id="29" Count="0" />
       <LineId Id="32" Count="1" />
       <LineId Id="31" Count="0" />
       <LineId Id="23" Count="2" />
@@ -1971,10 +2075,11 @@ END_FOR]]></ST>
       <LineId Id="67" Count="0" />
       <LineId Id="70" Count="0" />
       <LineId Id="28" Count="0" />
-      <LineId Id="145" Count="1" />
+      <LineId Id="145" Count="0" />
       <LineId Id="144" Count="0" />
       <LineId Id="123" Count="1" />
       <LineId Id="122" Count="0" />
+      <LineId Id="192" Count="1" />
       <LineId Id="149" Count="0" />
       <LineId Id="68" Count="0" />
       <LineId Id="56" Count="3" />
@@ -1982,13 +2087,15 @@ END_FOR]]></ST>
       <LineId Id="60" Count="0" />
       <LineId Id="161" Count="0" />
       <LineId Id="132" Count="0" />
-      <LineId Id="153" Count="7" />
+      <LineId Id="153" Count="2" />
+      <LineId Id="158" Count="2" />
       <LineId Id="152" Count="0" />
       <LineId Id="20" Count="0" />
       <LineId Id="87" Count="0" />
       <LineId Id="86" Count="0" />
       <LineId Id="88" Count="1" />
-      <LineId Id="95" Count="3" />
+      <LineId Id="95" Count="2" />
+      <LineId Id="177" Count="0" />
       <LineId Id="100" Count="2" />
       <LineId Id="99" Count="0" />
       <LineId Id="92" Count="2" />
@@ -2033,11 +2140,17 @@ END_FOR]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToPosition">
-      <LineId Id="3" Count="8" />
+      <LineId Id="3" Count="4" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="107" Count="1" />
+      <LineId Id="9" Count="2" />
       <LineId Id="92" Count="0" />
       <LineId Id="12" Count="7" />
+      <LineId Id="109" Count="0" />
       <LineId Id="78" Count="1" />
       <LineId Id="20" Count="17" />
+      <LineId Id="110" Count="0" />
       <LineId Id="81" Count="1" />
       <LineId Id="80" Count="0" />
       <LineId Id="38" Count="10" />
@@ -2048,9 +2161,17 @@ END_FOR]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveToStation">
-      <LineId Id="97" Count="7" />
+      <LineId Id="97" Count="3" />
+      <LineId Id="196" Count="1" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="102" Count="2" />
       <LineId Id="180" Count="0" />
-      <LineId Id="105" Count="39" />
+      <LineId Id="105" Count="7" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="113" Count="19" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="133" Count="11" />
       <LineId Id="182" Count="0" />
       <LineId Id="181" Count="0" />
       <LineId Id="184" Count="1" />
@@ -2059,9 +2180,19 @@ END_FOR]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.MoveVelocity">
-      <LineId Id="3" Count="7" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="8" Count="2" />
       <LineId Id="86" Count="0" />
-      <LineId Id="11" Count="37" />
+      <LineId Id="11" Count="10" />
+      <LineId Id="107" Count="1" />
+      <LineId Id="22" Count="17" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="41" Count="7" />
       <LineId Id="87" Count="0" />
       <LineId Id="89" Count="1" />
       <LineId Id="88" Count="0" />
@@ -2124,6 +2255,10 @@ END_FOR]]></ST>
       <LineId Id="3" Count="16" />
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="Mover.SetGap">
+      <LineId Id="14" Count="15" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="Mover.SetJerk">
       <LineId Id="3" Count="16" />
       <LineId Id="2" Count="0" />
@@ -2160,26 +2295,6 @@ END_FOR]]></ST>
       <LineId Id="108" Count="0" />
       <LineId Id="68" Count="23" />
       <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.UnregisterFromAll">
-      <LineId Id="9" Count="1" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

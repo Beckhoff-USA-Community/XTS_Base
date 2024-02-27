@@ -10,8 +10,7 @@ VAR
 	{attribute 'hide'}
 	internalOTCID			: OTCID;	// internal track id for use with MC_ActivateTrack
 	internalId				: INT;	// numeric track desigination i.e. "Track 1"
-	internalMoverList : MoverList;	// working list of movers on this track
-	ErrorTrack				: ErrorTrack;					
+	internalMoverList : MoverList;	// working list of movers on this track					
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>

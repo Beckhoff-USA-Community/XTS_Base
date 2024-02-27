@@ -1,17 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="PositionTrigger" Id="{2be242dd-21c3-49cc-ab16-707ac1bbd2e6}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK PositionTrigger EXTENDS Objective
 
 VAR
-    internalPosition    	 			: LREAL;
-    internalTriggerDirection 			: Tc2_MC2.MC_Direction;
-    internalMoverPassedPosition 		: BOOL;
-	internalLastMoverPassedPosition		: BOOL;
+    internalPosition    	 : LREAL;
+    internalTriggerDirection 	 : Tc2_MC2.MC_Direction;
+    internalMoverPassedPosition : BOOL;
+    internalCurrentMover     	 : POINTER TO Mover;
+	internalTrackId				: DINT := 1;
+    moverLastPos              	: ARRAY[0..GVL.NUM_MOVERS - 1] OF LREAL; // Positions of tracked movers from last cycle
+	moverInitialized			: ARRAY [0..(GVL.NUM_MOVERS-1)] OF BOOL; // first scan-like flag to prevent erronious triggers on first scan
+	
+	lastCallMuteCurrent: LREAL;
 	internalInterarrivalTimer			: TON;
-    internalCurrentMover     	 		: POINTER TO Mover;
-	internalTrackId						: DINT := 1;
-    moverLastPos              			: ARRAY[0..GVL.NUM_MOVERS - 1] OF LREAL; // Positions of tracked movers from last cycle
 END_VAR
 VAR_OUTPUT
 	Statistics							: PositionTriggerStats_typ;
@@ -68,10 +70,15 @@ END_VAR]]></Declaration>
         <ST><![CDATA[currentIsRegistered		:= FALSE;
 
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-    IF internalTrackedMovers[i] <> 0 THEN
+    IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.IsTrackReady THEN
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrackId) THEN
-	
+			
+			// last position is invalid on first scan, set it to the current position to avoid a false trigger on the first scan
+			IF NOT moverInitialized[i] THEN
+				moverInitialized[i] := TRUE;
+				moverLastPos[i] := modTrackPosition;
+			END_IF
 		
 			// Determine if a position rollover occured in the last cycle
 			modTrackPosition := MODABS( internalTrackedMovers[i]^.TrackInfo.TrackPosition, GVL.TRACK_LENGTH);
@@ -110,12 +117,6 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 			END_IF
 	
 			moverLastPos[i] 		:= modTrackPosition;
-		END_IF	
-	ELSE
-		IF TriggerDirection = MC_Negative_Direction THEN
-			moverLastPos[i] := -1E300; // very negative value, to prevent false-positive triggers on first cycle
-		ELSIF TriggerDirection = MC_Positive_Direction THEN
-			moverLastPos[i] := 1E300; // very positive value, to prevent false-positive triggers on first cycle
 		END_IF
 	END_IF
 
@@ -187,11 +188,22 @@ END_VAR]]></Declaration>
     </Property>
     <Method Name="MuteCurrent" Id="{f0f7dfa6-6c7f-0f13-1029-58bc07baccb3}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MuteCurrent : BOOL
-VAR_INPUT
+VAR
+	newCallTime			: LREAL;
+END_VAR
+VAR_INST
+	MsgCreate			: FB_TcMessage;	
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[// message for debugging as this function is typically called when acting on a position trigger
+newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+IF ( newCallTime - lastCallMuteCurrent ) > 1 THEN
+	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.PositionTriggerMuteCurrent,0 );
+	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDint(internalCurrentMover^.IdentInGroup);
+	MsgCreate.Send(0);
+END_IF
+lastCallMuteCurrent := newCallTime;
 
 internalMoverPassedPosition		:= FALSE;
 internalCurrentMover			:= 0;]]></ST>
@@ -283,55 +295,24 @@ END_VAR]]></Declaration>
     <LineIds Name="PositionTrigger.Cyclic">
       <LineId Id="86" Count="3" />
       <LineId Id="160" Count="0" />
-      <LineId Id="90" Count="3" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="199" Count="3" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="92" Count="1" />
       <LineId Id="185" Count="0" />
       <LineId Id="172" Count="0" />
       <LineId Id="170" Count="0" />
       <LineId Id="94" Count="5" />
       <LineId Id="104" Count="33" />
-      <LineId Id="139" Count="9" />
-      <LineId Id="256" Count="0" />
-      <LineId Id="254" Count="0" />
-      <LineId Id="201" Count="0" />
-      <LineId Id="228" Count="0" />
-      <LineId Id="221" Count="0" />
-      <LineId Id="226" Count="0" />
-      <LineId Id="259" Count="0" />
-      <LineId Id="224" Count="0" />
-      <LineId Id="258" Count="0" />
-      <LineId Id="227" Count="0" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="257" Count="0" />
-      <LineId Id="206" Count="0" />
-      <LineId Id="260" Count="0" />
-      <LineId Id="232" Count="0" />
-      <LineId Id="261" Count="1" />
-      <LineId Id="234" Count="0" />
-      <LineId Id="233" Count="0" />
-      <LineId Id="235" Count="1" />
-      <LineId Id="248" Count="0" />
-      <LineId Id="245" Count="0" />
-      <LineId Id="238" Count="0" />
-      <LineId Id="255" Count="0" />
-      <LineId Id="237" Count="0" />
-      <LineId Id="239" Count="0" />
-      <LineId Id="241" Count="0" />
-      <LineId Id="243" Count="0" />
-      <LineId Id="242" Count="0" />
-      <LineId Id="240" Count="0" />
-      <LineId Id="252" Count="0" />
-      <LineId Id="251" Count="0" />
-      <LineId Id="253" Count="0" />
-      <LineId Id="229" Count="0" />
-      <LineId Id="208" Count="4" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="149" Count="2" />
+      <LineId Id="139" Count="12" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.MoverPassedPosition.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.MuteCurrent">
+      <LineId Id="14" Count="6" />
       <LineId Id="3" Count="2" />
       <LineId Id="2" Count="0" />
     </LineIds>
