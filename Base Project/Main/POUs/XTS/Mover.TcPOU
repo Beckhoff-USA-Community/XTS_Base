@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
@@ -1916,6 +1916,31 @@ SyncToMover		:= THIS^;
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="UnregisterFromAll" Id="{f143e1ea-77ff-0f0f-21c3-e86b5d1cb377}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD UnregisterFromAll : BOOL
+VAR_INPUT
+	i		: ULINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+FOR i := 0 TO GVL.NUM_MOVERLISTS-1 DO
+	Mediator.MoverListArray[i]^.UnregisterMover( THIS^ );
+END_FOR
+
+FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS-1 DO
+	Mediator.PositionTriggerArray[i]^.UnregisterMover( THIS^ );
+END_FOR
+
+FOR i := 0 TO GVL.NUM_STATIONS-1 DO
+	Mediator.StationArray[i]^.UnregisterMover( THIS^ );
+END_FOR
+
+FOR i := 0 TO GVL.NUM_ZONES-1 DO
+	Mediator.ZoneArray[i]^.UnregisterMover( THIS^ );
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ValidateTrack" Id="{230f15af-f744-0e9b-0384-784f5f4f41dd}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ValidateTrack : BOOL
 VAR_INPUT
@@ -1943,35 +1968,6 @@ ELSE
 END_IF
 
 lastCallValidateTrack		:= newCallTime;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="UnregisterFromAll" Id="{f143e1ea-77ff-0f0f-21c3-e86b5d1cb377}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD UnregisterFromAll : BOOL
-VAR_INPUT
-	i		: ULINT;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
-FOR i := 0 TO GVL.NUM_MOVERLISTS-1 DO
-	Mediator.MoverListArray[i]^.UnregisterMover( THIS^ );
-END_FOR
-
-FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS-1 DO
-	Mediator.PositionTriggerArray[i]^.UnregisterMover( THIS^ );
-END_FOR
-
-FOR i := 0 TO GVL.NUM_SPEEDTRIGGERS-1 DO
-	Mediator.SpeedTriggerArray[i]^.UnregisterMover( THIS^ );
-END_FOR
-
-FOR i := 0 TO GVL.NUM_STATIONS-1 DO
-	Mediator.StationArray[i]^.UnregisterMover( THIS^ );
-END_FOR
-
-FOR i := 0 TO GVL.NUM_ZONES-1 DO
-	Mediator.ZoneArray[i]^.UnregisterMover( THIS^ );
-END_FOR]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="Mover">
@@ -2294,6 +2290,15 @@ END_FOR]]></ST>
       <LineId Id="109" Count="1" />
       <LineId Id="108" Count="0" />
       <LineId Id="68" Count="23" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.UnregisterFromAll">
+      <LineId Id="3" Count="7" />
+      <LineId Id="15" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.ValidateTrack">
+      <LineId Id="3" Count="14" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

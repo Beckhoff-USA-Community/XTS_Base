@@ -71,9 +71,6 @@
     <Compile Include="POUs\XTS\Administrative\ErrorMover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\XTS\Administrative\ErrorTrack.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\XTS\Administrative\Mediator.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -87,9 +84,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\PositionTrigger.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\SpeedTrigger.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\Station.TcPOU">

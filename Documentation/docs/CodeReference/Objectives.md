@@ -18,7 +18,6 @@ In this sense, we take a list of all movers on the track system, and apply *filt
 
 - Stations
 - Zones
-- SpeedTriggers
 - PositionTriggers
 - MoverLists
 

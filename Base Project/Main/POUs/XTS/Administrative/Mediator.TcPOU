@@ -8,7 +8,6 @@ VAR_INPUT
 	
 	MoverListArray			: ARRAY [0..GVL.NUM_MOVERLISTS-1] OF POINTER TO MoverList;
 	PositionTriggerArray	: ARRAY [0..GVL.NUM_POSITIONTRIGGERS-1] OF POINTER TO PositionTrigger;
-	SpeedTriggerArray		: ARRAY [0..GVL.NUM_SPEEDTRIGGERS-1] OF POINTER TO SpeedTrigger;
 	StationArray			: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Station;
 	ZoneArray				: ARRAY [0..GVL.NUM_ZONES-1] OF POINTER TO Zone;
 	
@@ -141,46 +140,6 @@ IF __ISVALIDREF( PositionTrigger ) THEN
 	
 	IF duplicateFound = FALSE THEN
 		THIS^.PositionTriggerArray[emptyIDX]		:= ADR( PositionTrigger );
-	END_IF
-END_IF]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="AddSpeedTrigger" Id="{29bcda05-25a3-0a03-1839-83d9d45c33ee}">
-      <Declaration><![CDATA[METHOD AddSpeedTrigger : BOOL
-VAR_INPUT
-	
-	SpeedTrigger		: REFERENCE TO SpeedTrigger;
-
-END_VAR
-
-VAR
-	duplicateFound		: BOOL;
-	i					: UDINT;
-	emptyIDX			: UDINT;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
-
-// Check for duplicates
-IF __ISVALIDREF( SpeedTrigger ) THEN
-	
-	SpeedTrigger.Mediator		:= THIS^;
-	
-	duplicateFound				:= FALSE;
-	
-	FOR i := 0 TO SIZEOF( SpeedTriggerArray ) / SIZEOF( SpeedTriggerArray[0] ) - 1 DO
-		IF SpeedTriggerArray[i] <> 0 THEN		// verify the element is clear to prevent overwrites
-			IF ADR( SpeedTrigger ) = SpeedTriggerArray[i] THEN
-				duplicateFound		:= TRUE;		// this moverlist is already mediated
-			END_IF
-		ELSE
-			emptyIDX		:= i;		// confirmed open array element
-		END_IF
-	END_FOR
-	
-	IF duplicateFound = FALSE THEN
-		THIS^.SpeedTriggerArray[emptyIDX]		:= ADR( SpeedTrigger );
 	END_IF
 END_IF]]></ST>
       </Implementation>
@@ -375,12 +334,6 @@ END_FOR]]></ST>
       <LineId Id="18" Count="3" />
       <LineId Id="38" Count="1" />
       <LineId Id="22" Count="15" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddSpeedTrigger">
-      <LineId Id="17" Count="3" />
-      <LineId Id="37" Count="1" />
-      <LineId Id="21" Count="15" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AddStation">

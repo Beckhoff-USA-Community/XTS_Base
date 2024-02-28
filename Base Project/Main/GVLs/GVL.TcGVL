@@ -11,7 +11,6 @@ VAR_GLOBAL CONSTANT
 	// The following should be set to a value **equal to or greater than** the number of objectives needed
 	NUM_MOVERLISTS			: USINT := 10;	// Mover Lists
 	NUM_POSITIONTRIGGERS	: USINT := 10;	// Position Triggers
-	NUM_SPEEDTRIGGERS		: USINT	:= 10;	// Speed Triggers
 	NUM_STATIONS			: USINT := 10;	// Stations
 	NUM_ZONES				: USINT := 10;	// Zones
 	
