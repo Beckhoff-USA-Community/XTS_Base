@@ -14,7 +14,7 @@ All XTS projects will require:
 
 The base project includes a simulated configuration for a 4m oval track and 6 movers. In order to modify the program to fit a different track configuration, navigate to the XTS Tool Window.
 
-![XTS Tool WIndow](../Images/XTSToolWindow.png)
+![XTS Tool Window](../Images/XTSToolWindow.png)
 
 Then launch the XTS Configurator and follow the prompts to configure your system.
 

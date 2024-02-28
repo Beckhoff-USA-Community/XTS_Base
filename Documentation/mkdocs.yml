@@ -37,6 +37,7 @@ nav:
     - Code Reference:
         - Overview:             CodeReference/Objectives.md
         - Objects:
+            - Mediator:             CodeReference/Mediator.md
             - Mover:                CodeReference/Mover.md
             - Mover List:           CodeReference/MoverList.md
             - Position Trigger:     CodeReference/PositionTrigger.md

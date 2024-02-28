@@ -76,6 +76,19 @@ Stations include some unique features regarding mover registration. See [Station
 <br>
 <br>
 
+### RegisterMoverList
+
+*RegisterMoverList( NewMoverList : MoverList )*
+
+> Provides the same functionality as [RegisterMover](#registermover), but for a group of movers represented as a [MoverList](MoverList.md).
+
+```javascript
+MoverListA.RegisterMoverList(MoverListB);
+```
+---
+<br>
+<br>
+
 ### UnregisterMover
 
 *RegisterMover( ExistingMover : Mover )*

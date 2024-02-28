@@ -67,6 +67,16 @@ FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
 	Station[i].Cyclic()
 END_FOR
 ```
+---
+<br>
+<br>
+
+### Reset Statistics
+
+*ResetStatistics()*
+
+> Resets the Statistics for this station. See the [Statistics](#statistics) property.
+
 
 ---
 <br>
@@ -74,7 +84,7 @@ END_FOR
 
 ## Properties
 
-#### .MoverInPosition
+### .MoverInPosition
 
 > Status boolean indicating that a mover is currently docked with the Station
 
@@ -82,19 +92,19 @@ END_FOR
 <br>
 <br>
 
-#### .CurrentMover
+### .CurrentMover
 
 > Reference variable that refers to the Mover that is docked with the Station
 
 When no mover is present in the Station, .CurrentMover is an invalid reference. In this case, an ErrorMover will replace the invalid reference. The user will receive notifications when this happens in the TwinCAT Event Logs.
 
-It is recommended that all evaluations are nested inside IF checks for .MoverInPosition.
+It is recommended that all evaluations are nested inside IF checks for [.MoverInPosition](#moverinposition).
 
 ---
 <br>
 <br>
 
-#### .TrackedMoverCount
+### .TrackedMoverCount
 
 > Simply reports the number of Movers that are currently registered with the Station. Because Stations automatically deregister movers that are not currently destined for this Station, this value also represents the current number of incoming movers.
 
@@ -102,9 +112,31 @@ It is recommended that all evaluations are nested inside IF checks for .MoverInP
 <br>
 <br>
 
-#### .Position
+### .Position
 
 > Current placement of the Station along the track
+
+---
+<br>
+<br>
+
+### .Statistics
+
+> A set of timers and counts that track the throughput and utilization of the station.
+
+| Member | Type | Description |
+|--|--|--|
+| TimeOccupied				| TIME |  Current amount of time that the station has had a MoverInPosition |
+| TimeEmpty | TIME |  Current amount of time where MoverInPosition is FALSE |
+| OccupiedTimeHistory | ARRAY[0..63] OF TIME | Ring buffer of recent TimeOccupied values |
+| EmptyTimeHistory | ARRAY[0..63] OF TIME |  Ring buffer of recent TimeEmpty values |
+| AverageTimeOccupied			| TIME |  Average of all nonzero TimeOccupied values in the ring buffer|
+| AverageTimeEmpty			| TIME |  Average of all nonzero TimeEmpty values in the ring buffer |
+| AverageTimeBetweenMovers	| TIME |  Sum of average TimeOccupied + AverageTimeEmpty |
+| AverageUtilizationFactor	| LREAL |  Percentage value equal to AverageTimeOccupied / AverageTimeBetweenMovers|
+| AverageMoversPerMinute		| LREAL |  MPM Throughput value, equal to 60 / AverageTimeBetweenMovers [s]	|
+| ProcessedMoverCount		| UDINT |  Total number of movers processed by this station |
+
 
 ---
 <br>
@@ -136,6 +168,7 @@ END_IF
 ```javascript
 // Immediately redirect all incoming shuttles to Station 1 instead of Station 0
 FOR i := 0 TO Station[0].TrackedMoverCount-1 DO
-	Station[0].TrackedMovers[i]^.MoveToStation( Station[1] );
+	targetMover := Station[0].TrackedMovers[i];
+	targetMover^.MoveToStation( Station[1] );
 END_FOR
 ```

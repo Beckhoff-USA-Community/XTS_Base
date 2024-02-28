@@ -387,6 +387,14 @@ A track change takes several PLC and NC scans. Issuing a motion command while th
 <br>
 <br>
 
+### ValidateTrack
+
+*ValidateTrack()*
+
+> Confirms that a valid track is selected and returns true. Otherwise logs an error and returns false to be handled by higher-level code.
+
+This method is typically used internally by other motion methods of movers to log an error message when a command is issued to a mover who is not on a valid track. The property .IsTrackReady is intended for use in user code.
+
 ### SetGap
 
 *SetGap( Gap : LREAL )*
@@ -402,7 +410,7 @@ Mover[1].SetGap( 65.0 );
 
 ## Properties
 
-#### .CurrentMoveType
+### .CurrentMoveType
 
 *MoverCommandType_enum*
 
@@ -419,7 +427,7 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 <br>
 <br>
 
-#### .CurrentDestinationPosition
+### .CurrentDestinationPosition
 
 *LREAL*
 
@@ -429,7 +437,17 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 <br>
 <br>
 
-#### .MotionParameters
+### .CurrentDestinationTrack
+
+*DINT*
+
+> Provides the current destination track for the last movement command issued to the Mover. When track management is used, it should be queried along with the property .CurrentDestinationPosition to validate destinations.
+
+---
+<br>
+<br>
+
+### .MotionParameters
 
 *MotionParameters_typ*
 
@@ -441,7 +459,7 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 <br>
 <br>
 
-#### .CurrentObjective
+### .CurrentObjective
 
 *STRING*
 
@@ -451,7 +469,7 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 <br>
 <br>
 
-#### .CurrentTrack
+### .CurrentTrack
 
 *POINTER TO Track*
 
@@ -467,7 +485,7 @@ currentTrackId := Mover[1].CurrentTrack^.Id
 <br>
 <br>
 
-#### .IsSyncedToMover
+### .IsSyncedToMover
 
 *BOOL*
 
@@ -477,7 +495,7 @@ currentTrackId := Mover[1].CurrentTrack^.Id
 <br>
 <br>
 
-#### .IsSyncedToAxis
+### .IsSyncedToAxis
 
 *BOOL*
 
@@ -487,17 +505,19 @@ currentTrackId := Mover[1].CurrentTrack^.Id
 <br>
 <br>
 
-#### .IsTrackReady
+### .IsTrackReady
 
 *BOOL*
 
 > Returns true when the ActivateTrack() method has completed successfully. When using track management motion commands should not be issued unless this value is true or the mover will throw an error.
 
+When using track management it can take several PLC scans for the .ActivateTrack method to complete. It is advised to wait for this to return after issuing an .ActivateTrack() command to avoid motion errors.
+
 ---
 <br>
 <br>
 
-#### .MasterMover
+### .MasterMover
 
 *REFERENCE To Mover*
 
@@ -511,6 +531,14 @@ It is recommended that all evaluations are nested inside IF checks for .IsSynced
 <br>
 <br>
 
+### .NextMover
+
+> Returns the next mover in line with respect to this mover. Specifically, it returns the closest mover with a greater Position value than the current mover, regardless of actual direction of travel.
+
+---
+<br>
+<br>
+
 #### .Payload
 
 > !!! Under Construction !!! At the moment, this property is a placeholder for application specific information regarding the current status of products onboard the mover, and can be modified as needed for your application.
@@ -519,7 +547,15 @@ It is recommended that all evaluations are nested inside IF checks for .IsSynced
 <br>
 <br>
 
-#### .TrackInfo
+### .PreviousMover
+
+> Returns the previous mover in line with respect to this mover. Specifically, it returns the closest mover with a lesser Position value than the current mover, regardless of actual direction of travel.
+
+---
+<br>
+<br>
+
+### .TrackInfo
 
 > Returns information provided by MC_ReadTrackPositions for use with track management.
 

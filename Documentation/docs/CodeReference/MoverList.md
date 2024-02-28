@@ -121,6 +121,70 @@ MoverListA.GetMoverByLocation( 2, 3000, MC_Negative_Direction ).SetAcceleration(
 <br>
 <br>
 
+### LogicalCompliment
+
+*LogicalCompliment()*
+
+> Returns the logical compliment of the current MoverList. Thus the returned list will list all movers not in the current MoverList.
+
+```javascript
+// System contains: M1, M2, M3, M4, M5
+// MoverListA =     M1, M2, M3
+MoverListA.LogicalCompliment(); // returns: M4, M5
+```
+
+---
+<br>
+<br>
+
+### LogicalDifference
+
+*LogicalDifference( MoverList : MoverList )*
+
+> Returns the logical difference of the current MoverList and the provided MoverList. Thus the returned list will list all movers in the current MoverList (MoverListA) and not in the provided MoverList (MoverListB).
+
+```javascript
+// MoverListA = M1, M2, M3
+// MoverListB =         M3, M4, M5
+MoverListA.LogicalDifference( MoverListB ); // returns: M1, M2
+```
+
+---
+<br>
+<br>
+
+### LogicalIntersect
+
+*LogicalIntersect( MoverList : MoverList )*
+
+> Returns the logical intersection of the current MoverList and the provided MoverList. Thus the returned list will list all movers in the current MoverList (MoverListA) that are also in the provided MoverList (MoverListB).
+
+```javascript
+// MoverListA = M1, M2, M3
+// MoverListB =         M3, M4, M5
+MoverListA.LogicalIntersect( MoverListB ); // returns: M3
+```
+
+---
+<br>
+<br>
+
+### LogicalUnion
+
+*LogicalUnion( MoverList : MoverList )*
+
+> Returns the logical union of the current MoverList and the provided MoverList. Thus the returned list will list all movers in the current MoverList (MoverListA) and in the provided MoverList (MoverListB) deduplicated.
+
+```javascript
+// MoverListA = M1, M2, M3
+// MoverListB =         M3, M5
+MoverListA.LogicalUnion( MoverListB ); // returns: M1, M2, M3, M5
+```
+
+---
+<br>
+<br>
+
 ### MoveAllToPosition
 
 *MoveAllToPosition( DestinationPosition : LREAL )*
@@ -241,20 +305,6 @@ MoverListA.SetAllJerk( 1e5 );
 
 ```javascript
 MoverListA.SetAllVelocity( 2000 );
-```
-
----
-<br>
-<br>
-
-### StopAll
-
-*StopAll()*
-
-> Stops all movers in the list by calling their individual Stop methods
-
-```javascript
-MoverListA.StopAll();
 ```
 
 ---

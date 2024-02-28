@@ -53,6 +53,17 @@ END_IF
 
 In this way, it is possible to *reset* the position trigger without having to completely unregister and re-register a mover from the trigger.
 
+This method will produce a [Log Event](../CodeReference/EventLogger.md) to aid in troubleshooting.
+
+---
+<br>
+<br>
+
+### Reset Statistics
+
+*ResetStatistics()*
+
+> Resets the Statistics for this station. See the [Statistics](#statistics) property.
 
 ---
 <br>
@@ -98,6 +109,37 @@ Position Triggers are unique in that the Current Mover output *latches* even tho
 ---
 <br>
 <br>
+
+#### .TriggerDirection
+> Sets the direction of travel required for the mover to trigger the position trigger.
+
+Options are:
+
+- MC_PositiveDirection: The mover's position is increasing as it crosses the trigger. (Default)
+- MC_Negative_Direction: The mover's position is decreasing as it crosses the trigger.
+
+---
+<br>
+<br>
+
+### .Statistics
+
+> A set of timers, counts and values that track the throughput of the position trigger and velocity of movers at the trigger.
+
+| Member | Type | Description |
+|--|--|--|
+| InterarrivalTime | TIME | Current amount of time between mover events |
+| LatestMoverVelocity | LREAL | Mover velocity of the most-recent trigger event |
+| InterarrivalTimeHistory | ARRAY[0..63] OF TIME | Ring buffer of recent interarrival times |
+| MoverVelocityHistory | ARRAY[0..63] OF LREAL | Ring buffer of recent mover velocities |
+| AverageInterarrivalTime | TIME | Average of all nonzero Interarrival times in the ring buffer |
+| AverageMoverVelocity | LREAL | Average of all nonzero mover velocities in the ring buffer	 |
+| AverageMoversPerMinute | LREAL;
+| ProcessedMoverCount | UDINT | Total number of movers processed by this position trigger |
+---
+<br>
+<br>
+
 
 ## Extra Examples
 
