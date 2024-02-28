@@ -217,14 +217,14 @@
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Main.tmc">
-      <SubType>Content</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <LibraryReference Include="VisuSymbols,3.5.10.0,System">
       <Namespace>VisuSymbols</Namespace>
     </LibraryReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Main.tmc">
+      <SubType>Content</SubType>
+    </None>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
