@@ -8,7 +8,7 @@ VAR_INPUT
 	
 	MoverListArray			: ARRAY [0..GVL.NUM_MOVERLISTS-1] OF POINTER TO MoverList;
 	PositionTriggerArray	: ARRAY [0..GVL.NUM_POSITIONTRIGGERS-1] OF POINTER TO PositionTrigger;
-	StationArray			: ARRAY [0..GVL.NUM_MOVERS-1] OF POINTER TO Station;
+	StationArray			: ARRAY [0..GVL.NUM_STATIONS-1] OF POINTER TO Station;
 	ZoneArray				: ARRAY [0..GVL.NUM_ZONES-1] OF POINTER TO Zone;
 	
 	TrackArray				: ARRAY [0..GVL.NUM_TRACKS-1] OF POINTER TO Track;	
