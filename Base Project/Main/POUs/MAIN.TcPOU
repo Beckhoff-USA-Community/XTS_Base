@@ -250,7 +250,14 @@ CASE MainState OF
             Zone[1].CurrentMoverList.SetAllVelocity(600).MoveAllToStation(Station[0]);
             Zone[2].CurrentMoverList.SetAllVelocity(400).MoveAllToStation(Station[0]);
             Zone[3].CurrentMoverList.SetAllVelocity(200).MoveAllToStation(Station[0]);
-
+			
+			// reset all statistics
+			FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
+				Station[i].ResetStatistics();
+			END_FOR			
+			FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
+				PositionTrigger[i].ResetStatistics();
+			END_FOR
 
             // ===== END =====
 
@@ -542,7 +549,12 @@ END_CASE
       <LineId Id="1750" Count="0" />
       <LineId Id="1752" Count="9" />
       <LineId Id="1751" Count="0" />
-      <LineId Id="1348" Count="268" />
+      <LineId Id="1348" Count="128" />
+      <LineId Id="1813" Count="1" />
+      <LineId Id="1816" Count="1" />
+      <LineId Id="1815" Count="0" />
+      <LineId Id="1819" Count="1" />
+      <LineId Id="1477" Count="139" />
       <LineId Id="1622" Count="29" />
       <LineId Id="1657" Count="26" />
       <LineId Id="1687" Count="6" />

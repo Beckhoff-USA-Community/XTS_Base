@@ -128,13 +128,17 @@ It is recommended that all evaluations are nested inside IF checks for [.MoverIn
 |--|--|--|
 | TimeOccupied				| TIME |  Current amount of time that the station has had a MoverInPosition |
 | TimeEmpty | TIME |  Current amount of time where MoverInPosition is FALSE |
+| TimeBlocked | TIME | Current amount of time where station cannot receive a new mover because the previous mover has not moved far enough away from the station |
 | OccupiedTimeHistory | ARRAY[0..63] OF TIME | Ring buffer of recent TimeOccupied values |
 | EmptyTimeHistory | ARRAY[0..63] OF TIME |  Ring buffer of recent TimeEmpty values |
+| BlockedTimeHistory | ARRAY[0..63] OF TIME | Ring buffer of recent TimeBlocked values | 
 | AverageTimeOccupied			| TIME |  Average of all nonzero TimeOccupied values in the ring buffer|
 | AverageTimeEmpty			| TIME |  Average of all nonzero TimeEmpty values in the ring buffer |
+| AverageTimeBlocked		| TIME |  Average of all nonzero TimeBlocked values in the ring buffer |
 | AverageTimeBetweenMovers	| TIME |  Sum of average TimeOccupied + AverageTimeEmpty |
 | AverageUtilizationFactor	| LREAL |  Percentage value equal to AverageTimeOccupied / AverageTimeBetweenMovers|
 | AverageMoversPerMinute		| LREAL |  MPM Throughput value, equal to 60 / AverageTimeBetweenMovers [s]	|
+| ThrottledThreshold		| LREAL |  A high throttled threshold (Blocked to Empty ratio) indicates a potential bottleneck station	|
 | ProcessedMoverCount		| UDINT |  Total number of movers processed by this station |
 
 
