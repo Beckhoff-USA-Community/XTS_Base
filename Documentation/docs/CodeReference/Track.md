@@ -24,18 +24,10 @@ Track			: ARRAY [0..GVL.NUM_TRACKS] OF Track;
 ```
 Tracks then need to have an ID and OTCID assigned to them. Index 0 should use 0 for both values as this is a special case for the absolute hardware position that may be useful during startup or recovery of some track configurations.
 
-OTCID is found in System > TcCOM Objects > XTS Processing Unit 1 > Track # and is labeled Object ID on the Object tab. Note that the value displayed uses the "0x" hex notation, but needs to be entered using "16#" hex notation in the code.
+The OTCID for each track can be set under the PLC Project > Main Instance > Symbol Initialization tab. MAIN.Track[0].OTCID should remain at 00000000.
 
-For simplicity the ID should match the array index. This application already includes code that assigns the ID to match the array index of the track.
+![Track OTCID](../Images/TrackOTCID.png)
 
-
-```javascript
-		Track[0].OTCID := 0;				// special "absolute reference" case, not typically used
-		Track[1].OTCID := 16#010100B0;	// default track used by code
-		Track[2].OTCID := 16#010100D0;	// additional track
-		// ... additional tracks
-
-```
 ## Use
 
 Tracks are used in three ways in software:

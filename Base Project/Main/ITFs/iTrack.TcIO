@@ -26,15 +26,6 @@
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
-    <Property Name="OTCID" Id="{f6ce1703-ab1e-0aac-1a01-d494ff9596d6}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY OTCID : OTCID]]></Declaration>
-      <Get Name="Get" Id="{cabf5557-da38-0c45-31d8-9a1af06122f6}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-      <Set Name="Set" Id="{d259f521-eb96-028c-3abd-b12cfa876b7e}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Set>
-    </Property>
     <Method Name="RegisterMover" Id="{aa379151-5a94-0a15-244b-4ddcbf268ca8}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD RegisterMover : BOOL
 VAR_INPUT

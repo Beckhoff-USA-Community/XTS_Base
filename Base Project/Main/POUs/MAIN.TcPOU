@@ -191,10 +191,6 @@ CASE MainState OF
 			Track[i].Id := UINT_TO_INT(i);
 		END_FOR
 		
-		// Track 0 is a special case absolute reference, no-modulus track instance and is not normally used
-		Track[0].OTCID := 0;				// special "absolute reference" case
-		Track[1].OTCID:= 16#01010080;		// value copied from XtsProcessingUnit1 > Track x > Object > Object Id field
-
 		MainState := MS_ACTIVATE_TRACKS;
 		
 	MS_ACTIVATE_TRACKS:
@@ -549,7 +545,8 @@ END_CASE
       <LineId Id="1750" Count="0" />
       <LineId Id="1752" Count="9" />
       <LineId Id="1751" Count="0" />
-      <LineId Id="1348" Count="128" />
+      <LineId Id="1348" Count="69" />
+      <LineId Id="1422" Count="54" />
       <LineId Id="1813" Count="1" />
       <LineId Id="1816" Count="1" />
       <LineId Id="1815" Count="0" />
