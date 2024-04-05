@@ -157,7 +157,7 @@ FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) -
     IF internalTrackedMovers[i] <> 0 THEN
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrackId) THEN
-			difference := Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition;
+			difference := ABS(Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition);
 
 			IF MIN(difference, GVL.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
 				MoverInPosition := TRUE;
