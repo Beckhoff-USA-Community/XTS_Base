@@ -5,10 +5,12 @@
 {attribute 'to_string'}
 TYPE MainState_enum : (
         MS_DISABLED					:= 0,
+		MS_INITIALIZING_XPU			:= 5,
         MS_INITIALIZING_MOVERS		:= 10,
 		MS_ONESHOT_ENABLE			:= 20,
         MS_ENABLING_MOVERS			:= 30,
         MS_INITIALIZING_OBJECTIVES	:= 40,
+		MS_INITIALIZE_TRACKS		:= 44,
 		MS_ACTIVATE_TRACKS			:= 45,
 		MS_WAIT_FOR_TRACKS			:= 46,
         MS_ENABLED					:= 50,

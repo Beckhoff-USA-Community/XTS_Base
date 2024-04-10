@@ -40,6 +40,7 @@ VAR
 	allMoverTracksEnabled : BOOL;	// helper flag for verifying track active status of all movers
 	allMoversDisabled	: BOOL;		// helper flag for verifying disable status of all movers
 	allMoversHalted		: BOOL;		// helper flag for verifying halt status of all movers
+	iXpuTracks			: UINT;		// helper count of tracks available in XPU
 
     StationTimer 		: ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells	
 	
@@ -90,8 +91,15 @@ CASE MainState OF
 		
         IF MainCommands.Enable THEN
             MainCommands.Disable := FALSE;
-            MainState            := MS_INITIALIZING_MOVERS;
+            MainState            := MS_INITIALIZING_XPU;
         END_IF
+		
+	MS_INITIALIZING_XPU:
+		// initialization is handled above in the MAIN.Initialize() action
+		// here we wait for it to complete
+		IF fbXtsEnvironment.P_IsInitialized THEN
+			MainState            := MS_INITIALIZING_MOVERS;
+		END_IF;
 
     MS_INITIALIZING_MOVERS: // --------------------------------------------- SET MOVER MOTION PARAMETERS
 		(*Initialize Mover motion parameters via a Parameter Set. Once complete, step
@@ -186,11 +194,20 @@ CASE MainState OF
         Zone[3].StartPosition		:= 2750;
         Zone[3].EndPosition   		:= 3750;
 		
-		// give all tracks their ID number
+		// give all tracks their ID number and hardware id
 		FOR i := 0 TO GVL.NUM_TRACKS DO
 			Track[i].Id := UINT_TO_INT(i);
 		END_FOR
 		
+		MainState := MS_INITIALIZE_TRACKS;
+		
+	MS_INITIALIZE_TRACKS:
+		// get count of tracks from XPU
+		iXpuTracks := fbXtsEnvironment.XpuTcIo(1).P_TrackCount;
+		// to avoid array overruns use the minimum available number of tracks between XPU and GVL
+		FOR i := 1 TO MIN(iXpuTracks, GVL.NUM_TRACKS) DO
+			Track[i].OTCID := fbXtsEnvironment.XpuTcIo(1).P_TrackOids[i];
+		END_FOR
 		MainState := MS_ACTIVATE_TRACKS;
 		
 	MS_ACTIVATE_TRACKS:
@@ -541,12 +558,24 @@ END_CASE
       <LineId Id="1695" Count="0" />
       <LineId Id="1282" Count="0" />
       <LineId Id="1694" Count="0" />
-      <LineId Id="1283" Count="52" />
+      <LineId Id="1283" Count="35" />
+      <LineId Id="1871" Count="1" />
+      <LineId Id="1875" Count="1" />
+      <LineId Id="1873" Count="1" />
+      <LineId Id="1877" Count="0" />
+      <LineId Id="1319" Count="16" />
       <LineId Id="1750" Count="0" />
       <LineId Id="1752" Count="9" />
       <LineId Id="1751" Count="0" />
       <LineId Id="1348" Count="69" />
-      <LineId Id="1422" Count="54" />
+      <LineId Id="1422" Count="0" />
+      <LineId Id="1878" Count="1" />
+      <LineId Id="1883" Count="0" />
+      <LineId Id="1880" Count="0" />
+      <LineId Id="1884" Count="0" />
+      <LineId Id="1882" Count="0" />
+      <LineId Id="1885" Count="2" />
+      <LineId Id="1423" Count="53" />
       <LineId Id="1813" Count="1" />
       <LineId Id="1816" Count="1" />
       <LineId Id="1815" Count="0" />

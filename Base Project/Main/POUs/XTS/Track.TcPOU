@@ -7,9 +7,8 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	{attribute 'TcInitSymbol'}
-	OTCID			: OTCID;	// internal track id for use with MC_ActivateTrack
-	{attribute 'hide'}	
+	{attribute 'hide'}
+	internalOTCID			: OTCID;	// internal track id for use with MC_ActivateTrack
 	internalId				: INT;	// numeric track desigination i.e. "Track 1"
 	internalMoverList : MoverList;	// working list of movers on this track					
 END_VAR]]></Declaration>
@@ -55,6 +54,25 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[internalId := Id;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="OTCID" Id="{dcb2dd98-b4d1-0928-1caf-998c96e183e9}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY OTCID : OTCID]]></Declaration>
+      <Get Name="Get" Id="{2c637409-cdfd-0044-03ac-42f38e6d51b4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[OTCID := internalOTCID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{0ae5c3d3-9ea8-01d6-15e0-675b4a5b4cb0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[internalOTCID := OTCID;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -133,6 +151,12 @@ END_FOR;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Track.Id.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.OTCID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.OTCID.Set">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Track.RegisterMover">

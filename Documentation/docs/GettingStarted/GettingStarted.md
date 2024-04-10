@@ -101,10 +101,6 @@ Next, check that each of your Axis objects are properly linked to a correspondin
 
 ![AxisLinks](../Images/AxisLinks.png)
 
-Next, check that the OTCID for the newly created track is set under the PLC Project > Main Instance > Symbol Initialization tab. `MAIN.Track[0].OTCID` should remain at `00000000`. You can select `Track 1` or other tracks from the drop down list to automatically selected the correct OTCID.
-
-![Track OTCID](../Images/OTCIDAssignment.png)
-
 Lastly, open the *XtsProcessingUnit* within SYSTEM and verify that every setting here is correct
 
 ![ProcessingUnit](../Images/ProcessingUnit.png)
