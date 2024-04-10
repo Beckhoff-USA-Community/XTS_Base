@@ -1728,7 +1728,6 @@ ELSE
 		fbGearInPosAxisCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbGearInPosAxisCA[0].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
 
-		
 		IF MotionParameters.Direction = mcDirectionPositive THEN
 			fbGearInPosAxisCA[0].SyncMode		:= mcSyncModePositive;
 		ELSIF MotionParameters.Direction = mcDirectionNegative THEN
@@ -1848,6 +1847,9 @@ ELSE	// let 'er rip
 		
 		fbGearInPosMoverCA[0].SyncStrategy			:= mcSyncStrategyEarly;		
 		fbGearInPosMoverCA[0].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
+		
+		fbGearInPosMoverCA[0].Options.DynamicsReferenceSystem				:= CurrentTrack^.OTCID;
+		fbGearInPosMoverCA[0].Options.SlaveSyncPositionReferenceSystem		:= CurrentTrack^.OTCID;
 				
 		//fbGearInPosMoverCA[0].Options.MinimalSlavePosition	:= -1E300;
 		
@@ -1872,6 +1874,9 @@ ELSE	// let 'er rip
 		
 		fbGearInPosMoverCA[1].SyncStrategy			:= mcSyncStrategyEarly;
 		fbGearInPosMoverCA[1].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
+		
+		fbGearInPosMoverCA[1].Options.DynamicsReferenceSystem				:= CurrentTrack^.OTCID;
+		fbGearInPosMoverCA[1].Options.SlaveSyncPositionReferenceSystem		:= CurrentTrack^.OTCID;
 		
 		//fbGearInPosMoverCA[1].Options.MinimalSlavePosition	:= -1E300;
 		
@@ -2269,7 +2274,6 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="13" Count="13" />
       <LineId Id="107" Count="0" />
       <LineId Id="109" Count="1" />
-      <LineId Id="108" Count="0" />
       <LineId Id="27" Count="26" />
       <LineId Id="111" Count="0" />
       <LineId Id="113" Count="0" />
@@ -2285,7 +2289,11 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
     <LineIds Name="Mover.SyncToMover">
       <LineId Id="3" Count="7" />
       <LineId Id="105" Count="0" />
-      <LineId Id="11" Count="56" />
+      <LineId Id="11" Count="20" />
+      <LineId Id="124" Count="2" />
+      <LineId Id="32" Count="23" />
+      <LineId Id="127" Count="2" />
+      <LineId Id="56" Count="11" />
       <LineId Id="106" Count="1" />
       <LineId Id="109" Count="1" />
       <LineId Id="108" Count="0" />

@@ -51,7 +51,7 @@ VAR_INPUT
 END_VAR
 VAR
 	
-    i                       	: INT;	
+    i                       	: UDINT;	
 	currentIsRegistered			: BOOL;
 	moverTrackId				: INT;
 	positionDifference			: LREAL;
