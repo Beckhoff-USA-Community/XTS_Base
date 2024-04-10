@@ -64,6 +64,8 @@ The three speeds used in the prepared motion sequence can be edited using the te
 
 The base project includes a simulated configuration for a 4m oval track and 6 movers. This will need to be modified to fit your application.
 
+Customizing the system often requires changing the shape or length of the track. This will cause the track's hardware ID number to change and must be updated in the PLC project configuration.
+
 ### Configuring XTS Hardware
 
 In order to modify the program to fit a different track configuration, navigate to the XTS Tool Window.
@@ -98,6 +100,10 @@ Next, check that each of your Axis objects are properly linked to a correspondin
 !!! Note The project contains *ErrorMover* objects which also appear as options when linking axes. **Do not link axes to these variables.**
 
 ![AxisLinks](../Images/AxisLinks.png)
+
+Next, check that the OTCID for the newly created track is set under the PLC Project > Main Instance > Symbol Initialization tab. `MAIN.Track[0].OTCID` should remain at `00000000`. You can select `Track 1` or other tracks from the drop down list to automatically selected the correct OTCID.
+
+![Track OTCID](../Images/OTCIDAssignment.png)
 
 Lastly, open the *XtsProcessingUnit* within SYSTEM and verify that every setting here is correct
 

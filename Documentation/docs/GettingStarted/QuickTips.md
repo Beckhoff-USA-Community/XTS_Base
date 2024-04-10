@@ -1,5 +1,5 @@
 
-### Programming Quick Tips
+## Programming Quick Tips
 
 Here are a few quick tips to assist in developing with this project:
 
@@ -17,10 +17,20 @@ Here are a few quick tips to assist in developing with this project:
 
 - When programming recovery scenarios, be sure to unregister movers from objectives where necessary.
 
-### General Code Tips
+## General Code Tips
 
 More generally, here are some recommendations regarding the architecture of your solution:
 
 - Proper code should not depend on the number of movers added to the system, and should be easily scalable when movers are added or removed from the system. Directly addressing specific movers by ID should be avoided when possible. See Overview for more information.
 
 - "The fleet sails as fast as the slowest ship." Overall system throughput is governed by the slowest individual Station's throughput. Focus on understanding the limiting factors of your routing logic in order to optimize traffic flow. A Mover's maximum velocity rarely affects the overall system throughput.
+
+## Common issues
+
+### MAIN state machine is stuck at MS_ACTIVATING_TRACKS
+
+After reconfiguring the track shape or length, a new track hardware ID (`OTCID`) may be generated. The PLC needs to reference this new ID.
+
+Check that the OTCID for the track is set under the PLC Project > Main Instance > Symbol Initialization tab. `MAIN.Track[0].OTCID` should remain at `00000000`. You can select `Track 1` or other tracks from the drop down list to automatically selected the correct OTCID.
+
+![Track OTCID](../Images/OTCIDAssignment.png)

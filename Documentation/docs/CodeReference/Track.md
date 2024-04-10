@@ -26,7 +26,7 @@ Tracks then need to have an ID and OTCID assigned to them. Index 0 should use 0 
 
 The OTCID for each track can be set under the PLC Project > Main Instance > Symbol Initialization tab. MAIN.Track[0].OTCID should remain at 00000000.
 
-![Track OTCID](../Images/TrackOTCID.png)
+![Track OTCID](../Images/OTCIDAssignment.png)
 
 ## Use
 
