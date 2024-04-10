@@ -28,6 +28,13 @@ The OTCID for each track can be set under the PLC Project > Main Instance > Symb
 
 ![Track OTCID](../Images/OTCIDAssignment.png)
 
+Tracks must also be added to the Mediator object. By default, this is handled in the MAIN.Initialize ACTION
+
+```javascript
+// Example implementation
+Mediator.AddTrack( Track );
+```
+
 ## Use
 
 Tracks are used in three ways in software:

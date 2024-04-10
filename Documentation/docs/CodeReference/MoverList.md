@@ -26,6 +26,14 @@ MoverListA.MoveAllToStation( Station[4] );
 MoverListA.UnregisterAll();
 ```
 
+MoverLists must also be added to the Mediator object. By default, this is handled already in the MAIN.Initialize ACTION.
+
+```javascript
+// Example implementation
+Mediator.AddMoverList( MoverListA );
+```
+
+
 ---
 <br>
 <br>

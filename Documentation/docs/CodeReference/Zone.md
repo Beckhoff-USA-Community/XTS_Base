@@ -23,6 +23,14 @@ ZoneRightSide.StartPosition	:= 2000;
 ZoneRightSide.EndPosition	:= 4000;
 ```
 
+Zones must also be added to the Mediator object. By default, this is handled in the MAIN.Initialize ACTION.
+
+```javascript
+// Example implementation
+Mediator.AddZone( ZoneLeftSide );
+Mediator.AddZone( ZoneRightSide );
+```
+
 ---
 <br>
 <br>

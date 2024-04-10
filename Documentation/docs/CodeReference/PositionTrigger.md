@@ -20,6 +20,13 @@ PositionTriggerA.Position		:= 2000;
 PositionTriggerA.TriggerDirection	:= mcDirectionPositive;
 ```
 
+Position Triggers must also be added to the Mediator object. By default, this is handled already in the MAIN.Initialize ACTION.
+
+```javascript
+// Example implementation
+Mediator.AddPositionTrigger( PositionTriggerA );
+```
+
 ---
 <br>
 <br>

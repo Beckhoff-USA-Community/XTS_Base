@@ -28,6 +28,13 @@ FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
 END_FOR
 ```
 
+Stations must also be added to the Mediator object. By default, this is handled in the MAIN.Initialize ACTION.
+
+```javascript
+// Example implementation
+Mediator.AddStation( Station[1] );
+```
+
 ---
 <br>
 <br>

@@ -16,18 +16,21 @@ It is recommended, but not required, to declare Movers as an array.
 ```javascript
 // Instance declaration
 Mover			: ARRAY [0..GVL.NUM_MOVERS-1] OF Mover;
-
-ParameterSet	: MoverParameters_typ;
 ```
 
-Movers contain a Cyclic() method that must be called every cycle. This cyclic method must also be given a Collision Avoidance Group reference as an argument. If track management is used, the CyclicTrack() method must also be called each scan.
+Movers must also be added to the Mediator object. By default, this is handled already in the MAIN.Initialize ACTION.
 
 ```javascript
-// Call this method cyclically
-FOR i := 0 TO GVL.NUM_MOVERS-1] DO
-	Mover[i].Cyclic( GroupRef );
-END_FOR
+// Example implementation
+Mediator.AddMover( Mover[0] );
 ```
+
+
+!!! note
+
+    Prior to 1.4.0, it was necessary to cyclically call two methods: *Mover.Cyclic()* and *Mover.CyclicTrack()*. This process is now handled implicitly by the Mediator object, along with all other Objective cyclic calls.
+
+
 
 ---
 

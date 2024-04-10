@@ -19,6 +19,8 @@ repo_url: https://github.com/Beckhoff-USA-Community/XTS_Base
 edit_uri: ""
 
 markdown_extensions:
+    - admonition
+    - pymdownx.details
     - pymdownx.emoji:
         emoji_index: !!python/name:materialx.emoji.twemoji
         emoji_generator: !!python/name:materialx.emoji.to_svg
