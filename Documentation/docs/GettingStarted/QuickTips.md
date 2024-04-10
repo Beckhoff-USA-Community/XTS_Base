@@ -27,6 +27,27 @@ More generally, here are some recommendations regarding the architecture of your
 
 ## Common issues
 
+### Changing the forward direction of the track
+
+Depending on the machine layout and the mounting needs of the motor modules the default direction of the track positions (clockwise for face-up motor modules) may not be desired. It is possible to invert the track's direction by changing the following settings.
+
+For each Mover axis in the NC set `Enc > Parameter > Encoder Evaluation > Invert Encoder Counting Direction` to `TRUE`.
+
+![Invert Encoder Direction](../Images/GettingStarted/InvertDirectionEncoder.png)
+
+For each Mover axis in the NC set `Drive > Parameter > Output Settings > Invert Motor Polarity` to `TRUE`.
+
+![Invert Drive Direction](../Images/GettingStarted/InvertDirectionDrive.png)
+
+For each Track set in the XTS Processing Unit set `Parameter > General > Polarity` to `Negative`.
+
+![Invert Track Direction](../Images/GettingStarted/InvertDirectionTrack.png)
+
+There are some additional considerations to be aware of when inverting the track direction, especially if the track direction is changed after portions of code have been written and tested.
+
+When looking for the next and previous movers on a system, for example when working with 2-up stations, movers that have been referenced directly such as Mover[i] and Mover[i+1] may no longer be in the expected order. Functions such as [`Mover.NextMover()`](../CodeReference/Mover.md#nextmover), [`Mover.PreviousMover()`](../CodeReference/Mover.md#previousmover) or [`Zone.CurrentMoverList.GetMoverByLocation`](../CodeReference/MoverList.md#getmoverbylocation) are the recommended methods will correctly handle an inverted track direction.
+
+
 ### MAIN state machine is stuck at MS_ACTIVATING_TRACKS
 
 After reconfiguring the track shape or length, a new track hardware ID (`OTCID`) may be generated. The PLC needs to reference this new ID.
