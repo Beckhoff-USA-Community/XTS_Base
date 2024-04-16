@@ -139,91 +139,187 @@ END_FOR
 EnableAll	:= THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetMoverByLocation" Id="{fef36da4-65e6-4a0c-848b-af8a54f15050}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE to Mover
+    <Method Name="GetMoverByLocation" Id="{5ac43cd5-f85a-06c2-1468-37f2b5bf2a62}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE TO Mover
 VAR_INPUT
-    Index     : USINT;                // 0 is find the first closest mover, 1 is find the second closest mover, 2 is find the third, etc. etc. etc.
-    Position  : LREAL;                // Fixed track position from which to search for movers by proximity
-    Direction : Tc2_MC2.MC_Direction; // Positive = find the most positive mover whose position is less than the Input. Negative = find the most negative mover whose position is greater than the input
+	Index			: USINT;				// 0 is find the first closest mover, 1 is find the second closest mover, 2 is find the third, etc. etc. etc.
+	Position		: LREAL;				// fixed track position from which to search for movers by proximity
+	Direction		: Tc2_MC2.MC_Direction;	// Positive = find the most positive mover whose position is less than the Input. Negative = find the most negative mover whose position is greater than the Input.		
 END_VAR
 
 VAR
-	SortBuffer		: ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover;	// initially empty array of movers, sorted in order by the position search
-	PopBuffer		: ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover; // temporary array, which simplifies the sorting operation at the minor cost of memory
+	sortState			: USINT;
 
-	currentLowDistance		: LREAL;
-	currentMover			: POINTER TO Mover;
-	directionalDistance		: LREAL;
-    leastIDX     : DINT;
-    i            : DINT;
-    j            : DINT;
-
-END_VAR]]></Declaration>
+	SortedBuffer		: ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover;	// Initially empty array of movers, sorted in order
+	HoldingBuffer		: ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover;	// Holding buffer for sorting operations
+	
+	place				: UDINT;	// placement index
+	level				: UDINT;	// level tracker
+	element				: UDINT;	// index tracker
+	
+	allsorted			: BOOL;		// status bit, array has been successfully sorted
+	elementsorted		: BOOL;		// status bit, element has been successfully sorted
+	
+	size				: UDINT;	// size of the sortation merge elements at this level
+	low					: UDINT;	// starting point for index i within this element
+	middle				: UDINT;	// starting point for index j within this element
+	high				: UDINT;	// end of the sortation merge element at this level, element
+	
+	i					: UDINT;		// index variable within the merge element
+	j					: UDINT;		// index variable within the merge element	
+	
+	directionalDistance_i		: LREAL;
+	directionalDistance_j		: LREAL;
+	
+	cycles				: UDINT;
+	
+END_VAR
+]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// copy tracked movers into temporary array
-memcpy(ADR(PopBuffer), ADR(internalTrackedMovers), SIZEOF(internalTrackedMovers));
+        <ST><![CDATA[// Method is implemented using a Mergesort, for improved performance on systems with high mover counts.
 
+memcpy(ADR(SortedBuffer),ADR(internalTrackedMovers),SIZEOF(internalTrackedMovers));
 
-// For every entry in the sorted buffer...
-FOR i := 0 TO SIZEOF( PopBuffer ) / SIZEOF( PopBuffer[0] ) - 1 DO
+WHILE allsorted = FALSE DO
 	
-	leastIDX			:= 0;
-	currentMover		:= 0;	
-	currentLowDistance	:= 0;
-	
-	// ... find the mover with the least directional distance to the input Position, including rollover
-	FOR j := 0 TO SIZEOF( PopBuffer ) / SIZEOF( PopBuffer[0] ) - 1 DO
+	cycles		:= cycles + 1;		// simple counter, for evaluating performance
+
+	CASE sortState OF
+		0: // ------------------------- Calculate sort parameters for the current merge element		
 		
-		IF Direction = MC_Positive_Direction THEN
-			// Calculate a directional distance from the input position to each mover, positive search
-			IF PopBuffer[j] <> 0 AND_THEN PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos <= Position THEN
-				directionalDistance 	:= Position - PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos;
-			ELSIF PopBuffer[j] <> 0 AND_THEN PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos > Position THEN
-				directionalDistance		:= Position + ( GVL.TRACK_LENGTH - PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos );
+			size			:= LREAL_TO_UDINT(EXPT(2,level+1));
+			low				:= element * size;
+			high			:= low + size - 1;
+			middle			:= low + LREAL_TO_UDINT(FLOOR(size / 2));
+			
+			i				:= low;
+			j				:= middle;
+			
+			sortState		:= 1;
+		
+		1: // ------------------------- Check if the level is completely sorted/merged
+		
+			IF element = 0 AND EXPT(2,level) > SIZEOF(SortedBuffer) / SIZEOF(SortedBuffer[0]) THEN
+				// the last level has been merged, everything is sorted
+				allsorted		:= TRUE;
+			ELSIF low > SIZEOF(SortedBuffer) / SIZEOF(SortedBuffer[0]) - 1 THEN
+				// the elements in this level have been merged, increment to the next
+				memset(ADR(HoldingBuffer),0,SIZEOF(HoldingBuffer));
+				level			:= level + 1;
+				element			:= 0;
+				place			:= 0;
+				sortState		:= 0;
+			ELSE
+				// this level is still being merged, continue the process
+				sortState		:= 2;
+			END_IF
+			
+		2: // ------------------------- Check if the elements at the indices are sortable or if we're beyond the array
+		
+			IF ( i >= middle OR i > SIZEOF(SortedBuffer)/SIZEOF(SortedBuffer[0])-1 ) AND
+				( j > high OR j > SIZEOF(SortedBuffer)/SIZEOF(SortedBuffer[0])-1 ) THEN
+				// i and j have both reached the end of the merge element
+				// copy the results from the holding buffer into sorted
+				// and increment the element to the next for merging
+				memcpy(ADR(SortedBuffer[low]),ADR(HoldingBuffer[low]),size*SIZEOF(SortedBuffer[0]));
+				element			:= element + 1;
+				sortState		:= 0;
+			ELSE
+				// i and j are both sortable. move on to direct comparisons
+				sortState		:= 3;				
+			END_IF
+			
+		3: // ------------------------- Merge elements at indices i & j
+		
+			// Calculate directional distances at i & j
+			IF Direction = MC_Positive_Direction THEN
+				// Calculate for i
+				IF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
+					directionalDistance_i		:= Position - SortedBuffer[i]^.TrackInfo.TrackPosition;
+				ELSIF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition > Position THEN
+					directionalDistance_i		:= Position + ( GVL.TRACK_LENGTH - SortedBuffer[i]^.TrackInfo.TrackPosition );
+				END_IF;	
+				// Calculate for j
+				IF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
+					directionalDistance_j		:= Position - SortedBuffer[j]^.TrackInfo.TrackPosition;
+				ELSIF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition > Position THEN
+					directionalDistance_j		:= Position + ( GVL.TRACK_LENGTH - SortedBuffer[j]^.TrackInfo.TrackPosition );					 
+				END_IF
+				
+			ELSIF Direction = MC_Negative_Direction THEN
+				
+				// Calculate for i
+				IF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
+					directionalDistance_i		:= SortedBuffer[i]^.TrackInfo.TrackPosition + ( GVL.TRACK_LENGTH - Position );
+				ELSIF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition > Position THEN
+					directionalDistance_i		:= SortedBuffer[i]^.TrackInfo.TrackPosition - Position;
+				END_IF
+				// Calculate for j
+				IF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
+					directionalDistance_j		:= SortedBuffer[j]^.TrackInfo.TrackPosition + ( GVL.TRACK_LENGTH - Position );
+				ELSIF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition > Position THEN
+					directionalDistance_j		:= SortedBuffer[j]^.TrackInfo.TrackPosition - Position;
+				END_IF
+				
+			ELSE
+				// closest in any direction, typically for linear, non-modulo tracks
+				IF SortedBuffer[i] <> 0 THEN
+					directionalDistance_i		:= ABS(SortedBuffer[i]^.TrackInfo.TrackPosition - Position);
+				END_IF
+				IF SortedBuffer[j] <> 0 THEN
+					directionalDistance_j		:= ABS(SortedBuffer[j]^.TrackInfo.TrackPosition - Position);
+				END_IF
+				
 			END_IF
 		
-		ELSIF Direction = MC_Negative_Direction THEN
-			// Calculate a directional distance from the input position to each mover, negative search
-			IF PopBuffer[j] <> 0 AND_THEN PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos <= Position THEN
-				directionalDistance		:= PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos + ( GVL.TRACK_LENGTH - Position );
-			ELSIF PopBuffer[j] <> 0 AND_THEN PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos > Position THEN
-				directionalDistance		:= PopBuffer[j]^.AxisReference.NcToPlc.ModuloActPos - Position;
+			// If j alone is beyond a sortable range, grab i
+			IF j > high OR j > SIZEOF(SortedBuffer)/SIZEOF(SortedBuffer[0])-1 THEN
+				HoldingBuffer[place]		:= SortedBuffer[i];
+				place						:= place + 1;
+				i							:= i + 1;
+			// If i is beyond a sortable range, grab j
+			ELSIF i >= middle THEN
+				HoldingBuffer[place]		:= SortedBuffer[j];
+				place						:= place + 1;
+				j							:= j + 1;
+			ELSIF SortedBuffer[i] = 0 THEN
+				HoldingBuffer[place]		:= SortedBuffer[j];
+				place						:= place + 1;
+				j							:= j + 1;
+			ELSIF SortedBuffer[j] = 0 THEN
+				HoldingBuffer[place]		:= SortedBuffer[i];
+				place						:= place + 1;
+				i							:= i + 1;
+			ELSIF directionalDistance_i <= directionalDistance_j THEN
+				HoldingBuffer[place]		:= SortedBuffer[i];
+				place						:= place + 1;
+				i							:= i + 1;
+			ELSIF directionalDistance_j < directionalDistance_i THEN
+				HoldingBuffer[place]		:= SortedBuffer[j];
+				place						:= place + 1;
+				j							:= j + 1; 
 			END_IF
+			
+			sortState		:= 2;
+	END_CASE;	
+END_WHILE
 
-		ELSE
-			// closest in any direction, typically for linear, non-modulo tracks
-			IF PopBuffer[j] <> 0 THEN
-				directionalDistance := ABS(PopBuffer[j]^.TrackInfo.TrackPosition - Position);
-			END_IF;			
-		END_IF
-	
-		// If the current mover is closer than the staged one, stage that instead
-		IF PopBuffer[j] <> 0 AND ( currentLowDistance = 0 OR directionalDistance < currentLowDistance ) THEN
-			currentMover			:= PopBuffer[j];
-			currentLowDistance		:= directionalDistance;
-			leastIDX				:= j;
-		END_IF
-	END_FOR
-	
-	// ForLoop concludes with the next mover in currentMover slot. add it to the sorted buffer
-	memcpy( ADR( SortBuffer[i] ), ADR( currentMover ), SIZEOF( currentMover ) );
-	memset( ADR( PopBuffer[leastIDX] ), 0, SIZEOF( PopBuffer[0] ) );
-	
-END_FOR
-
-// Output the proper indexed mover from the sorted list
 IF Index < 0 OR Index >= THIS^.TrackedMoverCount THEN
 	GetMoverByLocation REF= 0;
 ELSE
-	GetMoverByLocation REF= SortBuffer[Index]^;
+	GetMoverByLocation REF= SortedBuffer[Index]^;
+END_IF
+
+IF __ISVALIDREF(GetMoverByLocation) = FALSE THEN
+	ErrorMover.SourceInstancePath		:= THIS^.InstancePath;
+	GetMoverByLocation					REF= ErrorMover;
 END_IF
 
 
-// If the MoverList has no proper mover to return, then return an imposter ErrorMover, whose method calls all trigger an error message
-IF __ISVALIDREF(GetMoverByLocation) = FALSE THEN
-	ErrorMover.SourceInstancePath	:= THIS^.InstancePath;
-	GetMoverByLocation				REF= ErrorMover;
-END_IF]]></ST>
+
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="IsAllMoversReady" Id="{60630f08-9378-0450-0bc7-1b90b2e15524}" FolderPath="Properties\">
@@ -637,12 +733,8 @@ END_FOR
       <LineId Id="20" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.GetMoverByLocation">
-      <LineId Id="3" Count="28" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="80" Count="3" />
-      <LineId Id="32" Count="27" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="485" Count="142" />
+      <LineId Id="14" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.IsAllMoversReady.Get">
       <LineId Id="5" Count="2" />
