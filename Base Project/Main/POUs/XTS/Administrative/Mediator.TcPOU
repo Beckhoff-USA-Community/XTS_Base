@@ -10,7 +10,6 @@ VAR_INPUT
 	PositionTriggerArray	: ARRAY [0..GVL.NUM_POSITIONTRIGGERS-1] OF POINTER TO PositionTrigger;
 	StationArray			: ARRAY [0..GVL.NUM_STATIONS-1] OF POINTER TO Station;
 	ZoneArray				: ARRAY [0..GVL.NUM_ZONES-1] OF POINTER TO Zone;
-	
 	TrackArray				: ARRAY [0..GVL.NUM_TRACKS-1] OF POINTER TO Track;	
 
 	GROUP_REF				: AXES_GROUP_REF;
@@ -19,12 +18,17 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+
+	internalMoverList		: MoverList;	
+
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="AddMover" Id="{3437c27c-dd7b-0ac3-07a2-d432fc68235a}">
+    <Folder Name="Methods" Id="{0d177045-c92a-0627-14e7-41e4c9da72c3}" />
+    <Folder Name="Properties" Id="{d9d81742-b9bd-0437-3780-4a446062d311}" />
+    <Method Name="AddMover" Id="{3437c27c-dd7b-0ac3-07a2-d432fc68235a}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD AddMover : BOOL
 VAR_INPUT
 	
@@ -59,12 +63,28 @@ IF __ISVALIDREF( Mover ) THEN
 	END_FOR
 	
 	IF duplicateFound = FALSE THEN
+		
 		THIS^.MoverArray[emptyIDX]		:= ADR( Mover );	// new mover into empty array element
+
+		// Automatically register the mover with any Position Triggers
+		FOR i := 0 TO SIZEOF( PositionTriggerArray ) / SIZEOF( PositionTriggerArray[0] ) - 1 DO
+			IF PositionTriggerArray[i] <> 0 THEN
+				PositionTriggerArray[i]^.RegisterMover( Mover );
+			END_IF			
+		END_FOR
+		
+		// Automatically register the mover with any Zones
+		FOR i := 0 TO SIZEOF( ZoneArray ) / SIZEOF( ZoneArray[0] ) - 1 DO
+			IF ZoneArray[i] <> 0 THEN
+				ZoneArray[i]^.RegisterMover( Mover );
+			END_IF
+		END_FOR
+		
 	END_IF
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AddMoverList" Id="{fa372345-a99c-01d2-2d94-cc2fd6bab53d}">
+    <Method Name="AddMoverList" Id="{fa372345-a99c-01d2-2d94-cc2fd6bab53d}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD AddMoverList : BOOL
 VAR_INPUT
 	
@@ -84,7 +104,7 @@ END_VAR
 // Check for duplicates
 IF __ISVALIDREF( MoverList ) THEN
 	
-	MoverList.Mediator			:= THIS^;
+	MoverList.Mediator			REF= THIS^;
 	
 	duplicateFound				:= FALSE;
 	
@@ -104,7 +124,7 @@ IF __ISVALIDREF( MoverList ) THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AddPositionTrigger" Id="{37697d0e-c381-0846-3d01-3d7f2d276ad1}">
+    <Method Name="AddPositionTrigger" Id="{37697d0e-c381-0846-3d01-3d7f2d276ad1}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD AddPositionTrigger : BOOL
 VAR_INPUT
 	
@@ -124,7 +144,7 @@ END_VAR
 // Check for duplicates
 IF __ISVALIDREF( PositionTrigger ) THEN
 	
-	PositionTrigger.Mediator		:= THIS^;
+	PositionTrigger.Mediator		REF= THIS^;
 	
 	duplicateFound					:= FALSE;
 	
@@ -140,11 +160,19 @@ IF __ISVALIDREF( PositionTrigger ) THEN
 	
 	IF duplicateFound = FALSE THEN
 		THIS^.PositionTriggerArray[emptyIDX]		:= ADR( PositionTrigger );
+		
+		// Automatically register all existing movers with the new position trigger
+		FOR i := 0 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[0] ) - 1 DO
+			IF MoverArray[i] <> 0 THEN
+				THIS^.PositionTriggerArray[emptyIDX]^.RegisterMover( MoverArray[i]^ );
+			END_IF
+		END_FOR		
+		
 	END_IF
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AddStation" Id="{158bfd8c-35c0-05f6-1398-0d0a087d099a}">
+    <Method Name="AddStation" Id="{158bfd8c-35c0-05f6-1398-0d0a087d099a}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD AddStation : BOOL
 VAR_INPUT
 	
@@ -164,7 +192,7 @@ END_VAR
 // Check for duplicates
 IF __ISVALIDREF( Station ) THEN
 	
-	Station.Mediator	:= THIS^;
+	Station.Mediator	REF= THIS^;
 	
 	duplicateFound		:= FALSE;
 	
@@ -184,7 +212,7 @@ IF __ISVALIDREF( Station ) THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AddTrack" Id="{1f5fda23-0b4f-059d-05b7-42b4aba73321}">
+    <Method Name="AddTrack" Id="{1f5fda23-0b4f-059d-05b7-42b4aba73321}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD AddTrack : BOOL
 VAR_INPUT
 	
@@ -204,7 +232,7 @@ END_VAR
 // Check for duplicates
 IF __ISVALIDREF( Track ) THEN
 	
-	Track.Mediator		:= THIS^;
+	Track.Mediator		REF= THIS^;
 	
 	duplicateFound		:= FALSE;
 	
@@ -224,7 +252,7 @@ IF __ISVALIDREF( Track ) THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AddZone" Id="{b7275e17-ff08-069c-32b8-5e7a13dacb64}">
+    <Method Name="AddZone" Id="{b7275e17-ff08-069c-32b8-5e7a13dacb64}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD AddZone : BOOL
 VAR_INPUT
 	
@@ -244,7 +272,7 @@ END_VAR
 // Check for duplicates
 IF __ISVALIDREF( Zone ) THEN
 	
-	Zone.Mediator		:= THIS^;
+	Zone.Mediator		REF= THIS^;
 	
 	duplicateFound		:= FALSE;
 	
@@ -260,11 +288,39 @@ IF __ISVALIDREF( Zone ) THEN
 	
 	IF duplicateFound = FALSE THEN
 		THIS^.ZoneArray[emptyIDX]		:= ADR( Zone );
+		
+		// Automatically register all existing movers with the new zone
+		FOR i := 0 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray ) - 1 DO
+			IF MoverArray[i] <> 0 THEN
+				THIS^.ZoneArray[emptyIDX]^.RegisterMover( MoverArray[i]^ );
+			END_IF
+		END_FOR
+		
 	END_IF
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Cyclic" Id="{f2264867-ad86-0c96-3c42-ade0fe3bf9e2}">
+    <Property Name="CompleteMoverList" Id="{41f8f92e-6d81-02a1-048b-3da9baf27ff9}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CompleteMoverList : iMoverList]]></Declaration>
+      <Get Name="Get" Id="{0ba48769-41e2-05d1-1ed6-465e4a354ad7}">
+        <Declaration><![CDATA[VAR
+	i: UDINT;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[internalMoverList.UnregisterAll();
+
+FOR i := 0 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[0] ) - 1 DO
+	IF MoverArray[i] <> 0 THEN
+		internalMoverList.RegisterMover( MoverArray[i]^ );
+	END_IF
+END_FOR
+
+CompleteMoverList	:= internalMoverList;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Cyclic" Id="{f2264867-ad86-0c96-3c42-ade0fe3bf9e2}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Cyclic : BOOL
 VAR_INPUT
 END_VAR
@@ -280,6 +336,7 @@ END_VAR]]></Declaration>
 FOR i := 0 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[i] ) - 1 DO
 	IF MoverArray[i] <> 0 THEN
 		MoverArray[i]^.Cyclic( GROUP_REF );			// could make this ca group addition clener
+		MoverArray[i]^.CyclicTrack();
 		MoverArray[i]^.AxisReference.ReadStatus();
 	END_IF
 END_FOR
@@ -313,7 +370,23 @@ END_FOR]]></ST>
       <LineId Id="26" Count="3" />
       <LineId Id="31" Count="1" />
       <LineId Id="22" Count="0" />
-      <LineId Id="35" Count="3" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="66" Count="1" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="38" Count="0" />
       <LineId Id="14" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AddMoverList">
@@ -333,7 +406,15 @@ END_FOR]]></ST>
     <LineIds Name="Mediator.AddPositionTrigger">
       <LineId Id="18" Count="3" />
       <LineId Id="38" Count="1" />
-      <LineId Id="22" Count="15" />
+      <LineId Id="22" Count="14" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="37" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AddStation">
@@ -352,8 +433,24 @@ END_FOR]]></ST>
     <LineIds Name="Mediator.AddZone">
       <LineId Id="17" Count="3" />
       <LineId Id="37" Count="1" />
-      <LineId Id="21" Count="15" />
+      <LineId Id="21" Count="14" />
+      <LineId Id="51" Count="3" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="36" Count="0" />
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.CompleteMoverList.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.Cyclic">
       <LineId Id="6" Count="0" />
@@ -362,6 +459,7 @@ END_FOR]]></ST>
       <LineId Id="5" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="13" Count="0" />
+      <LineId Id="36" Count="0" />
       <LineId Id="29" Count="0" />
       <LineId Id="14" Count="0" />
       <LineId Id="9" Count="0" />

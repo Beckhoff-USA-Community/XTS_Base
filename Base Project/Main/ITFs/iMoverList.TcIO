@@ -11,11 +11,32 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="ApplyAllParameterSet" Id="{8abb1724-b9e6-083f-29e1-ca26a1ec4420}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ApplyAllParameterSet : iMoverList
+VAR_INPUT
+	ParameterSet		: MotionParameters_typ;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Contains" Id="{3b6e6689-5a0d-0fe5-1be4-c87805ffbb32}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Contains : BOOL
+VAR_INPUT
+	
+	Mover		: REFERENCE TO Mover;
+
+END_VAR
+
+]]></Declaration>
+    </Method>
     <Method Name="DestinationStation" Id="{5911a55f-1122-0e1b-277d-d8250281482e}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD DestinationStation : iMoverList
 VAR_INPUT
 	Destination	: REFERENCE TO Station;
 END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="EnableAll" Id="{538e372e-ce64-0d62-157f-b6c50867c4a3}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD EnableAll : iMoverList
 ]]></Declaration>
     </Method>
     <Method Name="GetMoverByLocation" Id="{08ab6dd2-55e6-476a-991b-26d3f0ccc58d}" FolderPath="Methods\">
@@ -26,12 +47,52 @@ VAR_INPUT
     Direction : Tc2_MC2.MC_Direction; // Positive = find the most positive mover whose position is less than the Input. Negative = find the most negative mover whose position is greater than the input
 END_VAR]]></Declaration>
     </Method>
+    <Property Name="IsAllMoversReady" Id="{3a813e61-e4f7-047e-0dde-9e7e6afdfbc3}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsAllMoversReady : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d07796c0-0944-0db8-3726-0bbe43c2aabe}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="IsAllTrackReady" Id="{a3e4944a-7607-0f5a-10b2-64b1616a1317}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY IsAllTrackReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{c87cec46-e2a4-0a12-2b5e-a6b05f1caa93}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="LogicalComplement" Id="{99897a70-e30e-0da3-0186-cef07523538c}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD LogicalComplement : MoverList
+VAR_INPUT
+END_VAR
+
+]]></Declaration>
+    </Method>
+    <Method Name="LogicalDifference" Id="{28dd98c9-5c2b-06ab-24f3-3fbd8540614a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD LogicalDifference : MoverList
+VAR_INPUT
+	
+	MoverList		: MoverList;
+
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="LogicalIntersect" Id="{044089b7-d05a-06ed-1b08-0d7870b3db96}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD LogicalIntersect : MoverList
+VAR_INPUT
+	
+	MoverList		: MoverList;
+
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="LogicalUnion" Id="{a80cf7c9-101b-0ad9-0af0-3ff72543790d}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD LogicalUnion : MoverList
+VAR_INPUT
+	
+	MoverList		: MoverList;
+
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="MoveAllToPosition" Id="{745a52d9-fa71-49ff-868a-52a3293e2e2d}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MoveAllToPosition : iMoverList
 VAR_INPUT

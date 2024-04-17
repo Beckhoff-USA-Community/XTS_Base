@@ -22,6 +22,9 @@
     <Compile Include="DUTs\MainCommands_typ.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MainStateMachine_enum.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MainState_enum.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -66,6 +69,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\MAIN2.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\XTS\Administrative\ErrorMover.TcPOU">

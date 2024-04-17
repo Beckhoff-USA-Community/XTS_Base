@@ -5,7 +5,7 @@
 FUNCTION_BLOCK ABSTRACT Objective
 VAR_INPUT
 
-	Mediator					: Mediator;	
+	Mediator					: REFERENCE TO Mediator;	
 
 END_VAR
 VAR

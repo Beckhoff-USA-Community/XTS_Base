@@ -36,7 +36,7 @@ FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) -
 END_FOR]]></ST>
       </Implementation>
     </Method>
-    <Method Name="ApplyAllParameterSet" Id="{8abb1724-b9e6-083f-29e1-ca26a1ec4420}" FolderPath="Methods\">
+    <Method Name="ApplyAllParameterSet" Id="{ee27996d-bc19-0617-3aa0-2b2a5832f4d1}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ApplyAllParameterSet : iMoverList
 VAR_INPUT
 	ParameterSet		: MotionParameters_typ;
@@ -58,7 +58,7 @@ END_FOR
 ApplyAllParameterSet		:= THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Contains" Id="{3b6e6689-5a0d-0fe5-1be4-c87805ffbb32}" FolderPath="Methods\">
+    <Method Name="Contains" Id="{49bffcb6-3630-0c15-279c-3e0d2426245a}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Contains : BOOL
 VAR_INPUT
 	
@@ -118,7 +118,7 @@ END_FOR;
 DestinationStation := THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="EnableAll" Id="{538e372e-ce64-0d62-157f-b6c50867c4a3}" FolderPath="Methods\">
+    <Method Name="EnableAll" Id="{99b09009-74d0-0637-0d16-bcb874d15a8e}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD EnableAll : iMoverList
 VAR
 	i		: ULINT;
@@ -383,7 +383,7 @@ IsAllTrackReady := allReady; // return result]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <Method Name="LogicalComplement" Id="{99897a70-e30e-0da3-0186-cef07523538c}" FolderPath="Methods\">
+    <Method Name="LogicalComplement" Id="{d6bb64e7-1c08-0ac2-2a32-42be336ae034}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD LogicalComplement : MoverList
 VAR_INPUT
 END_VAR
@@ -403,7 +403,7 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 END_FOR]]></ST>
       </Implementation>
     </Method>
-    <Method Name="LogicalDifference" Id="{28dd98c9-5c2b-06ab-24f3-3fbd8540614a}" FolderPath="Methods\">
+    <Method Name="LogicalDifference" Id="{a0c51d7c-09ca-0254-378e-53c1775ec0b5}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD LogicalDifference : MoverList
 VAR_INPUT
 	
@@ -427,7 +427,7 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 END_FOR]]></ST>
       </Implementation>
     </Method>
-    <Method Name="LogicalIntersect" Id="{044089b7-d05a-06ed-1b08-0d7870b3db96}" FolderPath="Methods\">
+    <Method Name="LogicalIntersect" Id="{83ddeada-4967-0249-0f08-a02d5e1843f1}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD LogicalIntersect : MoverList
 VAR_INPUT
 	
@@ -450,7 +450,7 @@ FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 END_FOR]]></ST>
       </Implementation>
     </Method>
-    <Method Name="LogicalUnion" Id="{a80cf7c9-101b-0ad9-0af0-3ff72543790d}" FolderPath="Methods\">
+    <Method Name="LogicalUnion" Id="{328a0d90-4052-09a0-1fd6-2c3bd426e573}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD LogicalUnion : MoverList
 VAR_INPUT
 	

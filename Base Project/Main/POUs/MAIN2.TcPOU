@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN2" Id="{c992ed33-41fe-02c4-17ef-23123b9a5b23}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN2
+VAR	
+
+	// ========= System Control / FSM Variables =========
+	
+	MainCommands 		: MainCommands_typ; 		// command struct for cycling thru the state machine
+	MainState    		: MainStateMachine_enum;   	// enumeration for the Main state machine
+	System				: Mediator;					// System-level control object
+
+	// ========= Linked NC Variables & References =========
+	
+	Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
+	
+	// ========= Objectives & Parameters =========
+
+	ParameterSet		: MotionParameters_typ;
+	
+	MoverList			: ARRAY[0..GVL.NUM_MOVERLISTS-1] OF MoverList;
+	PositionTrigger		: ARRAY[0..GVL.NUM_POSITIONTRIGGERS-1] OF PositionTrigger;
+	Station				: ARRAY[0..GVL.NUM_STATIONS-1] OF Station;
+	Track				: ARRAY[0..GVL.NUM_TRACKS] OF Track;
+	Zone				: ARRAY[0..GVL.NUM_ZONES-1] OF Zone;
+	
+    // ========= Helper, State, & Index Variables =========
+	
+    i                	: UINT; 	// index variable; gets reused in various FOR loops
+    n                	: UINT; 	// secondary index variable, for enabling movers
+	
+	// ========= XTS Utility Diagnostics =========
+	
+	VisuDiag						: FB_VisuXtsDiag;
+	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
+	fbXtsEnvironmentVisu			: FB_XtsEnvironmentVisu;
+	stXtsEnvironmentConfiguration	: ST_XtsEnvironmentConfiguration;
+	nEnvironmentState				: INT;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+CASE MainState OF
+	MainStateMachine_enum.MS_DISABLED: // ------------------------------------------
+	
+		// XTS is idle. Motive power is disabled.	
+		IF MainCommands.Enable THEN
+			MainCommands.Disable			:= FALSE;
+			MainState						:= MainStateMachine_enum.MS_INITIALIZING;
+		END_IF
+
+	MainStateMachine_enum.MS_INITIALIZING: // --------------------------------------
+	
+		Registering();			// Add all objectives & movers to the system-level Mediator object
+		Initializing();			// Set basic application parameters for the objects
+			
+		System.CompleteMoverList.EnableAll();
+		System.CompleteMoverList.ActivateAllTrack( Track[1] );
+		
+		IF System.CompleteMoverList.IsAllTrackReady AND System.CompleteMoverList.IsAllMoversReady THEN
+			MainState	:= MainStateMachine_enum.MS_ENABLED;
+		END_IF
+	
+	MainStateMachine_enum.MS_ENABLED:	// -------------------------------------------
+	
+		// Recovery logic
+		IF MainCommands.Start THEN
+			System.CompleteMoverList.MoveAllToStation( Station[0] );
+			MainState	:= MainStateMachine_enum.MS_RUN;
+		END_IF
+	
+	MainStateMachine_enum.MS_RUN: // -----------------------------------------------
+	
+		// blah blah blah
+		
+	MainStateMachine_enum.MS_STOPPED: // -------------------------------------------
+	MainStateMachine_enum.MS_ERROR: // ---------------------------------------------
+	MainStateMachine_enum.MS_DEBUG: // ---------------------------------------------	
+	
+
+END_CASE
+
+System.Cyclic();
+]]></ST>
+    </Implementation>
+    <Action Name="Initializing" Id="{77eee1d6-568e-0448-2c64-a85af70fbf71}">
+      <Implementation>
+        <ST><![CDATA[
+
+	Station[0].Position				:= 1000;
+	Station[1].Position				:= 1200;
+	Station[2].Position				:= 1300;
+	
+	PositionTrigger[0].Position		:= 1000;
+	
+	Zone[0].StartPosition			:= 1500;
+	Zone[0].EndPosition				:= 2000;
+	
+	System.CompleteMoverList.SetAllVelocity( 1E3 );
+	System.CompleteMoverList.SetAllAcceleration( 1E4 );
+	System.CompleteMoverList.SetAllDeceleration( 1E4 );
+	System.CompleteMoverList.SetAllJerk( 5E5 );
+	System.CompleteMoverList.SetAllGap( 85 );
+	]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="Registering" Id="{ef3ef836-2b88-0099-2899-1cd10004220b}">
+      <Implementation>
+        <ST><![CDATA[	
+
+		// Add all Movers to the Mediator
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+			System.AddMover( Mover[i] );
+		END_FOR
+	
+		// Add all Mover Lists to the Mediator
+		FOR i := 0 TO GVL.NUM_MOVERLISTS - 1 DO
+			System.AddMoverList( MoverList[i] );
+		END_FOR
+		
+		// Add all PositionTriggers to the Mediator
+		FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
+			System.AddPositionTrigger( PositionTrigger[i] );
+		END_FOR
+		
+		// Add all Stations to the Mediator
+		FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
+			System.AddStation( Station[i] );
+		END_FOR
+		
+		// Add all Tracks to the Mediator
+		FOR i := 0 TO GVL.NUM_TRACKS - 1 DO
+			System.AddTrack( Track[i] );
+		END_FOR
+		
+		// Add all Zones to the Mediator
+		FOR i := 0 TO GVL.NUM_ZONES - 1 DO
+			System.AddZone( Zone[i] );
+		END_FOR]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="MAIN2">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="249" Count="2" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="201" Count="2" />
+      <LineId Id="61" Count="2" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="192" Count="1" />
+      <LineId Id="191" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN2.Initializing">
+      <LineId Id="19" Count="0" />
+      <LineId Id="2" Count="14" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN2.Registering">
+      <LineId Id="2" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="3" Count="26" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
