@@ -43,6 +43,9 @@
     <Compile Include="DUTs\StationStats_typ.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\TrackCyclicState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\TrackInfo.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -51,10 +54,6 @@
     </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GVLs\ENV.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="GVLs\GVL.TcGVL">
       <SubType>Code</SubType>

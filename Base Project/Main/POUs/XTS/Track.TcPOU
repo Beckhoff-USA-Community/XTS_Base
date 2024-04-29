@@ -46,40 +46,40 @@ VAR
 	nXpuTracks : UINT;
 END_VAR
 VAR_INST
-	nState : UINT;
+	nState : TrackCyclicState;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF internalIdIsSet AND NOT internalOTCIDIsSet THEN
 	CASE nState OF
-		0:	// wait for environment
-			IF ENV.fbXtsEnvironment.P_IsInitialized THEN
-				nState := 10;
+		TrackCyclicState.WAIT_FOR_ENV:	// wait for environment
+			IF Mediator.EnvironmentIsReady THEN
+				nState := TrackCyclicState.CHECK_ZERO_CASE;
 			END_IF
 		
-		10: // check for zero special case
+		TrackCyclicState.CHECK_ZERO_CASE: // check for zero special case
 			IF (internalId = 0) THEN
 				// zero does not require initialization
-				nState := 100;
+				nState := TrackCyclicState.SET_INITIALIZED;
 			ELSE
-				nState := 20;
+				nState := TrackCyclicState.CHECK_TRACK_COUNT;
 			END_IF;
 	
-		20:	// check for track count
-			nXpuTracks := ENV.fbXtsEnvironment.XpuTcIo(1).P_TrackCount;
+		TrackCyclicState.CHECK_TRACK_COUNT:	// check for track count
+			nXpuTracks := Mediator.XPU.P_TrackCount;
 			IF (internalId > UINT_TO_INT(nXpuTracks)) THEN
 				// more tracks declared than defined in the XPU
 				// this is considered deilberate and OK, no further initialization required
-				nState := 100;
+				nState := TrackCyclicState.SET_INITIALIZED;
 			ELSE
-				nState := 30;
+				nState := TrackCyclicState.GET_OTCID;
 			END_IF;
 				
-		30: // get otcid
-			internalOTCID := ENV.fbXtsEnvironment.XpuTcIo(1).P_TrackOids[internalId];
-			nState := 100;
+		TrackCyclicState.GET_OTCID: // get otcid
+			internalOTCID := Mediator.XPU.P_TrackOids[internalId];
+			nState :=TrackCyclicState.SET_INITIALIZED;
 			
-		100: // set intitialized and rewind
-			nState := 0;
+		TrackCyclicState.SET_INITIALIZED: // set intitialized and rewind
+			nState := TrackCyclicState.WAIT_FOR_ENV;
 			internalOTCIDIsSet := TRUE;
 			
 	END_CASE

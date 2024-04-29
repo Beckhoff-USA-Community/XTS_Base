@@ -19,8 +19,20 @@ VAR_OUTPUT
 END_VAR
 VAR
 
-	internalMoverList		: MoverList;	
+	{attribute : hide}
+	internalMoverList		: MoverList;
+	internalEnvironmentIsReady : BOOL;
+	
+	// ========= XTS Utility Diagnostics =========
+	VisuDiag						: FB_VisuXtsDiag;
+	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
+	fbXtsEnvironmentVisu			: FB_XtsEnvironmentVisu;
+	stXtsEnvironmentConfiguration	: ST_XtsEnvironmentConfiguration;	
+	nEnvironmentState				: INT;
 
+	internalEnvironment				: I_TcIoXtsEnvironment;
+	internalXPU						: I_TcIoXtsProcessingUnit;
+	internalInfoServer				: I_TcIoXtsInfoServer;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -357,9 +369,102 @@ FOR i := 0 TO SIZEOF( TrackArray ) / SIZEOF( TrackArray[i] ) - 1 DO
 	IF TrackArray[i] <> 0 THEN
 		TrackArray[i]^.Cyclic();
 	END_IF
-END_FOR]]></ST>
+END_FOR
+
+CyclicEnvironment();]]></ST>
       </Implementation>
     </Method>
+    <Method Name="CyclicEnvironment" Id="{bec7bc22-417c-060d-2998-493fbd5e5180}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD CyclicEnvironment : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE nEnvironmentState OF
+	0:	// ----------------------------------------- Enable Init Items
+	
+		// Enable init Info Server if needed
+		stXtsEnvironmentConfiguration.bEnableInitInfoServer		:= TRUE;
+		
+		// Enable init CA Group if needed
+		stXtsEnvironmentConfiguration.bEnableInitCaGroup		:= TRUE;
+		
+		// Set configuration of XtsUtility init
+		fbXtsEnvironment.P_XtsEnvironmentConfiguration			:= stXtsEnvironmentConfiguration;
+		
+		// Next step
+		nEnvironmentState	:= 1;
+		
+	1:	// ------------------------------------------ Init Environment
+		
+		// Start init
+		IF fbXtsEnvironment.Init(TRUE) THEN
+			// stop init
+			fbXtsEnvironment.Init(FALSE);
+			
+			// next step
+			nEnvironmentState	:= 2;
+		END_IF
+		
+	2:	// ------------------------------------------ Check for success
+	
+		// Check IsInitialized property
+		IF fbXtsEnvironment.P_IsInitialized THEN
+			// assign to vars
+			internalEnvironment := fbXtsEnvironment;
+			internalXPU			:= fbXtsEnvironment.XpuTcIo(1);
+			internalInfoServer	:= fbXtsEnvironment.InfoServerTcIo(1);
+			// next step
+			nEnvironmentState	:= 3;
+		END_IF
+		
+	3:	// ------------------------------------------- Init Visu
+	
+		fbXtsEnvironmentVisu( ipTcIoXtsEnvironment := fbXtsEnvironment );
+		
+		// next step
+		nEnvironmentState	:= 4;
+		
+	4:	// ------------------------------------------- Init done
+
+		fbXtsEnvironmentVisu.Cycle();
+		
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="EnvironmentIsReady" Id="{45272fae-93d1-0503-0b16-fd82b7738745}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY EnvironmentIsReady : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c1e17dfb-61a0-0ba8-0903-93fde5311796}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[EnvironmentIsReady := fbXtsEnvironment.P_IsInitialized;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Envrionment" Id="{5e5f4ba6-ff8f-0396-2883-6b9b059dc7fd}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Envrionment : I_TcIoXtsEnvironment]]></Declaration>
+      <Get Name="Get" Id="{67009401-6b19-0292-3a1b-93904af08df3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Envrionment := internalEnvironment;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="InfoServer" Id="{816a507a-b5f1-077f-3d31-6cc9a0af8cb5}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY InfoServer : I_TcIoXtsInfoServer]]></Declaration>
+      <Get Name="Get" Id="{880f5fd5-5a90-005a-341d-63c8b7f4f011}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InfoServer := internalInfoServer;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="ResetStatistics" Id="{03455d1c-c490-0e78-3526-b69b05e0917b}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ResetStatistics : BOOL
 VAR
@@ -377,6 +482,17 @@ END_FOR
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="XPU" Id="{b9694a68-ee0f-0a17-2999-0aade43c6ce4}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY XPU : I_TcIoXtsProcessingUnit]]></Declaration>
+      <Get Name="Get" Id="{fb7fa487-baed-05fa-2f8e-e167e0e16d6f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[XPU := internalXPU;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <LineIds Name="Mediator">
       <LineId Id="9" Count="0" />
     </LineIds>
@@ -498,11 +614,31 @@ END_FOR
       <LineId Id="24" Count="0" />
       <LineId Id="44" Count="4" />
       <LineId Id="43" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="55" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.CyclicEnvironment">
+      <LineId Id="6" Count="29" />
+      <LineId Id="51" Count="3" />
+      <LineId Id="36" Count="14" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.EnvironmentIsReady.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Envrionment.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InfoServer.Get">
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.ResetStatistics">
       <LineId Id="5" Count="0" />
       <LineId Id="13" Count="5" />
       <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.XPU.Get">
+      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

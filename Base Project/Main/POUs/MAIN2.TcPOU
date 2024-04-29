@@ -29,10 +29,6 @@ VAR
     i                	: UINT; 	// index variable; gets reused in various FOR loops
     n                	: UINT; 	// secondary index variable, for enabling movers
 	
-	// ========= XTS Utility Diagnostics =========
-	
-	nEnvironmentState				: INT;
-	
 	// ========= Example Application Variables =========
 
     nextStation 		: USINT := 4;
@@ -45,8 +41,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[EnvironmentCyclic();
-
+      <ST><![CDATA[
 CASE MainState OF
 	MainStateMachine_enum.MS_DISABLED: // ------------------------------------------
 	
@@ -132,56 +127,6 @@ END_CASE
 System.Cyclic();
 ]]></ST>
     </Implementation>
-    <Action Name="EnvironmentCyclic" Id="{9a903fbd-e9ae-032f-2559-00badaf47834}">
-      <Implementation>
-        <ST><![CDATA[CASE nEnvironmentState OF
-	0:	// ----------------------------------------- Enable Init Items
-	
-		// Enable init Info Server if needed
-		ENV.stXtsEnvironmentConfiguration.bEnableInitInfoServer		:= TRUE;
-		
-		// Enable init CA Group if needed
-		ENV.stXtsEnvironmentConfiguration.bEnableInitCaGroup		:= TRUE;
-		
-		// Set configuration of XtsUtility init
-		ENV.fbXtsEnvironment.P_XtsEnvironmentConfiguration			:= ENV.stXtsEnvironmentConfiguration;
-		
-		// Next step
-		nEnvironmentState	:= 1;
-		
-	1:	// ------------------------------------------ Init Environment
-		
-		// Start init
-		IF ENV.fbXtsEnvironment.Init(TRUE) THEN
-			// stop init
-			ENV.fbXtsEnvironment.Init(FALSE);
-			
-			// next step
-			nEnvironmentState	:= 2;
-		END_IF
-		
-	2:	// ------------------------------------------ Check for success
-	
-		// Check IsInitialized property
-		IF ENV.fbXtsEnvironment.P_IsInitialized THEN
-			// next step
-			nEnvironmentState	:= 3;
-		END_IF
-		
-	3:	// ------------------------------------------- Init Visu
-	
-		ENV.fbXtsEnvironmentVisu( ipTcIoXtsEnvironment := ENV.fbXtsEnvironment );
-		
-		// next step
-		nEnvironmentState	:= 4;
-		
-	4:	// ------------------------------------------- Init done
-
-		ENV.fbXtsEnvironmentVisu.Cycle();
-		
-END_CASE]]></ST>
-      </Implementation>
-    </Action>
     <Action Name="Initializing" Id="{77eee1d6-568e-0448-2c64-a85af70fbf71}">
       <Implementation>
         <ST><![CDATA[
@@ -320,7 +265,7 @@ END_CASE]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="MAIN2">
-      <LineId Id="6" Count="1" />
+      <LineId Id="7" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="34" Count="0" />
@@ -381,10 +326,6 @@ END_CASE]]></ST>
       <LineId Id="9" Count="0" />
       <LineId Id="192" Count="1" />
       <LineId Id="191" Count="0" />
-    </LineIds>
-    <LineIds Name="MAIN2.EnvironmentCyclic">
-      <LineId Id="2" Count="44" />
-      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="MAIN2.Initializing">
       <LineId Id="19" Count="0" />

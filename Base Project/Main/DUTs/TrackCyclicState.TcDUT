@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="TrackCyclicState" Id="{a3d439c8-3e7b-0821-0269-26f007c6033b}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE TrackCyclicState :
+(
+	WAIT_FOR_ENV			:= 0,
+	CHECK_ZERO_CASE 		:= 10,
+	CHECK_TRACK_COUNT		:= 20,
+	GET_OTCID				:= 30,
+	SET_INITIALIZED			:= 100 
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

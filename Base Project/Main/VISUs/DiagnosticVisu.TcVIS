@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <Visu Name="DiagnosticVisu" Id="{0a14cc89-148e-0392-1f20-d50acac1a592}">
     <XmlArchive>
       <Data>
@@ -169,10 +169,10 @@
                               <o n="TypeNodeAttributes" t="TypeNodeAttributes2">
                                 <v n="AttrFlags">0UL</v>
                                 <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
-                                  <v>ieccodeconversion_useexistinginterface</v>
-                                  <v>_3S.CoDeSys.VisuGenerated.IVisualisationIEC</v>
                                   <v>conditionalshow</v>
                                   <v>visu_elemdev</v>
+                                  <v>ieccodeconversion_useexistinginterface</v>
+                                  <v>_3S.CoDeSys.VisuGenerated.IVisualisationIEC</v>
                                   <v>''NORMAL__COMMENT</v>
                                   <v> interface contains additional methods to IVisualElement</v>
                                 </d>
@@ -200,10 +200,10 @@
                                 <o n="TypeNodeAttributes" t="TypeNodeAttributes2">
                                   <v n="AttrFlags">0UL</v>
                                   <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
-                                    <v>ieccodeconversion_useexistinginterface</v>
-                                    <v>_3S.CoDeSys.VisuGenerated.IVisualisationIEC</v>
                                     <v>conditionalshow</v>
                                     <v>visu_elemdev</v>
+                                    <v>ieccodeconversion_useexistinginterface</v>
+                                    <v>_3S.CoDeSys.VisuGenerated.IVisualisationIEC</v>
                                     <v>''NORMAL__COMMENT</v>
                                     <v> interface contains additional methods to IVisualElement</v>
                                   </d>
@@ -226,17 +226,17 @@
                             <o n="TypeNodeAttributes" t="TypeNodeAttributes2">
                               <v n="AttrFlags">1048577UL</v>
                               <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
-                                <v>Visible</v>
-                                <v>False</v>
                                 <v>DefaultArraySize</v>
                                 <v>5</v>
-                                <v>VisibleChildren</v>
-                                <v>True</v>
                                 <v>ieccodeconversion_array</v>
                                 <v></v>
                                 <v>''NORMAL__COMMENT</v>
                                 <v> We hide this node to prevent having two References nodes
  Nevertheless we want to make sure that the children are displayed</v>
+                                <v>Visible</v>
+                                <v>False</v>
+                                <v>VisibleChildren</v>
+                                <v>True</v>
                               </d>
                               <v n="ConvDone">true</v>
                             </o>
@@ -289,24 +289,24 @@
                         <o n="TypeNodeAttributes" t="TypeNodeAttributes2">
                           <v n="AttrFlags">81920UL</v>
                           <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
-                            <v>DisplayFrameReferencesConfiguration</v>
-                            <v></v>
-                            <v>DescriptionTextId</v>
-                            <v>TL_ElementProperties.Desc_ReferencedVisus</v>
-                            <v>SortFlag</v>
-                            <v>80</v>
                             <v>AssignDestination</v>
                             <v>Init</v>
                             <v>Category</v>
                             <v>Simple|Standard</v>
-                            <v>DynamicArray</v>
-                            <v></v>
                             <v>conditionalshow</v>
                             <v>visu_elemdev</v>
-                            <v>FrameReferences</v>
+                            <v>DescriptionTextId</v>
+                            <v>TL_ElementProperties.Desc_ReferencedVisus</v>
+                            <v>DisplayFrameReferencesConfiguration</v>
                             <v></v>
                             <v>DisplayTextId</v>
                             <v>TL_ElementProperties.References</v>
+                            <v>DynamicArray</v>
+                            <v></v>
+                            <v>FrameReferences</v>
+                            <v></v>
+                            <v>SortFlag</v>
+                            <v>80</v>
                             <v>Storable</v>
                             <v>True</v>
                           </d>
@@ -375,10 +375,10 @@
                         <o n="TypeNodeAttributes" t="TypeNodeAttributes2">
                           <v n="AttrFlags">0UL</v>
                           <d n="TypeNodeAttributesData" t="CaseInsensitiveHashtable" ckt="String" cvt="String">
-                            <v>ieccodeconversion_useexistinginterface</v>
-                            <v>_3S.CoDeSys.VisuGenerated.IVisualisationIEC</v>
                             <v>conditionalshow</v>
                             <v>visu_elemdev</v>
+                            <v>ieccodeconversion_useexistinginterface</v>
+                            <v>_3S.CoDeSys.VisuGenerated.IVisualisationIEC</v>
                             <v>''NORMAL__COMMENT</v>
                             <v> interface contains additional methods to IVisualElement</v>
                           </d>
@@ -434,80 +434,80 @@
           <o n="GeneratedLMMDescriptions" t="GeneratedLanguageModelEntriesData">
             <o n="GeneratedVisuFbDescription" t="GenericFbDescription">
               <d n="FbMethods" t="CaseInsensitiveHashtable_1" ckt="String" cvt="Guid">
-                <v>HasVisibilityAccess</v>
-                <v>d4973fe0-91d1-4ac1-af05-0760e6aed30e</v>
                 <v>ContainsPoint</v>
                 <v>f7d9598a-93f5-4ca4-88fc-c2ca3733d922</v>
-                <v>HasInputAccess</v>
-                <v>78adb3fd-3d54-47a4-9bbc-bc15a7405e1c</v>
-                <v>Update</v>
-                <v>0413a1ca-5280-4757-b1f3-2d1462e10fa5</v>
-                <v>GetTooltip</v>
-                <v>9906445a-804f-40e8-bebf-0c001b0a4219</v>
-                <v>GetDialogInterfaceSize</v>
-                <v>fe08aef5-709a-4a5a-8e1a-823e49e7c7b7</v>
-                <v>GetUpdateRects</v>
-                <v>b870234b-1b34-4aa2-a645-cd4a0dc2bdd9</v>
-                <v>GetNamespace</v>
-                <v>fee19554-a41b-4cdd-93d9-6bf5a36a89f4</v>
-                <v>SetResult</v>
-                <v>177345a1-4c38-4754-aa19-8ce27c993557</v>
-                <v>GetTranslator</v>
-                <v>ed2ec975-18fa-4c0a-9e9f-b270dc99f6df</v>
-                <v>SetClientData</v>
-                <v>8f902cb0-463f-4403-84f5-27f791055bb2</v>
-                <v>HasVisibilityAccessIntern</v>
-                <v>52b07a97-a6fc-45da-bc30-39332032f2eb</v>
-                <v>GetInstance</v>
-                <v>cca63d2a-a64d-4bc5-b98a-ba2e4fbdab47</v>
-                <v>GetClientData</v>
-                <v>2c92d701-7262-403e-b2d5-a471caf7ced8</v>
-                <v>Paint</v>
-                <v>782831f8-576a-4d5c-b372-47a39392d749</v>
-                <v>GetElementArray</v>
-                <v>a39826fe-1c01-4762-aa66-189058285a0b</v>
-                <v>SetVisuFlagsInternal</v>
-                <v>cbf6ef13-8096-4f86-86c5-2c19bb55e429</v>
-                <v>GetText</v>
-                <v>dd8bc172-99c8-4b7f-a24d-633950c71fd8</v>
-                <v>GetTextProperties</v>
-                <v>253ca83e-1712-4c09-9545-6eb3382d53f0</v>
-                <v>IsAntialiasingInactive</v>
-                <v>7c4255a8-4e94-4ce1-8d41-8e81f712186d</v>
-                <v>HasInputAccessIntern</v>
-                <v>a91e441a-7416-415d-9cf9-7daa507d460c</v>
-                <v>Initialize</v>
-                <v>7324c9be-32a9-4f5b-abf5-d4ab40f0dd2b</v>
                 <v>Destruct</v>
                 <v>0b7addec-70bb-43db-8422-d35425855a12</v>
-                <v>SetStaticState</v>
-                <v>c677a065-96ff-4b7b-b7c5-620bffbc2484</v>
-                <v>GetSurroundingRect</v>
-                <v>cdb2eb3a-f4d5-46a3-b87a-cb8ac270fd71</v>
-                <v>GetResult</v>
-                <v>69a13475-7c34-423b-9481-4d04a91d0a52</v>
+                <v>ElementInfo</v>
+                <v>84374fb2-1607-4ad5-8e00-219b522e6d06</v>
+                <v>FB_Exit</v>
+                <v>ac4dd86e-00c3-4d5f-86f9-849b9c9c4f32</v>
+                <v>FB_Reinit</v>
+                <v>78a8006b-1b4d-4e0e-8f47-dc2a8f97bc1b</v>
+                <v>GetClientData</v>
+                <v>2c92d701-7262-403e-b2d5-a471caf7ced8</v>
+                <v>GetDialogInterface</v>
+                <v>e094cd98-27f9-4db9-8d1f-17f9c1897a43</v>
+                <v>GetDialogInterfaceSize</v>
+                <v>fe08aef5-709a-4a5a-8e1a-823e49e7c7b7</v>
+                <v>GetElementArray</v>
+                <v>a39826fe-1c01-4762-aa66-189058285a0b</v>
+                <v>GetElementIdArray</v>
+                <v>5607fbc6-d82e-4649-ae34-1c23776aa0a4</v>
+                <v>GetInitializeVersion</v>
+                <v>f79da077-c55a-47c9-879e-b595ec55d4b9</v>
+                <v>GetInstance</v>
+                <v>cca63d2a-a64d-4bc5-b98a-ba2e4fbdab47</v>
                 <v>GetLocalUsergroup</v>
                 <v>b2bf8477-06d4-482a-99ec-7349e126e865</v>
                 <v>GetName</v>
                 <v>f818dfeb-551e-444d-995d-f8688a14da7e</v>
+                <v>GetNamespace</v>
+                <v>fee19554-a41b-4cdd-93d9-6bf5a36a89f4</v>
+                <v>GetResult</v>
+                <v>69a13475-7c34-423b-9481-4d04a91d0a52</v>
                 <v>GetSize</v>
                 <v>2d694b0e-6bb7-4864-9ec1-0d2415a80522</v>
-                <v>SetDialogInterface</v>
-                <v>e04cf6b4-4156-4a85-902f-ad29643a2eb5</v>
-                <v>FB_Reinit</v>
-                <v>78a8006b-1b4d-4e0e-8f47-dc2a8f97bc1b</v>
-                <v>FB_Exit</v>
-                <v>ac4dd86e-00c3-4d5f-86f9-849b9c9c4f32</v>
-                <v>GetInitializeVersion</v>
-                <v>f79da077-c55a-47c9-879e-b595ec55d4b9</v>
-                <v>GetDialogInterface</v>
-                <v>e094cd98-27f9-4db9-8d1f-17f9c1897a43</v>
-                <v>GetElementIdArray</v>
-                <v>5607fbc6-d82e-4649-ae34-1c23776aa0a4</v>
+                <v>GetSurroundingRect</v>
+                <v>cdb2eb3a-f4d5-46a3-b87a-cb8ac270fd71</v>
+                <v>GetText</v>
+                <v>dd8bc172-99c8-4b7f-a24d-633950c71fd8</v>
+                <v>GetTextProperties</v>
+                <v>253ca83e-1712-4c09-9545-6eb3382d53f0</v>
+                <v>GetTooltip</v>
+                <v>9906445a-804f-40e8-bebf-0c001b0a4219</v>
+                <v>GetTranslator</v>
+                <v>ed2ec975-18fa-4c0a-9e9f-b270dc99f6df</v>
+                <v>GetUpdateRects</v>
+                <v>b870234b-1b34-4aa2-a645-cd4a0dc2bdd9</v>
                 <v>HandleInput</v>
                 <v>af5f5445-17bd-4070-8992-2d223ac39cac</v>
-                <v>ElementInfo</v>
-                <v>84374fb2-1607-4ad5-8e00-219b522e6d06</v>
+                <v>HasInputAccess</v>
+                <v>78adb3fd-3d54-47a4-9bbc-bc15a7405e1c</v>
+                <v>HasInputAccessIntern</v>
+                <v>a91e441a-7416-415d-9cf9-7daa507d460c</v>
+                <v>HasVisibilityAccess</v>
+                <v>d4973fe0-91d1-4ac1-af05-0760e6aed30e</v>
+                <v>HasVisibilityAccessIntern</v>
+                <v>52b07a97-a6fc-45da-bc30-39332032f2eb</v>
+                <v>Initialize</v>
+                <v>7324c9be-32a9-4f5b-abf5-d4ab40f0dd2b</v>
+                <v>IsAntialiasingInactive</v>
+                <v>7c4255a8-4e94-4ce1-8d41-8e81f712186d</v>
+                <v>Paint</v>
+                <v>782831f8-576a-4d5c-b372-47a39392d749</v>
+                <v>SetClientData</v>
+                <v>8f902cb0-463f-4403-84f5-27f791055bb2</v>
+                <v>SetDialogInterface</v>
+                <v>e04cf6b4-4156-4a85-902f-ad29643a2eb5</v>
+                <v>SetResult</v>
+                <v>177345a1-4c38-4754-aa19-8ce27c993557</v>
+                <v>SetStaticState</v>
+                <v>c677a065-96ff-4b7b-b7c5-620bffbc2484</v>
+                <v>SetVisuFlagsInternal</v>
+                <v>cbf6ef13-8096-4f86-86c5-2c19bb55e429</v>
+                <v>Update</v>
+                <v>0413a1ca-5280-4757-b1f3-2d1462e10fa5</v>
               </d>
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{d72ec7a0-9af2-4da0-87bd-6528e65822e5}</v>
@@ -518,12 +518,12 @@
             <d n="GeneratedAllElementsEntries" t="Hashtable" />
             <o n="VisuRegDesc" t="GenericFbDescription">
               <d n="FbMethods" t="CaseInsensitiveHashtable_1" ckt="String" cvt="Guid">
+                <v>FB_Exit</v>
+                <v>946e0cbb-6d01-4a6b-bb7a-54068f6f4b97</v>
                 <v>FB_Init</v>
                 <v>b75e6103-0399-4dbf-95fc-a3b2724fa8d2</v>
                 <v>FB_Reinit</v>
                 <v>217b5a38-3d2a-43ed-938b-7dc940fe9fa3</v>
-                <v>FB_Exit</v>
-                <v>946e0cbb-6d01-4a6b-bb7a-54068f6f4b97</v>
               </d>
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{f25502dc-696e-4973-9232-70d2148f72e4}</v>
@@ -533,34 +533,34 @@
             <n n="MemManPou" />
             <o n="InputsPou" t="GenericFbDescription">
               <d n="FbMethods" t="CaseInsensitiveHashtable_1" ckt="String" cvt="Guid">
-                <v>ExecuteLooseCapture</v>
-                <v>5f5475b5-a07c-4244-ad8a-e79fc5f5ec82</v>
-                <v>ExecuteMouseDblClick</v>
-                <v>2bad2227-139e-4dd3-af29-2ab146e461a1</v>
-                <v>ExecuteMouseDown</v>
-                <v>740c7de4-08f2-4cb9-b8f6-c4dd9a7a944f</v>
-                <v>ExecuteMouseUp</v>
-                <v>85bd31fd-3b25-415c-96ff-dd3843364d4f</v>
-                <v>GetElementInfo</v>
-                <v>adac80a9-c25a-4f3a-bc25-8abecb8cc788</v>
                 <v>abstrGetDefaultCursor</v>
                 <v>1bfe083e-3e68-436c-b94a-b12e61a89dcb</v>
                 <v>ExecuteDialogClosed</v>
                 <v>175a0b2e-d4a5-40c9-8e64-d62e1a30d84a</v>
-                <v>ExecuteKeyUp</v>
-                <v>ef6e57f5-cdcf-4ff9-8189-438e9c63207f</v>
                 <v>ExecuteKeyDown</v>
                 <v>c52a6fab-220f-49dc-9f72-9cb5bebdb44d</v>
-                <v>ExecuteMouseMove</v>
-                <v>dd7fc003-865b-44eb-9c81-9ff6b5ed8e52</v>
-                <v>Initialize</v>
-                <v>e3478e0c-ecfe-4379-9e56-ff39250c016f</v>
+                <v>ExecuteKeyUp</v>
+                <v>ef6e57f5-cdcf-4ff9-8189-438e9c63207f</v>
+                <v>ExecuteLooseCapture</v>
+                <v>5f5475b5-a07c-4244-ad8a-e79fc5f5ec82</v>
+                <v>ExecuteMouseClick</v>
+                <v>558e8903-7013-4391-a1c0-ef465b6c13b0</v>
+                <v>ExecuteMouseDblClick</v>
+                <v>2bad2227-139e-4dd3-af29-2ab146e461a1</v>
+                <v>ExecuteMouseDown</v>
+                <v>740c7de4-08f2-4cb9-b8f6-c4dd9a7a944f</v>
                 <v>ExecuteMouseEnter</v>
                 <v>16172313-8833-4f9f-abba-9696bfdb044b</v>
                 <v>ExecuteMouseLeave</v>
                 <v>45b13733-15a2-4993-8ce8-8e4e9abf0dac</v>
-                <v>ExecuteMouseClick</v>
-                <v>558e8903-7013-4391-a1c0-ef465b6c13b0</v>
+                <v>ExecuteMouseMove</v>
+                <v>dd7fc003-865b-44eb-9c81-9ff6b5ed8e52</v>
+                <v>ExecuteMouseUp</v>
+                <v>85bd31fd-3b25-415c-96ff-dd3843364d4f</v>
+                <v>GetElementInfo</v>
+                <v>adac80a9-c25a-4f3a-bc25-8abecb8cc788</v>
+                <v>Initialize</v>
+                <v>e3478e0c-ecfe-4379-9e56-ff39250c016f</v>
               </d>
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{afa415cb-a0d7-41f5-af2e-608cbbbd9748}</v>
