@@ -118,6 +118,27 @@ END_FOR;
 DestinationStation := THIS^;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="DisableAll" Id="{34930db0-7d57-0ea7-09de-0bf399bd6e52}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD DisableAll : iMoverList
+VAR
+	i		: ULINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// For every valid mover in the list, Enable it
+
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+	
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.Disable();
+	END_IF
+
+END_FOR
+
+DisableAll	:= THIS^;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="EnableAll" Id="{99b09009-74d0-0637-0d16-bcb874d15a8e}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD EnableAll : iMoverList
 VAR
@@ -322,6 +343,69 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="HaltAll" Id="{da08056b-7ab2-0f88-0878-dde248efd6e3}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD HaltAll : iMoverList
+VAR
+	i		: ULINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+// For every valid mover in the list, Halt it
+
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+	
+	IF internalTrackedMovers[i] <> 0 THEN
+		internalTrackedMovers[i]^.Halt();
+	END_IF
+
+END_FOR
+
+HaltAll	:= THIS^;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="IsAllMoversDisabled" Id="{62b7d526-7474-0452-005a-29acf2e3f507}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsAllMoversDisabled : bool]]></Declaration>
+      <Get Name="Get" Id="{65b9f9db-b175-0367-29fb-c0545e966bd7}">
+        <Declaration><![CDATA[VAR
+	i: ULINT;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsAllMoversDisabled		:= TRUE;		// ...default
+
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+
+	IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.Ready = TRUE THEN
+		IsAllMoversDisabled		:= FALSE;
+	END_IF;
+
+
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsAllMoversHalted" Id="{7eaef20f-f1ea-0872-0da2-c36e439864d5}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsAllMoversHalted : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d65b9e73-d62f-07d0-2566-ad06acb540ed}">
+        <Declaration><![CDATA[VAR
+	i: ULINT;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsAllMoversHalted		:= TRUE;		// ...default
+
+FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+	// check for valid mover
+	IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.AxisReference.Status.Moving = TRUE THEN
+		IsAllMoversHalted		:= FALSE;
+	END_IF;
+
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="IsAllMoversReady" Id="{60630f08-9378-0450-0bc7-1b90b2e15524}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY IsAllMoversReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{bc6cb727-5d1a-0db0-2b04-cbe3e5287984}">
@@ -719,6 +803,19 @@ END_FOR
       <LineId Id="9" Count="25" />
       <LineId Id="6" Count="0" />
     </LineIds>
+    <LineIds Name="MoverList.DisableAll">
+      <LineId Id="9" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
     <LineIds Name="MoverList.EnableAll">
       <LineId Id="9" Count="1" />
       <LineId Id="5" Count="0" />
@@ -735,6 +832,26 @@ END_FOR
     <LineIds Name="MoverList.GetMoverByLocation">
       <LineId Id="485" Count="142" />
       <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.HaltAll">
+      <LineId Id="6" Count="11" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.IsAllMoversDisabled.Get">
+      <LineId Id="5" Count="2" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="30" Count="2" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.IsAllMoversHalted.Get">
+      <LineId Id="5" Count="2" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.IsAllMoversReady.Get">
       <LineId Id="5" Count="2" />

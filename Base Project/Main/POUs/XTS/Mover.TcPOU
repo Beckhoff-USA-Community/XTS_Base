@@ -116,6 +116,7 @@ VAR
 	lastCallSync		: LREAL;
 	lastCallValidateTrack : LREAL;
 	lastCallSetGap		: LREAL;
+	lastCallActivateTrack : LREAL;
 	
 END_VAR
 VAR_IN_OUT
@@ -155,13 +156,13 @@ IF (internalTrackState = TrackState.WAIT_FOR_COMMAND) THEN
 	
 	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 	
-	IF ( newCallTime - lastCallMoveSta ) > 1 THEN
+	IF ( newCallTime - lastCallActivateTrack ) > 1 THEN
 		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrack,0 );
 		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(internalActivatingTrack^.Id).AddString(THIS^.SourceInstancePath).AddString(Track.InstancePath);
 		MsgCreate.Send(0);
 	END_IF
 	
-	lastCallMovePos		:= newCallTime;
+	lastCallActivateTrack		:= newCallTime;
 END_IF;]]></ST>
       </Implementation>
     </Method>
@@ -763,7 +764,7 @@ END_VAR]]></Declaration>
 CASE internalTrackState OF
 	// wait for command
 	TrackState.WAIT_FOR_COMMAND:
-		IF (internalActivateTrackFlag) THEN
+		IF (internalActivateTrackFlag AND internalActivatingTrack^.isInitialized) THEN
 			// unregister mover from current track (logical tracking)
 			IF (internalTrack <> 0) THEN
 				internalTrack^.UnregisterMover(THIS^);

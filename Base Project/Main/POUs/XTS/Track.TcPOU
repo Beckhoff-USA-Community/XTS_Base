@@ -10,7 +10,9 @@ VAR
 	{attribute 'hide'}
 	internalOTCID			: OTCID;	// internal track id for use with MC_ActivateTrack
 	internalId				: INT;	// numeric track desigination i.e. "Track 1"
-	internalMoverList : MoverList;	// working list of movers on this track					
+	internalMoverList : MoverList;	// working list of movers on this track
+	internalIdIsSet			: BOOL; // track ID has been set, it is now ok to find the track OTCID
+	internalOTCIDIsSet		: BOOL;	// track OTCID has been set, track commands can now be run
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -38,6 +40,52 @@ END_VAR]]></Declaration>
         </Implementation>
       </Get>
     </Property>
+    <Method Name="Cyclic" Id="{0fbacee0-46ef-088c-34f0-d7cb5b41b934}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Cyclic : BOOL
+VAR
+	nXpuTracks : UINT;
+END_VAR
+VAR_INST
+	nState : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF internalIdIsSet AND NOT internalOTCIDIsSet THEN
+	CASE nState OF
+		0:	// wait for environment
+			IF ENV.fbXtsEnvironment.P_IsInitialized THEN
+				nState := 10;
+			END_IF
+		
+		10: // check for zero special case
+			IF (internalId = 0) THEN
+				// zero does not require initialization
+				nState := 100;
+			ELSE
+				nState := 20;
+			END_IF;
+	
+		20:	// check for track count
+			nXpuTracks := ENV.fbXtsEnvironment.XpuTcIo(1).P_TrackCount;
+			IF (internalId > UINT_TO_INT(nXpuTracks)) THEN
+				// more tracks declared than defined in the XPU
+				// this is considered deilberate and OK, no further initialization required
+				nState := 100;
+			ELSE
+				nState := 30;
+			END_IF;
+				
+		30: // get otcid
+			internalOTCID := ENV.fbXtsEnvironment.XpuTcIo(1).P_TrackOids[internalId];
+			nState := 100;
+			
+		100: // set intitialized and rewind
+			nState := 0;
+			internalOTCIDIsSet := TRUE;
+			
+	END_CASE
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Id" Id="{bc141487-48e4-021d-1b8b-19fa2c77c46e}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Id : INT]]></Declaration>
       <Get Name="Get" Id="{5dbdca49-4776-084f-23a4-b7b52bdccbfc}">
@@ -53,9 +101,23 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[internalId := Id;]]></ST>
+          <ST><![CDATA[internalId := Id;
+// internal flag noting this value has been set this allows 0 (special case) to be used
+internalIdIsSet := TRUE;
+]]></ST>
         </Implementation>
       </Set>
+    </Property>
+    <Property Name="isInitialized" Id="{a010b7aa-b890-0ceb-3883-720b25186af2}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY isInitialized : bool]]></Declaration>
+      <Get Name="Get" Id="{8d3e9ef0-8df9-0a5c-34fa-bc058f56c77c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[isInitialized := internalIdIsSet and internalOTCIDIsSet;]]></ST>
+        </Implementation>
+      </Get>
     </Property>
     <Property Name="OTCID" Id="{dcb2dd98-b4d1-0928-1caf-998c96e183e9}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY OTCID : OTCID]]></Declaration>
@@ -72,7 +134,9 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[internalOTCID := OTCID;]]></ST>
+          <ST><![CDATA[internalOTCID := OTCID;
+// internal flag, pauses track methods until fbxtsenvironment has provided OTCIDs for each track
+internalOTCIDIsSet := TRUE;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -147,10 +211,42 @@ END_FOR;]]></ST>
     <LineIds Name="Track.CurrentMoverList.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="Track.Cyclic">
+      <LineId Id="5" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="4" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
     <LineIds Name="Track.Id.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Track.Id.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="1" />
+    </LineIds>
+    <LineIds Name="Track.isInitialized.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Track.OTCID.Get">
@@ -158,6 +254,8 @@ END_FOR;]]></ST>
     </LineIds>
     <LineIds Name="Track.OTCID.Set">
       <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Track.RegisterMover">
       <LineId Id="7" Count="0" />

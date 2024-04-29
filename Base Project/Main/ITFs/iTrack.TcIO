@@ -17,6 +17,12 @@
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="Cyclic" Id="{e5bbb3c5-faa0-07b4-21a1-1182774a93d6}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Cyclic : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="Id" Id="{e69e0034-eced-090a-3e7c-cb98c2c8ba20}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Id : INT]]></Declaration>
       <Get Name="Get" Id="{fda8bdc8-fe34-01b4-33d1-6cb2adf3c8b1}">
@@ -25,6 +31,12 @@
       <Set Name="Set" Id="{eedf83fb-7109-04ab-2166-7221f61f50a7}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>
+    </Property>
+    <Property Name="isInitialized" Id="{b0b7211b-de4e-0de3-060d-549dd1bdb96f}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY isInitialized : bool]]></Declaration>
+      <Get Name="Get" Id="{6fdcd363-dd42-01b0-0a9a-0f3d6c5fd19a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
     </Property>
     <Property Name="OTCID" Id="{7742d262-0d22-0599-170c-d4a1b40d3165}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY OTCID : OTCID]]></Declaration>

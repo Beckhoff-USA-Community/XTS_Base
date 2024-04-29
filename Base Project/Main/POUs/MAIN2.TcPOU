@@ -31,16 +31,21 @@ VAR
 	
 	// ========= XTS Utility Diagnostics =========
 	
-	VisuDiag						: FB_VisuXtsDiag;
-	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
-	fbXtsEnvironmentVisu			: FB_XtsEnvironmentVisu;
-	stXtsEnvironmentConfiguration	: ST_XtsEnvironmentConfiguration;
 	nEnvironmentState				: INT;
 	
+	// ========= Example Application Variables =========
+
+    nextStation 		: USINT := 4;
+                    	
+    lowVelocity    		: LREAL := 200;  	// mm/s
+    mediumVelocity 		: LREAL := 800;  	// mm/s
+    highVelocity   		: LREAL := 1200; 	// mm/s
+	
+	StationTimer 		: ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[EnvironmentCyclic();
 
 CASE MainState OF
 	MainStateMachine_enum.MS_DISABLED: // ------------------------------------------
@@ -48,6 +53,7 @@ CASE MainState OF
 		// XTS is idle. Motive power is disabled.	
 		IF MainCommands.Enable THEN
 			MainCommands.Disable			:= FALSE;
+			MainCommands.Stop				:= FALSE;
 			MainState						:= MainStateMachine_enum.MS_INITIALIZING;
 		END_IF
 
@@ -68,14 +74,55 @@ CASE MainState OF
 		// Recovery logic
 		IF MainCommands.Start THEN
 			System.CompleteMoverList.MoveAllToStation( Station[0] );
-			MainState	:= MainStateMachine_enum.MS_RUN;
+			System.ResetStatistics();
+			// Reinit nextStation
+        	nextStation := 4;
+			MainState			:= MainStateMachine_enum.MS_RUN;
+		ELSIF MainCommands.Disable THEN
+			MainCommands.Enable	:= FALSE;
+			System.CompleteMoverList.HaltAll();
+			MainState			:= MainStateMachine_enum.MS_STOPPING;
+			
 		END_IF
 	
 	MainStateMachine_enum.MS_RUN: // -----------------------------------------------
 	
-		// blah blah blah
+		StationLogic();
+	
+        IF MainCommands.Stop THEN
+            MainCommands.Start 	:= FALSE;
+			System.CompleteMoverList.HaltAll();
+            MainState         	:= MainStateMachine_enum.MS_STOPPING;
+        ELSIF MainCommands.Disable THEN
+            MainCommands.Enable := FALSE;
+			System.CompleteMoverList.HaltAll();
+            MainState           := MainStateMachine_enum.MS_STOPPING;
+        END_IF
+		
+	MainStateMachine_enum.MS_STOPPING:
+	
+		IF System.CompleteMoverList.IsAllMoversHalted THEN
+			MainState			:= MainStateMachine_enum.MS_STOPPED;
+		END_IF
 		
 	MainStateMachine_enum.MS_STOPPED: // -------------------------------------------
+	
+	    IF MainCommands.Disable THEN
+            MainCommands.Enable 	:= FALSE;
+			MainCommands.Start		:= FALSE;
+			System.CompleteMoverList.DisableAll();
+            MainState           	:= MainStateMachine_enum.MS_DISABLING;
+        ELSIF MainCommands.Start THEN
+            MainCommands.Stop 		:= FALSE;
+            MainState         		:= MainStateMachine_enum.MS_ENABLED;
+        END_IF
+		
+	MainStateMachine_enum.MS_DISABLING: // -------------------------------------------
+	
+		IF System.CompleteMoverList.IsAllMoversDisabled THEN
+			MainState			:= MainStateMachine_enum.MS_DISABLED;
+		END_IF
+		
 	MainStateMachine_enum.MS_ERROR: // ---------------------------------------------
 	MainStateMachine_enum.MS_DEBUG: // ---------------------------------------------	
 	
@@ -85,24 +132,89 @@ END_CASE
 System.Cyclic();
 ]]></ST>
     </Implementation>
+    <Action Name="EnvironmentCyclic" Id="{9a903fbd-e9ae-032f-2559-00badaf47834}">
+      <Implementation>
+        <ST><![CDATA[CASE nEnvironmentState OF
+	0:	// ----------------------------------------- Enable Init Items
+	
+		// Enable init Info Server if needed
+		ENV.stXtsEnvironmentConfiguration.bEnableInitInfoServer		:= TRUE;
+		
+		// Enable init CA Group if needed
+		ENV.stXtsEnvironmentConfiguration.bEnableInitCaGroup		:= TRUE;
+		
+		// Set configuration of XtsUtility init
+		ENV.fbXtsEnvironment.P_XtsEnvironmentConfiguration			:= ENV.stXtsEnvironmentConfiguration;
+		
+		// Next step
+		nEnvironmentState	:= 1;
+		
+	1:	// ------------------------------------------ Init Environment
+		
+		// Start init
+		IF ENV.fbXtsEnvironment.Init(TRUE) THEN
+			// stop init
+			ENV.fbXtsEnvironment.Init(FALSE);
+			
+			// next step
+			nEnvironmentState	:= 2;
+		END_IF
+		
+	2:	// ------------------------------------------ Check for success
+	
+		// Check IsInitialized property
+		IF ENV.fbXtsEnvironment.P_IsInitialized THEN
+			// next step
+			nEnvironmentState	:= 3;
+		END_IF
+		
+	3:	// ------------------------------------------- Init Visu
+	
+		ENV.fbXtsEnvironmentVisu( ipTcIoXtsEnvironment := ENV.fbXtsEnvironment );
+		
+		// next step
+		nEnvironmentState	:= 4;
+		
+	4:	// ------------------------------------------- Init done
+
+		ENV.fbXtsEnvironmentVisu.Cycle();
+		
+END_CASE]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="Initializing" Id="{77eee1d6-568e-0448-2c64-a85af70fbf71}">
       <Implementation>
         <ST><![CDATA[
 
-	Station[0].Position				:= 1000;
-	Station[1].Position				:= 1200;
-	Station[2].Position				:= 1300;
-	
-	PositionTrigger[0].Position		:= 1000;
-	
-	Zone[0].StartPosition			:= 1500;
-	Zone[0].EndPosition				:= 2000;
+	// Initialize station positions
+	Station[0].Position 		:= 5;
+	Station[1].Position 		:= 750;
+	Station[2].Position 		:= 1200;
+	Station[3].Position 		:= 1300;
+	Station[4].Position 		:= 1400;
+
+	PositionTrigger[0].Position := 1500;
+	PositionTrigger[1].Position := 2000;
+	PositionTrigger[2].Position := 3500;
+
+	Zone[0].StartPosition		:= 3750;
+	Zone[0].EndPosition   		:= 750;
+
+	Zone[1].StartPosition 		:= 750;
+	Zone[1].EndPosition   		:= 1750;
+
+	Zone[2].StartPosition 		:= 1750;
+	Zone[2].EndPosition   		:= 2750;
+
+	Zone[3].StartPosition		:= 2750;
+	Zone[3].EndPosition   		:= 3750;
 	
 	System.CompleteMoverList.SetAllVelocity( 1E3 );
 	System.CompleteMoverList.SetAllAcceleration( 1E4 );
 	System.CompleteMoverList.SetAllDeceleration( 1E4 );
 	System.CompleteMoverList.SetAllJerk( 5E5 );
 	System.CompleteMoverList.SetAllGap( 85 );
+	System.CompleteMoverList.SetAllDirection( mcDirectionPositive );
 	]]></ST>
       </Implementation>
     </Action>
@@ -131,7 +243,9 @@ System.Cyclic();
 		END_FOR
 		
 		// Add all Tracks to the Mediator
-		FOR i := 0 TO GVL.NUM_TRACKS - 1 DO
+		// note track zero is a special case, so the loop is one larger than the rest of the initalization loops
+		FOR i := 0 TO GVL.NUM_TRACKS DO
+			Track[i].Id := UINT_TO_INT(i);
 			System.AddTrack( Track[i] );
 		END_FOR
 		
@@ -141,6 +255,70 @@ System.Cyclic();
 		END_FOR]]></ST>
       </Implementation>
     </Action>
+    <Action Name="StationLogic" Id="{ad15b1d3-f9a4-013e-29dd-5430b02980cb}">
+      <Implementation>
+        <ST><![CDATA[		(*Mover routing logic should be written here to define the system's operating behavior.
+		Station implementations, Position Trigger logic, etc. In general, you can remove the example code
+		here down to the short line break that looks like this: // ============= *)
+	
+        // Station 0 Logic
+        IF Station[0].MoverInPosition THEN
+            StationTimer[0](IN := TRUE, PT := T#1000MS);
+            IF StationTimer[0].Q THEN
+                Station[0].CurrentMover.SetVelocity(mediumVelocity);
+                Station[0].CurrentMover.MoveToStation(Station[1]);
+            END_IF
+        ELSE
+            StationTimer[0](IN := FALSE);
+        END_IF
+		
+        // Station 1 Logic		
+        IF Station[1].MoverInPosition THEN
+            StationTimer[1](IN := TRUE, PT := T#250MS);
+            IF StationTimer[1].Q THEN
+                Station[1].CurrentMover.SetVelocity(mediumVelocity);
+                Station[1].CurrentMover.MoveToStation(Station[nextStation]);
+                nextStation := nextStation - 1;
+                IF nextStation = 1 THEN
+                    nextStation := 4;
+                END_IF
+            END_IF
+        ELSE
+            StationTimer[1](IN := FALSE);
+        END_IF
+		
+		// Group of Stations 2, 3, and 4 Logic
+        IF Station[2].MoverInPosition AND Station[3].MoverInPosition AND Station[4].MoverInPosition THEN
+            StationTimer[2](IN := TRUE, PT := T#750MS);
+            IF StationTimer[2].Q THEN
+				StationTimer[2](IN := FALSE);
+
+                Station[2].CurrentMover.MoveVelocity(500);
+                Station[3].CurrentMover.MoveVelocity(500);
+                Station[4].CurrentMover.MoveVelocity(500);
+            END_IF
+        END_IF
+		
+        // Position Trigger 0 Logic
+        IF PositionTrigger[0].MoverPassedPosition THEN
+            PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
+            PositionTrigger[0].MuteCurrent();
+        END_IF
+		
+        // Position Trigger 1 Logic
+        IF PositionTrigger[1].MoverPassedPosition THEN
+            PositionTrigger[1].CurrentMover.SetVelocity(highVelocity);
+            PositionTrigger[1].MuteCurrent();
+        END_IF
+
+		// Position Trigger 2 Logic
+        IF PositionTrigger[2].MoverPassedPosition THEN
+            PositionTrigger[2].CurrentMover.SetVelocity(lowVelocity);
+            PositionTrigger[2].CurrentMover.MoveToStation(Station[0]);
+            PositionTrigger[2].MuteCurrent();
+        END_IF]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="MAIN2">
       <LineId Id="6" Count="1" />
       <LineId Id="5" Count="0" />
@@ -148,6 +326,7 @@ System.Cyclic();
       <LineId Id="34" Count="0" />
       <LineId Id="88" Count="0" />
       <LineId Id="35" Count="1" />
+      <LineId Id="359" Count="0" />
       <LineId Id="38" Count="0" />
       <LineId Id="37" Count="0" />
       <LineId Id="57" Count="0" />
@@ -162,32 +341,72 @@ System.Cyclic();
       <LineId Id="178" Count="0" />
       <LineId Id="176" Count="0" />
       <LineId Id="52" Count="0" />
-      <LineId Id="188" Count="0" />
+      <LineId Id="289" Count="0" />
       <LineId Id="200" Count="0" />
       <LineId Id="189" Count="0" />
       <LineId Id="197" Count="0" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="340" Count="1" />
       <LineId Id="199" Count="0" />
+      <LineId Id="303" Count="1" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="306" Count="0" />
+      <LineId Id="305" Count="0" />
       <LineId Id="198" Count="0" />
       <LineId Id="190" Count="0" />
       <LineId Id="59" Count="0" />
-      <LineId Id="201" Count="2" />
-      <LineId Id="61" Count="2" />
+      <LineId Id="328" Count="1" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="322" Count="1" />
+      <LineId Id="330" Count="0" />
+      <LineId Id="324" Count="2" />
+      <LineId Id="331" Count="0" />
+      <LineId Id="327" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="334" Count="5" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="342" Count="0" />
+      <LineId Id="344" Count="2" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="347" Count="3" />
+      <LineId Id="343" Count="0" />
+      <LineId Id="352" Count="2" />
+      <LineId Id="356" Count="1" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="62" Count="1" />
       <LineId Id="18" Count="0" />
       <LineId Id="21" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="192" Count="1" />
       <LineId Id="191" Count="0" />
     </LineIds>
+    <LineIds Name="MAIN2.EnvironmentCyclic">
+      <LineId Id="2" Count="44" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
     <LineIds Name="MAIN2.Initializing">
       <LineId Id="19" Count="0" />
-      <LineId Id="2" Count="14" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="20" Count="20" />
+      <LineId Id="10" Count="6" />
+      <LineId Id="41" Count="0" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="MAIN2.Registering">
       <LineId Id="2" Count="0" />
       <LineId Id="31" Count="0" />
       <LineId Id="30" Count="0" />
-      <LineId Id="3" Count="26" />
+      <LineId Id="3" Count="19" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="24" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN2.StationLogic">
+      <LineId Id="2" Count="58" />
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

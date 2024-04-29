@@ -9,9 +9,11 @@ TYPE MainStateMachine_enum :
 	MS_INITIALIZING		:= 10,
 	MS_ENABLED			:= 20,
 	MS_RUN				:= 30,
-	MS_STOPPED			:= 40,
-	MS_ERROR			:= 50,
-	MS_DEBUG			:= 60	
+	MS_STOPPING			:= 40,
+	MS_STOPPED			:= 50,
+	MS_DISABLING		:= 60,
+	MS_ERROR			:= 70,
+	MS_DEBUG			:= 80	
 );
 END_TYPE
 ]]></Declaration>

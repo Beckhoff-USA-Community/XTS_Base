@@ -35,6 +35,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="DisableAll" Id="{d1bc30a1-2326-0110-1e1d-60e4d87b0a39}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD DisableAll : iMoverList]]></Declaration>
+    </Method>
     <Method Name="EnableAll" Id="{538e372e-ce64-0d62-157f-b6c50867c4a3}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD EnableAll : iMoverList
 ]]></Declaration>
@@ -47,6 +50,23 @@ VAR_INPUT
     Direction : Tc2_MC2.MC_Direction; // Positive = find the most positive mover whose position is less than the Input. Negative = find the most negative mover whose position is greater than the input
 END_VAR]]></Declaration>
     </Method>
+    <Method Name="HaltAll" Id="{ec179683-03da-0f43-2da1-532fad375049}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD HaltAll : iMoverList
+
+]]></Declaration>
+    </Method>
+    <Property Name="IsAllMoversDisabled" Id="{69f50e8f-13e3-0cb8-0762-e62af910e889}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsAllMoversDisabled : bool]]></Declaration>
+      <Get Name="Get" Id="{7d931201-2102-0a4e-25df-7f386a4587ac}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="IsAllMoversHalted" Id="{4daae172-31cd-0386-200b-8fb5866bdbe9}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsAllMoversHalted : bool]]></Declaration>
+      <Get Name="Get" Id="{557d1e0d-87b7-0a58-3555-3d62535dd5bd}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="IsAllMoversReady" Id="{3a813e61-e4f7-047e-0dde-9e7e6afdfbc3}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY IsAllMoversReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{d07796c0-0944-0db8-3726-0bbe43c2aabe}">

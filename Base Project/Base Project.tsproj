@@ -56891,6 +56891,8 @@ and will return to Group State Standby when the situation permits.
 		</Io>
 	</Project>
 	<Mappings>
+		<MappingInfo Identifier="{08502001-0010-0500-0020-500810001205}" Id="#x02030020" Watchdog="08000000040000000400000004000000"/>
+		<MappingInfo Identifier="{08502001-0010-0500-0020-500850000403}" Id="#x02030010" Watchdog="08000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 3">
 			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Part 2^Module 15">
 				<Link VarA="Term 29 (AT2002-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>

@@ -10,7 +10,7 @@ VAR_INPUT
 	PositionTriggerArray	: ARRAY [0..GVL.NUM_POSITIONTRIGGERS-1] OF POINTER TO PositionTrigger;
 	StationArray			: ARRAY [0..GVL.NUM_STATIONS-1] OF POINTER TO Station;
 	ZoneArray				: ARRAY [0..GVL.NUM_ZONES-1] OF POINTER TO Zone;
-	TrackArray				: ARRAY [0..GVL.NUM_TRACKS-1] OF POINTER TO Track;	
+	TrackArray				: ARRAY [0..GVL.NUM_TRACKS] OF POINTER TO Track;	// track 0 is a special absolute case, this makes the array 1 larger than normal	
 
 	GROUP_REF				: AXES_GROUP_REF;
 	
@@ -351,7 +351,30 @@ FOR i := 0 TO SIZEOF( PositionTriggerArray ) / SIZEOF( PositionTriggerArray[i] )
 	IF PositionTriggerArray[i] <> 0 THEN
 		PositionTriggerArray[i]^.Cyclic();
 	END_IF
+END_FOR
+
+FOR i := 0 TO SIZEOF( TrackArray ) / SIZEOF( TrackArray[i] ) - 1 DO
+	IF TrackArray[i] <> 0 THEN
+		TrackArray[i]^.Cyclic();
+	END_IF
 END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetStatistics" Id="{03455d1c-c490-0e78-3526-b69b05e0917b}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ResetStatistics : BOOL
+VAR
+	i					: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// reset statistics at all postion triggers and stations
+FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS-1 DO
+	PositionTriggerArray[i]^.ResetStatistics();
+END_FOR
+FOR i := 0 TO GVL.NUM_STATIONS-1 DO
+	StationArray[i]^.ResetStatistics();
+END_FOR
+]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="Mediator">
@@ -473,6 +496,13 @@ END_FOR]]></ST>
       <LineId Id="23" Count="0" />
       <LineId Id="25" Count="1" />
       <LineId Id="24" Count="0" />
+      <LineId Id="44" Count="4" />
+      <LineId Id="43" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.ResetStatistics">
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="5" />
+      <LineId Id="12" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
