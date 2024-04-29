@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="MediatorGroupStatus" Id="{32999573-d701-00d8-1ee2-09643aad92ba}">
+    <Declaration><![CDATA[TYPE MediatorGroupStatus :
+STRUCT
+	Valid          			: BOOL;
+    Busy           			: BOOL;
+    GroupMoving    			: BOOL;
+    GroupHoming    			: BOOL;
+    GroupErrorStop 			: BOOL;
+    GroupNotReady  			: BOOL;
+    GroupStandby   			: BOOL;
+    GroupStopping  			: BOOL;
+    GroupDisabled  			: BOOL;
+    AllAxesStanding			: BOOL;
+    InPosition     			: BOOL;
+    Error          			: BOOL;
+    ErrorId        			: UDINT;
+	// custom statuses for this application
+	Enabled					: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

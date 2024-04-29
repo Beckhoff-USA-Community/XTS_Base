@@ -76,12 +76,6 @@ VAR
 	fbGearInPosAxisCA		: ARRAY[0..1] OF MC_GearInPosCA;
 	fbGearInPosMoverCA		: ARRAY[0..1] OF MC_GearInPosCA;
 	
-	fbGroupStatus			: MC_GroupReadStatus;
-	fbGroupEnable			: MC_GroupEnable;
-	fbGroupReset			: MC_GroupReset;
-	fbGroupStop				: MC_GroupStop;
-	
-	fbReadStatus			: MC_ReadStatus;
 	fbMoveRelCA				: ARRAY[0..1] OF MC_MoveRelativeCA;
 	
 	fbActivateTrack			: MC_ActivateTrack;
@@ -233,6 +227,9 @@ END_VAR
 VAR_IN_OUT
 	GroupReference		: AXES_GROUP_REF;
 END_VAR
+VAR
+	uGroupStatus			: MediatorGroupStatus;
+END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -279,104 +276,13 @@ CASE internalState OF
 		
 		IF fbReset.Done THEN
 			fbReset.Execute		:= FALSE;
-			internalState		:= MV_M1_READMODE;
+			Mediator.DetectMover1();
+			internalState		:= MV_M1_DELAY;
 		ELSIF fbReset.Error THEN
 			ErrorID				:= fbReset.ErrorID;
 			ErrorOrigin			:= CONCAT( InstancePath, '.fbReset' );
 			internalState		:= MV_ERROR;		
 		END_IF
-		
-	MV_M1_READMODE: // ------------------------------------------------------- begin checking for M1 detection mode setting
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		// todo: values may change. see issue #25 for update
-		fbReadM1DetectMode.NETID		:= '';
-		fbReadM1DetectMode.PORT			:= 351;
-		fbReadM1DetectMode.IDXGRP		:= GVL.pXtsProcessingUnit;
-		fbReadM1DetectMode.IDXOFFS		:= 16#03080246;
-		fbReadM1DetectMode.LEN			:= SIZEOF( IdDetectionMode );
-		fbReadM1DetectMode.DESTADDR		:= ADR( IdDetectionMode );
-		fbReadM1DetectMode.READ			:= TRUE;
-		
-		internalState	:= MV_M1_EVALMODE;
-		
-	MV_M1_EVALMODE: // ------------------------------------------------------- Determine detection mode setting
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-	
-		fbReadM1DetectMode.READ		:= FALSE;
-		
-		CASE IdDetectionMode OF
-			0:	internalState		:= MV_ENABLING;			// Mover 1 functionality is not configured, skip ahead to enabling the mover
-			1:	internalState		:= MV_M1_READSTATUS;	// Mover 1 functionality is configured, read detection status
-		END_CASE
-	
-	MV_M1_READSTATUS: // ------------------------------------------------------- Determine current M1 Detection Status
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbWriteM1Detect.WRITE			:= FALSE;
-		
-		fbReadM1DetectValid.NETID		:= '';
-		fbReadM1DetectValid.PORT		:= 351;
-		fbReadM1DetectValid.IDXGRP		:= GVL.pXtsProcessingUnit;
-		fbReadM1DetectValid.IDXOFFS		:= 16#03080251;
-		fbReadM1DetectValid.LEN			:= SIZEOF( IsIdDetectionValid );
-		fbReadM1DetectValid.DESTADDR	:= ADR( IsIdDetectionValid );
-		fbReadM1DetectValid.READ		:= TRUE;
-		
-		fbReadM1DetectActive.NETID		:= '';
-		fbReadM1DetectActive.PORT		:= 351;
-		fbReadM1DetectActive.IDXGRP		:= GVL.pXtsProcessingUnit;
-		fbReadM1DetectActive.IDXOFFS	:= 16#03080268;
-		fbReadM1DetectActive.LEN		:= SIZEOF( IsIdDetectionActive );
-		fbReadM1DetectActive.DESTADDR	:= ADR( IsIdDetectionActive );
-		fbReadM1DetectActive.READ		:= TRUE;
-		
-		internalState	:= MV_M1_EVALSTATUS;
-		
-	MV_M1_EVALSTATUS:	// ------------------------------------------------------- Determine to activate M1 Detect or ignore
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-	
-		fbReadM1DetectValid.READ		:= FALSE;
-		fbReadM1DetectActive.READ		:= FALSE;
-		
-		IF IsIdDetectionActive THEN
-			internalState		:= MV_M1_READSTATUS;	// M1 Detection is underway, but we need to wait until it completes
-		ELSIF IsIdDetectionValid THEN
-			internalState		:= MV_ENABLING;			// M1 Detection complete, ready to enable this mover
-		ELSE
-			internalState		:= MV_M1_DETECT;		// M1 Detection hasn't been started yet. So start it!
-		END_IF
- 
-	MV_M1_DETECT:	// ------------------------------------------------------- Begin M1 Detection
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbWriteM1Detect.NETID			:= '';
-		fbWriteM1Detect.PORT			:= 351;
-		fbWriteM1Detect.IDXGRP			:= GVL.pXtsProcessingUnit;
-		fbWriteM1Detect.IDXOFFS			:= 16#03080250;
-		fbWriteM1Detect.WRITE			:= TRUE;
-		
-		internalState	:= MV_M1_DELAY;	// go back to Read M1 Detect status to confirm it has completed
 		
 	MV_M1_DELAY:	// ------------------------------------------------------ delay to allow M1 Detect Completion
 	
@@ -385,11 +291,11 @@ CASE internalState OF
 		Error	:= FALSE;
 		ErrorID	:= 0;
 		
-		fbDelayM1Timer( IN := TRUE, PT := T#500MS );
+		fbDelayM1Timer( IN := Mediator.Mover1DetectionComplete, PT := T#500MS );
 		
 		IF fbDelayM1Timer.Q THEN
 			fbDelayM1Timer( IN := FALSE );
-			internalState	:= MV_M1_READSTATUS;
+			internalState	:= MV_ENABLING;
 		END_IF
 			
 	MV_ENABLING: // ------------------------------------------------------- axis is enabling
@@ -427,62 +333,21 @@ CASE internalState OF
 			InGroup						:= TRUE;
 			IdentInGroup				:= AxisReference.NcToPlc.AxisId - 1;
 			fbAddToGroup.Execute		:= FALSE;
-			internalState				:= MV_READGROUPSTATUS;
+			internalState				:= MV_ENABLEGROUP;
 		ELSIF fbAddToGroup.Error THEN
 			ErrorID						:= fbAddToGroup.ErrorId;
 			ErrorOrigin					:= CONCAT( InstancePath, '.fbAddToGroup' );
 			internalState				:= MV_ERROR;
 		END_IF
 		
-	MV_READGROUPSTATUS: // ------------------------------------------------------- check the status of the group
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbGroupStatus.Enable			:= TRUE;
-		
-		fbGroupStatus( AxesGroup := GroupReference );	// get current information
-		
-		IF fbGroupStatus.Valid AND fbGroupStatus.GroupErrorStop THEN
-			fbGroupReset.Execute		:= TRUE;
-		ELSIF fbGroupStatus.Valid AND fbGroupStatus.GroupDisabled THEN
-			fbGroupReset.Execute		:= FALSE;
-			internalState				:= MV_ENABLEGROUP;
-		ELSIF fbGroupStatus.Valid AND ( fbGroupStatus.GroupStandby OR fbGroupStatus.GroupMoving ) THEN
-			fbGroupReset.Execute		:= FALSE;
-			internalState				:= MV_RUN;
+	MV_ENABLEGROUP:	// ----------------------------------------------- have mediator enable group
+		uGroupStatus := Mediator.GroupStatus;
+		IF NOT uGroupStatus.Enabled THEN
+			Mediator.EnableGroup();
+		ELSE
+			internalState := MV_RUN;
 		END_IF
-		
-		IF fbGroupStatus.Error THEN
-			ErrorID						:= fbGroupStatus.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupStatus' );
-			internalState				:= MV_ERROR;
-		ELSIF fbGroupReset.Error THEN
-			ErrorID						:= fbGroupStatus.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupReset' );
-			internalState				:= MV_ERROR;
-		END_IF
-		
 	
-	MV_ENABLEGROUP: // ------------------------------------------------------- enable the group
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		fbGroupEnable.Execute			:= TRUE;
-		
-		IF fbGroupEnable.Done THEN
-			fbGroupEnable.Execute		:= FALSE;
-			internalState				:= MV_RUN;
-		ELSIF fbGroupEnable.Error THEN
-			ErrorID						:= fbGroupEnable.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupEnable' );
-			internalState				:= MV_ERROR;
-		END_IF
 		
 	MV_RUN: // ------------------------------------------------------- mover enabled, ready
 	
@@ -521,10 +386,6 @@ CASE internalState OF
 			fbGearInPosAxisCA[1].Execute	:= FALSE;
 		ELSIF fbHaltCA.Busy OR fbHaltCA.CommandAborted OR fbHaltCA.Done THEN
 			fbHaltCA.Execute			:= FALSE;
-		// This is different than the other similar cases, since a Stop command should prevent other commands from overriding it, thus
-		// the Execute needs to remain High until the command has fully completed.
-		ELSIF fbGroupStop.Done THEN
-			fbGroupStop.Execute			:= FALSE;
 		END_IF;
 		
 		THIS^.CyclicTrack();
@@ -562,10 +423,6 @@ CASE internalState OF
 			ErrorID					:= fbAddToGroup.ErrorID;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbAddToGroup' );
 			internalState			:= MV_ERROR;
-		ELSIF fbGroupStop.Error THEN
-			ErrorID					:= fbGroupStop.ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGroupStop' );
-			internalState			:= MV_ERROR;
 		ELSIF fbMoveRelCA[0].Error THEN
 			ErrorID					:= fbMoveRelCA[0].ErrorID;
 			ErrorOrigin 			:= CONCAT ( InstancePath, '.fbMoveRelCA[0]');
@@ -573,10 +430,6 @@ CASE internalState OF
 		ELSIF fbMoveRelCA[1].Error THEN
 			ErrorID					:= fbMoveRelCA[1].ErrorID;
 			ErrorOrigin 			:= CONCAT ( InstancePath, '.fbMoveRelCA[1]');
-			internalState			:= MV_ERROR;
-		ELSIF fbReadStatus.Valid AND fbReadStatus.ErrorStop THEN
-			ErrorID					:= fbReadStatus.Status.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbReadStatus' );
 			internalState			:= MV_ERROR;
 		ELSIF fbGearInPosMoverCA[0].Error THEN
 			ErrorID					:= fbGearInPosMoverCA[0].ErrorId;
@@ -612,8 +465,9 @@ CASE internalState OF
 		fbMoveRelCA[1].Execute		:= FALSE;
 		fbMoveAbsCA[0].Execute		:= FALSE;
 		fbMoveAbsCA[1].Execute		:= FALSE;
-				
-		IF fbReadStatus.ErrorStop = FALSE THEN
+		
+		uGroupStatus := Mediator.GroupStatus;
+		IF uGroupStatus.GroupErrorStop = FALSE THEN
 			fbHaltCA.Execute		:= TRUE;
 			//fbHaltCA.Deceleration	:= MotionParameters.Deceleration;
 			//fbHaltCA.Jerk			:= MotionParameters.Jerk;
@@ -710,14 +564,8 @@ fbHaltCA( Axis := AxisReference );
 fbAddToGroup( AxesGroup := GroupReference, Axis := AxisReference );
 fbRemoveFromGroup( AxesGroup := GroupReference );
 
-fbGroupStatus( AxesGroup := GroupReference );
-fbGroupEnable( AxesGroup := GroupReference );
-fbGroupReset( AxesGroup := GroupReference );
-fbGroupStop( AxesGroup := GroupReference );
-
 fbMoveAbsCA[0]( Axis := AxisReference );
 fbMoveAbsCA[1]( Axis := AxisReference );
-fbReadStatus( Enable := TRUE, Axis := AxisReference );
 fbMoveRelCA[0] ( Axis := AxisReference );
 fbMoveRelCA[1] ( Axis := AxisReference );
 
@@ -931,9 +779,9 @@ ELSE	// otherwise execute the command
 	// grab a timestamp of the command
 	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 	
-	fbGroupStop.Execute			:= TRUE;
-	fbGroupStop.Deceleration	:= MotionParameters.Deceleration;
-	fbGroupStop.Jerk			:= MotionParameters.Jerk;
+//	fbGroupStop.Execute			:= TRUE;
+//	fbGroupStop.Deceleration	:= MotionParameters.Deceleration;
+//	fbGroupStop.Jerk			:= MotionParameters.Jerk;
 	
 	memset( ADR( internalCurrentDestObjective ), 0, SIZEOF( internalCurrentDestObjective ));
 	internalCurrentMoveType		:= MoverCommandType_enum.MOVETYPE_NONE;
@@ -2017,19 +1865,35 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Cyclic">
-      <LineId Id="3" Count="140" />
-      <LineId Id="507" Count="13" />
-      <LineId Id="144" Count="135" />
+      <LineId Id="3" Count="43" />
+      <LineId Id="525" Count="0" />
+      <LineId Id="47" Count="6" />
+      <LineId Id="509" Count="11" />
+      <LineId Id="144" Count="42" />
+      <LineId Id="526" Count="1" />
+      <LineId Id="538" Count="0" />
+      <LineId Id="529" Count="1" />
+      <LineId Id="532" Count="1" />
+      <LineId Id="531" Count="0" />
+      <LineId Id="528" Count="0" />
+      <LineId Id="237" Count="37" />
+      <LineId Id="279" Count="0" />
       <LineId Id="465" Count="1" />
       <LineId Id="483" Count="1" />
       <LineId Id="487" Count="14" />
       <LineId Id="485" Count="0" />
       <LineId Id="502" Count="0" />
       <LineId Id="486" Count="0" />
-      <LineId Id="280" Count="45" />
+      <LineId Id="280" Count="13" />
+      <LineId Id="298" Count="7" />
+      <LineId Id="310" Count="15" />
       <LineId Id="468" Count="2" />
       <LineId Id="467" Count="0" />
-      <LineId Id="326" Count="132" />
+      <LineId Id="326" Count="14" />
+      <LineId Id="539" Count="0" />
+      <LineId Id="341" Count="95" />
+      <LineId Id="442" Count="2" />
+      <LineId Id="446" Count="12" />
       <LineId Id="476" Count="0" />
       <LineId Id="475" Count="0" />
       <LineId Id="478" Count="0" />

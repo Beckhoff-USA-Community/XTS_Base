@@ -20,8 +20,13 @@ END_VAR
 VAR
 
 	{attribute : hide}
-	internalMoverList		: MoverList;
-	internalEnvironmentIsReady : BOOL;
+	internalMoverList				: MoverList;
+	internalEnvironmentIsReady		: BOOL;
+	internalGroupStatus				: MediatorGroupStatus;
+	internalM1DetectFlag			: BOOL;
+	internalM1DetectState			: INT;
+	internalEnableGroupFlag			: BOOL;
+	internalEnableGroupState		: INT;
 	
 	// ========= XTS Utility Diagnostics =========
 	VisuDiag						: FB_VisuXtsDiag;
@@ -33,6 +38,12 @@ VAR
 	internalEnvironment				: I_TcIoXtsEnvironment;
 	internalXPU						: I_TcIoXtsProcessingUnit;
 	internalInfoServer				: I_TcIoXtsInfoServer;
+	
+	// ========= internal function blocks =========
+	fbGroupStatus					: MC_GroupReadStatus;
+	fbGroupEnable			: MC_GroupEnable;
+	fbGroupReset			: MC_GroupReset;
+	fbGroupStop				: MC_GroupStop;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -341,11 +352,9 @@ VAR
 	i: ULINT;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[// Handle all project cyclic calls
 
-// Handle all project cyclic calls
-
-FOR i := 0 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[i] ) - 1 DO
+FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
 	IF MoverArray[i] <> 0 THEN
 		MoverArray[i]^.Cyclic( GROUP_REF );			// could make this ca group addition clener
 		MoverArray[i]^.CyclicTrack();
@@ -353,25 +362,116 @@ FOR i := 0 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[i] ) - 1 DO
 	END_IF
 END_FOR
 
-FOR i := 0 TO SIZEOF( StationArray ) / SIZEOF( StationArray[i] ) - 1 DO
+FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
 	IF StationArray[i] <> 0 THEN
 		StationArray[i]^.Cyclic();
 	END_IF
 END_FOR
 
-FOR i := 0 TO SIZEOF( PositionTriggerArray ) / SIZEOF( PositionTriggerArray[i] ) - 1 DO
+FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
 	IF PositionTriggerArray[i] <> 0 THEN
 		PositionTriggerArray[i]^.Cyclic();
 	END_IF
 END_FOR
 
-FOR i := 0 TO SIZEOF( TrackArray ) / SIZEOF( TrackArray[i] ) - 1 DO
+FOR i := 0 TO GVL.NUM_TRACKS - 1 DO
 	IF TrackArray[i] <> 0 THEN
 		TrackArray[i]^.Cyclic();
 	END_IF
 END_FOR
 
-CyclicEnvironment();]]></ST>
+CyclicEnvironment();
+CyclicMover1();
+CyclicEnableGroup();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CyclicEnableGroup" Id="{29279241-cafd-03e6-374f-d434ad56f253}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD CyclicEnableGroup : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// cyclic calls
+fbGroupEnable( AxesGroup := GROUP_REF );
+fbGroupReset( AxesGroup := GROUP_REF );
+fbGroupStop( AxesGroup := GROUP_REF );
+
+// get group status for property
+fbGroupStatus.Enable := TRUE;
+fbGroupStatus( AxesGroup := GROUP_REF );
+internalGroupStatus.Valid                 := fbGroupStatus.Valid;
+internalGroupStatus.Busy                  := fbGroupStatus.Busy;
+internalGroupStatus.GroupMoving           := fbGroupStatus.GroupMoving;
+internalGroupStatus.GroupHoming           := fbGroupStatus.GroupHoming;
+internalGroupStatus.GroupErrorStop        := fbGroupStatus.GroupErrorStop;
+internalGroupStatus.GroupNotReady         := fbGroupStatus.GroupNotReady;
+internalGroupStatus.GroupStandby          := fbGroupStatus.GroupStandby;
+internalGroupStatus.GroupStopping         := fbGroupStatus.GroupStopping;
+internalGroupStatus.GroupDisabled         := fbGroupStatus.GroupDisabled;
+internalGroupStatus.AllAxesStanding       := fbGroupStatus.AllAxesStanding;
+internalGroupStatus.InPosition            := fbGroupStatus.InPosition;
+internalGroupStatus.Error                 := fbGroupStatus.Error;
+internalGroupStatus.ErrorId               := fbGroupStatus.ErrorId;
+// additional custom statuses are set in the state machine
+
+
+
+CASE internalEnableGroupState OF
+	0:	// wait for flag 
+		IF internalEnableGroupFlag	 AND NOT internalGroupStatus.Enabled THEN
+			internalEnableGroupState := 10;
+		END_IF;
+
+	10: // ------------------------------------------------------- check the status of the group
+	
+		IF fbGroupStatus.Valid AND fbGroupStatus.GroupErrorStop THEN
+			fbGroupReset.Execute		:= TRUE;
+		ELSIF fbGroupStatus.Valid AND fbGroupStatus.GroupDisabled THEN
+			fbGroupReset.Execute		:= FALSE;
+			internalEnableGroupState	:= 20;
+		ELSIF fbGroupStatus.Valid AND ( fbGroupStatus.GroupStandby OR fbGroupStatus.GroupMoving ) THEN
+			fbGroupReset.Execute		:= FALSE;
+			internalEnableGroupState	:= 100;
+		END_IF
+		
+		IF fbGroupStatus.Error THEN
+//			ErrorID						:= fbGroupStatus.ErrorId;
+//			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupStatus' );
+			internalEnableGroupState	:= 900;
+		ELSIF fbGroupReset.Error THEN
+//			ErrorID						:= fbGroupStatus.ErrorId;
+//			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupReset' );
+			internalEnableGroupState		:= MV_ERROR;
+		END_IF
+		
+	
+	20: // ------------------------------------------------------- enable the group
+		
+		fbGroupEnable.Execute			:= TRUE;
+		
+		IF fbGroupEnable.Done THEN
+			fbGroupEnable.Execute		:= FALSE;
+			internalEnableGroupState	:= 100;
+		ELSIF fbGroupEnable.Error THEN
+//			ErrorID						:= fbGroupEnable.ErrorId;
+//			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupEnable' );
+			internalEnableGroupState	:= 900;
+		END_IF
+		
+	100: // clean up flags and rewind
+		internalGroupStatus.Enabled := TRUE;
+		internalEnableGroupState := 0;
+		
+		
+END_CASE
+// catch error flag and reset custom status bit
+IF (fbGroupStatus.Error) THEN
+	internalGroupStatus.Enabled := FALSE;
+END_IF
+
+// always clear the triggering flag
+internalEnableGroupFlag := FALSE;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="CyclicEnvironment" Id="{bec7bc22-417c-060d-2998-493fbd5e5180}" FolderPath="Methods\">
@@ -432,6 +532,79 @@ END_VAR
 END_CASE]]></ST>
       </Implementation>
     </Method>
+    <Method Name="CyclicMover1" Id="{7d08ba4e-da2e-0f10-1c1f-401198736263}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD CyclicMover1 : BOOL
+VAR
+	eMoverIdDetectionMode : MoverIdDetectionMode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// monitor for the group reset flag and act on it
+CASE internalM1DetectState OF 
+	0:	// wait for flag and envrionment
+		IF internalM1DetectFlag AND EnvironmentIsReady AND_THEN NOT THIS^.Mover1DetectionComplete THEN
+ 			internalM1DetectState := 10;
+		END_IF;
+		
+	10:	// check for mover 1 mode
+		eMoverIdDetectionMode := XPU.GetMoverIdDetectionMode();
+		IF (eMoverIdDetectionMode = MoverIdDetectionMode.Mover1) THEN
+			// mover 1 detection sequence
+			internalM1DetectState := 100;
+		ELSE
+			// no detection required
+			internalM1DetectState := 200;
+		END_IF
+		
+	100: // check if mover 1 id is avtive
+		IF NOT (XPU.GetIsMoverIdDetectionActive() OR XPU.GetIsMoverIdDetectionValid()) THEN
+			// start the detection
+			XPU.TriggerMoverIdDetection();
+		END_IF;
+		internalM1DetectState := 110;
+		
+	110: // wait for group detection results
+		IF XPU.GetHasMoverIdDetectionError() THEN
+			// error state
+			internalM1DetectState := 900;
+		ELSIF XPU.GetIsMoverIdDetectionValid() AND NOT XPU.GetIsMoverIdDetectionActive() THEN
+			// detection complete
+			internalM1DetectState := 200;
+		END_IF;
+				
+	
+	200: // set flags and clean up
+		// flag is read directly from XPU in Mover1DetectionComplete property
+		internalM1DetectState := 0;
+		
+END_CASE
+
+// reset flag always
+internalM1DetectFlag := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DetectMover1" Id="{1d387785-e892-0967-22d4-73d2923e67ae}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD DetectMover1 : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// calling enable group only sets a group reset flag that is handled in Cyclic Group Reset
+// this effectively sums up requests from all movers into a single sequence that will handle the reset
+internalM1DetectFlag := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EnableGroup" Id="{a75c02a5-1ca0-0df7-3f91-6bd402a249c4}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD EnableGroup : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// calling enable group only sets a group reset flag that is handled in Cyclic Group Reset
+// this effectively sums up requests from all movers into a single sequence that will handle the reset
+internalEnableGroupFlag := TRUE;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="EnvironmentIsReady" Id="{45272fae-93d1-0503-0b16-fd82b7738745}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY EnvironmentIsReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{c1e17dfb-61a0-0ba8-0903-93fde5311796}">
@@ -454,6 +627,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="GroupStatus" Id="{8cef10f7-592f-09e2-234b-7fced8a70710}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY GroupStatus : MediatorGroupStatus]]></Declaration>
+      <Get Name="Get" Id="{ae50c7df-6021-08d8-2a2e-a8507f5fc38f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[GroupStatus := internalGroupStatus;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="InfoServer" Id="{816a507a-b5f1-077f-3d31-6cc9a0af8cb5}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY InfoServer : I_TcIoXtsInfoServer]]></Declaration>
       <Get Name="Get" Id="{880f5fd5-5a90-005a-341d-63c8b7f4f011}">
@@ -462,6 +646,18 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[InfoServer := internalInfoServer;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Mover1DetectionComplete" Id="{b3d53d33-3d35-07f8-35ed-d0dbe454a97c}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Mover1DetectionComplete : BOOL]]></Declaration>
+      <Get Name="Get" Id="{e92705b4-cdc3-0cc7-25dc-0275953572ce}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Mover1DetectionComplete := XPU.GetIsMoverIdDetectionValid() AND NOT XPU.GetIsMoverIdDetectionActive();
+]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -592,30 +788,32 @@ END_VAR
       <LineId Id="15" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.Cyclic">
-      <LineId Id="6" Count="0" />
-      <LineId Id="27" Count="1" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="19" Count="1" />
-      <LineId Id="18" Count="0" />
+      <LineId Id="117" Count="29" />
+      <LineId Id="116" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.CyclicEnableGroup">
       <LineId Id="22" Count="0" />
-      <LineId Id="21" Count="0" />
+      <LineId Id="24" Count="2" />
       <LineId Id="23" Count="0" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="44" Count="4" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="55" Count="0" />
+      <LineId Id="6" Count="15" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="89" Count="2" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="39" Count="21" />
+      <LineId Id="66" Count="9" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="92" Count="1" />
+      <LineId Id="95" Count="1" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="76" Count="5" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="99" Count="1" />
     </LineIds>
     <LineIds Name="Mediator.CyclicEnvironment">
       <LineId Id="6" Count="29" />
@@ -623,14 +821,54 @@ END_VAR
       <LineId Id="36" Count="14" />
       <LineId Id="5" Count="0" />
     </LineIds>
+    <LineIds Name="Mediator.CyclicMover1">
+      <LineId Id="5" Count="0" />
+      <LineId Id="28" Count="2" />
+      <LineId Id="34" Count="4" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="43" Count="3" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="47" Count="1" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="57" Count="3" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="70" Count="3" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="68" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.DetectMover1">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.EnableGroup">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
     <LineIds Name="Mediator.EnvironmentIsReady.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.Envrionment.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="Mediator.GroupStatus.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
     <LineIds Name="Mediator.InfoServer.Get">
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Mover1DetectionComplete.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.ResetStatistics">
       <LineId Id="5" Count="0" />
