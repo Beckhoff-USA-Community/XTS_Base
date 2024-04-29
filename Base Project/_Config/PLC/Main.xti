@@ -1343,7 +1343,7 @@ External Setpoint Generation:
 		</DataType>
 	</DataTypes>
 	<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="Main" PrjFilePath="..\..\Main\Main.plcproj" TmcFilePath="..\..\Main\Main.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Main\Main.tmc" TmcHash="{ADBBB5BC-53C9-7A52-56B0-4649163A384F}">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Main\Main.tmc" TmcHash="{DEDC1900-7477-2809-AAC6-4B44473C091B}">
 			<Name>Main Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="1">
@@ -1920,20 +1920,6 @@ External Setpoint Generation:
 				</Context>
 			</Contexts>
 			<InitSymbols>
-				<InitSymbol>
-					<Name>MAIN2.Track[0].OTCID</Name>
-					<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
-					<Comment><![CDATA[ internal track id for use with MC_ActivateTrack]]></Comment>
-					<AreaNo>#x00000003</AreaNo>
-					<Data>00000000</Data>
-				</InitSymbol>
-				<InitSymbol>
-					<Name>MAIN2.Track[1].OTCID</Name>
-					<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
-					<Comment><![CDATA[ internal track id for use with MC_ActivateTrack]]></Comment>
-					<AreaNo>#x00000003</AreaNo>
-					<Data>00000000</Data>
-				</InitSymbol>
 				<InitSymbol>
 					<Name>GVL.pXtsProcessingUnit</Name>
 					<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>

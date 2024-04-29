@@ -16,17 +16,7 @@ The track object is only necessary when using track management. For most applica
 
 ## Setup
 
-It is recommended, but not required, to declare Tracks as an array. Starting at the zero index is also recommended.
-```javascript
-// Instance declaration
-Track			: ARRAY [0..GVL.NUM_TRACKS] OF Track;
-
-```
-Tracks then need to have an ID and OTCID assigned to them. Index 0 should use 0 for both values as this is a special case for the absolute hardware position that may be useful during startup or recovery of some track configurations.
-
-The OTCID for each track can be set under the PLC Project > Main Instance > Symbol Initialization tab. MAIN.Track[0].OTCID should remain at 00000000.
-
-![Track OTCID](../Images/OTCIDAssignment.png)
+Tracks are declared as an array and should be numbered starting at 1 to match the numbering assigned by the XTS configurator. The provided code does this automatically and will find the correct hardware address for each track in the array during the initialization phase.
 
 Tracks must also be added to the Mediator object. By default, this is handled in the MAIN.Initialize ACTION
 
@@ -164,3 +154,5 @@ This property is read/write, but should only be written once during initializati
 > Stores the hardware id of the track object found in XTSProcessingUnit 1
 
 This property is read/write, but should only be written once during initialization and should not change during execution. It is used internally by Mover.ActivateTrack()
+
+By default during the initialization step all track OTCIDs are assigned automatically.

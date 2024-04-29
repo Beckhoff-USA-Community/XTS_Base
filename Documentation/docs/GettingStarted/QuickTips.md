@@ -46,12 +46,3 @@ For each Track set in the XTS Processing Unit set `Parameter > General > Polarit
 There are some additional considerations to be aware of when inverting the track direction, especially if the track direction is changed after portions of code have been written and tested.
 
 When looking for the next and previous movers on a system, for example when working with 2-up stations, movers that have been referenced directly such as Mover[i] and Mover[i+1] may no longer be in the expected order. Functions such as [`Mover.NextMover()`](../CodeReference/Mover.md#nextmover), [`Mover.PreviousMover()`](../CodeReference/Mover.md#previousmover) or [`Zone.CurrentMoverList.GetMoverByLocation`](../CodeReference/MoverList.md#getmoverbylocation) are the recommended methods will correctly handle an inverted track direction.
-
-
-### MAIN state machine is stuck at MS_ACTIVATING_TRACKS
-
-After reconfiguring the track shape or length, a new track hardware ID (`OTCID`) may be generated. The PLC needs to reference this new ID.
-
-Check that the OTCID for the track is set under the PLC Project > Main Instance > Symbol Initialization tab. `MAIN.Track[0].OTCID` should remain at `00000000`. You can select `Track 1` or other tracks from the drop down list to automatically selected the correct OTCID.
-
-![Track OTCID](../Images/OTCIDAssignment.png)
