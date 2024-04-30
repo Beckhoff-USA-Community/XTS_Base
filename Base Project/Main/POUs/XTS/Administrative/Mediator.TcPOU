@@ -21,7 +21,6 @@ VAR
 
 	{attribute : hide}
 	internalMoverList				: MoverList;
-	internalEnvironmentIsReady		: BOOL;
 	internalGroupStatus				: MediatorGroupStatus;
 	internalM1DetectFlag			: BOOL;
 	internalM1DetectState			: INT;
@@ -29,7 +28,6 @@ VAR
 	internalEnableGroupState		: INT;
 	
 	// ========= XTS Utility Diagnostics =========
-	VisuDiag						: FB_VisuXtsDiag;
 	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
 	fbXtsEnvironmentVisu			: FB_XtsEnvironmentVisu;
 	stXtsEnvironmentConfiguration	: ST_XtsEnvironmentConfiguration;	

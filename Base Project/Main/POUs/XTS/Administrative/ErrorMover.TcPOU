@@ -223,9 +223,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallMovePos ) > 1 THEN
+IF ( newCallTime - lastCallMoveSta ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The MoveToStation method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallMovePos		:= newCallTime;
+	lastCallMoveSta		:= newCallTime;
 END_IF
 
 ]]></ST>

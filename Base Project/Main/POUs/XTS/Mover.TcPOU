@@ -86,9 +86,6 @@ VAR
 	fbReadM1DetectActive	: ADSREAD;
 	fbWriteM1Detect			: ADSWRITE;
 	fbDelayM1Timer			: TON;
-	IdDetectionMode			: DINT;			// 0: Standard 1: Mover1
-	IsIdDetectionValid		: BOOL;			// M1 Detection has completed
-	IsIdDetectionActive		: BOOL;			// M1 Detection currently underway
 	
 	// vars to store system time of most recent method calls, for filtering event logger
 	
@@ -97,7 +94,6 @@ VAR
 	lastCallEnable		: LREAL;
 	lastCallGroupStop	: LREAL;
 	lastCallHalt		: LREAL;
-	lastCallLogEvent	: LREAL;
 	lastCallMovePos		: LREAL;
 	lastCallMoveSta		: LREAL;
 	lastCallMoveVel		: LREAL;
@@ -114,8 +110,6 @@ VAR
 	
 END_VAR
 VAR_IN_OUT
-	
-	GroupReference		: AXES_GROUP_REF;
 	
 END_VAR]]></Declaration>
     <Implementation>
