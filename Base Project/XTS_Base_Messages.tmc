@@ -1,2 +1,155 @@
 <?xml version="1.0"?>
-<TcModuleClass/>
+<TcModuleClass>
+	<DataTypes>
+		<DataType>
+			<Name GUID="{3148E5C4-541C-4FC9-AD27-F516DDA14931}">XtsBaseEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="1">UserEvent</Name>
+				<DisplayName TxtId=""><![CDATA[{0} | {1} | {2}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">MoverDisable</Name>
+				<DisplayName TxtId=""><![CDATA[{0} Disable command issued. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">MoverEnable</Name>
+				<DisplayName TxtId=""><![CDATA[{0} Enable command issued. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">MoverGroupStop</Name>
+				<DisplayName TxtId=""><![CDATA[{0} GroupStop command issued. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">MoverMoveToPosition</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveToPosition command issued. Commanded Position = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">MoverMoveToStation</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveToStation command issued. Commanded Station = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">MoverMoveVelocity</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveVelocity command issued. Commanded Velocity = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">MoverSetAcceleration</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetAcceleration command issued. Commanded Acceleration = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9">MoverSetDeceleration</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetDeceleration command issued. Commanded Decelaration = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="10">MoverSetDirection</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetDirection command issued. Commanded Direction = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="11">MoverSetJerk</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetJerk command issued. Commanded Jerk = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="12">MoverSetVelocity</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetVelocity command issued. Commanded Velocity = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="13">MoverSyncToMover</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SyncToMover command issued. MasterMover = {2}. GapDistance = {3}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="14">MoverHalt</Name>
+				<DisplayName TxtId=""><![CDATA[{0} Halt command issued. Commanded Deceleration = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="15">MoverSyncToAxis</Name>
+				<DisplayName TxtId=""><![CDATA[XtsBaseEventClassEvent15_DisplayText]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="16">MoverActivateTrack</Name>
+				<DisplayName TxtId=""><![CDATA[{0} ActivateTrack command issued. TrackId: {1} Source: {2}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="17">MoverActivateTrackComplete</Name>
+				<DisplayName TxtId=""><![CDATA[{0} ActivateTrack command complete. TrackId: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="18">MoverMoveToPositionOverload</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveToPosition command overloaded buffer. Commanded Position = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="19">MoverMoveToStationOverload</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveToStation command overloaded buffer. Commanded Station = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="20">MoverSyncToMoverOverload</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SyncToMover command overloaded buffer. MasterMover = {2}. GapDistance = {3}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="21">MoverSyncToAxisOverload</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SyncToAxis command overloaded buffer. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="22">MoverMoveVelocityOverload</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MoveVelocity command overloaded buffer. Commanded Velocity = {2}. Source: {1}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="23">MoverSetGap</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetGap command issued. Commanded Gap = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="24">PositionTriggerMuteCurrent</Name>
+				<DisplayName TxtId=""><![CDATA[{0} MuteCurrent command issued. Mover Number = {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="25">ValidateTrackError</Name>
+				<DisplayName TxtId=""><![CDATA[{0} Motion command called on mover with invalid track. Source: {1}]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="26">fbGroupEnable</Name>
+				<DisplayName TxtId=""><![CDATA[{0} .fbGroupEnable Error {1}]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="27">fbGroupStatus</Name>
+				<DisplayName TxtId=""><![CDATA[{0} .fbGroupStatus Error {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="28">fbGroupReset</Name>
+				<DisplayName TxtId=""><![CDATA[{0} .fbGroupReset Error {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{4BDC38D5-09DA-4A12-9EF7-B1149E5348D6}"/>
+				<Hide GUID="{4F1FD198-5075-468A-8997-D9F532DF8CE0}"/>
+				<Hide GUID="{19200DE0-6EF3-480E-BA12-D962B66814A5}"/>
+				<Hide GUID="{8FA935DE-0979-4AB5-9248-1D7D0A6F5372}"/>
+			</Hides>
+		</DataType>
+	</DataTypes>
+</TcModuleClass>

@@ -16,10 +16,16 @@ VAR_INPUT
 	
 END_VAR
 VAR_OUTPUT
+	Error			: BOOL;			// error is currently active
+	ErrorID			: UDINT;		// errorID of the active error
+	ErrorOrigin		: STRING;		// error source, in case of errored internal function block
 END_VAR
 VAR
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	{attribute 'hide'}
+	InstancePath		: STRING;	// instance naming, for diagnostics purposes
 
-	{attribute : hide}
 	internalMoverList				: MoverList;
 	internalGroupStatus				: MediatorGroupStatus;
 	internalM1DetectFlag			: BOOL;
@@ -38,7 +44,7 @@ VAR
 	internalInfoServer				: I_TcIoXtsInfoServer;
 	
 	// ========= internal function blocks =========
-	fbGroupStatus					: MC_GroupReadStatus;
+	fbGroupStatus			: MC_GroupReadStatus;
 	fbGroupEnable			: MC_GroupEnable;
 	fbGroupReset			: MC_GroupReset;
 	fbGroupStop				: MC_GroupStop;
@@ -387,14 +393,14 @@ CyclicEnableGroup();]]></ST>
       <Declaration><![CDATA[METHOD CyclicEnableGroup : BOOL
 VAR_INPUT
 END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// cyclic calls
-fbGroupEnable( AxesGroup := GROUP_REF );
-fbGroupReset( AxesGroup := GROUP_REF );
-fbGroupStop( AxesGroup := GROUP_REF );
+VAR_INST
+	MsgCreate		: FB_TcMessage;	
+END_VAR
+VAR
 
-// get group status for property
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// get group status for property
 fbGroupStatus.Enable := TRUE;
 fbGroupStatus( AxesGroup := GROUP_REF );
 internalGroupStatus.Valid                 := fbGroupStatus.Valid;
@@ -433,13 +439,17 @@ CASE internalEnableGroupState OF
 		END_IF
 		
 		IF fbGroupStatus.Error THEN
-//			ErrorID						:= fbGroupStatus.ErrorId;
-//			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupStatus' );
+			ErrorID						:= fbGroupStatus.ErrorId;
+			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupStatus' );
+			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupStatus,0 );
+			MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDINT(THIS^.ErrorID);
 			internalEnableGroupState	:= 900;
 		ELSIF fbGroupReset.Error THEN
-//			ErrorID						:= fbGroupStatus.ErrorId;
-//			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupReset' );
-			internalEnableGroupState		:= MV_ERROR;
+			ErrorID						:= fbGroupReset.ErrorId;
+			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupReset' );
+			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupReset,0 );
+			MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDINT(THIS^.ErrorID);
+			internalEnableGroupState	:= 900;
 		END_IF
 		
 	
@@ -451,8 +461,11 @@ CASE internalEnableGroupState OF
 			fbGroupEnable.Execute		:= FALSE;
 			internalEnableGroupState	:= 100;
 		ELSIF fbGroupEnable.Error THEN
-//			ErrorID						:= fbGroupEnable.ErrorId;
-//			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupEnable' );
+			ErrorID						:= fbGroupEnable.ErrorId;
+			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupEnable' );
+			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupEnable,0 );
+			MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDINT(THIS^.ErrorID);
+			MsgCreate.Send(0);
 			internalEnableGroupState	:= 900;
 		END_IF
 		
@@ -460,12 +473,23 @@ CASE internalEnableGroupState OF
 		internalGroupStatus.Enabled := TRUE;
 		internalEnableGroupState := 0;
 		
+	900: // error
+		Error := TRUE;
+		internalGroupStatus.Enabled := FALSE;
+		
 		
 END_CASE
+
 // catch error flag and reset custom status bit
 IF (fbGroupStatus.Error) THEN
+	Error := TRUE;
 	internalGroupStatus.Enabled := FALSE;
 END_IF
+
+// cyclic calls
+fbGroupEnable( AxesGroup := GROUP_REF );
+fbGroupReset( AxesGroup := GROUP_REF );
+fbGroupStop( AxesGroup := GROUP_REF );
 
 // always clear the triggering flag
 internalEnableGroupFlag := FALSE;
@@ -790,9 +814,6 @@ END_VAR
       <LineId Id="116" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.CyclicEnableGroup">
-      <LineId Id="22" Count="0" />
-      <LineId Id="24" Count="2" />
-      <LineId Id="23" Count="0" />
       <LineId Id="6" Count="15" />
       <LineId Id="5" Count="0" />
       <LineId Id="28" Count="1" />
@@ -802,13 +823,27 @@ END_VAR
       <LineId Id="86" Count="0" />
       <LineId Id="85" Count="0" />
       <LineId Id="32" Count="1" />
-      <LineId Id="39" Count="21" />
-      <LineId Id="66" Count="9" />
+      <LineId Id="39" Count="12" />
+      <LineId Id="125" Count="1" />
+      <LineId Id="52" Count="3" />
+      <LineId Id="123" Count="1" />
+      <LineId Id="56" Count="4" />
+      <LineId Id="66" Count="8" />
+      <LineId Id="121" Count="1" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="75" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="92" Count="1" />
       <LineId Id="95" Count="1" />
+      <LineId Id="101" Count="3" />
       <LineId Id="94" Count="0" />
-      <LineId Id="76" Count="5" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="111" Count="3" />
+      <LineId Id="110" Count="0" />
       <LineId Id="98" Count="0" />
       <LineId Id="97" Count="0" />
       <LineId Id="99" Count="1" />
