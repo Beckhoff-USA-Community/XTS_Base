@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="MAIN" Id="{0790caa7-8a3f-4f91-b0f8-9ebb3db3858d}" SpecialFunc="None">
+  <POU Name="MAIN" Id="{c992ed33-41fe-02c4-17ef-23123b9a5b23}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
-VAR
+VAR	
 
 	// ========= System Control / FSM Variables =========
 	
-	MainCommands 		: MainCommands_typ; 	// command struct for cycling thru the state machine
-	MainState    		: MainState_enum;   	// enumeration for the Main state machine
+	MainCommands 		: MainCommands_typ; 		// command struct for cycling thru the state machine
+	MainState    		: MainStateMachine_enum;   	// enumeration for the Main state machine
+	System				: Mediator;					// System-level control object
 
 	// ========= Linked NC Variables & References =========
 	
 	Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
-	Mediator			: Mediator;
 	
 	// ========= Objectives & Parameters =========
 
@@ -24,265 +24,195 @@ VAR
 	Track				: ARRAY[0..GVL.NUM_TRACKS] OF Track;
 	Zone				: ARRAY[0..GVL.NUM_ZONES-1] OF Zone;
 	
-    // ========= Example Application Variables =========
+    // ========= Helper, State, & Index Variables =========
+	
+    i                	: UINT; 	// index variable; gets reused in various FOR loops
+    n                	: UINT; 	// secondary index variable, for enabling movers
+	
+	// ========= Example Application Variables =========
 
     nextStation 		: USINT := 4;
                     	
     lowVelocity    		: LREAL := 200;  	// mm/s
     mediumVelocity 		: LREAL := 800;  	// mm/s
     highVelocity   		: LREAL := 1200; 	// mm/s
-
-    // ========= Helper, State, & Index Variables =========
 	
-    i                	: UINT; 	// index variable; gets reused in various FOR loops
-    n                	: UINT; 	// secondary index variable, for enabling movers
-    allMoversEnabled 	: BOOL; 	// helper flag for verifying enable status of all movers
-	allMoverTracksEnabled : BOOL;	// helper flag for verifying track active status of all movers
-	allMoversDisabled	: BOOL;		// helper flag for verifying disable status of all movers
-	allMoversHalted		: BOOL;		// helper flag for verifying halt status of all movers
-	iXpuTracks			: UINT;		// helper count of tracks available in XPU
-
-    StationTimer 		: ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells	
-	
-	// ========= XTS Utility Diagnostics =========
-	
-	VisuDiag						: FB_VisuXtsDiag;
-	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
-	fbXtsEnvironmentVisu			: FB_XtsEnvironmentVisu;
-	stXtsEnvironmentConfiguration	: ST_XtsEnvironmentConfiguration;
-	nEnvironmentState				: INT;
-	
-END_VAR]]></Declaration>
+	StationTimer 		: ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells
+END_VAR
+]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-
-// Initialize, connect objects with the mediator, and update diagnostic features
-Initialize();
-
-
-(* ======================================================================================
-
---- XTS Starter Project ---
-
-This MAIN (PRG) is intended to serve as an example, which can be modified to suit your specific application.
-
-No programming changes should be necessary inside the provided XTS objects / function block definitions.
-They are intended to be simply instantiated and controlled via the provided methods and properties.
-However the objects are provided as open-source for modification and extension as needed.
-
-Documentation for these objects can be found online at:
-https://beckhoff-usa-community.github.io/XTS_Base/
-
-Bug reports, new feature requests, and general feedback is always welcome on our Github page.
-For any other questions, please reach out to your local Application Engineer.
-
-- Beckhoff USA Advanced Applications Group
-
-====================================================================================== *)
-
-	
 CASE MainState OF
-    MS_DISABLED: // --------------------------------------------------------- IDLE STATE
-		(*Wait here until an operator issues a MainCommand to Enable the system. 
-		Disallow Start and Stop commands until the system has been Enabled*)
+	MainStateMachine_enum.MS_DISABLED: // ------------------------------------------
 	
-        MainCommands.Start		:= FALSE;
-		MainCommands.Stop		:= FALSE;
-		
-        IF MainCommands.Enable THEN
-            MainCommands.Disable := FALSE;
-            MainState            := MS_INITIALIZING_XPU;
-        END_IF
-		
-	MS_INITIALIZING_XPU:
-		// initialization is handled above in the MAIN.Initialize() action
-		// here we wait for it to complete
-		IF fbXtsEnvironment.P_IsInitialized THEN
-			MainState            := MS_INITIALIZING_MOVERS;
-		END_IF;
+		// XTS is idle. Motive power is disabled.	
+		IF MainCommands.Enable THEN
+			MainCommands.Disable			:= FALSE;
+			MainCommands.Stop				:= FALSE;
+			MainState						:= MainStateMachine_enum.MS_INITIALIZING;
+		END_IF
 
-    MS_INITIALIZING_MOVERS: // --------------------------------------------- SET MOVER MOTION PARAMETERS
-		(*Initialize Mover motion parameters via a Parameter Set. Once complete, step
-		forward to begin Enabling movers on the system*)
-		
-		ParameterSet.Jerk         := 1E5; // mm/s3
-		ParameterSet.Acceleration := 1E4; // mm/s2
-		ParameterSet.Deceleration := 1E4; // mm/s2
-		ParameterSet.Velocity     := 1E3; // mm/s
-		ParameterSet.Direction    := mcDirectionPositive;
-		ParameterSet.Gap		  := 85.0; // mm
-
-        FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-            Mover[i].MotionParameters 			:= ParameterSet;
+	MainStateMachine_enum.MS_INITIALIZING: // --------------------------------------
+	
+		Registering();			// Add all objectives & movers to the system-level Mediator object
+		Initializing();			// Set basic application parameters for the objects
 			
-			Mover[i].Mediator					REF= Mediator;
-			Mover[i].Mediator.MoverArray[i]		:= ADR(Mover[i]);
-        END_FOR
+		System.CompleteMoverList.EnableAll();
+		System.CompleteMoverList.ActivateAllTrack( Track[1] );
+		
+		IF System.CompleteMoverList.IsAllTrackReady AND System.CompleteMoverList.IsAllMoversReady THEN
+			MainState	:= MainStateMachine_enum.MS_ENABLED;
+		END_IF
 		
 		IF MainCommands.Disable THEN
-			MainCommands.Enable		:= FALSE;
-			MainState				:= MS_DISABLED;
+			MainCommands.Enable	:= FALSE;
+			System.CompleteMoverList.DisableAll();
+			MainState			:= MainStateMachine_enum.MS_DISABLING;
+		END_IF
+	
+	MainStateMachine_enum.MS_ENABLED:	// -------------------------------------------
+	
+		// Recovery logic
+		IF MainCommands.Start THEN
+			System.CompleteMoverList.SetAllVelocity(mediumVelocity).MoveAllToStation( Station[0] );
+			System.ResetStatistics();
+			// Reinit nextStation
+        	nextStation := 4;
+			MainState			:= MainStateMachine_enum.MS_RUN;
+		ELSIF MainCommands.Disable THEN
+			MainCommands.Enable	:= FALSE;
+			System.CompleteMoverList.HaltAll();
+			MainState			:= MainStateMachine_enum.MS_STOPPING;
+			
+		END_IF
+	
+	MainStateMachine_enum.MS_RUN: // -----------------------------------------------
+	
+		StationLogic();
+        IF System.GroupError THEN
+			// stop on group error user must go through disable/enable to recover
+			MainCommands.Start	:= FALSE;
+			MainState 			:= MainStateMachine_enum.MS_STOPPING;
 		ELSIF MainCommands.Stop THEN
-			MainCommands.Stop		:= FALSE;
-			MainCommands.Disable	:= TRUE;
-			MainCommands.Start		:= FALSE;
-			MainState				:= MS_DISABLED;
-		ELSIF MainCommands.Enable THEN
-        	MainState 				:= MS_ONESHOT_ENABLE;
-		END_IF
-
-	MS_ONESHOT_ENABLE:	// -------------------------------------------------- SINGLE-CYCLE ISSUE ENABLE COMMANDS
-		(*Begin Enabling movers by calling Mover.Enable(). Methods in this project
-		are intended to be called once, although they will function correctly if called repeatedly*)
-
-		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-			Mover[i].Enable();
-		END_FOR
-
-		MainState		:= MS_ENABLING_MOVERS;
-	
-    MS_ENABLING_MOVERS: // -------------------------------------------------- RESETTING AND ENABLING AXES
-		(*Wait here until all movers have Enabled. This means that the Axis has
-		fully energized, and also that all Collision Avoidance grouping and Mover 1 detection
-		has finished. If the state machine gets stuck in this state, check the Error output
-		of an individual Mover to see what the issue is. A common cause is forgetting to link
-		Mover NC Axes to the AXIS_REF inside the PLC*)
-
-        allMoversEnabled := TRUE; // default ...
-
-        FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-            IF Mover[i].Ready = FALSE THEN
-                allMoversEnabled 		:= FALSE;
-            END_IF
-        END_FOR
-
-        IF allMoversEnabled THEN
-			IF MainCommands.Disable THEN
-				MainCommands.Enable		:=FALSE;
-            	MainState				:= MS_ONESHOT_DISABLE;
-			ELSIF MainCommands.Stop	 THEN
-				MainCommands.Start		:=FALSE;
-				MainState				:= MS_ONESHOT_STOP;
-			ELSIF MainCommands.Enable THEN
-	        	MainState 				:= MS_INITIALIZING_OBJECTIVES;
-			END_IF
-        END_IF
-
-    MS_INITIALIZING_OBJECTIVES: // --------------------------------------------- WRITING OBJECTIVE PARAMETERS
-		(*Initialize Station positions, Position Trigger positions, Zones etc. *)
-
-        // Initialize station positions
-        Station[0].Position 		:= 5;
-        Station[1].Position 		:= 750;
-        Station[2].Position 		:= 1200;
-        Station[3].Position 		:= 1300;
-        Station[4].Position 		:= 1400;
-
-        PositionTrigger[0].Position := 1500;
-        PositionTrigger[1].Position := 2000;
-        PositionTrigger[2].Position := 3500;
-
-        Zone[0].StartPosition		:= 3750;
-        Zone[0].EndPosition   		:= 750;
-
-        Zone[1].StartPosition 		:= 750;
-        Zone[1].EndPosition   		:= 1750;
-
-        Zone[2].StartPosition 		:= 1750;
-        Zone[2].EndPosition   		:= 2750;
-
-        Zone[3].StartPosition		:= 2750;
-        Zone[3].EndPosition   		:= 3750;
-		
-		// give all tracks their ID number and hardware id
-		FOR i := 0 TO GVL.NUM_TRACKS DO
-			Track[i].Id := UINT_TO_INT(i);
-		END_FOR
-		
-		MainState := MS_INITIALIZE_TRACKS;
-		
-	MS_INITIALIZE_TRACKS:
-		// get count of tracks from XPU
-		iXpuTracks := fbXtsEnvironment.XpuTcIo(1).P_TrackCount;
-		// to avoid array overruns use the minimum available number of tracks between XPU and GVL
-		FOR i := 1 TO MIN(iXpuTracks, GVL.NUM_TRACKS) DO
-			Track[i].OTCID := fbXtsEnvironment.XpuTcIo(1).P_TrackOids[i];
-		END_FOR
-		MainState := MS_ACTIVATE_TRACKS;
-		
-	MS_ACTIVATE_TRACKS:
-		// activate all movers on track[1]
-		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-            Mover[i].ActivateTrack(Track[1]);
-        END_FOR
-		
-		MainState := MS_WAIT_FOR_TRACKS;
-	
-	MS_WAIT_FOR_TRACKS:
-		// wait for all movers to activate their tracks
-		
-		allMoverTracksEnabled := TRUE;
-		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-			IF (NOT Mover[i].IsTrackReady) THEN
-            	allMoverTracksEnabled := FALSE;
-			END_IF;
-        END_FOR
-		IF (allMoverTracksEnabled) THEN
-			MainState := MS_ENABLED;	
-		END_IF
-
-    MS_ENABLED: // ------------------------------------------------------------- MOVERS ENABLED, STOPPED
-		(*In this state, Movers should be energized and holding their position. They should wait
-		until a Start command is issued. This is also a good state to include basic Recovery steps.
-		Our example shows a simple use-case involving Zones for localized recovery*)
-
-		MainCommands.Stop	:= FALSE;
-	
-        IF MainCommands.Start THEN
-
-            // ===== RECOVERY LOGIC =====
-
-            (*
-			Recovery is typically very application-specific. Each implementation will need to determine
-			what to do with work-in-progres, rejects, movers with unknown product status, etc.s
-			*)
-
-            // Register all movers with all Zones, for recovery
-            FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-                Zone[0].RegisterMover( Mover[i] );
-                Zone[1].RegisterMover( Mover[i] );
-                Zone[2].RegisterMover( Mover[i] );
-                Zone[3].RegisterMover( Mover[i] );
-				
-				PositionTrigger[0].RegisterMover( Mover[i] );
-				PositionTrigger[1].RegisterMover( Mover[i] );
-				PositionTrigger[2].RegisterMover( Mover[i] );
-            END_FOR
-			
-            Zone[0].CurrentMoverList.SetAllVelocity(800).MoveAllToStation(Station[0]);
-            Zone[1].CurrentMoverList.SetAllVelocity(600).MoveAllToStation(Station[0]);
-            Zone[2].CurrentMoverList.SetAllVelocity(400).MoveAllToStation(Station[0]);
-            Zone[3].CurrentMoverList.SetAllVelocity(200).MoveAllToStation(Station[0]);
-			
-			// reset all statistics
-			FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
-				Station[i].ResetStatistics();
-			END_FOR			
-			FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
-				PositionTrigger[i].ResetStatistics();
-			END_FOR
-
-            // ===== END =====
-
-            MainState			:= MS_RUN;
-
+            MainCommands.Start 	:= FALSE;
+			System.CompleteMoverList.HaltAll();
+            MainState         	:= MainStateMachine_enum.MS_STOPPING;
         ELSIF MainCommands.Disable THEN
             MainCommands.Enable := FALSE;
-            MainState           := MS_ONESHOT_STOP;
+			System.CompleteMoverList.HaltAll();
+            MainState           := MainStateMachine_enum.MS_STOPPING;
         END_IF
+		
+	MainStateMachine_enum.MS_STOPPING:
+	
+		IF System.CompleteMoverList.IsAllMoversHalted THEN
+			MainState			:= MainStateMachine_enum.MS_STOPPED;
+		END_IF
+		
+	MainStateMachine_enum.MS_STOPPED: // -------------------------------------------
+	
+	    IF MainCommands.Disable THEN
+            MainCommands.Enable 	:= FALSE;
+			MainCommands.Start		:= FALSE;
+			MainCommands.Stop		:= FALSE;
+			System.CompleteMoverList.DisableAll();
+            MainState           	:= MainStateMachine_enum.MS_DISABLING;
+        ELSIF MainCommands.Start THEN
+            MainCommands.Stop 		:= FALSE;
+            MainState         		:= MainStateMachine_enum.MS_ENABLED;
+        END_IF
+		
+	MainStateMachine_enum.MS_DISABLING: // -------------------------------------------
+	
+		IF System.CompleteMoverList.IsAllMoversDisabled THEN
+			MainState			:= MainStateMachine_enum.MS_DISABLED;
+		END_IF
+		
+	MainStateMachine_enum.MS_ERROR: // ---------------------------------------------
+	MainStateMachine_enum.MS_DEBUG: // ---------------------------------------------	
+	
 
-    MS_RUN: // --------------------------------------------------------------- OPERATING
-		(*Mover routing logic should be written here to define the system's operating behavior.
+END_CASE
+
+System.Cyclic();
+]]></ST>
+    </Implementation>
+    <Action Name="Initializing" Id="{77eee1d6-568e-0448-2c64-a85af70fbf71}">
+      <Implementation>
+        <ST><![CDATA[
+
+	// Initialize station positions
+	Station[0].Position 		:= 5;
+	Station[1].Position 		:= 750;
+	Station[2].Position 		:= 1200;
+	Station[3].Position 		:= 1300;
+	Station[4].Position 		:= 1400;
+
+	PositionTrigger[0].Position := 1500;
+	PositionTrigger[1].Position := 2000;
+	PositionTrigger[2].Position := 3500;
+
+	Zone[0].StartPosition		:= 3750;
+	Zone[0].EndPosition   		:= 750;
+
+	Zone[1].StartPosition 		:= 750;
+	Zone[1].EndPosition   		:= 1750;
+
+	Zone[2].StartPosition 		:= 1750;
+	Zone[2].EndPosition   		:= 2750;
+
+	Zone[3].StartPosition		:= 2750;
+	Zone[3].EndPosition   		:= 3750;
+	
+	System.CompleteMoverList.SetAllVelocity( 1E3 );
+	System.CompleteMoverList.SetAllAcceleration( 1E4 );
+	System.CompleteMoverList.SetAllDeceleration( 1E4 );
+	System.CompleteMoverList.SetAllJerk( 5E5 );
+	System.CompleteMoverList.SetAllGap( 85 );
+	System.CompleteMoverList.SetAllDirection( mcDirectionPositive );
+	]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="Registering" Id="{ef3ef836-2b88-0099-2899-1cd10004220b}">
+      <Implementation>
+        <ST><![CDATA[	
+
+		// Add all Movers to the Mediator
+		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+			System.AddMover( Mover[i] );
+		END_FOR
+	
+		// Add all Mover Lists to the Mediator
+		FOR i := 0 TO GVL.NUM_MOVERLISTS - 1 DO
+			System.AddMoverList( MoverList[i] );
+		END_FOR
+		
+		// Add all PositionTriggers to the Mediator
+		FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
+			System.AddPositionTrigger( PositionTrigger[i] );
+		END_FOR
+		
+		// Add all Stations to the Mediator
+		FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
+			System.AddStation( Station[i] );
+		END_FOR
+		
+		// Add all Tracks to the Mediator
+		// note track zero is a special case, so the loop is one larger than the rest of the initalization loops
+		FOR i := 0 TO GVL.NUM_TRACKS DO
+			Track[i].Id := UINT_TO_INT(i);
+			System.AddTrack( Track[i] );
+		END_FOR
+		
+		// Add all Zones to the Mediator
+		FOR i := 0 TO GVL.NUM_ZONES - 1 DO
+			System.AddZone( Zone[i] );
+		END_FOR]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="StationLogic" Id="{ad15b1d3-f9a4-013e-29dd-5430b02980cb}">
+      <Implementation>
+        <ST><![CDATA[		(*Mover routing logic should be written here to define the system's operating behavior.
 		Station implementations, Position Trigger logic, etc. In general, you can remove the example code
 		here down to the short line break that looks like this: // ============= *)
 	
@@ -332,274 +262,52 @@ CASE MainState OF
 		
         // Position Trigger 1 Logic
         IF PositionTrigger[1].MoverPassedPosition THEN
+			PositionTrigger[1].CurrentMover.SetAcceleration(5E2);
             PositionTrigger[1].CurrentMover.SetVelocity(highVelocity);
             PositionTrigger[1].MuteCurrent();
         END_IF
 
 		// Position Trigger 2 Logic
         IF PositionTrigger[2].MoverPassedPosition THEN
+			PositionTrigger[2].CurrentMover.SetAcceleration(1E4);
             PositionTrigger[2].CurrentMover.SetVelocity(lowVelocity);
             PositionTrigger[2].CurrentMover.MoveToStation(Station[0]);
             PositionTrigger[2].MuteCurrent();
-        END_IF
-
-		// Example call to XTS Utility library. See Diagnostics section of docs for more info
-		(*
-		myMoverMileage	:= fbXtsEnvironment.XpuTcIo(1).MoverTcIo(2).GetDistanceDriven();
-		*)
-		
-		// =============
-
-        IF MainCommands.Stop THEN
-            MainCommands.Start 	:= FALSE;
-            MainState         	:= MS_ONESHOT_STOP;
-        ELSIF MainCommands.Disable THEN
-            MainCommands.Enable := FALSE;
-            MainState           := MS_ONESHOT_STOP;
-        END_IF
-		
-	MS_ONESHOT_STOP:	// --------------------------------------------------- SINGLE-CYCLE ISSUE HALT COMMANDS
-		(*Issue a halt command, then change states right away to wait for Movers to carry out the instruction*)
-	
-		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-			Mover[i].Halt();
-		END_FOR
-	
-		MainState					:= MS_STOPPING;
-	
-    MS_STOPPING: // ---------------------------------------------------------- STOPPING MOVERS
-		(*Movers are coming to a stop here in this state*)
-
-		// Stop all movers
-		allMoversHalted				:= TRUE;
-		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-			Mover[i].AxisReference.ReadStatus();
-			IF Mover[i].AxisReference.Status.Moving THEN
-				allMoversHalted		:= FALSE;
-			END_IF
-		END_FOR
-		
-		MainCommands.Start			:= FALSE;
- 
-		IF allMoversHalted THEN
-           	MainState 				:= MS_STOPPED;
-		END_IF
-        
-
-    MS_STOPPED: // ------------------------------------------------------------ Stop Command has been sent, hold here
-		(*Movers are now stopped, and further Main Commands can be issued to the system*)
-
-        IF MainCommands.Disable THEN
-            MainCommands.Enable 	:= FALSE;
-			MainCommands.Start		:= FALSE;
-            MainState           	:= MS_ONESHOT_DISABLE;
-        ELSIF MainCommands.Start THEN
-            MainCommands.Stop 		:= FALSE;
-            MainState         		:= MS_ENABLING_MOVERS;
-        END_IF
-
-	    // Reinit nextStation
-        nextStation := 4;
-
-        // Unregister everything from all stations
-        FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
-            Station[i].UnregisterAll();
-        END_FOR
-
-        // Unregister everything from all Pos Trigs
-        FOR i := 0 TO SIZEOF(PositionTrigger) / SIZEOF(PositionTrigger[0]) - 1 DO
-            PositionTrigger[i].UnregisterAll();
-        END_FOR
-
-        // Unregister everything from all zones
-        FOR i := 0 TO SIZEOF(Zone) / SIZEOF(Zone[0]) - 1 DO
-            Zone[i].UnregisterAll();
-        END_FOR
-	
-	MS_ONESHOT_DISABLE:	// ------------------------------------------------------- SINGLE CYCLE ISSUE DISABLE COMMANDS
-		(*Mover disable commands are issued here, followed by a state tranisition to await completion of the Disabling*)
-		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-			Mover[i].Disable();
-		END_FOR
-
-		MainState					:=	MS_DISABLING;
-	
-    MS_DISABLING: // --------------------------------------------------- DISABLING MOVERS
-		(*Movers are Disabling. During this step, we also Unregister movers from relevant Objectives
-		to ensure proper startup behavior*)
-		
-        // Reinit nextStation
-        nextStation := 4;
-
-        // Unregister everything from all stations
-        FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
-            Station[i].UnregisterAll();
-        END_FOR
-
-        // Unregister everything from all Position triggers
-        FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
-            PositionTrigger[i].UnregisterAll();
-        END_FOR
-
-        // Unregister everything from all zones
-        FOR i := 0 TO GVL.NUM_ZONES - 1 DO
-            Zone[i].UnregisterAll();
-        END_FOR
-		
-		allMoversDisabled				:= TRUE;
-		
-		FOR i := 0 TO gvl.NUM_MOVERS-1 DO
-			IF NOT Mover[i].AxisReference.Status.Disabled THEN 
-				allMoversDisabled		:= FALSE;
-			END_IF
-		END_FOR
- 
-        IF allMoversDisabled THEN
-            MainState					:= MS_DISABLED;
-        END_IF
-
-    MS_ERROR: // --------------------------------------------------- ERRORSTATE
-		(*A reset command can be included here to clear Mover errors, etc. and return
-		to a controlled state*)
-
-    MS_DEBUG: // ------------------------------------------------------- DEV USE ONLY
-		(*This state is intentionally left blank, 
-		for optional use by a developer during programming*)
-	
-
-END_CASE;
-
-// It is no longer required to call object.cyclic() methods.
-// Instead, ensure that all Movers, Stations, PositionTriggers, etc. have been added to the Mediator object during Init
-// For example, Mediator.AddStation( myNewStation );
-Mediator.Cyclic();
-
-
-]]></ST>
-    </Implementation>
-    <Action Name="Initialize" Id="{4ac3b602-bbee-0af7-24db-b9d89bbd3ae5}">
-      <Implementation>
-        <ST><![CDATA[
-
-
-
-FOR i := 0 TO GVL.NUM_MOVERS-1 DO
-	Mediator.AddMover( Mover[i] );	
-END_FOR
-FOR i := 0 TO GVL.NUM_MOVERLISTS-1 DO
-	Mediator.AddMoverList( MoverList[i] );
-END_FOR
-FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS-1 DO
-	Mediator.AddPositionTrigger( PositionTrigger[i] );
-END_FOR
-FOR i := 0 TO GVL.NUM_STATIONS-1 DO
-	Mediator.AddStation( Station[i] );
-END_FOR
-FOR i := 0 TO GVL.NUM_TRACKS-1 DO
-	Mediator.AddTrack( Track[i] );
-END_FOR
-FOR i := 0 TO GVL.NUM_ZONES-1 DO
-	Mediator.AddZone( Zone[i] );
-END_FOR
-
-
-
-CASE nEnvironmentState OF
-	0:	// ----------------------------------------- Enable Init Items
-	
-		// Enable init Info Server if needed
-		stXtsEnvironmentConfiguration.bEnableInitInfoServer		:= TRUE;
-		
-		// Enable init CA Group if needed
-		stXtsEnvironmentConfiguration.bEnableInitCaGroup		:= TRUE;
-		
-		// Set configuration of XtsUtility init
-		fbXtsEnvironment.P_XtsEnvironmentConfiguration			:= stXtsEnvironmentConfiguration;
-		
-		// Next step
-		nEnvironmentState	:= 1;
-		
-	1:	// ------------------------------------------ Init Environment
-		
-		// Start init
-		IF fbXtsEnvironment.Init(TRUE) THEN
-			// stop init
-			fbXtsEnvironment.Init(FALSE);
-			
-			// next step
-			nEnvironmentState	:= 2;
-		END_IF
-		
-	2:	// ------------------------------------------ Check for success
-	
-		// Check IsInitialized property
-		IF fbXtsEnvironment.P_IsInitialized THEN
-			// next step
-			nEnvironmentState	:= 3;
-		END_IF
-		
-	3:	// ------------------------------------------- Init Visu
-	
-		fbXtsEnvironmentVisu( ipTcIoXtsEnvironment := fbXtsEnvironment );
-		
-		// next step
-		nEnvironmentState	:= 4;
-		
-	4:	// ------------------------------------------- Init done
-
-		fbXtsEnvironmentVisu.Cycle();
-		
-END_CASE
-
-]]></ST>
+        END_IF]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="1695" Count="0" />
-      <LineId Id="1282" Count="0" />
-      <LineId Id="1694" Count="0" />
-      <LineId Id="1283" Count="35" />
-      <LineId Id="1871" Count="1" />
-      <LineId Id="1875" Count="1" />
-      <LineId Id="1873" Count="1" />
-      <LineId Id="1877" Count="0" />
-      <LineId Id="1319" Count="16" />
-      <LineId Id="1750" Count="0" />
-      <LineId Id="1752" Count="9" />
-      <LineId Id="1751" Count="0" />
-      <LineId Id="1348" Count="69" />
-      <LineId Id="1422" Count="0" />
-      <LineId Id="1878" Count="1" />
-      <LineId Id="1883" Count="0" />
-      <LineId Id="1880" Count="0" />
-      <LineId Id="1884" Count="0" />
-      <LineId Id="1882" Count="0" />
-      <LineId Id="1885" Count="2" />
-      <LineId Id="1423" Count="53" />
-      <LineId Id="1813" Count="1" />
-      <LineId Id="1816" Count="1" />
-      <LineId Id="1815" Count="0" />
-      <LineId Id="1819" Count="1" />
-      <LineId Id="1477" Count="139" />
-      <LineId Id="1622" Count="29" />
-      <LineId Id="1657" Count="26" />
-      <LineId Id="1687" Count="6" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="1762" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="436" Count="89" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="192" Count="1" />
+      <LineId Id="191" Count="0" />
     </LineIds>
-    <LineIds Name="MAIN.Initialize">
+    <LineIds Name="MAIN.Initializing">
+      <LineId Id="19" Count="0" />
       <LineId Id="2" Count="0" />
-      <LineId Id="52" Count="2" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="68" Count="2" />
-      <LineId Id="72" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="80" Count="8" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="3" Count="48" />
+      <LineId Id="20" Count="20" />
+      <LineId Id="10" Count="6" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Registering">
+      <LineId Id="2" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="3" Count="19" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="24" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.StationLogic">
+      <LineId Id="2" Count="49" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="52" Count="5" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="58" Count="2" />
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

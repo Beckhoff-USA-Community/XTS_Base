@@ -222,7 +222,7 @@ VAR_IN_OUT
 	GroupReference		: AXES_GROUP_REF;
 END_VAR
 VAR
-	uGroupStatus			: MediatorGroupStatus;
+
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -236,11 +236,6 @@ MotionParameters.Acceleration	:= LIMIT( 0, MotionParameters.Acceleration, 1E300 
 MotionParameters.Deceleration	:= LIMIT( 0, MotionParameters.Deceleration, 1E300 );
 MotionParameters.Jerk			:= LIMIT( 0, MotionParameters.Jerk, 1E300 );
 MotionParameters.Velocity		:= LIMIT( 0, MotionParameters.Velocity, 1E300 );
-
-
-
-
-
 
 CASE internalState OF
 	MV_IDLE:	// ------------------------------------------------------- idle state
@@ -335,8 +330,7 @@ CASE internalState OF
 		END_IF
 		
 	MV_ENABLEGROUP:	// ----------------------------------------------- have mediator enable group
-		uGroupStatus := Mediator.GroupStatus;
-		IF NOT uGroupStatus.Enabled THEN
+		IF NOT Mediator.GroupEnabled THEN
 			Mediator.EnableGroup();
 		ELSE
 			internalState := MV_RUN;
@@ -460,8 +454,7 @@ CASE internalState OF
 		fbMoveAbsCA[0].Execute		:= FALSE;
 		fbMoveAbsCA[1].Execute		:= FALSE;
 		
-		uGroupStatus := Mediator.GroupStatus;
-		IF uGroupStatus.GroupErrorStop = FALSE THEN
+		IF Mediator.Error = FALSE THEN
 			fbHaltCA.Execute		:= TRUE;
 			//fbHaltCA.Deceleration	:= MotionParameters.Deceleration;
 			//fbHaltCA.Jerk			:= MotionParameters.Jerk;
@@ -1859,13 +1852,13 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Cyclic">
-      <LineId Id="3" Count="43" />
+      <LineId Id="3" Count="9" />
+      <LineId Id="18" Count="28" />
       <LineId Id="525" Count="0" />
       <LineId Id="47" Count="6" />
       <LineId Id="509" Count="11" />
       <LineId Id="144" Count="42" />
       <LineId Id="526" Count="1" />
-      <LineId Id="538" Count="0" />
       <LineId Id="529" Count="1" />
       <LineId Id="532" Count="1" />
       <LineId Id="531" Count="0" />
@@ -1883,9 +1876,7 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="310" Count="15" />
       <LineId Id="468" Count="2" />
       <LineId Id="467" Count="0" />
-      <LineId Id="326" Count="14" />
-      <LineId Id="539" Count="0" />
-      <LineId Id="341" Count="95" />
+      <LineId Id="326" Count="110" />
       <LineId Id="442" Count="2" />
       <LineId Id="446" Count="12" />
       <LineId Id="476" Count="0" />

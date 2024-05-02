@@ -77,9 +77,6 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\MAIN2.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\XTS\Administrative\ErrorMover.TcPOU">
       <SubType>Code</SubType>
     </Compile>

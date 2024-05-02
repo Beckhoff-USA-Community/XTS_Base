@@ -88,7 +88,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"MAIN2.MainCommands.Enable"</v>
+                      <v n="Value">"MAIN.MainCommands.Enable"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -448,7 +448,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"MAIN2.MainCommands.Start"</v>
+                      <v n="Value">"MAIN.MainCommands.Start"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -679,7 +679,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"MAIN2.MainCommands.Stop"</v>
+                      <v n="Value">"MAIN.MainCommands.Stop"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -910,7 +910,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"MAIN2.MainCommands.Disable"</v>
+                      <v n="Value">"MAIN.MainCommands.Disable"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -1071,7 +1071,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"MAIN2.highVelocity"</v>
+                      <v n="Value">"MAIN.highVelocity"</v>
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
@@ -1380,7 +1380,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"MAIN2.mediumVelocity"</v>
+                      <v n="Value">"MAIN.mediumVelocity"</v>
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
@@ -1689,7 +1689,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"MAIN2.lowVelocity"</v>
+                      <v n="Value">"MAIN.lowVelocity"</v>
                     </o>
                     <o>
                       <v n="Id">823443203L</v>

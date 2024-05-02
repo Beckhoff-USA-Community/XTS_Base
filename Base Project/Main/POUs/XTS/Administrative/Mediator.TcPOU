@@ -26,12 +26,12 @@ VAR
 	{attribute 'hide'}
 	InstancePath		: STRING;	// instance naming, for diagnostics purposes
 
-	internalMoverList				: MoverList;
-	internalGroupStatus				: MediatorGroupStatus;
+	internalMoverList				: MoverList;;
 	internalM1DetectFlag			: BOOL;
 	internalM1DetectState			: INT;
 	internalEnableGroupFlag			: BOOL;
 	internalEnableGroupState		: INT;
+	internalEnabled					: BOOL;
 	
 	// ========= XTS Utility Diagnostics =========
 	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
@@ -403,27 +403,12 @@ END_VAR]]></Declaration>
         <ST><![CDATA[// get group status for property
 fbGroupStatus.Enable := TRUE;
 fbGroupStatus( AxesGroup := GROUP_REF );
-internalGroupStatus.Valid                 := fbGroupStatus.Valid;
-internalGroupStatus.Busy                  := fbGroupStatus.Busy;
-internalGroupStatus.GroupMoving           := fbGroupStatus.GroupMoving;
-internalGroupStatus.GroupHoming           := fbGroupStatus.GroupHoming;
-internalGroupStatus.GroupErrorStop        := fbGroupStatus.GroupErrorStop;
-internalGroupStatus.GroupNotReady         := fbGroupStatus.GroupNotReady;
-internalGroupStatus.GroupStandby          := fbGroupStatus.GroupStandby;
-internalGroupStatus.GroupStopping         := fbGroupStatus.GroupStopping;
-internalGroupStatus.GroupDisabled         := fbGroupStatus.GroupDisabled;
-internalGroupStatus.AllAxesStanding       := fbGroupStatus.AllAxesStanding;
-internalGroupStatus.InPosition            := fbGroupStatus.InPosition;
-internalGroupStatus.Error                 := fbGroupStatus.Error;
-internalGroupStatus.ErrorId               := fbGroupStatus.ErrorId;
-// additional custom statuses are set in the state machine
-
-
 
 CASE internalEnableGroupState OF
 	0:	// wait for flag 
-		IF internalEnableGroupFlag	 AND NOT internalGroupStatus.Enabled THEN
+		IF internalEnableGroupFlag AND NOT internalEnabled THEN
 			internalEnableGroupState := 10;
+			Error := FALSE;
 		END_IF;
 
 	10: // ------------------------------------------------------- check the status of the group
@@ -470,20 +455,20 @@ CASE internalEnableGroupState OF
 		END_IF
 		
 	100: // clean up flags and rewind
-		internalGroupStatus.Enabled := TRUE;
+		internalEnabled := TRUE;
 		internalEnableGroupState := 0;
 		
 	900: // error
 		Error := TRUE;
-		internalGroupStatus.Enabled := FALSE;
+		internalEnabled := FALSE;
 		
 		
 END_CASE
 
 // catch error flag and reset custom status bit
-IF (fbGroupStatus.Error) THEN
+IF (fbGroupStatus.GroupErrorStop) THEN
 	Error := TRUE;
-	internalGroupStatus.Enabled := FALSE;
+	internalEnabled := FALSE;
 END_IF
 
 // cyclic calls
@@ -649,14 +634,27 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="GroupStatus" Id="{8cef10f7-592f-09e2-234b-7fced8a70710}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY GroupStatus : MediatorGroupStatus]]></Declaration>
-      <Get Name="Get" Id="{ae50c7df-6021-08d8-2a2e-a8507f5fc38f}">
+    <Property Name="GroupEnabled" Id="{dca70979-fee3-0f39-3528-000ca64a8f22}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY GroupEnabled : bool]]></Declaration>
+      <Get Name="Get" Id="{a4a17b6e-a2a8-0398-0745-96cf710d270e}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[GroupEnabled := internalEnabled;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="GroupError" Id="{3ac97d16-5fe4-0a9a-3305-6d88385b660b}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY GroupError : bool]]></Declaration>
+      <Get Name="Get" Id="{faa6b223-287a-0e59-1c37-f312dffb5ec6}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[GroupStatus := internalGroupStatus;]]></ST>
+          <ST><![CDATA[// sum of various error bits throughout the mediator
+GroupError := fbGroupStatus.GroupErrorStop;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -814,12 +812,11 @@ END_VAR
       <LineId Id="116" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.CyclicEnableGroup">
-      <LineId Id="6" Count="15" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="28" Count="1" />
+      <LineId Id="6" Count="2" />
       <LineId Id="82" Count="0" />
       <LineId Id="87" Count="0" />
       <LineId Id="89" Count="2" />
+      <LineId Id="135" Count="0" />
       <LineId Id="86" Count="0" />
       <LineId Id="85" Count="0" />
       <LineId Id="32" Count="1" />
@@ -893,7 +890,11 @@ END_VAR
     <LineIds Name="Mediator.Envrionment.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="Mediator.GroupStatus.Get">
+    <LineIds Name="Mediator.GroupEnabled.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupError.Get">
+      <LineId Id="5" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.InfoServer.Get">
