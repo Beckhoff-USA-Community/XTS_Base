@@ -18,6 +18,7 @@ VAR_GLOBAL CONSTANT
 
     {attribute 'TcInitSymbol'}
     pXtsProcessingUnit : OTCID:=0; // This pointer needs to be initialized in the Main Instance, under Symbol Initialization
+	PART_ARRAY_SIZE			: UDINT := 100;
 
 END_VAR
 VAR_GLOBAL

@@ -386,7 +386,8 @@ END_FOR
 
 CyclicEnvironment();
 CyclicMover1();
-CyclicEnableGroup();]]></ST>
+CyclicEnableGroup();
+CyclicStationInfo();]]></ST>
       </Implementation>
     </Method>
     <Method Name="CyclicEnableGroup" Id="{29279241-cafd-03e6-374f-d434ad56f253}" FolderPath="Methods\">
@@ -525,14 +526,31 @@ END_VAR
 			nEnvironmentState	:= 3;
 		END_IF
 		
-	3:	// ------------------------------------------- Init Visu
+	3:	// ------------------------------------------- Init info server
+		// Start init
+		IF internalInfoServer.Init(TRUE, TRUE) THEN
+			// stop init
+			internalInfoServer.Init(FALSE, FALSE);
+			
+			// next step
+			nEnvironmentState	:= 4;
+		END_IF
+	4:	// ------------------------------------------ Check for success
+	
+		// Check IsInitialized property
+		IF internalInfoServer.P_IsInitialized THEN
+			// next step
+			nEnvironmentState	:= 5;
+		END_IF
+		
+	5:	// ------------------------------------------- Init Visu
 	
 		fbXtsEnvironmentVisu( ipTcIoXtsEnvironment := fbXtsEnvironment );
 		
 		// next step
 		nEnvironmentState	:= 4;
 		
-	4:	// ------------------------------------------- Init done
+	6:	// ------------------------------------------- Init done
 
 		fbXtsEnvironmentVisu.Cycle();
 		
@@ -588,6 +606,55 @@ END_CASE
 
 // reset flag always
 internalM1DetectFlag := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CyclicStationInfo" Id="{ec913905-8396-08ae-1a45-5803e3227982}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD CyclicStationInfo : BOOL
+VAR_INPUT
+END_VAR
+VAR_INST
+	nState : INT;
+	
+	// 
+	PartStartEnd : ARRAY [0..GVL.PART_ARRAY_SIZE-1] OF ARRAY [0..1] OF LREAL;
+	
+	nPartsInTrack1	: UDINT;
+	PartInfo 		: St_PartInfoItems;
+	
+	i				: UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// populate TcCom XTS station objects with positions and part numbers from code for easier visibility in simulation
+
+// check for environment
+IF THIS^.EnvironmentIsReady and internalEnabled AND_THEN internalEnvironment.P_IsInitialized THEN
+	
+	CASE nState OF
+		
+	// get number of parts via track 1 and store start/end positions in 
+		0:
+			// check for defined track in first position
+			IF (internalXPU.P_TrackCount >= 1) THEN
+				nState := 10;
+			END_IF
+			
+		10:
+			// get info about array of parts
+			nPartsInTrack1 := internalXPU.TrackTcIo(1).GetPartCount();
+			nState := 20;
+			
+		20:
+			// get info for each part start and end position (or max size of array)
+			FOR i := 1 TO MIN(nPartsInTrack1, GVL.PART_ARRAY_SIZE) DO
+				PartInfo := internalXPU.TrackTcIo(1).GetPartInfoItems()[i];
+				PartStartEnd[i][0] := PartInfo.fOffset;
+				PartStartEnd[i][1] := PartInfo.fLength + PartInfo.fOffset;
+			END_FOR
+			
+	END_CASE
+
+
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="DetectMover1" Id="{1d387785-e892-0967-22d4-73d2923e67ae}" FolderPath="Methods\">
@@ -810,6 +877,7 @@ END_VAR
     <LineIds Name="Mediator.Cyclic">
       <LineId Id="117" Count="29" />
       <LineId Id="116" Count="0" />
+      <LineId Id="153" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.CyclicEnableGroup">
       <LineId Id="6" Count="2" />
@@ -848,7 +916,14 @@ END_VAR
     <LineIds Name="Mediator.CyclicEnvironment">
       <LineId Id="6" Count="29" />
       <LineId Id="51" Count="3" />
-      <LineId Id="36" Count="14" />
+      <LineId Id="36" Count="2" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="62" Count="6" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="69" Count="3" />
+      <LineId Id="77" Count="1" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="39" Count="11" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.CyclicMover1">
@@ -875,6 +950,30 @@ END_VAR
       <LineId Id="67" Count="0" />
       <LineId Id="66" Count="0" />
       <LineId Id="68" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.CyclicStationInfo">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="27" Count="4" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="39" Count="4" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.DetectMover1">
       <LineId Id="5" Count="1" />
