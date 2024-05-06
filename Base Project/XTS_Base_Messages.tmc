@@ -2,7 +2,7 @@
 <TcModuleClass>
 	<DataTypes>
 		<DataType>
-			<Name GUID="{3148E5C4-541C-4FC9-AD27-F516DDA14931}">XtsBaseEventClass</Name>
+			<Name GUID="{77D3DE92-58B2-4FDC-A4F3-5B84CD1D7925}">XtsBaseEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[XtsBaseEventClass]]></DisplayName>
 			<EventId>
 				<Name Id="1">UserEvent</Name>
@@ -144,11 +144,17 @@
 				<DisplayName TxtId=""><![CDATA[{0} .fbGroupReset Error {1}]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
+			<EventId>
+				<Name Id="#x1D">MoverSetGapMode</Name>
+				<DisplayName TxtId=""><![CDATA[{0} SetGapMode command issued. Commanded Mode = {2}. Source: {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
 			<Hides>
 				<Hide GUID="{4BDC38D5-09DA-4A12-9EF7-B1149E5348D6}"/>
 				<Hide GUID="{4F1FD198-5075-468A-8997-D9F532DF8CE0}"/>
 				<Hide GUID="{19200DE0-6EF3-480E-BA12-D962B66814A5}"/>
 				<Hide GUID="{8FA935DE-0979-4AB5-9248-1D7D0A6F5372}"/>
+				<Hide GUID="{3148E5C4-541C-4FC9-AD27-F516DDA14931}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

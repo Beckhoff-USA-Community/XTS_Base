@@ -411,6 +411,30 @@ Mover[1].SetGap( 65.0 );
 ```
 
 
+### SetGapMode
+
+*SetGapMode( Mode : MC_GAP_CONTROL_MODE )*
+
+> Sets the collision avoidance gap control mode for the specified mover. This takes effect immediately.
+
+Default defers to the mode set in the NC's Collision Avoidance object.
+
+Note: For modes other than Standard the NC's Collision Avoidance object must be set to `mcGapCtrlDirectionPositive`. This paramater can only be set in configuration and not during runtime.
+
+| Mode | Description |
+|--|--|
+| mcGapControlModeGroupDefault | This value indicates that the GapControlMode set in the group parameters should be used for this motion command. |
+| mcGapControlModeStandard | "Caterpillar" The axes fan out characteristically during the acceleration phase, such that a collision during the motion command is prevented. |
+| mcGapControlModeFast | "Lock-step" All Axes move at the same time and with the full dynamics. |
+| mcGapControlModeNone | This value indicates that the Gap Control is not active in the command. After the command, the Standby Gap Control takes effect again with the mode, which is set in the group and the gap size of the last valid command. |
+
+Additional documentation of gap control mode is available on [Infosys](https://infosys.beckhoff.com/content/1033/tf5410_tc3_collision_avoidance/1539510027.html?id=7324917585245879036) which includes graphs comparing the options.
+
+```javascript
+Mover[1].SetGapMode( mcGapControlModeStandard );
+```
+
+
 ## Properties
 
 ### .CurrentMoveType
