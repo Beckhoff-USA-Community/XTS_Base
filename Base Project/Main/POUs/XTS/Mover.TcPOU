@@ -957,8 +957,9 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
 		fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
 		fbMoveAbsCA[0].Gap			:= MotionParameters.Gap;
-		fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
-		fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveAbsCA[0].Options.DynamicsReferenceSystem	:= CurrentTrack^.OTCID;
+		fbMoveAbsCA[0].Options.PositionReferenceSystem	:= CurrentTrack^.OTCID;
+		fbMoveAbsCA[0].Options.GapControlMode			:= MotionParameters.GapMode;
 		
 		fbMoveAbsCA[0].Position		:= DestinationPosition;
 		
@@ -980,6 +981,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveAbsCA[1].Options.GapControlMode			:= MotionParameters.GapMode;
 
 		
 		fbMoveAbsCA[1].Position		:= DestinationPosition;
@@ -1054,6 +1056,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[0].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveAbsCA[0].Options.GapControlMode			:= MotionParameters.GapMode;
 		
 		fbMoveAbsCA[0].Position		:= DestinationStation.internalPosition;
 		
@@ -1075,6 +1078,7 @@ ELSE	// otherwise let 'er rip
 		fbMoveAbsCA[1].Gap			:= MotionParameters.Gap;
 		fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveAbsCA[1].Options.GapControlMode			:= MotionParameters.GapMode;
 		
 		fbMoveAbsCA[1].Position		:= DestinationStation.internalPosition;
 		
@@ -1158,8 +1162,9 @@ ELSE
 		fbMoveRelCA[0].Acceleration	:= MotionParameters.Acceleration;
 		fbMoveRelCA[0].Deceleration	:= MotionParameters.Deceleration;
 		fbMoveRelCA[0].Velocity		:= MotionParameters.Velocity;
-		fbMoveRelCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
-		fbMoveRelCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveRelCA[0].Options.DynamicsReferenceSystem	:= CurrentTrack^.OTCID;
+		fbMoveRelCA[0].Options.PositionReferenceSystem	:= CurrentTrack^.OTCID;
+		fbMoveRelCA[0].Options.GapControlMode			:= MotionParameters.GapMode;
 		
 		fbMoveRelCA[0].Distance		:= SEL( negativeCommand, RelDistance, -RelDistance );
 		fbMoveRelCA[0].Gap			:= MotionParameters.Gap;
@@ -1180,6 +1185,7 @@ ELSE
 		fbMoveRelCA[1].Velocity		:= MotionParameters.Velocity;
 		fbMoveRelCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbMoveRelCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+		fbMoveRelCA[1].Options.GapControlMode			:= MotionParameters.GapMode;
 		fbMoveRelCA[1].Gap			:= MotionParameters.Gap;
 		fbMoveRelCA[1].Distance		:= SEL( negativeCommand, RelDistance, -RelDistance );
 		      
@@ -1450,6 +1456,50 @@ lastCallSetGap		:= newCallTime;
 SetGap		:= THIS^;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SetGapMode" Id="{a4e6725e-191a-0c31-2393-58563c314975}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetGapMode : iMover
+VAR_INPUT
+	Mode	: MC_GAP_CONTROL_MODE;
+END_VAR
+VAR
+	newCallTime		: LREAL;
+	ModeString		: STRING;
+END_VAR
+VAR_INST
+	MsgCreate		: FB_TcMessage;	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+
+MotionParameters.GapMode		:= Mode;	// update gap mode
+
+THIS^.ReissueCommand();
+
+IF ( newCallTime - lastCallSetGap ) > 1 THEN
+	// user-friendly string for mode
+	CASE Mode OF
+		MC_GAP_CONTROL_MODE.mcGapControlModeGroupDefault:
+			ModeString := 'Group Default';
+		MC_GAP_CONTROL_MODE.mcGapControlModeStandard:
+			ModeString := 'Standard';
+		MC_GAP_CONTROL_MODE.mcGapControlModeFast:
+			ModeString := 'Fast';
+		MC_GAP_CONTROL_MODE.mcGapControlModeNone:
+			ModeString := 'None';
+	END_CASE;
+	
+	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetGapMode,0 );
+	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(ModeString);
+	MsgCreate.Send(0);
+END_IF;
+
+THIS^.SourceInstancePath	:= 'Direct access';
+
+lastCallSetGap		:= newCallTime;
+
+SetGapMode		:= THIS^;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SetJerk" Id="{de57e13f-25de-42a4-aec6-c6dc8b78d964}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetJerk : iMover
 VAR_INPUT
@@ -1563,6 +1613,7 @@ ELSE
 		
 		fbGearInPosAxisCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbGearInPosAxisCA[0].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
+		fbGearInPosAxisCA[0].Options.GapControlMode := MotionParameters.GapMode;
 
 		IF MotionParameters.Direction = mcDirectionPositive THEN
 			fbGearInPosAxisCA[0].SyncMode		:= mcSyncModePositive;
@@ -1593,6 +1644,7 @@ ELSE
 		
 		fbGearInPosAxisCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbGearInPosAxisCA[1].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
+		fbGearInPosAxisCA[1].Options.GapControlMode := MotionParameters.GapMode;
 		
 		IF MotionParameters.Direction = mcDirectionPositive THEN
 			fbGearInPosAxisCA[1].SyncMode		:= mcSyncModePositive;
@@ -1686,6 +1738,7 @@ ELSE	// let 'er rip
 		
 		fbGearInPosMoverCA[0].Options.DynamicsReferenceSystem				:= CurrentTrack^.OTCID;
 		fbGearInPosMoverCA[0].Options.SlaveSyncPositionReferenceSystem		:= CurrentTrack^.OTCID;
+		fbGearInPosMoverCA[0].Options.GapControlMode						:= MotionParameters.GapMode;
 				
 		//fbGearInPosMoverCA[0].Options.MinimalSlavePosition	:= -1E300;
 		
@@ -1713,6 +1766,7 @@ ELSE	// let 'er rip
 		
 		fbGearInPosMoverCA[1].Options.DynamicsReferenceSystem				:= CurrentTrack^.OTCID;
 		fbGearInPosMoverCA[1].Options.SlaveSyncPositionReferenceSystem		:= CurrentTrack^.OTCID;
+		fbGearInPosMoverCA[1].Options.GapControlMode						:= MotionParameters.GapMode;
 		
 		//fbGearInPosMoverCA[1].Options.MinimalSlavePosition	:= -1E300;
 		
@@ -2000,9 +2054,11 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="12" Count="7" />
       <LineId Id="109" Count="0" />
       <LineId Id="78" Count="1" />
+      <LineId Id="120" Count="0" />
       <LineId Id="20" Count="17" />
       <LineId Id="110" Count="0" />
       <LineId Id="81" Count="1" />
+      <LineId Id="121" Count="0" />
       <LineId Id="80" Count="0" />
       <LineId Id="38" Count="10" />
       <LineId Id="93" Count="0" />
@@ -2020,9 +2076,13 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="180" Count="0" />
       <LineId Id="105" Count="7" />
       <LineId Id="199" Count="0" />
-      <LineId Id="113" Count="19" />
+      <LineId Id="113" Count="1" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="115" Count="17" />
       <LineId Id="200" Count="0" />
-      <LineId Id="133" Count="11" />
+      <LineId Id="133" Count="1" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="135" Count="9" />
       <LineId Id="182" Count="0" />
       <LineId Id="181" Count="0" />
       <LineId Id="184" Count="1" />
@@ -2039,9 +2099,11 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="86" Count="0" />
       <LineId Id="11" Count="10" />
       <LineId Id="107" Count="1" />
+      <LineId Id="124" Count="0" />
       <LineId Id="22" Count="17" />
       <LineId Id="109" Count="0" />
       <LineId Id="40" Count="0" />
+      <LineId Id="125" Count="0" />
       <LineId Id="110" Count="0" />
       <LineId Id="41" Count="7" />
       <LineId Id="87" Count="0" />
@@ -2110,6 +2172,16 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="14" Count="15" />
       <LineId Id="5" Count="0" />
     </LineIds>
+    <LineIds Name="Mover.SetGapMode">
+      <LineId Id="14" Count="6" />
+      <LineId Id="49" Count="2" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="56" Count="5" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="21" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="Mover.SetJerk">
       <LineId Id="3" Count="16" />
       <LineId Id="2" Count="0" />
@@ -2124,10 +2196,12 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="13" Count="13" />
       <LineId Id="107" Count="0" />
       <LineId Id="109" Count="1" />
+      <LineId Id="151" Count="0" />
       <LineId Id="27" Count="26" />
       <LineId Id="111" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="112" Count="0" />
+      <LineId Id="152" Count="0" />
       <LineId Id="54" Count="14" />
       <LineId Id="131" Count="0" />
       <LineId Id="69" Count="0" />
@@ -2141,8 +2215,10 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="105" Count="0" />
       <LineId Id="11" Count="20" />
       <LineId Id="124" Count="2" />
+      <LineId Id="143" Count="0" />
       <LineId Id="32" Count="23" />
       <LineId Id="127" Count="2" />
+      <LineId Id="144" Count="0" />
       <LineId Id="56" Count="11" />
       <LineId Id="106" Count="1" />
       <LineId Id="109" Count="1" />

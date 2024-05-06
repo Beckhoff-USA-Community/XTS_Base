@@ -161,6 +161,18 @@ END_VAR
 
 ]]></Declaration>
     </Method>
+    <Method Name="SetGap" Id="{e2bc056f-1769-0e35-2541-ab37fb203ff0}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetGap : iMover
+VAR_INPUT
+	Gap	: LREAL;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="SetGapMode" Id="{e660e867-2432-076f-21c6-754c3195e78b}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetGapMode : iMover
+VAR_INPUT
+	Mode	: MC_GAP_CONTROL_MODE;
+END_VAR]]></Declaration>
+    </Method>
     <Method Name="SetJerk" Id="{7c744f28-4b51-4d53-bcdc-6b5a1cdf2938}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetJerk : iMover
 VAR_INPUT

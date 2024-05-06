@@ -10,6 +10,7 @@
         Velocity     : LREAL;                           // mm/s
         Direction    : Tc3_Mc3Definitions.MC_Direction; // MC_Direction
 		Gap			 : LREAL;							// mm
+		GapMode		 : MC_GAP_CONTROL_MODE := MC_GAP_CONTROL_MODE.mcGapControlModeGroupDefault; // default to mode defined in collision avoidance object
 
     END_STRUCT
 END_TYPE]]></Declaration>
