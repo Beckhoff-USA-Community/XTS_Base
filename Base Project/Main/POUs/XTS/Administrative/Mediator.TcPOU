@@ -317,7 +317,7 @@ IF __ISVALIDREF( Zone ) THEN
 		THIS^.ZoneArray[emptyIDX]		:= ADR( Zone );
 		
 		// Automatically register all existing movers with the new zone
-		FOR i := 0 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray ) - 1 DO
+		FOR i := 0 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[0] ) - 1 DO
 			IF MoverArray[i] <> 0 THEN
 				THIS^.ZoneArray[emptyIDX]^.RegisterMover( MoverArray[i]^ );
 			END_IF
