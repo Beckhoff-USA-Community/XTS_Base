@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="PositionTrigger" Id="{2be242dd-21c3-49cc-ab16-707ac1bbd2e6}" SpecialFunc="None">
+  <POU Name="PositionTrigger" Id="{e261b23c-fca2-43e5-b385-fb66bc9fcaf5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK PositionTrigger EXTENDS Objective
 
 VAR
@@ -15,6 +15,7 @@ VAR
 	
 	lastCallMuteCurrent: LREAL;
 	internalInterarrivalTimer			: TON;
+	internalStatisticsReset				: BOOL;
 END_VAR
 VAR_OUTPUT
 	Statistics							: PositionTriggerStats_typ;
@@ -22,12 +23,12 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Folder Name="Methods" Id="{5543ded2-7a48-48d8-8a29-b553779a4150}" />
-    <Folder Name="Properties" Id="{8d51ba54-c5eb-42a0-ba8e-ec7acb9ee6ae}" />
-    <Property Name="CurrentMover" Id="{08e03357-929c-40a3-8446-c462dfedb470}" FolderPath="Properties\">
+    <Folder Name="Methods" Id="{9cc02e33-a729-42f1-92ba-3e4f0abe5943}" />
+    <Folder Name="Properties" Id="{44d24ab5-188a-4889-a21d-6766b6bafebd}" />
+    <Property Name="CurrentMover" Id="{c163c3b6-4ffd-4a8a-9cd5-4f7ea2c9ac63}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
-      <Get Name="Get" Id="{d772a5d5-0e79-4d5f-ad7a-159060b39ae3}">
+      <Get Name="Get" Id="{1ef15534-d318-4776-b5e9-9e8c1d9782f0}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
@@ -45,7 +46,7 @@ END_IF]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <Method Name="Cyclic" Id="{837bb22f-75d9-4f81-992f-274e662e1a69}" FolderPath="Methods\">
+    <Method Name="Cyclic" Id="{4af842ce-a8b8-45a8-81bc-ac521b0a027a}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Cyclic : BOOL
 VAR_INPUT
 END_VAR
@@ -57,7 +58,6 @@ VAR
 	positionDifference			: LREAL;
 	modTrackPosition			: LREAL;
 	rolloverOccured				: BOOL;
-	alphaEMA					: LREAL := 0.1;
 	
 END_VAR
 VAR_INST
@@ -65,6 +65,7 @@ VAR_INST
 	velocityCount				: UDINT;
 	velocitySum					: LREAL;
 	internalRingBufferIDX		: UDINT;
+	alphaEMA					: LREAL;
 
 END_VAR]]></Declaration>
       <Implementation>
@@ -132,16 +133,26 @@ END_IF
 
 // Calculate stats
 IF THIS^.MoverPassedPosition AND internalLastMoverPassedPosition = FALSE THEN
-	Statistics.ProcessedMoverCount									:= Statistics.ProcessedMoverCount + 1;
-	Statistics.InterarrivalTimeHistory[internalRingBufferIDX]		:= internalInterarrivalTimer.ET;
-	Statistics.MoverVelocityHistory[internalRingBufferIDX]			:= THIS^.CurrentMover.AxisReference.NcToPlc.ActVelo;
-	internalRingBufferIDX											:= internalRingBufferIDX + 1;
-	Statistics.LatestMoverVelocity									:= THIS^.CurrentMover.AxisReference.NcToPlc.ActVelo;
-	Statistics.AverageInterarrivalTime	:= LREAL_TO_TIME(( alphaEMA * TIME_TO_LREAL(internalInterarrivalTimer.ET )) + (( 1 - alphaEMA) * TIME_TO_LREAL( Statistics.AverageInterarrivalTime )));
-	internalInterarrivalTimer( IN := FALSE );	
+	// skip statistics on reset flag
+	IF (internalStatisticsReset) THEN
+		// reset flag
+		internalStatisticsReset := FALSE;
+		// set weight of first mover to 1
+		alphaEMA := 1.0;
+	ELSE
+		Statistics.ProcessedMoverCount									:= Statistics.ProcessedMoverCount + 1;
+		Statistics.InterarrivalTimeHistory[internalRingBufferIDX]		:= internalInterarrivalTimer.ET;
+		Statistics.MoverVelocityHistory[internalRingBufferIDX]			:= THIS^.CurrentMover.AxisReference.NcToPlc.ActVelo;
+		internalRingBufferIDX											:= internalRingBufferIDX + 1;
+		Statistics.LatestMoverVelocity									:= THIS^.CurrentMover.AxisReference.NcToPlc.ActVelo;
+		Statistics.AverageInterarrivalTime	:= LREAL_TO_TIME(( alphaEMA * TIME_TO_LREAL(internalInterarrivalTimer.ET )) + (( 1 - alphaEMA) * TIME_TO_LREAL( Statistics.AverageInterarrivalTime )));
+		internalInterarrivalTimer( IN := FALSE );
+		// reset alphaema to global value for subsequent movers
+		alphaEMA := GVL.ALPHA_EMA;
+	END_IF;
 END_IF
 internalLastMoverPassedPosition		:= THIS^.MoverPassedPosition;
-internalInterarrivalTimer( IN := TRUE, PT := T#40D, ET => Statistics.InterarrivalTime );
+internalInterarrivalTimer( IN := NOT internalStatisticsReset, PT := T#40D, ET => Statistics.InterarrivalTime );
 
 IF internalRingBufferIDX = ( SIZEOF( Statistics.InterarrivalTimeHistory ) / SIZEOF( Statistics.InterarrivalTimeHistory[0] )) THEN
 	internalRingBufferIDX		:= 0;
@@ -176,10 +187,10 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="MoverPassedPosition" Id="{6ef1f07f-a5fa-461a-8898-d87506fab1a7}" FolderPath="Properties\">
+    <Property Name="MoverPassedPosition" Id="{a772009e-789b-4c33-900b-53697bdea9b4}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY MoverPassedPosition : BOOL]]></Declaration>
-      <Get Name="Get" Id="{a91db2b1-564e-4fdf-92fa-febfe2148c87}">
+      <Get Name="Get" Id="{609e4250-8b2f-45f6-8a69-75a39f309494}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
@@ -187,7 +198,7 @@ END_VAR]]></Declaration>
         </Implementation>
       </Get>
     </Property>
-    <Method Name="MuteCurrent" Id="{f0f7dfa6-6c7f-0f13-1029-58bc07baccb3}" FolderPath="Methods\">
+    <Method Name="MuteCurrent" Id="{39742f47-b11e-053a-08ba-d3a07a9ed4a0}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MuteCurrent : BOOL
 VAR
 	newCallTime			: LREAL;
@@ -210,17 +221,17 @@ internalMoverPassedPosition		:= FALSE;
 internalCurrentMover			:= 0;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Position" Id="{ec302377-0190-40b3-b726-4713ec7a403b}" FolderPath="Properties\">
+    <Property Name="Position" Id="{25b3d396-dcf1-4a9a-afb5-cc0f915e5828}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY Position : LREAL]]></Declaration>
-      <Get Name="Get" Id="{ff32a52e-c366-4283-94bb-898d1069bf0a}">
+      <Get Name="Get" Id="{36b155cf-1e07-48aa-8c28-02916d4da719}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[Position := internalPosition;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{b77ff2fd-1ee8-41cd-8d5f-9b4c152df435}">
+      <Set Name="Set" Id="{7efc021c-c389-4be4-95cc-10506809ec26}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
@@ -229,7 +240,7 @@ internalPosition := Position;]]></ST>
         </Implementation>
       </Set>
     </Property>
-    <Method Name="ResetStatistics" Id="{81dc9311-da3d-0455-0c85-807d7603399c}" FolderPath="Methods\">
+    <Method Name="ResetStatistics" Id="{485f63f0-075c-0e7c-1416-0b610b27218f}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ResetStatistics : BOOL
 VAR_INPUT
 END_VAR
@@ -246,12 +257,14 @@ memset(ADR(Statistics.InterarrivalTimeHistory),0,SIZEOF(Statistics.InterarrivalT
 memset(ADR(Statistics.MoverVelocityHistory),0,SIZEOF(Statistics.MoverVelocityHistory));
 
 Statistics.LatestMoverVelocity			:= 0;
-Statistics.ProcessedMoverCount			:= 0;]]></ST>
+Statistics.ProcessedMoverCount			:= 0;
+
+internalStatisticsReset					:= TRUE;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="TrackId" Id="{127d74ba-df8b-0a03-0926-c5e68e5e3675}" FolderPath="Properties\">
+    <Property Name="TrackId" Id="{dbfe845b-02ea-002a-11b5-4efaf37a2e66}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
-      <Get Name="Get" Id="{ffb39293-6b9f-0a6a-06be-511a7a51c7e5}">
+      <Get Name="Get" Id="{36306272-b6fe-0043-1e2d-da060775dff6}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -259,7 +272,7 @@ END_VAR
           <ST><![CDATA[TrackId := internalTrackId;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{8ac2de8f-e5ea-0661-0c2c-20e585f6741b}">
+      <Set Name="Set" Id="{43412e6e-388b-0c48-14bf-abf9f8d26c08}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -268,17 +281,17 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="TriggerDirection" Id="{da3896fd-b18b-47dc-bafd-92a621ffa675}" FolderPath="Properties\">
+    <Property Name="TriggerDirection" Id="{13bb661c-6cea-4df5-a26e-19ba5cdbbe66}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY TriggerDirection : Tc2_MC2.MC_Direction]]></Declaration>
-      <Get Name="Get" Id="{423fc284-e969-4051-9911-5a30b9185b1a}">
+      <Get Name="Get" Id="{8bbc3265-3408-4a78-8182-d12cc43c4309}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[TriggerDirection := internalTriggerDirection;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{f583cf2c-e716-4e32-994c-ff6c210917d6}">
+      <Set Name="Set" Id="{3c003fcd-3a77-441b-81df-74705c2d0fc5}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
@@ -306,8 +319,14 @@ END_VAR]]></Declaration>
       <LineId Id="170" Count="0" />
       <LineId Id="94" Count="5" />
       <LineId Id="104" Count="33" />
-      <LineId Id="139" Count="12" />
+      <LineId Id="139" Count="6" />
+      <LineId Id="242" Count="5" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="146" Count="5" />
       <LineId Id="2" Count="0" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="249" Count="0" />
+      <LineId Id="248" Count="0" />
       <LineId Id="74" Count="11" />
       <LineId Id="203" Count="4" />
       <LineId Id="91" Count="0" />
@@ -340,6 +359,8 @@ END_VAR]]></Declaration>
       <LineId Id="15" Count="0" />
       <LineId Id="14" Count="0" />
       <LineId Id="16" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.TrackId.Get">
       <LineId Id="2" Count="0" />

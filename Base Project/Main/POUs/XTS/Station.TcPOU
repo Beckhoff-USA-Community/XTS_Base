@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="Station" Id="{5b67f0b3-4286-49f2-9b21-1e637f521584}" SpecialFunc="None">
+  <POU Name="Station" Id="{92e40052-9fe7-43db-83b2-957f02760d97}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective
 VAR
 
@@ -13,6 +13,11 @@ VAR
 	internalStationEmptyTimer		: TON;
 	internalStationBlockedTimer		: TON;
 	internalBlocked					: BOOL;	// station is blocked from receiving movers because laving mover has not moved > mover gap
+	
+	// statistics reset tracking
+	internalStationOccupiedReset	: BOOL;
+	internalStationEmptyReset		: BOOL;
+	internalStationBlockedReset		: BOOL;
 END_VAR
 VAR_OUTPUT
 	
@@ -22,11 +27,11 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Folder Name="Methods" Id="{b783a2bf-4b7a-4aa5-9ae9-11ae8e9caf95}" />
-    <Folder Name="Properties" Id="{a0c9a439-1ed2-41be-8a26-9d0fb905bf29}" />
-    <Property Name="Blocked" Id="{79d4dd6e-d710-0c52-0601-a8b5f384954f}" FolderPath="Properties\">
+    <Folder Name="Methods" Id="{7e00525e-961b-408c-827a-9ab2f3b8b786}" />
+    <Folder Name="Properties" Id="{694a54d8-c3b3-4b97-92b5-1613c421a73a}" />
+    <Property Name="Blocked" Id="{b0572d8f-0a71-067b-1e92-23a98ea08d5c}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Blocked : BOOL]]></Declaration>
-      <Get Name="Get" Id="{b5f64075-80f1-032d-044f-a5717dd5fa40}">
+      <Get Name="Get" Id="{7c75b094-5d90-0904-1cdc-2e6d00f1e253}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -35,10 +40,10 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="CurrentMover" Id="{4e639a8f-b6e4-4381-9171-31b76bf41c77}" FolderPath="Properties\">
+    <Property Name="CurrentMover" Id="{87e06a6e-6b85-49a8-89e2-baab16d00464}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY CurrentMover : REFERENCE TO Mover]]></Declaration>
-      <Get Name="Get" Id="{590174cc-2a32-4e82-86cf-1c2eff136812}">
+      <Get Name="Get" Id="{9082842d-f753-44ab-9e5c-973282377001}">
         <Declaration><![CDATA[VAR
 
     i          : ULINT;
@@ -78,13 +83,12 @@ END_IF]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <Method Name="Cyclic" Id="{b1387964-723e-4a2a-a4b6-2d82b2e2e3a7}" FolderPath="Methods\">
+    <Method Name="Cyclic" Id="{78bb8985-af5f-4003-bc25-a69ecfc6fbb4}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Cyclic : BOOL
 VAR
     i 					: UINT;
 	occupiedCount		: UINT;
 	emptyCount			: UINT;
-	alphaEMA			: LREAL := 0.1;
 	lastMoverDist		: LREAL;
 	
 END_VAR
@@ -93,6 +97,9 @@ VAR_INST
 	internalRingBufferIDX			: UDINT;
 	internalLastMoverInPosition		: BOOL;
 	internalLastMover				: REFERENCE TO Mover;
+	alphaEMAOccupied				: LREAL;
+	alphaEMAEmpty					: LREAL;
+	alphaEMABlocked					: LREAL;
 	
 END_VAR]]></Declaration>
       <Implementation>
@@ -111,16 +118,36 @@ END_FOR
 
 // Log occupied and empty times when movers arrive & depart
 IF THIS^.MoverInPosition = FALSE AND internalLastMoverInPosition THEN
-	// Mover just departed
-	Statistics.OccupiedTimeHistory[internalRingBufferIDX]	:= internalStationOccupiedTimer.ET;
-	Statistics.AverageTimeOccupied		:= LREAL_TO_TIME(( alphaEMA * TIME_TO_LREAL(internalStationOccupiedTimer.ET) ) + (( 1 - alphaEMA ) * TIME_TO_LREAL(Statistics.AverageTimeOccupied) )); 
-	internalRingBufferIDX				:= internalRingBufferIDX + 1;
-	internalBlocked						:= TRUE;
+	// skip statistics on reset flag
+	IF (internalStationOccupiedReset) THEN
+		// reset flag
+		internalStationOccupiedReset := FALSE;
+		// set weight of first mover to 1
+		alphaEMAOccupied := 1.0;
+	ELSE
+		// Mover just departed
+		Statistics.OccupiedTimeHistory[internalRingBufferIDX]	:= internalStationOccupiedTimer.ET;
+		Statistics.AverageTimeOccupied		:= LREAL_TO_TIME(( alphaEMAOccupied * TIME_TO_LREAL(internalStationOccupiedTimer.ET) ) + (( 1 - alphaEMAOccupied ) * TIME_TO_LREAL(Statistics.AverageTimeOccupied) )); 
+		internalRingBufferIDX				:= internalRingBufferIDX + 1;
+		internalBlocked						:= TRUE;
+		// reset alphaema to global value for subsequent movers
+		alphaEMAOccupied := GVL.ALPHA_EMA;
+	END_IF
 ELSIF THIS^.MoverInPosition AND internalLastMoverInPosition = FALSE THEN
-	// Mover just arrived
-	Statistics.ProcessedMoverCount		:= Statistics.ProcessedMoverCount + 1;
-	Statistics.EmptyTimeHistory[internalRingBufferIDX]	:= internalStationEmptyTimer.ET;
-	Statistics.AverageTimeEmpty			:= LREAL_TO_TIME(( alphaEMA * TIME_TO_LREAL(internalStationEmptyTimer.ET) ) + (( 1 - alphaEMA ) * TIME_TO_LREAL(Statistics.AverageTimeEmpty) ));
+	// skip statistics on reset flag
+	IF (InternalStationEmptyReset) THEN
+		// reset flag
+		InternalStationEmptyReset := FALSE;
+		// set weight of first mover to 1
+		alphaEMAEmpty := 1.0;
+	ELSE
+		// Mover just arrived
+		Statistics.ProcessedMoverCount		:= Statistics.ProcessedMoverCount + 1;
+		Statistics.EmptyTimeHistory[internalRingBufferIDX]	:= internalStationEmptyTimer.ET;
+		Statistics.AverageTimeEmpty			:= LREAL_TO_TIME(( alphaEMAEmpty * TIME_TO_LREAL(internalStationEmptyTimer.ET) ) + (( 1 - alphaEMAEmpty ) * TIME_TO_LREAL(Statistics.AverageTimeEmpty) ));
+		// reset alphaema to global value for subsequent movers
+		alphaEMAEmpty := GVL.ALPHA_EMA;
+	END_IF
 END_IF
 internalLastMoverInPosition		:= THIS^.MoverInPosition;
 IF (THIS^.MoverInPosition) THEN
@@ -135,13 +162,20 @@ IF internalBlocked THEN
 	// calculate the previous mover's distance traveled and compare to gap*station group (minimum distance required to receive next mover)
 	lastMoverDist :=  ABS(Position - internalLastMover.TrackInfo.TrackPosition);
 	IF MIN(lastMoverDist, GVL.TRACK_LENGTH - lastMoverDist) >= internalLastMover.MotionParameters.Gap * GroupSize THEN
+		// use 1.0 as alphaema on reset
+		IF (internalStationBlockedReset) THEN
+			alphaEMABlocked := 1.0;
+			internalStationBlockedReset := FALSE;
+		END_IF
 		// reset blocked flag
 		internalBlocked := FALSE;
 		// calculate and store statistics
 		Statistics.BlockedTimeHistory[internalRingBufferIDX]	:= internalStationBlockedTimer.ET;
-		Statistics.AverageTimeBlocked			:= LREAL_TO_TIME(( alphaEMA * TIME_TO_LREAL(internalStationBlockedTimer.ET) ) + (( 1 - alphaEMA ) * TIME_TO_LREAL(Statistics.AverageTimeBlocked) ));
+		Statistics.AverageTimeBlocked			:= LREAL_TO_TIME(( alphaEMABlocked * TIME_TO_LREAL(internalStationBlockedTimer.ET) ) + (( 1 - alphaEMABlocked ) * TIME_TO_LREAL(Statistics.AverageTimeBlocked) ));
 		// reset timer
 		internalStationBlockedTimer(IN := FALSE);
+		// use global alphaema for subsequent movers
+		alphaEMABlocked := GVL.ALPHA_EMA;
 	END_IF
 END_IF
 
@@ -151,11 +185,12 @@ IF internalRingBufferIDX = ( SIZEOF(Statistics.OccupiedTimeHistory) / SIZEOF(Sta
 END_IF
 
 // Run occupied & empty timers
+// except when in reset condition and waiting for the first mover to hit this station
 IF THIS^.MoverInPosition THEN
-	internalStationOccupiedTimer( IN := TRUE, PT := T#40D, ET => Statistics.TimeOccupied );
+	internalStationOccupiedTimer( IN := NOT internalStationOccupiedReset, PT := T#40D, ET => Statistics.TimeOccupied );
 	internalStationEmptyTimer( IN := FALSE );
 ELSE
-	internalStationEmptyTimer( IN := TRUE, PT := T#40D, ET => Statistics.TimeEmpty );
+	internalStationEmptyTimer( IN := NOT InternalStationEmptyReset, PT := T#40D, ET => Statistics.TimeEmpty );
 	internalStationOccupiedTimer( IN := FALSE );
 END_IF
 
@@ -170,9 +205,9 @@ IF Statistics.AverageTimeEmpty <> T#0S THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Property Name="GroupSize" Id="{d1c9e5df-b71a-0fcb-0b46-ba416f32c2da}" FolderPath="Properties\">
+    <Property Name="GroupSize" Id="{184a153e-6a7b-05e2-13d5-315d1216dac9}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY GroupSize : DINT]]></Declaration>
-      <Get Name="Get" Id="{8fef9ce2-4d23-0465-2baa-8ce3b3d62780}">
+      <Get Name="Get" Id="{466c6c03-9042-0e4c-3339-07ffcef23f93}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -180,7 +215,7 @@ END_VAR
           <ST><![CDATA[GroupSize := internalGroupSize;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{49c1c3fb-7e5a-0d38-13e8-7ba1fefff912}">
+      <Set Name="Set" Id="{8042331a-a33b-0711-0b7b-f0bd83dbe101}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -189,10 +224,10 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="MoverInPosition" Id="{7b7104e7-1816-4b78-b1aa-ded30e5ff809}" FolderPath="Properties\">
+    <Property Name="MoverInPosition" Id="{b2f2f406-c577-4151-a939-55cf737be01a}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'variable'}
 PROPERTY MoverInPosition : BOOL]]></Declaration>
-      <Get Name="Get" Id="{11118b5e-d8b3-4427-a8f3-470e1381cae5}">
+      <Get Name="Get" Id="{d8927bbf-05d2-4e0e-b060-cc126ea5d2f6}">
         <Declaration><![CDATA[VAR
 
     i          : ULINT;
@@ -224,17 +259,17 @@ END_FOR]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <Property Name="Position" Id="{a036a85b-a6ff-4e53-924d-8183c40c2111}" FolderPath="Properties\">
+    <Property Name="Position" Id="{69b558ba-7b9e-447a-8ade-0a9fb9283902}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY Position : LREAL]]></Declaration>
-      <Get Name="Get" Id="{9b1fb402-d994-4b37-826c-4ff94e3f9cbc}">
+      <Get Name="Get" Id="{529c44e3-04f5-411e-9aff-c4e5331b84af}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[Position := internalPosition;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{6983000b-95aa-45e5-9d08-48de77decd80}">
+      <Set Name="Set" Id="{a000f0ea-48cb-4fcc-859b-c3c20afad593}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
@@ -242,7 +277,7 @@ END_VAR]]></Declaration>
         </Implementation>
       </Set>
     </Property>
-    <Method Name="ResetStatistics" Id="{13d6a3de-3094-0ab8-02e9-8669956a4141}" FolderPath="Methods\">
+    <Method Name="ResetStatistics" Id="{da55533f-edf5-0091-1a7a-0d75e84e5952}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ResetStatistics : BOOL
 VAR_INPUT
 END_VAR
@@ -267,12 +302,14 @@ Statistics.AverageMoversPerMinute	:= 0;
 Statistics.ProcessedMoverCount		:= 0;
 Statistics.ThrottledThreshold		:= 0;
 
-]]></ST>
+internalStationOccupiedReset		:= TRUE;
+internalStationEmptyReset			:= TRUE;
+internalStationBlockedReset			:= TRUE;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="TrackId" Id="{14a41bad-1d09-07ae-078b-0a0128d8288a}" FolderPath="Properties\">
+    <Property Name="TrackId" Id="{dd27eb4c-c068-0d87-1f18-811d55fc3099}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
-      <Get Name="Get" Id="{77f9f1dd-eadb-000e-2c9f-0345f3cc552b}">
+      <Get Name="Get" Id="{be7a013c-37ba-0a27-340c-88598ee84d38}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -280,7 +317,7 @@ END_VAR
           <ST><![CDATA[TrackId := internalTrackId;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{74ab2d01-c326-0260-17cc-59b298fe9ee9}">
+      <Set Name="Set" Id="{bd28dde0-1e47-0849-0f5f-d2aee5da86fa}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -305,7 +342,29 @@ END_VAR
       <LineId Id="20" Count="4" />
     </LineIds>
     <LineIds Name="Station.Cyclic">
-      <LineId Id="87" Count="70" />
+      <LineId Id="87" Count="14" />
+      <LineId Id="191" Count="2" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="197" Count="2" />
+      <LineId Id="102" Count="4" />
+      <LineId Id="201" Count="1" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="203" Count="2" />
+      <LineId Id="207" Count="3" />
+      <LineId Id="108" Count="3" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="112" Count="13" />
+      <LineId Id="218" Count="2" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="126" Count="6" />
+      <LineId Id="216" Count="1" />
+      <LineId Id="133" Count="8" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="142" Count="15" />
       <LineId Id="17" Count="0" />
     </LineIds>
     <LineIds Name="Station.GroupSize.Get">
@@ -337,6 +396,8 @@ END_VAR
       <LineId Id="30" Count="0" />
       <LineId Id="18" Count="5" />
       <LineId Id="5" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="38" Count="0" />
     </LineIds>
     <LineIds Name="Station.TrackId.Get">
       <LineId Id="2" Count="0" />
