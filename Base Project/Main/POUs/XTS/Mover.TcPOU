@@ -1242,7 +1242,7 @@ END_VAR
 
 minimumDifference		:= 1E300;
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO	
-	IF Mediator.MoverArray[i] <> 0 THEN		// pointer validity
+	IF Mediator.MoverArray[i] <> 0 AND_THEN Mediator.MoverArray[i] <> THIS THEN		// pointer validity
 		currentDifference			:= Mediator.MoverArray[i]^.AxisReference.NcToPlc.SetPos - THIS^.AxisReference.NcToPlc.SetPos;
 						
 		// remain within the same lap
@@ -1298,7 +1298,7 @@ END_VAR
 
 minimumDifference		:= 1E300;
 FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
-	IF Mediator.MoverArray[i] <> 0 THEN		// pointer validity
+	IF Mediator.MoverArray[i] <> 0 AND_THEN Mediator.MoverArray[i] <> THIS THEN		// pointer validity
 		currentDifference			:= THIS^.AxisReference.NcToPlc.SetPos - Mediator.MoverArray[i]^.AxisReference.NcToPlc.SetAcc;
 		
 		// remain within the same lap
