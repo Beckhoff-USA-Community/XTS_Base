@@ -137,20 +137,24 @@ END_VAR]]></Declaration>
 // to enable this to be called on every scan, a check is made here for not busy as MC_ActivateTrack does not handle multiple calls efficently
 // .CyclicTrack() monitors for a falling edge on internalActivateTrack before allowing another command
 // this functionality mimics motion library commands such as MC_MoveAbsolute
-internalActivateTrackFlag := TRUE;
-IF (internalTrackState = TrackState.WAIT_FOR_COMMAND) THEN
-	internalActivatingTrack := ADR(Track);
-	internalTrackIsReady := FALSE;
-	
-	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-	
-	IF ( newCallTime - lastCallActivateTrack ) > 1 THEN
-		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrack,0 );
-		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(internalActivatingTrack^.Id).AddString(THIS^.SourceInstancePath).AddString(Track.InstancePath);
-		MsgCreate.Send(0);
-	END_IF
-	
-	lastCallActivateTrack		:= newCallTime;
+
+// do not re-activate track if it is already selected
+IF (internalTrack = 0 OR (internalTrack <> 0 AND_THEN Track.Id <> internalTrack^.Id)) THEN
+	internalActivateTrackFlag := TRUE;
+	IF (internalTrackState = TrackState.WAIT_FOR_COMMAND) THEN
+		internalActivatingTrack := ADR(Track);
+		internalTrackIsReady := FALSE;
+		
+		newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+		
+		IF ( newCallTime - lastCallActivateTrack ) > 1 THEN
+			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrack,0 );
+			MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(internalActivatingTrack^.Id).AddString(THIS^.SourceInstancePath).AddString(Track.InstancePath);
+			MsgCreate.Send(0);
+		END_IF
+		
+		lastCallActivateTrack		:= newCallTime;
+	END_IF;
 END_IF;]]></ST>
       </Implementation>
     </Method>
@@ -1875,6 +1879,9 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="7" Count="1" />
       <LineId Id="44" Count="1" />
       <LineId Id="58" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="68" Count="0" />
       <LineId Id="48" Count="0" />
       <LineId Id="46" Count="0" />
       <LineId Id="9" Count="0" />
@@ -1886,6 +1893,7 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="34" Count="0" />
       <LineId Id="33" Count="0" />
       <LineId Id="47" Count="0" />
+      <LineId Id="69" Count="0" />
     </LineIds>
     <LineIds Name="Mover.CurrentDestinationPosition.Get">
       <LineId Id="3" Count="0" />
