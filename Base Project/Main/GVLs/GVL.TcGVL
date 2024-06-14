@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <GVL Name="GVL" Id="{73e6a867-4426-4dae-a583-2a717b275c1c}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
@@ -18,6 +18,8 @@ VAR_GLOBAL CONSTANT
 
     {attribute 'TcInitSymbol'}
     pXtsProcessingUnit : OTCID:=0; // This pointer needs to be initialized in the Main Instance, under Symbol Initialization
+	PART_ARRAY_SIZE			: UDINT := 100;
+	AUTO_POPULATE_STATIONS  : BOOL := TRUE; // use the Station[x] array to label stations on the visualization. Turn off if manually entering stations in the configurator.
 	
 	// statistics weighted average
 	ALPHA_EMA				: LREAL := 0.1;
