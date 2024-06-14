@@ -688,7 +688,7 @@ IF THIS^.EnvironmentIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS A
 			// calculate minimum number of stations that can be set up
 			nUsableStations := MIN(nInfoServerStations, GVL.NUM_STATIONS);
 			FOR i := 1 TO nUsableStations DO
-				// get XTS_Base Station pointer (stored in revers order in StationArray)
+				// get XTS_Base Station pointer (stored in reverse order in StationArray)
 				xtsStationPointer := StationArray[GVL.NUM_STATIONS - i];
 				// test for valid pointer (station has been through the Mediator.AddStation method)
 				IF (xtsStationPointer <> 0) THEN
@@ -725,6 +725,7 @@ IF THIS^.EnvironmentIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS A
 					END_IF;
 				END_IF;
 			END_FOR
+			// transition to non-existant state. This routine only runs one time at the first enable signal.
 			nState := 50;
 		
 			
@@ -1069,6 +1070,7 @@ END_VAR
       <LineId Id="177" Count="0" />
       <LineId Id="183" Count="0" />
       <LineId Id="148" Count="0" />
+      <LineId Id="218" Count="0" />
       <LineId Id="137" Count="5" />
       <LineId Id="12" Count="0" />
     </LineIds>

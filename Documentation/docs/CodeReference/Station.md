@@ -123,6 +123,8 @@ It is recommended that all evaluations are nested inside IF checks for [.MoverIn
 
 > Current placement of the Station along the track
 
+This value is also used to place a marker on the visualization tools representing the station. See [Visualization](../GettingStarted/Visualization.md).
+
 ---
 <br>
 <br>
@@ -183,3 +185,6 @@ FOR i := 0 TO Station[0].TrackedMoverCount-1 DO
 	targetMover^.MoveToStation( Station[1] );
 END_FOR
 ```
+# Station Labeling In Viewing Tools
+
+See [Visualization](../GettingStarted/Visualization.md)
