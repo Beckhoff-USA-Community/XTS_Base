@@ -36,6 +36,7 @@ nav:
             - Introduction:     GettingStarted/Introduction.md
             - First Steps:      GettingStarted/GettingStarted.md
             - Quick Tips:       GettingStarted/QuickTips.md
+            - Visualization:    GettingStarted/Visualization.md
     - Code Reference:
         - Overview:             CodeReference/Objectives.md
         - Objects:
