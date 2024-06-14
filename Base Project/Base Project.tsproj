@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.55">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.56">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C929B002-BF94-48A2-937B-5D20DED8EF3B}">OperationMode</Name>
@@ -3934,10 +3934,6 @@ External Setpoint Generation:
 				<Enum>1</Enum>
 			</EnumInfo>
 			<EnumInfo>
-				<Text><![CDATA[mcGroupTypeDxd]]></Text>
-				<Enum>2</Enum>
-			</EnumInfo>
-			<EnumInfo>
 				<Text><![CDATA[mcGroupTypeCM]]></Text>
 				<Enum>3</Enum>
 			</EnumInfo>
@@ -4051,7 +4047,6 @@ and will return to Group State Standby when the situation permits.
 				<Comment><![CDATA[Actual Type of this Group:
 0 = Invalid            (mcGroupTypeInvalid),
 1 = CollisionAvoidance (mcGroupTypeCA),
-2 = DXD/CNC            (mcGroupTypeDxd),
 3 = CoordinatedMotion  (mcGroupTypeCM)]]></Comment>
 				<BitSize>32</BitSize>
 				<BitOffs>32</BitOffs>
@@ -33414,7 +33409,7 @@ and will return to Group State Standby when the situation permits.
 						</Interfaces>
 						<Parameters>
 							<Group><![CDATA[General]]></Group>
-							<Group Collapsed="true"><![CDATA[Structure]]></Group>
+							<Group><![CDATA[Structure]]></Group>
 							<Parameter Group="General">
 								<Name>AdsPort</Name>
 								<Comment><![CDATA[Gets/sets the ads port. The port should be used to read/write parameters via ADS.]]></Comment>
@@ -33431,14 +33426,14 @@ and will return to Group State Standby when the situation permits.
 								<PTCID>#x03080275</PTCID>
 								<ContextId>1</ContextId>
 							</Parameter>
-							<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+							<Parameter OnlineParameter="true" ShowSubItems="true" ReadOnly="true" Group="Structure">
 								<Name>StationInfoObjectIds</Name>
 								<Comment><![CDATA[Returns an array containing the object IDs of all station infos.]]></Comment>
-								<BitSize>32</BitSize>
+								<BitSize>320</BitSize>
 								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 								<ArrayInfo>
 									<LBound>0</LBound>
-									<Elements Min="1" Max="100">1</Elements>
+									<Elements Min="1" Max="100">10</Elements>
 								</ArrayInfo>
 								<PTCID>#x03080276</PTCID>
 								<ContextId>1</ContextId>
@@ -33457,10 +33452,46 @@ and will return to Group State Standby when the situation permits.
 								<Name>StationInfoObjectIds[0]</Name>
 								<Value>0</Value>
 							</Value>
+							<Value>
+								<Name>StationInfoObjectIds[1]</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>StationInfoObjectIds[2]</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>StationInfoObjectIds[3]</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>StationInfoObjectIds[4]</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>StationInfoObjectIds[5]</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>StationInfoObjectIds[6]</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>StationInfoObjectIds[7]</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>StationInfoObjectIds[8]</Name>
+								<Value>0</Value>
+							</Value>
+							<Value>
+								<Name>StationInfoObjectIds[9]</Name>
+								<Value>0</Value>
+							</Value>
 						</ParameterValues>
 					</TmcDesc>
 					<Module Id="#x01010460" KeepUnrestoredLinks="2">
-						<Name>Station 0</Name>
+						<Name>0</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}">
 							<Name>XtsStationInfo</Name>
@@ -33478,7 +33509,7 @@ and will return to Group State Standby when the situation permits.
 							</Interfaces>
 							<Parameters>
 								<Group><![CDATA[General]]></Group>
-								<Group Collapsed="true"><![CDATA[Structure]]></Group>
+								<Group><![CDATA[Structure]]></Group>
 								<Parameter Group="General">
 									<Name>AdsPort</Name>
 									<Comment><![CDATA[Gets/sets the ads port. The port should be used to read/write parameters via ADS.]]></Comment>
@@ -33545,7 +33576,7 @@ and will return to Group State Standby when the situation permits.
 									<PTCID>#x03080274</PTCID>
 									<ContextId>1</ContextId>
 								</Parameter>
-								<Parameter Group="General">
+								<Parameter ShowSubItems="true" Group="General">
 									<Name>StopPositions</Name>
 									<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
 									<BitSize>64</BitSize>
@@ -33666,7 +33697,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x01010470" KeepUnrestoredLinks="2">
-						<Name>Station 1</Name>
+						<Name>1</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}">
 							<Name>XtsStationInfo</Name>
@@ -33751,7 +33782,7 @@ and will return to Group State Standby when the situation permits.
 									<PTCID>#x03080274</PTCID>
 									<ContextId>1</ContextId>
 								</Parameter>
-								<Parameter Group="General">
+								<Parameter ShowSubItems="true" Group="General">
 									<Name>StopPositions</Name>
 									<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
 									<BitSize>64</BitSize>
@@ -33764,7 +33795,7 @@ and will return to Group State Standby when the situation permits.
 									<PTCID>#x0308028d</PTCID>
 									<ContextId>1</ContextId>
 								</Parameter>
-								<Parameter Group="General">
+								<Parameter ShowSubItems="true" Group="General">
 									<Name>PartObjectIds</Name>
 									<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
 									<BitSize>32</BitSize>
@@ -33872,7 +33903,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x01010480" KeepUnrestoredLinks="2">
-						<Name>Station 2</Name>
+						<Name>2</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}">
 							<Name>XtsStationInfo</Name>
@@ -33957,7 +33988,7 @@ and will return to Group State Standby when the situation permits.
 									<PTCID>#x03080274</PTCID>
 									<ContextId>1</ContextId>
 								</Parameter>
-								<Parameter Group="General">
+								<Parameter ShowSubItems="true" Group="General">
 									<Name>StopPositions</Name>
 									<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
 									<BitSize>64</BitSize>
@@ -34078,7 +34109,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x01010490" KeepUnrestoredLinks="2">
-						<Name>Station 3</Name>
+						<Name>3</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}">
 							<Name>XtsStationInfo</Name>
@@ -34163,7 +34194,7 @@ and will return to Group State Standby when the situation permits.
 									<PTCID>#x03080274</PTCID>
 									<ContextId>1</ContextId>
 								</Parameter>
-								<Parameter Group="General">
+								<Parameter ShowSubItems="true" Group="General">
 									<Name>StopPositions</Name>
 									<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
 									<BitSize>64</BitSize>
@@ -34284,7 +34315,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x010104a0" KeepUnrestoredLinks="2">
-						<Name>Station 4</Name>
+						<Name>4</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}">
 							<Name>XtsStationInfo</Name>
@@ -34490,7 +34521,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x010104b0" KeepUnrestoredLinks="2">
-						<Name>Station 5</Name>
+						<Name>5</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}">
 							<Name>XtsStationInfo</Name>
@@ -34696,7 +34727,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x010104c0" KeepUnrestoredLinks="2">
-						<Name>Station 6</Name>
+						<Name>6</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}">
 							<Name>XtsStationInfo</Name>
@@ -34902,7 +34933,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x010104d0" KeepUnrestoredLinks="2">
-						<Name>Station 7</Name>
+						<Name>7</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}">
 							<Name>XtsStationInfo</Name>
@@ -35108,7 +35139,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x010104e0" KeepUnrestoredLinks="2">
-						<Name>Station 8</Name>
+						<Name>8</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}">
 							<Name>XtsStationInfo</Name>
@@ -35314,7 +35345,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x010104f0" KeepUnrestoredLinks="2">
-						<Name>Station 9</Name>
+						<Name>9</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}">
 							<Name>XtsStationInfo</Name>
@@ -35502,7 +35533,7 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>IsEnabled</Name>
-									<EnumText>TRUE</EnumText>
+									<EnumText>FALSE</EnumText>
 								</Value>
 								<Value>
 									<Name>Description</Name>
@@ -56022,6 +56053,16 @@ and will return to Group State Standby when the situation permits.
 									<PTCID>#x0503009c</PTCID>
 								</Parameter>
 								<Parameter Group="Gap Control">
+									<Name>Active Gap Establishing</Name>
+									<Comment><![CDATA[Specifies whether axes in this group may actively accelerate to move out of existing gap violations]]></Comment>
+									<BitSize>8</BitSize>
+									<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+									<Default>
+										<Value>0</Value>
+									</Default>
+									<PTCID>#x05030136</PTCID>
+								</Parameter>
+								<Parameter Group="Gap Control">
 									<Name>Standby Gap Control</Name>
 									<Comment><![CDATA[Specifies whether the collision avoidance is active when no FB is active]]></Comment>
 									<BitSize>8</BitSize>
@@ -56123,6 +56164,10 @@ and will return to Group State Standby when the situation permits.
 									<Name>Category</Name>
 									<Value>MC Object</Value>
 								</Property>
+								<Property>
+									<Name>Category</Name>
+									<Value>MC GroupModule</Value>
+								</Property>
 							</Properties>
 							<ParentOTCID>#x05000100</ParentOTCID>
 							<ParameterValues>
@@ -56149,6 +56194,10 @@ and will return to Group State Standby when the situation permits.
 								<Value>
 									<Name>Gap Control Direction</Name>
 									<EnumText>mcGapCtrlDirectionBoth</EnumText>
+								</Value>
+								<Value>
+									<Name>Active Gap Establishing</Name>
+									<EnumText>FALSE</EnumText>
 								</Value>
 								<Value>
 									<Name>Standby Gap Control</Name>

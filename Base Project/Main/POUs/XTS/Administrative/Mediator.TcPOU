@@ -38,6 +38,7 @@ VAR
 	fbXtsEnvironmentVisu			: FB_XtsEnvironmentVisu;
 	stXtsEnvironmentConfiguration	: ST_XtsEnvironmentConfiguration;	
 	nEnvironmentState				: INT;
+	internalInfoServerOTCID			: UDINT;
 
 	internalEnvironment				: I_TcIoXtsEnvironment;
 	internalXPU						: I_TcIoXtsProcessingUnit;
@@ -486,7 +487,10 @@ internalEnableGroupFlag := FALSE;
       <Declaration><![CDATA[METHOD CyclicEnvironment : BOOL
 VAR_INPUT
 END_VAR
-]]></Declaration>
+
+VAR
+	
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[CASE nEnvironmentState OF
 	0:	// ----------------------------------------- Enable Init Items
@@ -525,32 +529,41 @@ END_VAR
 			// next step
 			nEnvironmentState	:= 3;
 		END_IF
+
+	3:	// ------------------------------------------ Get OTCID
+	
+		IF internalEnvironment.GetInfoServerOids(TRUE) THEN
+			internalEnvironment.GetInfoServerOids(FALSE);
+			internalInfoServerOTCID := internalEnvironment.P_InfoServerOids[1];
+			nEnvironmentState := 4;
+		END_IF;
 		
-	3:	// ------------------------------------------- Init info server
+	4:	// ------------------------------------------- Init info server
+		
 		// Start init
-		IF internalInfoServer.Init(TRUE, TRUE) THEN
+		IF internalInfoServer.Init(TRUE, internalInfoServerOTCID) THEN
 			// stop init
-			internalInfoServer.Init(FALSE, FALSE);
+			internalInfoServer.Init(FALSE, internalInfoServerOTCID);
 			
 			// next step
-			nEnvironmentState	:= 4;
+			nEnvironmentState	:= 5;
 		END_IF
-	4:	// ------------------------------------------ Check for success
+	5:	// ------------------------------------------ Check for success
 	
 		// Check IsInitialized property
 		IF internalInfoServer.P_IsInitialized THEN
 			// next step
-			nEnvironmentState	:= 5;
+			nEnvironmentState	:= 6;
 		END_IF
 		
-	5:	// ------------------------------------------- Init Visu
+	6:	// ------------------------------------------- Init Visu
 	
 		fbXtsEnvironmentVisu( ipTcIoXtsEnvironment := fbXtsEnvironment );
 		
 		// next step
-		nEnvironmentState	:= 4;
+		nEnvironmentState	:= 7;
 		
-	6:	// ------------------------------------------- Init done
+	7:	// ------------------------------------------- Init done
 
 		fbXtsEnvironmentVisu.Cycle();
 		
@@ -616,18 +629,30 @@ VAR_INST
 	nState : INT;
 	
 	// 
-	PartStartEnd : ARRAY [0..GVL.PART_ARRAY_SIZE-1] OF ARRAY [0..1] OF LREAL;
+	PartStartEnd : ARRAY [1..GVL.PART_ARRAY_SIZE] OF ARRAY [0..1] OF LREAL;
 	
 	nPartsInTrack1	: UDINT;
+	TrackPartInfo	: ARRAY[1..TcIoXtsEnvironmentParameterList.MaxPartsPerTrack] OF ST_PartInfoItems;
 	PartInfo 		: St_PartInfoItems;
 	
+	nInfoServerStations		: UDINT;
+	nUsableStations			: UDINT;
+	
+	StationTcIo		: I_TcIoXtsInfoServerInfoStation;
+	nStationPartNum	: UDINT;
+	xtsStationPointer : POINTER TO Station;
+	xtsStation		: Station;
+	PartObjectIds	: ARRAY [1..TcIoXtsEnvironmentParameterList.MaxXtsPartsPerXpu] OF OTCID;
+	StopPositions	: ARRAY [1..TcIoXtsEnvironmentParameterList.MaxXtsStopPositionsPerStation] OF LREAL := [0.0];
+	
 	i				: UDINT;
+	j				: UDINT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// populate TcCom XTS station objects with positions and part numbers from code for easier visibility in simulation
 
 // check for environment
-IF THIS^.EnvironmentIsReady and internalEnabled AND_THEN internalEnvironment.P_IsInitialized THEN
+IF THIS^.EnvironmentIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS AND_THEN internalEnvironment.P_IsInitialized THEN
 	
 	CASE nState OF
 		
@@ -645,11 +670,63 @@ IF THIS^.EnvironmentIsReady and internalEnabled AND_THEN internalEnvironment.P_I
 			
 		20:
 			// get info for each part start and end position (or max size of array)
+			TrackPartInfo := internalXPU.TrackTcIo(1).GetPartInfoItems();
 			FOR i := 1 TO MIN(nPartsInTrack1, GVL.PART_ARRAY_SIZE) DO
-				PartInfo := internalXPU.TrackTcIo(1).GetPartInfoItems()[i];
+				PartInfo := TrackPartInfo[i];
 				PartStartEnd[i][0] := PartInfo.fOffset;
 				PartStartEnd[i][1] := PartInfo.fLength + PartInfo.fOffset;
 			END_FOR
+			nState := 30;
+			
+		30:
+			// get number of stations
+			nInfoServerStations := internalInfoServer.GetInfoStationCount() ;
+			nInfoServerStations := internalINfoServer.P_InfoStationCount;
+			nState := 40;
+			
+		40:
+			// calculate minimum number of stations that can be set up
+			nUsableStations := MIN(nInfoServerStations, GVL.NUM_STATIONS);
+			FOR i := 1 TO nUsableStations DO
+				// get XTS_Base Station pointer (stored in revers order in StationArray)
+				xtsStationPointer := StationArray[GVL.NUM_STATIONS - i];
+				// test for valid pointer (station has been through the Mediator.AddStation method)
+				IF (xtsStationPointer <> 0) THEN
+					// dereference the pointer
+					xtsStation := xtsStationPointer^;
+					// make sure the position is not zero (hides stations that probably aren't used)
+						IF (xtsStation.Position <> 0.0) THEN
+						// calculate part number
+						nStationPartNum := 0;
+						FOR j := 1 TO nPartsInTrack1 DO
+							IF (PartStartEnd[j][0] <= xtsStation.Position AND xtsStation.Position < PartStartEnd[j][1]) THEN
+								nStationPartNum := j;
+							END_IF
+						END_FOR
+						// test for found part number
+						IF (nStationPartNum > 0) THEN
+						// get station
+							StationTcIO := internalInfoServer.InfoStationTcIo(UDINT_TO_UINT(i));
+							// test for valid station
+							IF (stationTcIO <> 0) THEN
+								// try not to overwrite data that may have been entered in the configurator by testing for a start position of 0 (from the configurator), or 10 and 200 (defaults from adding object by hand)
+								IF (StationTcIO.GetStartPositionOnPart() = 0.0 OR (StationTcIO.GetStartPositionOnPart() = 10.0 AND StationTcIO.GetEndPositionOnPart() = 200.0)) THEN
+									// assign data
+									StationTcIO.SetStationId(i);
+									PartObjectIds[1] := TrackPartInfo[nStationPartNum].nObjectId;
+									stationTcIO.SetPartObjectIds(PartObjectIds);
+									StationTcIO.SetStartPositionOnPart(xtsSTation.Position - PartStartEnd[j][0]);
+									StationTcIO.SetEndPositionOnPart(xtsSTation.Position - PartStartEnd[j][0]);
+									StationTcIo.SetStopPositions(StopPositions);
+									StationTcIo.SetStationColor(16#FFEF0000);	// Beckhoff red
+								END_IF;
+							END_IF;
+						END_IF;
+					END_IF;
+				END_IF;
+			END_FOR
+			nState := 50;
+		
 			
 	END_CASE
 
@@ -917,7 +994,14 @@ END_VAR
       <LineId Id="6" Count="29" />
       <LineId Id="51" Count="3" />
       <LineId Id="36" Count="2" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="92" Count="1" />
       <LineId Id="58" Count="1" />
+      <LineId Id="82" Count="0" />
       <LineId Id="62" Count="6" />
       <LineId Id="60" Count="0" />
       <LineId Id="69" Count="3" />
@@ -952,27 +1036,40 @@ END_VAR
       <LineId Id="68" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.CyclicStationInfo">
-      <LineId Id="5" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="21" Count="1" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="27" Count="4" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="39" Count="4" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="13" Count="0" />
+      <LineId Id="99" Count="20" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="122" Count="11" />
+      <LineId Id="144" Count="2" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="180" Count="2" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="175" Count="1" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="156" Count="1" />
+      <LineId Id="163" Count="1" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="184" Count="1" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="187" Count="1" />
+      <LineId Id="190" Count="1" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="170" Count="2" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="137" Count="5" />
       <LineId Id="12" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.DetectMover1">
