@@ -1623,6 +1623,8 @@ ELSE
 			fbGearInPosAxisCA[0].SyncMode		:= mcSyncModePositive;
 		ELSIF MotionParameters.Direction = mcDirectionNegative THEN
 			fbGearInPosAxisCA[0].SyncMode		:= mcSyncModeNegative;
+		ELSE // mcDirectionNonModulo or mcDirectionShortestWay
+			fbGearInPosAxisCA[0].SyncMode		:= mcSyncModeNonModulo;
 		END_IF
 		
 		fbGearInPosAxisCA[0].Velocity			:= MotionParameters.Velocity;
@@ -1654,6 +1656,8 @@ ELSE
 			fbGearInPosAxisCA[1].SyncMode		:= mcSyncModePositive;
 		ELSIF MotionParameters.Direction = mcDirectionNegative THEN
 			fbGearInPosAxisCA[1].SyncMode		:= mcSyncModeNegative;				
+		ELSE // mcDirectionNonModulo or mcDirectionShortestWay
+			fbGearInPosAxisCA[1].SyncMode		:= mcSyncModeNonModulo;
 		END_IF
 		
 		fbGearInPosAxisCA[1].Velocity			:= MotionParameters.Velocity;
@@ -2205,12 +2209,16 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="107" Count="0" />
       <LineId Id="109" Count="1" />
       <LineId Id="151" Count="0" />
-      <LineId Id="27" Count="26" />
+      <LineId Id="27" Count="4" />
+      <LineId Id="169" Count="1" />
+      <LineId Id="32" Count="21" />
       <LineId Id="111" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="112" Count="0" />
       <LineId Id="152" Count="0" />
-      <LineId Id="54" Count="14" />
+      <LineId Id="54" Count="4" />
+      <LineId Id="171" Count="1" />
+      <LineId Id="59" Count="9" />
       <LineId Id="131" Count="0" />
       <LineId Id="69" Count="0" />
       <LineId Id="133" Count="1" />
