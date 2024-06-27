@@ -247,13 +247,21 @@ CASE internalState OF
 		Ready	:= FALSE;
 		Busy	:= FALSE;
 
-		fbMoveAbsCA[0].Execute	:= FALSE;
-		fbMoveAbsCA[1].Execute	:= FALSE;
-		fbMoveRelCA[0].Execute	:= FALSE;
-		fbMoveRelCA[1].Execute	:= FALSE;
-		
 		internalDisable			:= FALSE;
 		IF internalEnable THEN
+			// clear enable on commands (allows commands to hold error IDs until next enable signle for debugging
+			fbMoveAbsCA[0].Execute			:= FALSE;
+			fbMoveAbsCA[1].Execute			:= FALSE;
+			fbMoveRelCA[0].Execute			:= FALSE;
+			fbMoveRelCA[1].Execute			:= FALSE;
+			fbGearInPosMoverCA[0].Execute	:= FALSE;
+			fbGearInPosMoverCA[1].Execute	:= FALSE;
+			fbGearInPosAxisCA[0].Execute	:= FALSE;
+			fbGearInPosAxisCA[1].Execute	:= FALSE;
+			fbHaltCA.Execute				:= FALSE;
+			fbAddToGroup.Execute			:= FALSE;
+			fbRemoveFromGroup.Execute		:= FALSE;
+		
 			internalEnable		:= FALSE;
 			internalState		:= MV_RESET;
 		END_IF
@@ -453,10 +461,15 @@ CASE internalState OF
 		ErrorID	:= 0;
 		
 		// Kill any active motion commands
-		fbMoveRelCA[0].Execute		:= FALSE;
-		fbMoveRelCA[1].Execute		:= FALSE;
-		fbMoveAbsCA[0].Execute		:= FALSE;
-		fbMoveAbsCA[1].Execute		:= FALSE;
+		fbMoveAbsCA[0].Execute			:= FALSE;
+		fbMoveAbsCA[1].Execute			:= FALSE;
+		fbMoveRelCA[0].Execute			:= FALSE;
+		fbMoveRelCA[1].Execute			:= FALSE;
+		fbGearInPosMoverCA[0].Execute	:= FALSE;
+		fbGearInPosMoverCA[1].Execute	:= FALSE;
+		fbGearInPosAxisCA[0].Execute	:= FALSE;
+		fbGearInPosAxisCA[1].Execute	:= FALSE;
+
 		
 		IF Mediator.Error = FALSE THEN
 			fbHaltCA.Execute		:= TRUE;
@@ -1919,7 +1932,13 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
     </LineIds>
     <LineIds Name="Mover.Cyclic">
       <LineId Id="3" Count="9" />
-      <LineId Id="18" Count="28" />
+      <LineId Id="18" Count="6" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="541" Count="0" />
+      <LineId Id="543" Count="9" />
+      <LineId Id="542" Count="0" />
+      <LineId Id="553" Count="0" />
+      <LineId Id="32" Count="14" />
       <LineId Id="525" Count="0" />
       <LineId Id="47" Count="6" />
       <LineId Id="509" Count="11" />
@@ -1942,7 +1961,9 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="310" Count="15" />
       <LineId Id="468" Count="2" />
       <LineId Id="467" Count="0" />
-      <LineId Id="326" Count="110" />
+      <LineId Id="326" Count="9" />
+      <LineId Id="554" Count="7" />
+      <LineId Id="339" Count="97" />
       <LineId Id="442" Count="2" />
       <LineId Id="446" Count="12" />
       <LineId Id="476" Count="0" />
