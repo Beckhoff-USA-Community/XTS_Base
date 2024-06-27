@@ -715,8 +715,8 @@ IF THIS^.EnvironmentIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS A
 									StationTcIO.SetStationId(i);
 									PartObjectIds[1] := TrackPartInfo[nStationPartNum].nObjectId;
 									stationTcIO.SetPartObjectIds(PartObjectIds);
-									StationTcIO.SetStartPositionOnPart(xtsSTation.Position - PartStartEnd[j][0]);
-									StationTcIO.SetEndPositionOnPart(xtsSTation.Position - PartStartEnd[j][0]);
+									StationTcIO.SetStartPositionOnPart(xtsSTation.Position - PartStartEnd[nStationPartNum][0]);
+									StationTcIO.SetEndPositionOnPart(xtsSTation.Position - PartStartEnd[nStationPartNum][0]);
 									StationTcIo.SetStopPositions(StopPositions);
 									StationTcIo.SetStationColor(16#FFEF0000);	// Beckhoff red
 								END_IF;
@@ -725,7 +725,7 @@ IF THIS^.EnvironmentIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS A
 					END_IF;
 				END_IF;
 			END_FOR
-			// transition to non-existant state. This routine only runs one time at the first enable signal.
+			// transition to non-existent state. This routine only runs one time at the first enable signal.
 			nState := 50;
 		
 			
@@ -1037,41 +1037,7 @@ END_VAR
       <LineId Id="68" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.CyclicStationInfo">
-      <LineId Id="99" Count="20" />
-      <LineId Id="166" Count="0" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="167" Count="0" />
-      <LineId Id="122" Count="11" />
-      <LineId Id="144" Count="2" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="180" Count="2" />
-      <LineId Id="178" Count="0" />
-      <LineId Id="162" Count="0" />
-      <LineId Id="175" Count="1" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="156" Count="1" />
-      <LineId Id="163" Count="1" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="184" Count="1" />
-      <LineId Id="151" Count="0" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="187" Count="1" />
-      <LineId Id="190" Count="1" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="169" Count="0" />
-      <LineId Id="150" Count="0" />
-      <LineId Id="170" Count="2" />
-      <LineId Id="174" Count="0" />
-      <LineId Id="192" Count="0" />
-      <LineId Id="189" Count="0" />
-      <LineId Id="186" Count="0" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="183" Count="0" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="137" Count="5" />
+      <LineId Id="244" Count="82" />
       <LineId Id="12" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.DetectMover1">
