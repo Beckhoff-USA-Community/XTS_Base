@@ -10,3 +10,13 @@
 
 	--md-accent-fg-color:				#aeb3b8;
 }
+
+:root h2 {
+	padding-top: 4em;
+	border-top: 1px solid lightgray;
+}
+
+:root h3 {
+	padding-top: 2em;
+	border-top: 1px solid lightgray;
+}

@@ -3,9 +3,6 @@
 
 > The Mover List object provides a way to group Movers together and issue commands to every Mover in the list. Alternatively, commands can be sent to individual movers within the list based on their geographic proximity to a track position
 
----
-<br>
-<br>
 
 ## Setup & Execution
 
@@ -34,9 +31,6 @@ Mediator.AddMoverList( MoverListA );
 ```
 
 
----
-<br>
-<br>
 
 ## Methods
 
@@ -63,9 +57,6 @@ See [Mover](Mover.md).ActivateTrack and for additional notes about track managem
 	// movers on track 2 ready for commands
 ```
 
----
-<br>
-<br>
 
 ### Contains
 
@@ -79,12 +70,6 @@ IF MoverListA.Contains( Mover[4] ) THEN
 END_IF
 ```
 
-
----
-<br>
-<br>
-<br>
-
 ### DestinationStation
 
 *DestinationStation( Destination : REFERENCE TO Station ) : MoverList*
@@ -93,10 +78,6 @@ END_IF
 
 Filtering a mover list by station can be helpful when workings with several movers in a zone. There are two typical use cases. The first is to avoid re-triggering a move to station command after code such as `Zone[1].CurrentMoverList.MoveAllToStation(Station[2])` has executed, but movers are still accelerating out of this zone. The second is to ignore movers that may have a non-typical destination such as a rejected part in an otherwise normal flow of good parts.
 
----
-<br>
-<br>
-<br>
 
 ### GetMoverByLocation
 
@@ -125,9 +106,6 @@ MoverListA.GetMoverByLocation( 2, 3000, MC_Negative_Direction ).SetAcceleration(
 
 ```
 
----
-<br>
-<br>
 
 ### LogicalCompliment
 
@@ -141,9 +119,6 @@ MoverListA.GetMoverByLocation( 2, 3000, MC_Negative_Direction ).SetAcceleration(
 MoverListA.LogicalCompliment(); // returns: M4, M5
 ```
 
----
-<br>
-<br>
 
 ### LogicalDifference
 
@@ -157,9 +132,6 @@ MoverListA.LogicalCompliment(); // returns: M4, M5
 MoverListA.LogicalDifference( MoverListB ); // returns: M1, M2
 ```
 
----
-<br>
-<br>
 
 ### LogicalIntersect
 
@@ -173,9 +145,6 @@ MoverListA.LogicalDifference( MoverListB ); // returns: M1, M2
 MoverListA.LogicalIntersect( MoverListB ); // returns: M3
 ```
 
----
-<br>
-<br>
 
 ### LogicalUnion
 
@@ -189,9 +158,6 @@ MoverListA.LogicalIntersect( MoverListB ); // returns: M3
 MoverListA.LogicalUnion( MoverListB ); // returns: M1, M2, M3, M5
 ```
 
----
-<br>
-<br>
 
 ### MoveAllToPosition
 
@@ -203,9 +169,6 @@ MoverListA.LogicalUnion( MoverListB ); // returns: M1, M2, M3, M5
 MoverListA.MoveAllToPosition( 1200 );
 ```
 
----
-<br>
-<br>
 
 ### MoveAllToStation
 
@@ -217,9 +180,6 @@ MoverListA.MoveAllToPosition( 1200 );
 MoverListA.MoveAllToStation( Station[3] );
 ```
 
----
-<br>
-<br>
 
 ### MoveAllVelocity
 
@@ -231,9 +191,6 @@ MoverListA.MoveAllToStation( Station[3] );
 MoverListA.MoveAllVelocity( 300 );
 ```
 
----
-<br>
-<br>
 
 ### SetAllAcceleration
 
@@ -245,9 +202,6 @@ MoverListA.MoveAllVelocity( 300 );
 MoverListA.SetAllAcceleration( 1E3 );
 ```
 
----
-<br>
-<br>
 
 ### SetAllDeceleration
 
@@ -259,9 +213,6 @@ MoverListA.SetAllAcceleration( 1E3 );
 MoverListA.SetAllDeceleration( 15000 );
 ```
 
----
-<br>
-<br>
 
 ### SetAllDirection
 
@@ -273,9 +224,6 @@ MoverListA.SetAllDeceleration( 15000 );
 MoverListA.SetAllDirection( mcDirectionPositive );
 ```
 
----
-<br>
-<br>
 
 ### SetAllGap
 
@@ -287,9 +235,6 @@ MoverListA.SetAllDirection( mcDirectionPositive );
 MoverListA.Gap( 65.0 );
 ```
 
----
-<br>
-<br>
 
 ### SetAllJerk
 
@@ -301,9 +246,6 @@ MoverListA.Gap( 65.0 );
 MoverListA.SetAllJerk( 1e5 );
 ```
 
----
-<br>
-<br>
 
 ### SetAllVelocity
 
@@ -315,9 +257,6 @@ MoverListA.SetAllJerk( 1e5 );
 MoverListA.SetAllVelocity( 2000 );
 ```
 
----
-<br>
-<br>
 
 ### UnregisterAll
 

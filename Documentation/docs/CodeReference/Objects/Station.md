@@ -3,9 +3,6 @@
 
 > The Station object provides a fixed location for a Mover to stop at until it is ready to be released. A Station is a type of Objective, and provides a handle to the Mover object that is currently docked with the Station, allowing further motion commands to be issued to the Mover.
 
----
-<br>
-<br>
 
 ## Setup & Execution
 
@@ -35,9 +32,6 @@ Stations must also be added to the Mediator object. By default, this is handled 
 Mediator.AddStation( Station[1] );
 ```
 
----
-<br>
-<br>
 
 ## Mover Registration
 
@@ -57,9 +51,6 @@ Mover[2].MoveToPosition( Station[3].Position );
 
 Here, the Station will not report *MoverInPosition*.
 
----
-<br>
-<br>
 
 ## Methods
 
@@ -74,9 +65,6 @@ FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
 	Station[i].Cyclic()
 END_FOR
 ```
----
-<br>
-<br>
 
 ### Reset Statistics
 
@@ -85,9 +73,6 @@ END_FOR
 > Resets the Statistics for this station. See the [Statistics](#statistics) property.
 
 
----
-<br>
-<br>
 
 ## Properties
 
@@ -95,9 +80,6 @@ END_FOR
 
 > Status boolean indicating that a mover is currently docked with the Station
 
----
-<br>
-<br>
 
 ### .CurrentMover
 
@@ -107,17 +89,11 @@ When no mover is present in the Station, .CurrentMover is an invalid reference. 
 
 It is recommended that all evaluations are nested inside IF checks for [.MoverInPosition](#moverinposition).
 
----
-<br>
-<br>
 
 ### .TrackedMoverCount
 
 > Simply reports the number of Movers that are currently registered with the Station. Because Stations automatically deregister movers that are not currently destined for this Station, this value also represents the current number of incoming movers.
 
----
-<br>
-<br>
 
 ### .Position
 
@@ -125,9 +101,6 @@ It is recommended that all evaluations are nested inside IF checks for [.MoverIn
 
 This value is also used to place a marker on the visualization tools representing the station. See [Visualization](../../GettingStarted/Visualization.md).
 
----
-<br>
-<br>
 
 ### .Statistics
 
@@ -151,16 +124,10 @@ This value is also used to place a marker on the visualization tools representin
 | ProcessedMoverCount		| UDINT |  Total number of movers processed by this station |
 
 
----
-<br>
-<br>
 
 #### .TrackId
 *DINT*
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
----
-<br>
-<br>
 
 
 ## Extra Examples

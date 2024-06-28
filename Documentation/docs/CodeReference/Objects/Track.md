@@ -12,8 +12,6 @@ Tracks are a software defined group of motor modules that can be grouped togethe
 
 The track object is only necessary when using track management. For most applications that utilize a single, closed loop track the Track object does not need to be addressed directly. Movers, zones, stations and position triggers all reference a track internally but are set with defaults of TrackID 1 which is generated automatically by the configuration tool.
 
----
-
 ## Setup
 
 Tracks are declared as an array and should be numbered starting at 1 to match the numbering assigned by the XTS configurator. The provided code does this automatically and will find the correct hardware address for each track in the array during the initialization phase.
@@ -54,8 +52,6 @@ Station[1].Position := 250.0;
 Station[1].TrackId  := 3;
 ```
 
----
-
 ### Tracks managing movers
 
 Tracks maintain a MoverList that can be used to track and query the movers on the track. See the [MoverList](MoverList.md) object for complete details. Some common use cases are shown below
@@ -84,9 +80,6 @@ When using tracks where some are closed loops (ovals) and others are not (spurs)
 
 When a non-closed section of track is used (such as a rework spur), the mover commands `Mover.MoveToPosition` and `Mover.MoveToStation` as well as the related commands in a `MoverList` do not work with the default direction. When a mover is switched to a non-closed track, `Mover.SetDirection(mcDirectionNonModulo)` should also be called to set the mover's positioning to absolute along this portion of the track. Then when transitioning back to a closed section of track `Mover.SetDirection(mcDirectionPositive)` should be called to revert to the default modulo operation.
 
----
-<br>
-<br>
 
 ## Methods
 
@@ -99,9 +92,6 @@ The methods listed below are used internally within the base code and should not
 
 > This is used internally by Mover.TrackCyclic()
 
----
-<br>
-<br>
 
 
 ### UnregisterAll
@@ -110,9 +100,6 @@ The methods listed below are used internally within the base code and should not
 
 > This is used internally by the Track Object
 
----
-<br>
-<br>
 
 
 ### UnregisterMover
@@ -121,9 +108,6 @@ The methods listed below are used internally within the base code and should not
 
 > This is used internally by Mover.TrackCyclic()
 
----
-<br>
-<br>
 
 ## Properties
 

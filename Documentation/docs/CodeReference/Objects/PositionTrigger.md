@@ -3,9 +3,6 @@
 
 > Position Trigger objects monitor movers until they have crossed over a specified location on track, even if they do not stop there. Position Triggers will always point to the most recent registered mover which crossed over the Position Trigger's track position. When using track management the position trigger will only trigger if the mover crosses the specificed location and has a matching TrackId.
 
----
-<br>
-<br>
 
 ## Setup & Execution
 
@@ -27,9 +24,6 @@ Position Triggers must also be added to the Mediator object. By default, this is
 Mediator.AddPositionTrigger( PositionTriggerA );
 ```
 
----
-<br>
-<br>
 
 ## Methods
 
@@ -39,9 +33,6 @@ Mediator.AddPositionTrigger( PositionTriggerA );
 
 > Position Triggers require a cyclic call in the Main Program because they need to constantly monitor the positions of registered movers.
 
----
-<br>
-<br>
 
 ### MuteCurrent
 
@@ -62,9 +53,6 @@ In this way, it is possible to *reset* the position trigger without having to co
 
 This method will produce a [Log Event](../Diagnostics/EventLogger.md) to aid in troubleshooting.
 
----
-<br>
-<br>
 
 ### Reset Statistics
 
@@ -72,9 +60,6 @@ This method will produce a [Log Event](../Diagnostics/EventLogger.md) to aid in 
 
 > Resets the Statistics for this station. See the [Statistics](#statistics) property.
 
----
-<br>
-<br>
 
 ## Properties
 
@@ -84,9 +69,6 @@ This method will produce a [Log Event](../Diagnostics/EventLogger.md) to aid in 
 
 Position Triggers are unique in that the Current Mover output *latches* even though the mover may not still qualify under the trigger condition
 
----
-<br>
-<br>
 
 ### .CurrentMover
 
@@ -98,24 +80,15 @@ Position Triggers are unique in that the Current Mover output *latches* even tho
 
 - It is possible that multiple registered movers have crossed over a threshold position. Only the most recently valid mover handle is provided by .CurrentMover.
 
----
-<br>
-<br>
 
 ### .Position
 
 > Current placement of the Position Trigger threshold along the track
 
----
-<br>
-<br>
 
 #### .TrackId
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
 
----
-<br>
-<br>
 
 #### .TriggerDirection
 > Sets the direction of travel required for the mover to trigger the position trigger.
@@ -125,9 +98,6 @@ Options are:
 - MC_PositiveDirection: The mover's position is increasing as it crosses the trigger. (Default)
 - MC_Negative_Direction: The mover's position is decreasing as it crosses the trigger.
 
----
-<br>
-<br>
 
 ### .Statistics
 
@@ -143,9 +113,6 @@ Options are:
 | AverageMoverVelocity | LREAL | Average of all nonzero mover velocities in the ring buffer	 |
 | AverageMoversPerMinute | LREAL;
 | ProcessedMoverCount | UDINT | Total number of movers processed by this position trigger |
----
-<br>
-<br>
 
 
 ## Extra Examples

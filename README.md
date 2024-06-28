@@ -1,17 +1,13 @@
 
 # XTS Base Code
 
----
-
 ![XTS Base](/Assets/TrackDigital.png)
 
----
 
 ## Quick Start
 
 - [Download the Latest Release](https://github.com/Beckhoff-USA-Community/XTS_Base/releases/latest)
 
----
 
 ## Project Links
 
@@ -19,7 +15,6 @@
 - [Beckhoff XTS](https://www.beckhoff.com/en-us/products/motion/xts-linear-product-transport/)
 - [XTS Infosys](https://infosys.beckhoff.com/english.php?content=../content/1033/driveinfosys/9921860875.html&id=)
 
----
 
 ## Version 2.x
 
@@ -31,7 +26,6 @@ The 2.x revision overhauls this boilerplate code and moves the majority of it in
 
 Because of the nature of equipment in industrial facilities, validation cycles and uptime considerations we only recommend using Version 2.x on new projects.
 
----
 
 ## Development
 

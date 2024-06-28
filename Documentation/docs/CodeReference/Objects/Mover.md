@@ -8,8 +8,6 @@
 - Reading out current move status information like position, velocity, etc.
 - Updating motion parameters during operation
 
----
-
 ## Setup & Execution
 
 It is recommended, but not required, to declare Movers as an array.
@@ -31,9 +29,6 @@ Mediator.AddMover( Mover[0] );
     Prior to 1.4.0, it was necessary to cyclically call two methods: *Mover.Cyclic()* and *Mover.CyclicTrack()*. This process is now handled implicitly by the Mediator object, along with all other Objective cyclic calls.
 
 
-
----
-
 ## Methods
 
 ### Enable
@@ -52,9 +47,6 @@ Mediator.AddMover( Mover[0] );
 Mover[1].Enable();
 ```
 
----
-<br>
-<br>
 
 ### Disable
 
@@ -65,8 +57,6 @@ Mover[1].Enable();
 ```javascript
 Mover[1].Disable();
 ```
-
----
 
 ### GroupStop
 
@@ -83,9 +73,6 @@ IF xStopAllMovers THEN
 END_IF
 ```
 
----
-<br>
-<br>
 
 ### Halt
 
@@ -102,9 +89,6 @@ IF xStopSingleMover THEN
 END_IF
 ```
 
----
-<br>
-<br>
 
 ### MoveToPosition
 
@@ -119,9 +103,6 @@ IF xMoveCommand THEN
 END_IF
 ```
 
----
-<br>
-<br>
 
 ### MoveToStation
 
@@ -136,9 +117,6 @@ IF xMoveToHome THEN
 END_IF
 ```
 
----
-<br>
-<br>
 
 ### MoveVelocity
 
@@ -153,9 +131,6 @@ IF xMoveVelocity THEN
 END_IF
 ```
 
----
-<br>
-<br>
 
 ### SyncToAxis
 
@@ -186,9 +161,6 @@ IF xCmdSyncToAxis THEN
 END_IF;
 ```
 
----
-<br>
-<br>
 
 ### SyncToMover
 
@@ -231,9 +203,6 @@ IF xBuildTrain THEN
 END_IF;		
 ```
 
----
-<br>
-<br>
 
 ### ReissueCommand
 
@@ -258,9 +227,6 @@ ELSIF xUpdateCommand THEN
 END_IF
 ```
 
----
-<br>
-<br>
 
 ### LogUserEvent
 
@@ -274,9 +240,6 @@ IF PositionTrigger[1].MoverPassedPosition THEN
 END_IF;
 ```
 
----
-<br>
-<br>
 
 ### SetAcceleration
 
@@ -291,9 +254,6 @@ IF xCommandHighAccel THEN
 END_IF
 ```
 
----
-<br>
-<br>
 
 ### SetDeceleration
 
@@ -308,9 +268,6 @@ IF xCommandLowDecel THEN
 END_IF
 ```
 
----
-<br>
-<br>
 
 ### SetDirection
 
@@ -329,9 +286,6 @@ IF xReverseDirection THEN
 END_IF
 ```
 
----
-<br>
-<br>
 
 ### SetJerk
 
@@ -346,9 +300,6 @@ IF xUpdateJerk THEN
 END_IF
 ```
 
----
-<br>
-<br>
 
 ### SetVelocity
 
@@ -386,9 +337,6 @@ A track change takes several PLC and NC scans. Issuing a motion command while th
 	// mover is ready for additional commands
 ```
 
----
-<br>
-<br>
 
 ### ValidateTrack
 
@@ -450,9 +398,6 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 
 > Provides the current (last executed) type of movement command issued to the Mover
 
----
-<br>
-<br>
 
 ### .CurrentDestinationPosition
 
@@ -460,9 +405,6 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 
 > Provides the current destination position for the last movement command issued to the Mover. For Station commands, this will be the Position of the Station. For Velocity commands with no real destination position, the value is set to +/-1E300.
 
----
-<br>
-<br>
 
 ### .CurrentDestinationTrack
 
@@ -470,9 +412,6 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 
 > Provides the current destination track for the last movement command issued to the Mover. When track management is used, it should be queried along with the property .CurrentDestinationPosition to validate destinations.
 
----
-<br>
-<br>
 
 ### .MotionParameters
 
@@ -482,9 +421,6 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 
 *Note: despite listing this value as a Property here in the documentation, MotionParameters are actually defined as a regular Input to the Mover object. This allows component access to the members of the STRUCT, which is not possible for Properties.*
 
----
-<br>
-<br>
 
 ### .CurrentObjective
 
@@ -492,9 +428,6 @@ MOVETYPE_VELOCITY		// this mover was most recently issued a MoveVelocity command
 
 > Provides the current Objective destination for the Mover. Right now this is only valid when the Mover is destined for a Station objective, and provides a string name for that station.
 
----
-<br>
-<br>
 
 ### .CurrentTrack
 
@@ -508,9 +441,6 @@ Use the ^ operator to dereference the pointer and query track properties
 currentTrackId := Mover[1].CurrentTrack^.Id
 ```
 
----
-<br>
-<br>
 
 ### .IsSyncedToMover
 
@@ -518,9 +448,6 @@ currentTrackId := Mover[1].CurrentTrack^.Id
 
 > Returns true if the mover is slaved to another mover and has successfully reached the following position specified by the Gap.
 
----
-<br>
-<br>
 
 ### .IsSyncedToAxis
 
@@ -528,9 +455,6 @@ currentTrackId := Mover[1].CurrentTrack^.Id
 
 > Returns true if the mover is slaved to an external axis and has successfully reached the following position specified by the Master & Slave Sync Positions
 
----
-<br>
-<br>
 
 ### .IsTrackReady
 
@@ -540,9 +464,6 @@ currentTrackId := Mover[1].CurrentTrack^.Id
 
 When using track management it can take several PLC scans for the .ActivateTrack method to complete. It is advised to wait for this to return after issuing an .ActivateTrack() command to avoid motion errors.
 
----
-<br>
-<br>
 
 ### .MasterMover
 
@@ -554,33 +475,21 @@ When this mover is not slaved to another mover, .MasterMover is an invalid refer
 
 It is recommended that all evaluations are nested inside IF checks for .IsSyncedToMover OR by calling __ISVALIDREF
 
----
-<br>
-<br>
 
 ### .NextMover
 
 > Returns the next mover in line with respect to this mover. Specifically, it returns the closest mover with a greater Position value than the current mover, regardless of actual direction of travel.
 
----
-<br>
-<br>
 
 #### .Payload
 
 > !!! Under Construction !!! At the moment, this property is a placeholder for application specific information regarding the current status of products onboard the mover, and can be modified as needed for your application.
 
----
-<br>
-<br>
 
 ### .PreviousMover
 
 > Returns the previous mover in line with respect to this mover. Specifically, it returns the closest mover with a lesser Position value than the current mover, regardless of actual direction of travel.
 
----
-<br>
-<br>
 
 ### .TrackInfo
 
@@ -593,9 +502,6 @@ It is recommended that all evaluations are nested inside IF checks for .IsSynced
 | TrackPosition | LREAL | Position of the mover measured from the zero point of the track. This may differ from Mover.AxisReference.NcToPLC.ActPos in certain track configurations |
 | PartPosition | LREAL | Position of the mover measured from the zero point of the part the mover is physically on|
 
----
-<br>
-<br>
 
 ## Extra Examples
 

@@ -9,7 +9,7 @@ Here are a few quick tips to assist in developing with this project:
 
 - Movers Contain an AxisRef. The status values of an AxisRef can be very useful. 
 
-- When using *.CurrentMover* properties (or similar), always wrap usage with a check for *.MoverInPosition* or similar, to verify that the pointers are valid. See ErrorMovers for more information.
+- When using `.CurrentMover` properties (or similar), always wrap usage with a check for `.MoverInPosition` or similar, to verify that the pointers are valid. See [`ErrorMovers`](../CodeReference/Diagnostics/ErrorMovers.md) for more information.
 
 - When reconfiguring the project for new hardware, be sure to delete elements of a previous configuration. More info on this is included in the First Steps section.
 
@@ -45,4 +45,6 @@ For each Track set in the XTS Processing Unit set `Parameter > General > Polarit
 
 There are some additional considerations to be aware of when inverting the track direction, especially if the track direction is changed after portions of code have been written and tested.
 
-When looking for the next and previous movers on a system, for example when working with 2-up stations, movers that have been referenced directly such as Mover[i] and Mover[i+1] may no longer be in the expected order. Functions such as [`Mover.NextMover()`](../CodeReference/Objects/Mover.md#nextmover), [`Mover.PreviousMover()`](../CodeReference/Objects/Mover.md#previousmover) or [`Zone.CurrentMoverList.GetMoverByLocation`](../CodeReference/Objects/MoverList.md#getmoverbylocation) are the recommended methods will correctly handle an inverted track direction.
+### Next and previous movers
+
+When looking for the next and previous movers on a system, for example when working with 2-up stations, movers that have been referenced directly such as Mover[i] and Mover[i+1] may no longer be in the expected order. Functions such as [`Mover.NextMover()`](../CodeReference/Objects/Mover.md#nextmover), [`Mover.PreviousMover()`](../CodeReference/Objects/Mover.md#previousmover) or [`Zone.CurrentMoverList.GetMoverByLocation()`](../CodeReference/Objects/MoverList.md#getmoverbylocation) are the recommended methods will correctly handle an inverted track direction.
