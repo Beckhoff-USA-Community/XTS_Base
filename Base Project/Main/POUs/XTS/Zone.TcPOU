@@ -26,7 +26,7 @@ END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[internalMoverList.UnregisterAll();
 
-FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[0]) - 1 DO
+FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[1]) - 1 DO
     IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.IsTrackReady AND internalTrackedMovers[i]^.CurrentTrack <> 0 THEN
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrackId) THEN

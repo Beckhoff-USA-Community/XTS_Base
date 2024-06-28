@@ -12,7 +12,7 @@ VAR
 
 	// ========= Linked NC Variables & References =========
 	
-	Mover    			: ARRAY[0..GVL.NUM_MOVERS - 1] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
+	Mover    			: ARRAY[1..GVL.NUM_MOVERS] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
 	
 	// ========= Objectives & Parameters =========
 
@@ -178,7 +178,7 @@ System.Cyclic();
         <ST><![CDATA[	
 
 		// Add all Movers to the Mediator
-		FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+		FOR i := 1 TO GVL.NUM_MOVERS DO
 			System.AddMover( Mover[i] );
 		END_FOR
 	

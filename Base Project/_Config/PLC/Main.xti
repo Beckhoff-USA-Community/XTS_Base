@@ -1305,7 +1305,7 @@ External Setpoint Generation:
 		</DataType>
 	</DataTypes>
 	<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="Main" PrjFilePath="..\..\Main\Main.plcproj" TmcFilePath="..\..\Main\Main.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Main\Main.tmc" TmcHash="{20C43B17-ACDA-9602-495A-326E2081099B}">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Main\Main.tmc" TmcHash="{855AE27D-D1B7-A9C2-78C0-E88B4FFB06BD}">
 			<Name>Main Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="1">
@@ -1320,10 +1320,6 @@ External Setpoint Generation:
 				</Var>
 				<Var>
 					<Name>MAIN.System.__MEDIATOR__CYCLICSTATIONINFO__XTSSTATION.ErrorMover.AxisReference.NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>MAIN.Mover[0].AxisReference.NcToPlc</Name>
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
@@ -1344,6 +1340,10 @@ External Setpoint Generation:
 				</Var>
 				<Var>
 					<Name>MAIN.Mover[5].AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Mover[6].AxisReference.NcToPlc</Name>
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
@@ -1578,10 +1578,6 @@ External Setpoint Generation:
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 				<Var>
-					<Name>MAIN.Mover[0].AxisReference.PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
 					<Name>MAIN.Mover[1].AxisReference.PlcToNc</Name>
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
@@ -1599,6 +1595,10 @@ External Setpoint Generation:
 				</Var>
 				<Var>
 					<Name>MAIN.Mover[5].AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Mover[6].AxisReference.PlcToNc</Name>
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 				<Var>
@@ -1862,28 +1862,28 @@ External Setpoint Generation:
 	<Mappings>
 		<OwnerA Name="Main Instance">
 			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 1">
-				<Link VarA="PlcTask Inputs^MAIN.Mover[0].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
-				<Link VarA="PlcTask Outputs^MAIN.Mover[0].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 2">
 				<Link VarA="PlcTask Inputs^MAIN.Mover[1].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^MAIN.Mover[1].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 3">
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 2">
 				<Link VarA="PlcTask Inputs^MAIN.Mover[2].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^MAIN.Mover[2].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 4">
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 3">
 				<Link VarA="PlcTask Inputs^MAIN.Mover[3].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^MAIN.Mover[3].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 5">
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 4">
 				<Link VarA="PlcTask Inputs^MAIN.Mover[4].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^MAIN.Mover[4].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
-			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 6">
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 5">
 				<Link VarA="PlcTask Inputs^MAIN.Mover[5].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^MAIN.Mover[5].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 6">
+				<Link VarA="PlcTask Inputs^MAIN.Mover[6].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.Mover[6].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC SAF^Objects^Collision Avoidance">
 				<Link VarA="PlcTask Inputs^MAIN.System.GROUP_REF.NcToPlc^CA" VarB="Group Outputs^ToPLC"/>

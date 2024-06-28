@@ -27,7 +27,7 @@ END_VAR
 // monitor .IsAllTrackReady before calling additional commands on this list
 
 // For every valid mover in the list, pass it a ActivateTrack command
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.ActivateTrack(Track);
@@ -47,7 +47,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+FOR i := 1 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[1] ) DO
 	
 	IF internalTrackedMovers[i] <> 0 THEN
 		internalTrackedMovers[i]^.MotionParameters		:= ParameterSet;
@@ -73,7 +73,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[
 
 // Check if the input Mover is contained within the existing list
-FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[1]) DO
 	IF internalTrackedMovers[i] <> 0 AND internalTrackedMovers[i] = ADR( Mover ) THEN
 		Contains	:= TRUE;
 	END_IF
@@ -90,7 +90,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// filters this mover list for movers that have the stated destination station
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
 	// test for valid mover
     IF internalTrackedMovers[i] <> 0 THEN
@@ -128,7 +128,7 @@ END_VAR]]></Declaration>
 
 // For every valid mover in the list, Enable it
 
-FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+FOR i := 1 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[1] ) DO
 	
 	IF internalTrackedMovers[i] <> 0 THEN
 		internalTrackedMovers[i]^.Disable();
@@ -149,7 +149,7 @@ END_VAR]]></Declaration>
 
 // For every valid mover in the list, Enable it
 
-FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+FOR i := 1 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[1] ) DO
 	
 	IF internalTrackedMovers[i] <> 0 THEN
 		internalTrackedMovers[i]^.Enable();
@@ -325,7 +325,7 @@ WHILE allsorted = FALSE DO
 	END_CASE;	
 END_WHILE
 
-IF Index < 0 OR Index >= THIS^.TrackedMoverCount THEN
+IF Index < 1 OR Index > THIS^.TrackedMoverCount THEN
 	GetMoverByLocation REF= 0;
 ELSE
 	GetMoverByLocation REF= SortedBuffer[Index]^;
@@ -354,7 +354,7 @@ END_VAR
 
 // For every valid mover in the list, Halt it
 
-FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+FOR i := 1 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[1] ) DO
 	
 	IF internalTrackedMovers[i] <> 0 THEN
 		internalTrackedMovers[i]^.Halt();
@@ -375,7 +375,7 @@ END_VAR
         <Implementation>
           <ST><![CDATA[IsAllMoversDisabled		:= TRUE;		// ...default
 
-FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+FOR i := 1 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[1] ) DO
 
 	IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.Ready = TRUE THEN
 		IsAllMoversDisabled		:= FALSE;
@@ -396,7 +396,7 @@ END_VAR
         <Implementation>
           <ST><![CDATA[IsAllMoversHalted		:= TRUE;		// ...default
 
-FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+FOR i := 1 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[1] ) DO
 	// check for valid mover
 	IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.AxisReference.Status.Moving = TRUE THEN
 		IsAllMoversHalted		:= FALSE;
@@ -417,7 +417,7 @@ END_VAR
           <ST><![CDATA[
 IsAllMoversReady		:= TRUE;		// ...default
 
-FOR i := 0 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[i] ) - 1 DO
+FOR i := 1 TO SIZEOF( internalTrackedMovers ) / SIZEOF( internalTrackedMovers[1] ) DO
 
 	IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.Ready = FALSE THEN
 		IsAllMoversReady		:= FALSE;
@@ -445,10 +445,10 @@ END_VAR
 // this ensures that during the ~20ms track change in software when no movers may be present on the track, this response will not inadvertantly advance code
 // if zero movers is a common situation an OR condition of "MoverList.TrackedMoverCount = 0" can be added to the statement calling this
 allReady := TRUE;
-size := SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1;
+size := SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]);
 zeroCount := 0;
 
-FOR i := 0 TO size DO
+FOR i := 1 TO size DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         allReady := allReady AND internalTrackedMovers[i]^.IsTrackReady;
@@ -459,7 +459,7 @@ FOR i := 0 TO size DO
 END_FOR
 
 // check for no movers
-IF zeroCount = (size + 1) THEN
+IF zeroCount = (size) THEN
 	allReady := FALSE;
 END_IF
 
@@ -478,7 +478,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+FOR i := 1 TO GVL.NUM_MOVERS DO
 	
 	IF NOT THIS^.Contains( Mediator.MoverArray[i]^ ) THEN
 		LogicalComplement.RegisterMover( Mediator.MoverArray[i]^ );
@@ -502,7 +502,7 @@ END_VAR
         <ST><![CDATA[
 
 
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+FOR i := 1 TO GVL.NUM_MOVERS DO
 	
 	IF THIS^.Contains( Mediator.MoverArray[i]^ ) AND NOT MoverList.Contains( Mediator.MoverArray[i]^ ) THEN
 		LogicalDifference.RegisterMover( Mediator.MoverArray[i]^ );
@@ -525,7 +525,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+FOR i := 1 TO GVL.NUM_MOVERS DO
 	
 	IF MoverList.Contains( Mediator.MoverArray[i]^ ) AND THIS^.Contains( Mediator.MoverArray[i]^ ) THEN
 		LogicalIntersect.RegisterMover( Mediator.MoverArray[i]^ );	
@@ -563,7 +563,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// For every valid mover in the list, pass it a MoveToPosition command
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.MoveToPosition(DestinationPosition);
@@ -587,7 +587,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// For every valid mover in the list, pass it a MoveToStation command
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.MoveToStation(DestinationStation);
@@ -610,7 +610,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// For every valid mover in the list, pass it a MoveVelocity command
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.MoveVelocity(Velocity);
@@ -634,7 +634,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// For every valid mover in the list, set the Acceleration values
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.SetAcceleration(Acceleration);
@@ -657,7 +657,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// For every valid mover in the list, set the Deceleration values
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.SetDeceleration(Deceleration);
@@ -680,7 +680,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// For every valid mover in the list, update the internal Direction parameter
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.SetDirection(Direction);
@@ -701,7 +701,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// For every valid mover in the list, update the internal Gap Parameter
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.SetGap(Gap);
@@ -724,7 +724,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// For every valid mover in the list, update the internal Jerk Parameter
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.SetJerk(Jerk);
@@ -747,7 +747,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// For every valid mover in the list, set the Velocity values
-FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         internalTrackedMovers[i]^.SetVelocity(Velocity);
@@ -766,7 +766,7 @@ VAR
     i : ulint;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+        <ST><![CDATA[FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
     IF internalTrackedMovers[i] <> 0 THEN
         THIS^.UnregisterMover(internalTrackedMovers[i]^);
     END_IF

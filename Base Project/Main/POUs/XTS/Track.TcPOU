@@ -157,7 +157,7 @@ SUPER^.RegisterMover(NewMover);
 // this saves us the time of generating it on every call to CurrentMoverCount
 internalMoverList.UnregisterAll();
 
-FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[0]) - 1 DO
+FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[1]) - 1 DO
     IF internalTrackedMovers[i] <> 0 THEN
 		internalMoverList.RegisterMover(internalTrackedMovers[i]^);
 	END_IF
@@ -195,7 +195,7 @@ SUPER^.UnregisterMover(RemovingMover);
 // this saves us the time of generating it on every call to CurrentMoverCount
 internalMoverList.UnregisterAll();
 
-FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[0]) - 1 DO
+FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[1]) - 1 DO
     IF internalTrackedMovers[i] <> 0 THEN
 		internalMoverList.RegisterMover(internalTrackedMovers[i]^);
 	END_IF

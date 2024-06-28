@@ -12,7 +12,7 @@ VAR
 
     internalTrackedMoverCount 	: USINT;
    
-    internalTrackedMovers 		: ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover;
+    internalTrackedMovers 		: ARRAY[1..GVL.NUM_MOVERS] OF POINTER TO Mover;
 
     ErrorMover 					: ErrorMover;
 	
@@ -65,7 +65,7 @@ IF __ISVALIDREF(NewMover) THEN // validate reference
     duplicateFound            := FALSE; // default to false, counterexample below
     internalTrackedMoverCount := 0;     // reset to zero, incremented below
 
-    FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) - 1 DO
+    FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) DO
         IF internalTrackedMovers[i] <> 0 THEN
             IF ADR(NewMover) = internalTrackedMovers[i] THEN
                 duplicateFound := TRUE; // this mover already tracked
@@ -107,7 +107,7 @@ arrTrackedMovers := NewMoverList.TrackedMovers;
 
 // IF __ISVALIDREF( NewMoverList ) THEN
 IF NewMoverList <> 0 THEN
-    FOR i := 0 TO SIZEOF(arrTrackedMovers) / SIZEOF(arrTrackedMovers[0]) - 1 DO
+    FOR i := 1 TO SIZEOF(arrTrackedMovers) / SIZEOF(arrTrackedMovers[0]) DO
 
         THIS^.RegisterMover(arrTrackedMovers[i]^);
 
@@ -125,7 +125,7 @@ END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[TrackedMoverCount := 0;
 
-FOR i := 0 TO GVL.NUM_MOVERS - 1 DO
+FOR i := 1 to GVL.NUM_MOVERS DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         TrackedMoverCount := TrackedMoverCount + 1;
@@ -185,7 +185,7 @@ IF __ISVALIDREF(RemovingMover) THEN
 
     internalTrackedMoverCount := 0;
 
-    FOR i := 0 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[0]) - 1 DO
+    FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
         IF internalTrackedMovers[i] <> 0 THEN // validate pointer
 
             internalTrackedMoverCount := internalTrackedMoverCount + 1;
