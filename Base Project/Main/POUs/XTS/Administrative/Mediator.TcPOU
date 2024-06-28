@@ -26,7 +26,7 @@ VAR
 	{attribute 'hide'}
 	InstancePath		: STRING;	// instance naming, for diagnostics purposes
 
-	internalMoverList				: MoverList;;
+	internalMoverList				: MoverList;
 	internalM1DetectFlag			: BOOL;
 	internalM1DetectState			: INT;
 	internalEnableGroupFlag			: BOOL;
@@ -652,7 +652,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[// populate TcCom XTS station objects with positions and part numbers from code for easier visibility in simulation
 
 // check for environment
-IF THIS^.EnvironmentIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS AND_THEN internalEnvironment.P_IsInitialized THEN
+IF THIS^.InfoServerIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS THEN
 	
 	CASE nState OF
 		
@@ -757,6 +757,17 @@ END_VAR
 internalEnableGroupFlag := TRUE;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Environment" Id="{5e5f4ba6-ff8f-0396-2883-6b9b059dc7fd}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Environment : I_TcIoXtsEnvironment]]></Declaration>
+      <Get Name="Get" Id="{67009401-6b19-0292-3a1b-93904af08df3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Environment := internalEnvironment;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="EnvironmentIsReady" Id="{45272fae-93d1-0503-0b16-fd82b7738745}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY EnvironmentIsReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{c1e17dfb-61a0-0ba8-0903-93fde5311796}">
@@ -765,17 +776,6 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[EnvironmentIsReady := fbXtsEnvironment.P_IsInitialized;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="Envrionment" Id="{5e5f4ba6-ff8f-0396-2883-6b9b059dc7fd}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Envrionment : I_TcIoXtsEnvironment]]></Declaration>
-      <Get Name="Get" Id="{67009401-6b19-0292-3a1b-93904af08df3}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[Envrionment := internalEnvironment;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -811,6 +811,17 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[InfoServer := internalInfoServer;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="InfoServerIsReady" Id="{4e305043-af78-0914-0db5-c677c55227ed}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY InfoServerIsReady : BOOL]]></Declaration>
+      <Get Name="Get" Id="{8b9f3051-e0e9-0ebe-0aa7-9041fdaa0bf8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InfoServerIsReady := internalInfoServer <> 0 AND_THEN internalInfoServer.P_IsInitialized;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -1048,10 +1059,10 @@ END_VAR
       <LineId Id="5" Count="1" />
       <LineId Id="8" Count="0" />
     </LineIds>
-    <LineIds Name="Mediator.EnvironmentIsReady.Get">
+    <LineIds Name="Mediator.Environment.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="Mediator.Envrionment.Get">
+    <LineIds Name="Mediator.EnvironmentIsReady.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.GroupEnabled.Get">
@@ -1062,6 +1073,9 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.InfoServer.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InfoServerIsReady.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.Mover1DetectionComplete.Get">
