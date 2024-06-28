@@ -60,7 +60,7 @@ END_IF
 
 In this way, it is possible to *reset* the position trigger without having to completely unregister and re-register a mover from the trigger.
 
-This method will produce a [Log Event](../CodeReference/EventLogger.md) to aid in troubleshooting.
+This method will produce a [Log Event](../Diagnostics/EventLogger.md) to aid in troubleshooting.
 
 ---
 <br>

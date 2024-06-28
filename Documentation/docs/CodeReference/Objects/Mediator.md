@@ -13,7 +13,7 @@ Finally, the Mediator handles calling the necessary .Cyclic() methods on all obj
 
 Code already exists to make the mediator aware of all [Movers](Mover.md), [MoverLists](MoverList.md), [PositionTriggers](PositionTrigger.md), [Stations](Station.md), [Zones](Zone.md) and [Tracks](Track.md). It is executed at the appropriate states in the MAIN program. However, the mediator must be made aware of the number of each object. This is accomplished in the global variable list GVL.
 
-![Global Variable List](../Images/GlobalVarsMediator.png)
+![Global Variable List](../../Images/GlobalVarsMediator.png)
 
 Update the count of each object according to the needs of the system in this list. It's recommended to oversize these arrays so that during runtime debugging additional stations, zones or position triggers can be added without the need to stop and recompile the PLC program.
 

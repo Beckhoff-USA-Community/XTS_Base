@@ -41,7 +41,7 @@ Mediator.AddStation( Station[1] );
 
 ## Mover Registration
 
-Unlike other types of Objectives, Stations manage mover registration automatically. Any mover that is commanded with a [MoveToStation](../CodeReference/Mover.md#movetostation) is also automatically registered with that station. As an example, this implementation would be redundant:
+Unlike other types of Objectives, Stations manage mover registration automatically. Any mover that is commanded with a [MoveToStation](Mover.md#movetostation) is also automatically registered with that station. As an example, this implementation would be redundant:
 
 ```javascript
 Mover[2].MoveToStation( Station[3] );
@@ -123,7 +123,7 @@ It is recommended that all evaluations are nested inside IF checks for [.MoverIn
 
 > Current placement of the Station along the track
 
-This value is also used to place a marker on the visualization tools representing the station. See [Visualization](../GettingStarted/Visualization.md).
+This value is also used to place a marker on the visualization tools representing the station. See [Visualization](../../GettingStarted/Visualization.md).
 
 ---
 <br>
@@ -187,4 +187,4 @@ END_FOR
 ```
 # Station Labeling In Viewing Tools
 
-See [Visualization](../GettingStarted/Visualization.md)
+See [Visualization](../../GettingStarted/Visualization.md)

@@ -550,7 +550,7 @@ When using track management it can take several PLC scans for the .ActivateTrack
 
 > Reference variable that refers to the Mover this Mover is currently slaved to
 
-When this mover is not slaved to another mover, .MasterMover is an invalid reference. There is therefore an ErrorMover object which will return information on what action was requested by the object while .MasterMover was invalid. This will show up in TwinCAT's Event Logs. See [Diagnostics / ErrorMovers](../CodeReference/ErrorMovers.md) for more information.  
+When this mover is not slaved to another mover, .MasterMover is an invalid reference. There is therefore an ErrorMover object which will return information on what action was requested by the object while .MasterMover was invalid. This will show up in TwinCAT's Event Logs. See [Diagnostics / ErrorMovers](../Diagnostics/ErrorMovers.md) for more information.  
 
 It is recommended that all evaluations are nested inside IF checks for .IsSyncedToMover OR by calling __ISVALIDREF
 

@@ -70,7 +70,7 @@ The code above is similar in functionality to:
 Mover[1].MoveToStation( Station[1] );
 ```
 
-Stations include some unique features regarding mover registration. See [Station Object](Station.md) for more details.
+Stations include some unique features regarding mover registration. See [Station Object](Objects/Station.md) for more details.
 
 ---
 <br>
@@ -80,7 +80,7 @@ Stations include some unique features regarding mover registration. See [Station
 
 *RegisterMoverList( NewMoverList : MoverList )*
 
-> Provides the same functionality as [RegisterMover](#registermover), but for a group of movers represented as a [MoverList](MoverList.md).
+> Provides the same functionality as [RegisterMover](#registermover), but for a group of movers represented as a [MoverList](Objects/MoverList.md).
 
 ```javascript
 MoverListA.RegisterMoverList(MoverListB);

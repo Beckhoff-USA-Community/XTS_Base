@@ -14,7 +14,7 @@ END_IF
 
 Typically, calling methods on these *invalid references* would result in a Pagefault and halt the XAR. However this outcome can be frustrating and slows development. Instead, an imposter **ErrorMover** object is returned in these circumstances as a quality-of-life improvement. ErrorMovers replace all the method functionality of standard Movers and will instead generate Errors in TwinCAT. For example:
 
-![ErrorMover](../Images/PagefaultPrevention.png)
+![ErrorMover](../../Images/PagefaultPrevention.png)
 
 ## Axis Linking
 
@@ -22,4 +22,4 @@ If ErrorMovers appear in the list of potentially linkable objects when connectin
 
 By default, ErrorMovers are removed from the PLC Process Image to prevent them appearing in this list.
 
-![MappingErrorMovers](../Images/MappingErrorMovers.png)
+![MappingErrorMovers](../../Images/MappingErrorMovers.png)

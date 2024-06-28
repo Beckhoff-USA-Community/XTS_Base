@@ -20,6 +20,7 @@ As a starting point, always be sure to investigate the object status outputs in 
 - Most recently commanded via Position Trigger #2
 - Has no active errors
 
+
 > For more advanced troubleshooting steps, see the additional categories to the left.
 
-![Mover Status](../Images/MoverStatus.png)
+![Mover Status](../../Images/MoverStatus.png)

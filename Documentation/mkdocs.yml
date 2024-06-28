@@ -40,17 +40,17 @@ nav:
     - Code Reference:
         - Overview:             CodeReference/Objectives.md
         - Objects:
-            - Mediator:             CodeReference/Mediator.md
-            - Mover:                CodeReference/Mover.md
-            - Mover List:           CodeReference/MoverList.md
-            - Position Trigger:     CodeReference/PositionTrigger.md
-            - Station:              CodeReference/Station.md
-            - Track:                CodeReference/Track.md
-            - Zone:                 CodeReference/Zone.md
+            - Mediator:             CodeReference/Objects/Mediator.md
+            - Mover:                CodeReference/Objects/Mover.md
+            - Mover List:           CodeReference/Objects/MoverList.md
+            - Position Trigger:     CodeReference/Objects/PositionTrigger.md
+            - Station:              CodeReference/Objects/Station.md
+            - Track:                CodeReference/Objects/Track.md
+            - Zone:                 CodeReference/Objects/Zone.md
         - Diagnostics:
-            - Basics:           CodeReference/Diagnostics.md
-            - ErrorMovers:      CodeReference/ErrorMovers.md
-            - Event Logger:     CodeReference/EventLogger.md
-            - Utility Library:  CodeReference/UtilityLibrary.md
+            - Basics:           CodeReference/Diagnostics/Basics.md
+            - ErrorMovers:      CodeReference/Diagnostics/ErrorMovers.md
+            - Event Logger:     CodeReference/Diagnostics/EventLogger.md
+            - Utility Library:  CodeReference/Diagnostics/UtilityLibrary.md
     - Examples:
         - Station to Station:   Examples/StationRouting.md
