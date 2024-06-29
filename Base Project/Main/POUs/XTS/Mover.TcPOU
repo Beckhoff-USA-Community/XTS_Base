@@ -226,14 +226,17 @@ VAR_IN_OUT
 	GroupReference		: AXES_GROUP_REF;
 END_VAR
 VAR
-
+	runCyclicTrack		: BOOL;
 END_VAR
-]]></Declaration>
+VAR_INST
+	MsgCreate			: FB_TcMessage;	
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[// this method contains multiple state machines denoted by the headers below
 
-
-
+// *************************************************************************
+// mover state machine
+// *************************************************************************
 
 // cleans motion parameters, removing possible negatives. Upper bounds are capped by the axis parameters
 MotionParameters.Acceleration	:= LIMIT( 0, MotionParameters.Acceleration, 1E300 );
@@ -388,7 +391,7 @@ CASE internalState OF
 			fbHaltCA.Execute			:= FALSE;
 		END_IF;
 		
-		THIS^.CyclicTrack();
+		runCyclicTrack := TRUE;
 		
 		IF (internalReissue) THEN
 			THIS^.SourceInstancePath	:= 'ReissueCommand';
@@ -588,19 +591,11 @@ fbWriteM1Detect();
 fbActivateTrack(Axis := AxisReference);
 fbReadTrackPositions(Axis := AxisReference);
 
+// *************************************************************************
+// track management state machine
+// *************************************************************************
 
-]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="CyclicTrack" Id="{f91ef8d2-f744-0809-3990-5a057546bb09}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD CyclicTrack : BOOL
-VAR
-END_VAR
-VAR_INST
-	MsgCreate			: FB_TcMessage;	
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// called by .Cyclic() to handle the MC_ActivateTrack call's required state machine
+// called by .Cyclic() to handle the MC_ActivateTrack call's required state machine
 // this is only called while the mover is in the RUN state within .Cyclic() by design
 // calling the track management functions on disabled or errored movers that are not
 // assigned to a group just causes the track management functions to throw more errors
@@ -612,96 +607,100 @@ END_VAR]]></Declaration>
 // upstream movers to be released erroniously because the station/zone momentarily appears clear
 
 // in user code .IsTrackReady and .CurrentTrack should be queried together before issuing commands to a mover
-
-CASE internalTrackState OF
-	// wait for command
-	TrackState.WAIT_FOR_COMMAND:
-		IF (internalActivateTrackFlag AND internalActivatingTrack^.isInitialized) THEN
-			// unregister mover from current track (logical tracking)
-			IF (internalTrack <> 0) THEN
-				internalTrack^.UnregisterMover(THIS^);
+IF (runCyclicTrack) THEN
+	CASE internalTrackState OF
+		// wait for command
+		TrackState.WAIT_FOR_COMMAND:
+			IF (internalActivateTrackFlag AND internalActivatingTrack^.isInitialized) THEN
+				// unregister mover from current track (logical tracking)
+				IF (internalTrack <> 0) THEN
+					internalTrack^.UnregisterMover(THIS^);
+				END_IF;
+	
+				// set flags
+				internalTrackIsReady := FALSE;
+	
+				// advance state
+				internalTrackState := TrackState.SETUP_FUNCTION;
+			END_IF
+			
+		// setup and call the function
+		TrackState.SETUP_FUNCTION:
+			fbActivateTrack.TrackId := internalActivatingTrack^.OTCID;
+			fbActivateTrack.Execute := TRUE;
+			IF (fbActivateTrack.Busy) THEN
+				fbActivateTrack.Execute := FALSE;
+				internalTrackState := TrackState.MONITOR_RESPONSE;
+			END_IF
+		
+		// monitor response	
+		TrackState.MONITOR_RESPONSE:
+			IF (fbActivateTrack.Error) THEN
+				internalTrackState := TrackState.ERROR;
+			ELSIF (fbActivateTrack.Done) THEN
+				internalTrackState := TrackState.REQUIRED_DELAY;
 			END_IF;
-
-			// set flags
-			internalTrackIsReady := FALSE;
-
-			// advance state
-			internalTrackState := TrackState.SETUP_FUNCTION;
-		END_IF
 		
-	// setup and call the function
-	TrackState.SETUP_FUNCTION:
-		fbActivateTrack.TrackId := internalActivatingTrack^.OTCID;
-		fbActivateTrack.Execute := TRUE;
-		IF (fbActivateTrack.Busy) THEN
+		// required delay
+		// the FB has returned .Done but the change has not yet propigated to the NC
+		TrackState.REQUIRED_DELAY:
+			internalTrackStateDelay.IN := TRUE;
+			IF (internalTrackStateDelay.Q) THEN
+				internalTrackStateDelay.IN := FALSE;
+				internalTrackState := TrackState.CLEAN_UP;
+			END_IF;
+		
+		// clean up flags
+		TrackState.CLEAN_UP:
+			internalTrack := internalActivatingTrack;
+			internalTrackIsReady := TRUE;
+			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrackComplete, 0);
+			MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(THIS^.CurrentTrack^.Id);
+			MsgCreate.Send(0);
+			// register mover
+			internalTrack^.RegisterMover(THIS^);
+			internalTrackState := TrackState.WAIT_END;
+			
+		TrackState.ERROR:
+			// reset execute
 			fbActivateTrack.Execute := FALSE;
-			internalTrackState := TrackState.MONITOR_RESPONSE;
+			// GVL.ERROR_TRACK is intentionally left in place
+			// internalTrackIsReady is left at false
+			// error is recorded in Cyclic()
+			internalTrackState := TrackState.WAIT_END;
+			
+		TrackState.WAIT_END: 
+			// falling edge detection for internalActivateTrackFlag
+			IF (NOT internalActivateTrackFlag) THEN
+				internalTrackState := TrackState.WAIT_FOR_COMMAND;	
+			END_IF
+			internalActivateTrackFlag := FALSE;
+	
+	END_CASE
+	
+	// read back track information
+	IF (internalTrackIsReady) THEN
+		// track info should be stable, call the block
+		fbReadTrackPositions.Enable := TRUE;
+		// copy data when ready
+		IF (fbReadTrackPositions.Valid) THEN
+			TrackInfo.TrackPosition := fbReadTrackPositions.TrackPosition;
+			TrackInfo.PartPosition := fbReadTrackPositions.PartPosition;
+			TrackInfo.TrackId := fbReadTrackPositions.TrackId;
+			TrackInfo.PartId := fbReadTrackPositions.PartId;
 		END_IF
-	
-	// monitor response	
-	TrackState.MONITOR_RESPONSE:
-		IF (fbActivateTrack.Error) THEN
-			internalTrackState := TrackState.ERROR;
-		ELSIF (fbActivateTrack.Done) THEN
-			internalTrackState := TrackState.REQUIRED_DELAY;
-		END_IF;
-	
-	// required delay
-	// the FB has returned .Done but the change has not yet propigated to the NC
-	TrackState.REQUIRED_DELAY:
-		internalTrackStateDelay.IN := TRUE;
-		IF (internalTrackStateDelay.Q) THEN
-			internalTrackStateDelay.IN := FALSE;
-			internalTrackState := TrackState.CLEAN_UP;
-		END_IF;
-	
-	// clean up flags
-	TrackState.CLEAN_UP:
-		internalTrack := internalActivatingTrack;
-		internalTrackIsReady := TRUE;
-		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrackComplete, 0);
-		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(THIS^.CurrentTrack^.Id);
-		MsgCreate.Send(0);
-		// register mover
-		internalTrack^.RegisterMover(THIS^);
-		internalTrackState := TrackState.WAIT_END;
-		
-	TrackState.ERROR:
-		// reset execute
-		fbActivateTrack.Execute := FALSE;
-		// GVL.ERROR_TRACK is intentionally left in place
-		// internalTrackIsReady is left at false
-		// error is recorded in Cyclic()
-		internalTrackState := TrackState.WAIT_END;
-		
-	TrackState.WAIT_END: 
-		// falling edge detection for internalActivateTrackFlag
-		IF (NOT internalActivateTrackFlag) THEN
-			internalTrackState := TrackState.WAIT_FOR_COMMAND;	
-		END_IF
-		internalActivateTrackFlag := FALSE;
-
-END_CASE
-
-// read back track information
-IF (internalTrackIsReady) THEN
-	// track info should be stable, call the block
-	fbReadTrackPositions.Enable := TRUE;
-	// copy data when ready
-	IF (fbReadTrackPositions.Valid) THEN
-		TrackInfo.TrackPosition := fbReadTrackPositions.TrackPosition;
-		TrackInfo.PartPosition := fbReadTrackPositions.PartPosition;
-		TrackInfo.TrackId := fbReadTrackPositions.TrackId;
-		TrackInfo.PartId := fbReadTrackPositions.PartId;
+	ELSE
+		// don't call function block to allow it to reset
+		fbReadTrackPositions.Enable := FALSE;
 	END_IF
-ELSE
-	// don't call function block to allow it to reset
-	fbReadTrackPositions.Enable := FALSE;
-END_IF
+	
+	
+	// a delay is required after MC_ActivateTrack returns .Done
+	internalTrackStateDelay(PT := T#10MS);
+END_IF;
 
-
-// a delay is required after MC_ActivateTrack returns .Done
-internalTrackStateDelay(PT := T#10MS);]]></ST>
+// clear cyclic track run command and wait for it to be re-enabled by the first state machine
+runCyclicTrack := FALSE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Disable" Id="{2aa14795-54cd-46b8-a131-b1a8801c005f}" FolderPath="Methods\">
@@ -1931,7 +1930,12 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Cyclic">
-      <LineId Id="3" Count="9" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="573" Count="0" />
+      <LineId Id="7" Count="5" />
       <LineId Id="18" Count="6" />
       <LineId Id="30" Count="1" />
       <LineId Id="541" Count="0" />
@@ -1950,8 +1954,9 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="528" Count="0" />
       <LineId Id="237" Count="37" />
       <LineId Id="279" Count="0" />
-      <LineId Id="465" Count="1" />
-      <LineId Id="483" Count="1" />
+      <LineId Id="687" Count="1" />
+      <LineId Id="465" Count="0" />
+      <LineId Id="484" Count="0" />
       <LineId Id="487" Count="14" />
       <LineId Id="485" Count="0" />
       <LineId Id="502" Count="0" />
@@ -1970,77 +1975,15 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="475" Count="0" />
       <LineId Id="478" Count="0" />
       <LineId Id="477" Count="0" />
-      <LineId Id="459" Count="1" />
+      <LineId Id="459" Count="0" />
+      <LineId Id="574" Count="2" />
+      <LineId Id="460" Count="0" />
+      <LineId Id="577" Count="100" />
       <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mover.CyclicTrack">
-      <LineId Id="5" Count="0" />
-      <LineId Id="104" Count="2" />
-      <LineId Id="184" Count="7" />
-      <LineId Id="107" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="109" Count="0" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="110" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="32" Count="1" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="23" Count="2" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="114" Count="1" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="116" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="118" Count="0" />
-      <LineId Id="45" Count="1" />
-      <LineId Id="48" Count="1" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="50" Count="1" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="167" Count="0" />
-      <LineId Id="53" Count="1" />
-      <LineId Id="63" Count="1" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="70" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="145" Count="0" />
-      <LineId Id="144" Count="0" />
-      <LineId Id="123" Count="1" />
-      <LineId Id="122" Count="0" />
-      <LineId Id="192" Count="1" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="56" Count="3" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="132" Count="0" />
-      <LineId Id="153" Count="2" />
-      <LineId Id="158" Count="2" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="88" Count="1" />
-      <LineId Id="95" Count="2" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="100" Count="2" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="92" Count="2" />
-      <LineId Id="90" Count="0" />
-      <LineId Id="14" Count="1" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="6" Count="0" />
+      <LineId Id="693" Count="0" />
+      <LineId Id="691" Count="0" />
+      <LineId Id="690" Count="0" />
+      <LineId Id="692" Count="0" />
     </LineIds>
     <LineIds Name="Mover.Disable">
       <LineId Id="3" Count="13" />

@@ -50,12 +50,6 @@ VAR_IN_OUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="CyclicTrack" Id="{3e3500dc-85cc-0f0e-23f9-0a487fad9df8}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD CyclicTrack : BOOL
-VAR
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="Disable" Id="{d596b2ea-b33b-4163-8d7c-887245d1fbda}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Disable : iMover
 VAR_INPUT
