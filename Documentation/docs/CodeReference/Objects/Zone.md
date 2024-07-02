@@ -65,13 +65,13 @@ ZoneRightSide.CurrentMoverList.MoveAllToStation( Station[2] );
 Zone.CurrentMoverList.GetMoverByLocation(0,Zone.EndPosition,MC_Positive_Direction).MoveToStation( Station[3] );
 
 ```
-### .StartPosition
-
-> Defines the lower bound for the track region considered by the Zone object.
-
 ### .EndPosition
 
 > Defines the upper bound for the track region considered by the Zone object.
+
+### .StartPosition
+
+> Defines the lower bound for the track region considered by the Zone object.
 
 ### .TrackId
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.

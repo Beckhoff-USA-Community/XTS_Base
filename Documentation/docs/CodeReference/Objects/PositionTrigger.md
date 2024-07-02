@@ -6,6 +6,7 @@
 
 ## Setup & Execution
 
+### Setup
 ```javascript
 // Declaration
 PositionTriggerA		: PositionTrigger;
@@ -16,7 +17,22 @@ PositionTriggerA		: PositionTrigger;
 PositionTriggerA.Position		:= 2000;
 PositionTriggerA.TriggerDirection	:= mcDirectionPositive;
 ```
+### Execution
+A position trigger must be checked each scan for movers that have crossed it's position. Then the mover must be acknowledged before another mover can be detected at this position.
 
+```javascript
+// test for mover crossing this position trigger
+IF (PositionTriggerA.MoverPassedPosition) THEN
+	// get the most recent mover and change it's velocity
+	PositionTriggerA.CurrentMover.SetVelocity(500);
+	// acknowledge the mover calling the MuteCurrent method
+	// this re-arms the position trigger for the next mover
+	PositionTriggerA.MuteCurrent();
+END_IF;
+```
+
+
+### Usage notes
 Position Triggers must also be added to the Mediator object. By default, this is handled already in the MAIN.Initialize ACTION.
 
 ```javascript
@@ -32,6 +48,8 @@ Mediator.AddPositionTrigger( PositionTriggerA );
 *Cyclic()*
 
 > Position Triggers require a cyclic call in the Main Program because they need to constantly monitor the positions of registered movers.
+
+This is automatically called by the [Mediator](./Mediator.md) when using the pre-defined position triggers in MAIN.
 
 
 ### MuteCurrent
@@ -80,17 +98,19 @@ Position Triggers are unique in that the Current Mover output *latches* even tho
 
 - It is possible that multiple registered movers have crossed over a threshold position. Only the most recently valid mover handle is provided by .CurrentMover.
 
+	- You must compare your PLC scan time, maximum mover velocity and minimum mover gap to ensure that all movers can be detected at a position trigger regardless of their velocity.
+
 
 ### .Position
 
 > Current placement of the Position Trigger threshold along the track
 
 
-#### .TrackId
+### .TrackId
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
 
 
-#### .TriggerDirection
+### .TriggerDirection
 > Sets the direction of travel required for the mover to trigger the position trigger.
 
 Options are:

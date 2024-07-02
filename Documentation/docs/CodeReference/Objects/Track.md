@@ -2,11 +2,11 @@
 
 > The track object contains functionality used for track management (switching movers between different tracks). In includes functionality for:
 
-- Attaching a track hardware ID number to this object
 - Assigning a user-friendly numerical TrackID for use in code
 - Finding and addressing all movers on a track
+- Checking the status of the track initialization
 
-## Use
+## Description
 
 Tracks are a software defined group of motor modules that can be grouped together independently of the physical machine layout. Tracks allow you to switch movers between different groups of otherwise disconnected motor modules. A common use case is an oval system layout with a reject spur. Movers typically travel around the oval during normal production, but stop at a track "switch" which moves between the oval and a separate reject spur.  
 
@@ -22,6 +22,9 @@ Tracks must also be added to the Mediator object. By default, this is handled in
 // Example implementation
 Mediator.AddTrack( Track );
 ```
+
+!!! Important
+	Tracks must receive their hardware ID from the XTS Processing Unit before they can be used. This is handled automatically by the `.Cyclic()` method but may take several PLC scans at startup before the track can be utilized in code. The property `.isInitialized` is provided to check that this process has been completed before using the track in code.
 
 ## Use
 
@@ -85,14 +88,15 @@ When a non-closed section of track is used (such as a rework spur), the mover co
 
 The methods listed below are used internally within the base code and should not be called directly by the user. They are shown for completeness.
 
+### Cyclic
+
+Handles the initialization of the Track object by finding its hardware OTCID.
 
 ### RegisterMover
 
 *RegisterMover( NewMover : REFERENCE TO Mover )*
 
-> This is used internally by Mover.TrackCyclic()
-
-
+> This is used internally by Mover.Cyclic() to manage the list of movers associated with this track.
 
 ### UnregisterAll
 
@@ -106,7 +110,7 @@ The methods listed below are used internally within the base code and should not
 
 *unRegisterMover( RemovingMover : REFERENCE TO Mover)*
 
-> This is used internally by Mover.TrackCyclic()
+> This is used internally by Mover.Cyclic() to manage the list of movers associated with this track.
 
 
 ## Properties
@@ -129,7 +133,7 @@ The methods listed below are used internally within the base code and should not
 
 > Stores the user-friendly numeric track identifier.
 
-This property is read/write, but should only be written once during initialization and should not change during execution. It is provided for querying and comparing TrackIds between objects.
+This property is read/write, but should only be written once during initialization (handled by `MAIN.Registering()`) and should not change during execution. It is provided for querying and comparing TrackIds between objects.
 
 ### OTCID
 
@@ -137,6 +141,6 @@ This property is read/write, but should only be written once during initializati
 
 > Stores the hardware id of the track object found in XTSProcessingUnit 1
 
-This property is read/write, but should only be written once during initialization and should not change during execution. It is used internally by Mover.ActivateTrack()
+This property is read/write, but should only be written once during initialization (handled by `.Cyclic()`) and should not change during execution. It is used internally by `Mover.ActivateTrack()`.
 
 By default during the initialization step all track OTCIDs are assigned automatically.

@@ -1,8 +1,9 @@
 
 # Mover List Object
 
-> The Mover List object provides a way to group Movers together and issue commands to every Mover in the list. Alternatively, commands can be sent to individual movers within the list based on their geographic proximity to a track position
+> The Mover List object provides a way to group Movers together and issue commands to every Mover in the list. Alternatively, commands can be sent to individual movers within the list based on their geographic proximity to a track position.
 
+Many of the methods and properties below are are based on corresponding methods available and documented in the [Mover](./Mover.md) object.
 
 ## Setup & Execution
 
@@ -30,7 +31,22 @@ MoverLists must also be added to the Mediator object. By default, this is handle
 Mediator.AddMoverList( MoverListA );
 ```
 
+## Chainability and related objects
 
+The [`Track`](./Track.md) and [`Zone`](./Zone.md) objects keep internal mover lists that can be accessed with the `.CurrentMoverList` property. And many of the methods below return mover lists.
+
+Additionally a mover list is extended from [`Objective`](./Objective.md) which provides two additional and very helpful properties `.TrackedMoverCount` and `.TrackedMovers`.
+
+The combination of these functionalities can allow for powerful and concise handling of movers throughout the system. Some examples follow.
+
+```javascript
+// find all movers on track 2 with a destination station of 3 and redirect them to station 4
+Track[2].CurrentMoverList.DestinationStation(Station[3]).MoveAllToStation(Station[4]);
+```
+```javascript
+// count the number of movers in Zone 2 and Zone 3
+MoverCount := Zone[2].CurrentMoverList.LogicalIntersect(Zone[3].CurrentMoverList).TrackedMoverCount;
+```
 
 ## Methods
 
@@ -42,7 +58,7 @@ Mediator.AddMoverList( MoverListA );
 
 The property IsAllTrackReady can be used to query for the completion of this method. Note that ActivateAllTrack and IsAllTrackReady may need to operate on different lists when working with Zone and Track lists as both Zone and Track are track-aware and only return movers that are both assigned to the track that the track or zone is also assigned to.
 
-See [Mover](Mover.md).ActivateTrack and for additional notes about track management.
+See [Mover.ActivateTrack](Mover.md#activatetrack) and for additional notes about track management.
 
 ```javascript
 // state machine
@@ -56,7 +72,12 @@ See [Mover](Mover.md).ActivateTrack and for additional notes about track managem
 200:
 	// movers on track 2 ready for commands
 ```
+### ApplyAllParameterSet
+*ApplyAllParameterSet( ParameterSet : MotionParameters_typ )*
 
+> Applies a set of motion paramaters to then entire mover list.
+
+This only sets the motion parameters that will be used for the next motion command. Any in process motion will not be affected by this method. To immediately change motion paramaters use methods such as `.SetAllVelocity` or `.SetAllAcceleration`.
 
 ### Contains
 
@@ -78,6 +99,14 @@ END_IF
 
 Filtering a mover list by station can be helpful when workings with several movers in a zone. There are two typical use cases. The first is to avoid re-triggering a move to station command after code such as `Zone[1].CurrentMoverList.MoveAllToStation(Station[2])` has executed, but movers are still accelerating out of this zone. The second is to ignore movers that may have a non-typical destination such as a rejected part in an otherwise normal flow of good parts.
 
+### DisableAll
+*DisableAll()*
+
+> Calls the Disable() method for all movers in the list.
+
+### EnableAll
+
+> Calls the Enable() method for all movers in the list.
 
 ### GetMoverByLocation
 
@@ -105,7 +134,11 @@ MoverListA.GetMoverByLocation( 0, 900, MC_Positive_Direction ).MoveToStation( St
 MoverListA.GetMoverByLocation( 2, 3000, MC_Negative_Direction ).SetAcceleration( 1E4 );
 
 ```
+### Halt All
 
+*HaltAll()*
+
+> Calls the Halt() method for all movers in the list.
 
 ### LogicalCompliment
 
@@ -227,7 +260,7 @@ MoverListA.SetAllDirection( mcDirectionPositive );
 
 ### SetAllGap
 
-*SetAllFap( Gap : LREAL )*
+*SetAllGap( Gap : LREAL )*
 
 > Sets the gap for every mover in the list
 
@@ -235,6 +268,15 @@ MoverListA.SetAllDirection( mcDirectionPositive );
 MoverListA.Gap( 65.0 );
 ```
 
+### SetAllGapMode
+
+*SetAllGapMode( Mode : Tc3_Mc3Definitions.MC_GAP_CONTROL_MODE )*
+
+> Sets the gap mode for every mover in the list
+
+```javascript
+MoverListA.Gap( 65.0 );
+```
 
 ### SetAllJerk
 
@@ -270,7 +312,70 @@ MoverListA.UnregisterAll();
 
 ## Properties
 
-#### .IsAllTrackReady
+### .IsAllMoversDisabled
+
+*BOOL*
+
+> Queries all movers registered with the mover list for the their `.Ready` property and returns true if all movers are not ready.
+
+```javascript
+// state machine
+	100:
+		// disable movers
+		MoverList[1].DisableAll();
+		state := 200;
+	200:
+		// wait for all movers to be disabled
+		IF (MoverList[1].AllMoversDisabled) THEN
+			state := 300;
+		END_IF;
+	300:
+		// movers are disabled
+```
+
+### .IsAllMoversHalted
+
+*BOOL*
+
+> Queries all movers registered with the mover list for their `.Moving` property and returns true if all movers are not moving
+
+```javascript
+	// state machine
+		100:
+			// halt all movers in zone 1
+			Zone[1].CurrentMoverList.HaltAll();
+			state := 200;
+		200:
+			// wait for all movers to be stopped
+			IF (Zone[1].CurrentMoverList.AllMoversHalted) THEN
+				state := 300;
+			END_IF;
+		300:
+			// movers in zone 1 are stopped
+```
+
+### .IsAllMoversReady
+
+*BOOL*
+
+> Queries all movers registered with the mover list for their `.Ready` property and returns true if all mover are ready.
+
+```javascript
+// state machine
+	100:
+		// enable movers
+		MoverList[1].EnableAll();
+		state := 200;
+	200:
+		// wait for all movers to be ready
+		IF (MoverList[1].AllMoversReady) THEN
+			state := 300;
+		END_IF;
+	300:
+		// movers are enable and ready for motion commands
+```
+
+### .IsAllTrackReady
 
 *BOOL*
 
@@ -279,3 +384,17 @@ MoverListA.UnregisterAll();
 Note: This routine intentionally returns false if no movers are on the track. This is to handle the several scan delay between activating a track and the mover reporting the track is active. In a typical use case .ActivateAllTrack and .IsAllTrackReady are called back to back. Without this exception code folling .IsAllTrackReady would falsely assume the track switch is complete if the track was empty causing mover motion commands to throw errors.
 
 See ActivateAllTrack() for an example.
+
+### .TrackedMoverCount
+
+*USINT*
+
+!!! Note
+	This property is part of [Objective](./Objective.md#trackedmovercount) but is frequently used with mover lists and can be accessed as part of the MoverList object.
+
+### .TrackedMovers
+
+*ARRAY OF POINTER TO Mover*
+
+!!! Note
+	This property is part of [Objective](./Objective.md#trackedmovers) but is frequently used with mover lists and can be accessed as part of the mover list.
