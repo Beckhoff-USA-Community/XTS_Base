@@ -712,6 +712,27 @@ END_FOR
 SetAllGap := THIS^;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SetAllGapMode" Id="{eb4b4f5b-2a13-0c63-3742-71822424864a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetAllGapMode : iMoverList
+VAR_INPUT
+    Mode	: MC_GAP_CONTROL_MODE;
+END_VAR
+VAR
+    i : ULINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// For every valid mover in the list, update the internal GapMode Parameter
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
+
+    IF internalTrackedMovers[i] <> 0 THEN
+        internalTrackedMovers[i]^.SetGapMode(Mode);
+    END_IF
+
+END_FOR
+
+SetAllGapMode := THIS^;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SetAllJerk" Id="{713a2faa-4d72-4826-b835-2931c44827b9}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAllJerk : iMoverList
 VAR_INPUT
@@ -936,6 +957,10 @@ END_FOR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="MoverList.SetAllGap">
+      <LineId Id="13" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllGapMode">
       <LineId Id="13" Count="8" />
       <LineId Id="5" Count="0" />
     </LineIds>

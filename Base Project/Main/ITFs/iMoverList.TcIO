@@ -168,6 +168,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="SetAllGapMode" Id="{e86b8658-8b29-0057-3eb5-d77eb51ba7c6}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetAllGapMode : iMoverList
+VAR_INPUT
+    Mode	: MC_GAP_CONTROL_MODE;
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="SetAllJerk" Id="{a91832af-959e-462a-a423-5a2f3601faa8}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAllJerk : iMoverList
 VAR_INPUT

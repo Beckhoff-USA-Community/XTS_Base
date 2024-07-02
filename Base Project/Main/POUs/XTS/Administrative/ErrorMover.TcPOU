@@ -238,7 +238,6 @@ VAR_INPUT
 END_VAR
 
 VAR
-	negativeCommand: BOOL;
 	newCallTime: LREAL;
 END_VAR]]></Declaration>
       <Implementation>

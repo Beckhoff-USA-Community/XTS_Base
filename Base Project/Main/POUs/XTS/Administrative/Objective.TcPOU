@@ -172,7 +172,6 @@ VAR_INPUT
 END_VAR
 VAR
     i              : dint;
-    duplicateFound : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[(*

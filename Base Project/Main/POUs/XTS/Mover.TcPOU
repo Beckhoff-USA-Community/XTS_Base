@@ -65,7 +65,6 @@ VAR
 	// Internal function blocks	
 	fbPower					: MC_Power;
 	fbReset					: MC_Reset;
-	fbStop					: MC_Stop;
 	
 	fbHaltCA				: MC_HaltCA;
 
@@ -81,10 +80,6 @@ VAR
 	fbActivateTrack			: MC_ActivateTrack;
 	fbReadTrackPositions	: MC_ReadTrackPositions;
 	
-	fbReadM1DetectMode		: ADSREAD;
-	fbReadM1DetectValid		: ADSREAD;
-	fbReadM1DetectActive	: ADSREAD;
-	fbWriteM1Detect			: ADSWRITE;
 	fbDelayM1Timer			: TON;
 	
 	// vars to store system time of most recent method calls, for filtering event logger
@@ -519,6 +514,7 @@ CASE internalState OF
 		
 		IF fbRemoveFromGroup.Done THEN
 			fbRemoveFromGroup.Execute		:= FALSE;
+			InGroup							:= FALSE;
 			internalState					:= MV_DISABLING;
 		END_IF
 		
@@ -1554,7 +1550,6 @@ VAR_INPUT
 	Velocity		: LREAL;		// Updates Mover's internal velocity parameter. Takes effect immediately. [mm/s]
 END_VAR
 VAR
-	logstr			: STRING(200);		// method variable containing an event log message for the command
 	LogEvent		: INT;
 	newCallTime		: LREAL;
 END_VAR
@@ -1968,7 +1963,9 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="467" Count="0" />
       <LineId Id="326" Count="9" />
       <LineId Id="554" Count="7" />
-      <LineId Id="339" Count="97" />
+      <LineId Id="339" Count="46" />
+      <LineId Id="703" Count="0" />
+      <LineId Id="386" Count="50" />
       <LineId Id="442" Count="2" />
       <LineId Id="446" Count="12" />
       <LineId Id="476" Count="0" />
