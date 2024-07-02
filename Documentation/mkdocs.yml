@@ -38,11 +38,12 @@ nav:
             - Quick Tips:       GettingStarted/QuickTips.md
             - Visualization:    GettingStarted/Visualization.md
     - Code Reference:
-        - Overview:             CodeReference/Objectives.md
+        - Overview:             CodeReference/Overview.md
         - Objects:
             - Mediator:             CodeReference/Objects/Mediator.md
             - Mover:                CodeReference/Objects/Mover.md
             - Mover List:           CodeReference/Objects/MoverList.md
+            - Objective:            CodeReference/Objects/Objective.md
             - Position Trigger:     CodeReference/Objects/PositionTrigger.md
             - Station:              CodeReference/Objects/Station.md
             - Track:                CodeReference/Objects/Track.md

@@ -3,12 +3,10 @@
 
 > Position Trigger objects monitor movers until they have crossed over a specified location on track, even if they do not stop there. Position Triggers will always point to the most recent registered mover which crossed over the Position Trigger's track position. When using track management the position trigger will only trigger if the mover crosses the specificed location and has a matching TrackId.
 
----
-<br>
-<br>
 
 ## Setup & Execution
 
+### Setup
 ```javascript
 // Declaration
 PositionTriggerA		: PositionTrigger;
@@ -19,7 +17,22 @@ PositionTriggerA		: PositionTrigger;
 PositionTriggerA.Position		:= 2000;
 PositionTriggerA.TriggerDirection	:= mcDirectionPositive;
 ```
+### Execution
+A position trigger must be checked each scan for movers that have crossed it's position. Then the mover must be acknowledged before another mover can be detected at this position.
 
+```javascript
+// test for mover crossing this position trigger
+IF (PositionTriggerA.MoverPassedPosition) THEN
+	// get the most recent mover and change it's velocity
+	PositionTriggerA.CurrentMover.SetVelocity(500);
+	// acknowledge the mover calling the MuteCurrent method
+	// this re-arms the position trigger for the next mover
+	PositionTriggerA.MuteCurrent();
+END_IF;
+```
+
+
+### Usage notes
 Position Triggers must also be added to the Mediator object. By default, this is handled already in the MAIN.Initialize ACTION.
 
 ```javascript
@@ -27,9 +40,6 @@ Position Triggers must also be added to the Mediator object. By default, this is
 Mediator.AddPositionTrigger( PositionTriggerA );
 ```
 
----
-<br>
-<br>
 
 ## Methods
 
@@ -39,9 +49,8 @@ Mediator.AddPositionTrigger( PositionTriggerA );
 
 > Position Triggers require a cyclic call in the Main Program because they need to constantly monitor the positions of registered movers.
 
----
-<br>
-<br>
+This is automatically called by the [Mediator](./Mediator.md) when using the pre-defined position triggers in MAIN.
+
 
 ### MuteCurrent
 
@@ -62,9 +71,6 @@ In this way, it is possible to *reset* the position trigger without having to co
 
 This method will produce a [Log Event](../Diagnostics/EventLogger.md) to aid in troubleshooting.
 
----
-<br>
-<br>
 
 ### Reset Statistics
 
@@ -72,9 +78,6 @@ This method will produce a [Log Event](../Diagnostics/EventLogger.md) to aid in 
 
 > Resets the Statistics for this station. See the [Statistics](#statistics) property.
 
----
-<br>
-<br>
 
 ## Properties
 
@@ -84,9 +87,6 @@ This method will produce a [Log Event](../Diagnostics/EventLogger.md) to aid in 
 
 Position Triggers are unique in that the Current Mover output *latches* even though the mover may not still qualify under the trigger condition
 
----
-<br>
-<br>
 
 ### .CurrentMover
 
@@ -98,26 +98,19 @@ Position Triggers are unique in that the Current Mover output *latches* even tho
 
 - It is possible that multiple registered movers have crossed over a threshold position. Only the most recently valid mover handle is provided by .CurrentMover.
 
----
-<br>
-<br>
+	- You must compare your PLC scan time, maximum mover velocity and minimum mover gap to ensure that all movers can be detected at a position trigger regardless of their velocity.
+
 
 ### .Position
 
 > Current placement of the Position Trigger threshold along the track
 
----
-<br>
-<br>
 
-#### .TrackId
+### .TrackId
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
 
----
-<br>
-<br>
 
-#### .TriggerDirection
+### .TriggerDirection
 > Sets the direction of travel required for the mover to trigger the position trigger.
 
 Options are:
@@ -125,9 +118,6 @@ Options are:
 - MC_PositiveDirection: The mover's position is increasing as it crosses the trigger. (Default)
 - MC_Negative_Direction: The mover's position is decreasing as it crosses the trigger.
 
----
-<br>
-<br>
 
 ### .Statistics
 
@@ -143,9 +133,6 @@ Options are:
 | AverageMoverVelocity | LREAL | Average of all nonzero mover velocities in the ring buffer	 |
 | AverageMoversPerMinute | LREAL;
 | ProcessedMoverCount | UDINT | Total number of movers processed by this position trigger |
----
-<br>
-<br>
 
 
 ## Extra Examples

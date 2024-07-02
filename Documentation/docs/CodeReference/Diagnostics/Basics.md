@@ -10,16 +10,11 @@ Several tools are made available in this project file to make development as qui
 - Mover activity Event Log
 - User Log Events
 
----
-<br>
-<br>
-
 As a starting point, always be sure to investigate the object status outputs in the variable viewer inside TwinCAT. Here we can immediately see a Mover which is:
 
 - Currently destined for Station #0
 - Most recently commanded via Position Trigger #2
 - Has no active errors
-
 
 > For more advanced troubleshooting steps, see the additional categories to the left.
 

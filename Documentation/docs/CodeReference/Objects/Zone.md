@@ -3,9 +3,6 @@
 
 > The Zone object provides a method for grabbing all Movers within a specified geographic area on the track. A Zone is defined by a Start Position and an End Position, and returns every mover between these points. Zones are especially useful for programming recovery scenarios. When using track management, zones make use of TrackId and only return movers that are both within the zones defined geographic area and have a matching TrackId.
 
----
-<br>
-<br>
 
 ## Setup & Execution
 
@@ -31,9 +28,6 @@ Mediator.AddZone( ZoneLeftSide );
 Mediator.AddZone( ZoneRightSide );
 ```
 
----
-<br>
-<br>
 
 ## Methods
 
@@ -53,13 +47,10 @@ ZoneLeftSide.GetMover( 0, MC_Positive_Direction ).MoveToPosition( 2000 );
 ZoneRightSide.GetMover( 3, MC_Negative_Direction ).SetVelocity( 1200 );
 ```
 
----
-<br>
-<br>
 
 ## Properties
 
-#### .CurrentMoverList
+### .CurrentMoverList
 
 > Provides a MoverList object reference, containing all Movers that are currently within the boundaries set by Start Position and End Position. As a MoverList, methods are provided to command all movers as a group. See [MoverList](MoverList.md) objective for more information
 
@@ -74,17 +65,17 @@ ZoneRightSide.CurrentMoverList.MoveAllToStation( Station[2] );
 Zone.CurrentMoverList.GetMoverByLocation(0,Zone.EndPosition,MC_Positive_Direction).MoveToStation( Station[3] );
 
 ```
-#### .StartPosition
-
-> Defines the lower bound for the track region considered by the Zone object.
-
-#### .EndPosition
+### .EndPosition
 
 > Defines the upper bound for the track region considered by the Zone object.
 
-#### .TrackId
+### .StartPosition
+
+> Defines the lower bound for the track region considered by the Zone object.
+
+### .TrackId
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
 
-#### .ZoneLength
+### .ZoneLength
 
 > Calculates the length of the defined zone, in millimeters.

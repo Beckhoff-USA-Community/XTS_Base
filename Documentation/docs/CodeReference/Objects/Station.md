@@ -3,9 +3,6 @@
 
 > The Station object provides a fixed location for a Mover to stop at until it is ready to be released. A Station is a type of Objective, and provides a handle to the Mover object that is currently docked with the Station, allowing further motion commands to be issued to the Mover.
 
----
-<br>
-<br>
 
 ## Setup & Execution
 
@@ -20,14 +17,6 @@ Station[1].Position		:= 250;
 Station[2].Position		:= 500;
 Station[3].Position		:= 750;
 ```
-
-```javascript
-// Call this method cyclically
-FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
-	Station[i].Cyclic();
-END_FOR
-```
-
 Stations must also be added to the Mediator object. By default, this is handled in the MAIN.Initialize ACTION.
 
 ```javascript
@@ -35,9 +24,6 @@ Stations must also be added to the Mediator object. By default, this is handled 
 Mediator.AddStation( Station[1] );
 ```
 
----
-<br>
-<br>
 
 ## Mover Registration
 
@@ -57,9 +43,6 @@ Mover[2].MoveToPosition( Station[3].Position );
 
 Here, the Station will not report *MoverInPosition*.
 
----
-<br>
-<br>
 
 ## Methods
 
@@ -69,14 +52,7 @@ Here, the Station will not report *MoverInPosition*.
 
 > Stations require a cyclic call in the Main program. This allows the station to automatically unregister movers from its Tracked list who have been redirected and are no longer destined for this Station.
 
-```javascript
-FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
-	Station[i].Cyclic()
-END_FOR
-```
----
-<br>
-<br>
+The call to Cyclic() is handled automatically after the station has been registered with the Mediator.
 
 ### Reset Statistics
 
@@ -84,22 +60,19 @@ END_FOR
 
 > Resets the Statistics for this station. See the [Statistics](#statistics) property.
 
-
----
-<br>
-<br>
-
 ## Properties
 
-### .MoverInPosition
+### .Blocked
 
-> Status boolean indicating that a mover is currently docked with the Station
+*BOOL*
 
----
-<br>
-<br>
+> A station is considered blocked if a mover has left the station but that mover has not yet moved further than the mover's `.Gap`.
+
+This value is used internally to calculate some values in the `.Statistics` property by detecting when a station does not have a mover, but also can not receive a mover because of the gap maintained by collision avoidance.
 
 ### .CurrentMover
+
+*REFERENCE TO Mover*
 
 > Reference variable that refers to the Mover that is docked with the Station
 
@@ -107,17 +80,26 @@ When no mover is present in the Station, .CurrentMover is an invalid reference. 
 
 It is recommended that all evaluations are nested inside IF checks for [.MoverInPosition](#moverinposition).
 
----
-<br>
-<br>
+### .GroupSize
+
+*DINT*
+
+> When multiple stations perform the same operation they are considered "grouped". This value represents the number of stations in the group.
+
+This value is only used to help calculate throughput `.Statistics` on the mover and is used in combination with the `.Blocked` property.
+
+
+### .MoverInPosition
+
+> Status boolean indicating that a mover is currently docked with the Station
 
 ### .TrackedMoverCount
 
 > Simply reports the number of Movers that are currently registered with the Station. Because Stations automatically deregister movers that are not currently destined for this Station, this value also represents the current number of incoming movers.
 
----
-<br>
-<br>
+!!! Note
+	This property is part of [Objective](./Objective.md#trackedmovercount) but is frequently used with stations and can be accessed as part of the Station object.
+
 
 ### .Position
 
@@ -125,9 +107,6 @@ It is recommended that all evaluations are nested inside IF checks for [.MoverIn
 
 This value is also used to place a marker on the visualization tools representing the station. See [Visualization](../../GettingStarted/Visualization.md).
 
----
-<br>
-<br>
 
 ### .Statistics
 
@@ -150,17 +129,9 @@ This value is also used to place a marker on the visualization tools representin
 | ThrottledThreshold		| LREAL |  A high throttled threshold (Blocked to Empty ratio) indicates a potential bottleneck station	|
 | ProcessedMoverCount		| UDINT |  Total number of movers processed by this station |
 
-
----
-<br>
-<br>
-
 #### .TrackId
 *DINT*
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
----
-<br>
-<br>
 
 
 ## Extra Examples

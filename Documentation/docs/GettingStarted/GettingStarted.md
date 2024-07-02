@@ -64,8 +64,6 @@ The three speeds used in the prepared motion sequence can be edited using the te
 
 The base project includes a simulated configuration for a 4m oval track and 6 movers. This will need to be modified to fit your application.
 
-Customizing the system often requires changing the shape or length of the track. This will cause the track's hardware ID number to change and must be updated in the PLC project configuration.
-
 ### Configuring XTS Hardware
 
 In order to modify the program to fit a different track configuration, navigate to the XTS Tool Window.
