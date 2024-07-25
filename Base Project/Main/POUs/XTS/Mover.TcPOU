@@ -290,7 +290,7 @@ CASE internalState OF
 		Error	:= FALSE;
 		ErrorID	:= 0;
 		
-		fbDelayM1Timer( IN := Mediator.Mover1DetectionComplete OR Mediator.XPU.GetMoverIdDetectionMode() = 0, PT := T#500MS );
+		fbDelayM1Timer( IN := Mediator.EnvironmentIsReady AND_THEN (Mediator.Mover1DetectionComplete OR Mediator.XPU.GetMoverIdDetectionMode() = MoverIdDetectionMode.Standard) = 0, PT := T#500MS );
 		
 		IF fbDelayM1Timer.Q THEN
 			fbDelayM1Timer( IN := FALSE );

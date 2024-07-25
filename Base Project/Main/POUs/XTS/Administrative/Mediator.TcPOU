@@ -748,7 +748,9 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[EnvironmentIsReady := fbXtsEnvironment.P_IsInitialized;]]></ST>
+          <ST><![CDATA[// was fbXtsEnvironment.P_IsInitialized, but this can error if fbXtsEnironment.Init has not yet returned true
+// the state of the environment state machine is now used to confirm init has ben called
+EnvironmentIsReady := nEnvironmentState >= 3;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -805,7 +807,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[Mover1DetectionComplete := XPU.GetIsMoverIdDetectionValid() AND NOT XPU.GetIsMoverIdDetectionActive();
+          <ST><![CDATA[Mover1DetectionComplete := THIS^.EnvironmentIsReady AND_THEN (XPU.GetIsMoverIdDetectionValid() AND NOT XPU.GetIsMoverIdDetectionActive());
 ]]></ST>
         </Implementation>
       </Get>
@@ -838,146 +840,5 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <LineIds Name="Mediator">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddMover">
-      <LineId Id="9" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="15" Count="1" />
-      <LineId Id="20" Count="1" />
-      <LineId Id="26" Count="3" />
-      <LineId Id="31" Count="1" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="35" Count="1" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="72" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="64" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="66" Count="1" />
-      <LineId Id="69" Count="1" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="14" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddMoverList">
-      <LineId Id="15" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="35" Count="1" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="20" Count="3" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="27" Count="3" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="31" Count="3" />
-      <LineId Id="19" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddPositionTrigger">
-      <LineId Id="18" Count="3" />
-      <LineId Id="38" Count="1" />
-      <LineId Id="22" Count="14" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="59" Count="1" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddStation">
-      <LineId Id="36" Count="0" />
-      <LineId Id="17" Count="2" />
-      <LineId Id="37" Count="1" />
-      <LineId Id="20" Count="15" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddTrack">
-      <LineId Id="17" Count="3" />
-      <LineId Id="37" Count="1" />
-      <LineId Id="21" Count="15" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddZone">
-      <LineId Id="17" Count="3" />
-      <LineId Id="37" Count="1" />
-      <LineId Id="21" Count="14" />
-      <LineId Id="51" Count="3" />
-      <LineId Id="56" Count="1" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.CompleteMoverList.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="15" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.Cyclic">
-      <LineId Id="518" Count="326" />
-      <LineId Id="153" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.DetectMover1">
-      <LineId Id="5" Count="1" />
-      <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.EnableGroup">
-      <LineId Id="5" Count="1" />
-      <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.Environment.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.EnvironmentIsReady.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.GroupEnabled.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.GroupError.Get">
-      <LineId Id="5" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.InfoServer.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.InfoServerIsReady.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.Mover1DetectionComplete.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.ResetStatistics">
-      <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="5" />
-      <LineId Id="12" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.XPU.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
