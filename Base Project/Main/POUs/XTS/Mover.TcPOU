@@ -674,10 +674,17 @@ IF (runCyclicTrack) THEN
 		fbReadTrackPositions.Enable := TRUE;
 		// copy data when ready
 		IF (fbReadTrackPositions.Valid) THEN
-			TrackInfo.TrackPosition := fbReadTrackPositions.TrackPosition;
-			TrackInfo.PartPosition := fbReadTrackPositions.PartPosition;
-			TrackInfo.TrackId := fbReadTrackPositions.TrackId;
-			TrackInfo.PartId := fbReadTrackPositions.PartId;
+			IF (internalTrack^.Id <> 0) THEN
+				TrackInfo.TrackPosition := fbReadTrackPositions.TrackPosition;
+				TrackInfo.PartPosition := fbReadTrackPositions.PartPosition;
+				TrackInfo.TrackId := fbReadTrackPositions.TrackId;
+				TrackInfo.PartId := fbReadTrackPositions.PartId;
+			ELSE
+				TrackInfo.TrackPosition := AxisReference.NcToPlc.ModuloActPos;
+				TrackInfo.PartPosition := AxisReference.NcToPlc.ModuloActPos;
+				TrackInfo.TrackId := 0;
+				TrackInfo.PartId := 0;
+			END_IF
 		END_IF
 	ELSE
 		// don't call function block to allow it to reset
