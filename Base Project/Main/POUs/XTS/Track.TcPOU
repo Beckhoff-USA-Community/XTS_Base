@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Track" Id="{1d568bee-17b0-45d9-8c81-c6842c2a11d5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Track EXTENDS Objective IMPLEMENTS iTrack
@@ -157,7 +157,7 @@ SUPER^.RegisterMover(NewMover);
 // this saves us the time of generating it on every call to CurrentMoverCount
 internalMoverList.UnregisterAll();
 
-FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[1]) - 1 DO
+FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
     IF internalTrackedMovers[i] <> 0 THEN
 		internalMoverList.RegisterMover(internalTrackedMovers[i]^);
 	END_IF
@@ -202,77 +202,5 @@ FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[1]) - 1 DO
 END_FOR;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="Track">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.CurrentMoverCount.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.CurrentMoverList.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.Cyclic">
-      <LineId Id="5" Count="1" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="11" Count="4" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="21" Count="1" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="29" Count="1" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="38" Count="1" />
-      <LineId Id="41" Count="1" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.Id.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.Id.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="1" />
-    </LineIds>
-    <LineIds Name="Track.isInitialized.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.OTCID.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.OTCID.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.RegisterMover">
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="9" Count="1" />
-      <LineId Id="12" Count="1" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="15" Count="2" />
-    </LineIds>
-    <LineIds Name="Track.UnregisterAll">
-      <LineId Id="6" Count="5" />
-    </LineIds>
-    <LineIds Name="Track.UnregisterMover">
-      <LineId Id="6" Count="10" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
