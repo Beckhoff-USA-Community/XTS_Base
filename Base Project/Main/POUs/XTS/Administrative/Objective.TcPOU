@@ -73,7 +73,10 @@ IF __ISVALIDREF(NewMover) THEN // validate reference
 
             internalTrackedMoverCount := internalTrackedMoverCount + 1;
         ELSE
-            emptyIDX := i; // confirmed open array element
+			// track the first empty index
+			IF (emptyIDX = 0) THEN
+				emptyIDX	:= i;
+			END_IF;
         END_IF
     END_FOR
 
@@ -202,38 +205,5 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="Objective">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.CurrentMover.Get">
-      <LineId Id="3" Count="4" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.RegisterMover">
-      <LineId Id="3" Count="29" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.RegisterMoverList">
-      <LineId Id="3" Count="12" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.TrackedMoverCount.Get">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.TrackedMovers.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterAll">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterCurrent">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterMover">
-      <LineId Id="3" Count="24" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

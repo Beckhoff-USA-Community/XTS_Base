@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Mediator
@@ -86,7 +86,10 @@ IF __ISVALIDREF( Mover ) THEN
 				duplicateFound		:= TRUE;	// this mover is already mediated
 			END_IF
 		ELSE
-			emptyIDX	:= i;	// confirmed oopen array element
+			// track the first empty index
+			IF (emptyIDX = 0) THEN
+				emptyIDX	:= i;
+			END_IF;
 		END_IF	
 	END_FOR
 	
@@ -142,7 +145,10 @@ IF __ISVALIDREF( MoverList ) THEN
 				duplicateFound		:= TRUE;		// this moverlist is already mediated
 			END_IF
 		ELSE
-			emptyIDX		:= i;		// confirmed open array element
+			// track the first empty index
+			IF (emptyIDX = 0) THEN
+				emptyIDX	:= i;
+			END_IF;
 		END_IF
 	END_FOR
 	
@@ -182,7 +188,10 @@ IF __ISVALIDREF( PositionTrigger ) THEN
 				duplicateFound		:= TRUE;		// this moverlist is already mediated
 			END_IF
 		ELSE
-			emptyIDX		:= i;		// confirmed open array element
+			// track the first empty index
+			IF (emptyIDX = 0) THEN
+				emptyIDX	:= i;
+			END_IF;
 		END_IF
 	END_FOR
 	
@@ -230,7 +239,10 @@ IF __ISVALIDREF( Station ) THEN
 				duplicateFound		:= TRUE;		// this moverlist is already mediated
 			END_IF
 		ELSE
-			emptyIDX		:= i;		// confirmed open array element
+			// track the first empty index
+			IF (emptyIDX = 0) THEN
+				emptyIDX	:= i;
+			END_IF;
 		END_IF
 	END_FOR
 	
@@ -270,7 +282,10 @@ IF __ISVALIDREF( Track ) THEN
 				duplicateFound		:= TRUE;		// this moverlist is already mediated
 			END_IF
 		ELSE
-			emptyIDX		:= i;		// confirmed open array element
+			// track the first empty index
+			IF (emptyIDX = 0) THEN
+				emptyIDX	:= i;
+			END_IF;
 		END_IF
 	END_FOR
 	
@@ -310,7 +325,10 @@ IF __ISVALIDREF( Zone ) THEN
 				duplicateFound		:= TRUE;		// this moverlist is already mediated
 			END_IF
 		ELSE
-			emptyIDX		:= i;		// confirmed open array element
+			// track the first empty index
+			IF (emptyIDX = 0) THEN
+				emptyIDX	:= i;
+			END_IF;
 		END_IF
 	END_FOR
 	
@@ -661,8 +679,8 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS TH
 			// calculate minimum number of stations that can be set up
 			nUsableStations := MIN(nInfoServerStations, GVL.NUM_STATIONS);
 			FOR i := 1 TO nUsableStations DO
-				// get XTS_Base Station pointer (stored in reverse order in StationArray)
-				xtsStationPointer := StationArray[GVL.NUM_STATIONS - i];
+				// get XTS_Base Station pointer
+				xtsStationPointer := StationArray[i];
 				// test for valid pointer (station has been through the Mediator.AddStation method)
 				IF (xtsStationPointer <> 0) THEN
 					// dereference the pointer

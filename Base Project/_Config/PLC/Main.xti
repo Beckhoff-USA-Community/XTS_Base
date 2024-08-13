@@ -1305,7 +1305,7 @@ External Setpoint Generation:
 		</DataType>
 	</DataTypes>
 	<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="Main" PrjFilePath="..\..\Main\Main.plcproj" TmcFilePath="..\..\Main\Main.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Main\Main.tmc" TmcHash="{522AC73E-6DE9-E29A-8100-D560C70E325B}">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Main\Main.tmc" TmcHash="{4D5D23EA-3923-AFE8-C7BB-C66D7772B8E7}">
 			<Name>Main Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="1">
@@ -1320,22 +1320,6 @@ External Setpoint Generation:
 				</Var>
 				<Var>
 					<Name>MAIN.System.__MEDIATOR__CYCLIC__XTSSTATION.ErrorMover.AxisReference.NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>MAIN.Track[0].ErrorMover.AxisReference.NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>MAIN.Track[0].internalMoverList.ErrorMover.AxisReference.NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>MAIN.Track[1].ErrorMover.AxisReference.NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>MAIN.Track[1].internalMoverList.ErrorMover.AxisReference.NcToPlc</Name>
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
@@ -1483,6 +1467,22 @@ External Setpoint Generation:
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
+					<Name>MAIN.Track[0].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[0].internalMoverList.ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[1].ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[1].internalMoverList.ErrorMover.AxisReference.NcToPlc</Name>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
 					<Name>MAIN.Zone[0].ErrorMover.AxisReference.NcToPlc</Name>
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
@@ -1575,22 +1575,6 @@ External Setpoint Generation:
 				</Var>
 				<Var>
 					<Name>MAIN.System.__MEDIATOR__CYCLIC__XTSSTATION.ErrorMover.AxisReference.PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>MAIN.Track[0].ErrorMover.AxisReference.PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>MAIN.Track[0].internalMoverList.ErrorMover.AxisReference.PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>MAIN.Track[1].ErrorMover.AxisReference.PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>MAIN.Track[1].internalMoverList.ErrorMover.AxisReference.PlcToNc</Name>
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 				<Var>
@@ -1735,6 +1719,22 @@ External Setpoint Generation:
 				</Var>
 				<Var>
 					<Name>MAIN.Station[9].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[0].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[0].internalMoverList.ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[1].ErrorMover.AxisReference.PlcToNc</Name>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>MAIN.Track[1].internalMoverList.ErrorMover.AxisReference.PlcToNc</Name>
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 				<Var>
