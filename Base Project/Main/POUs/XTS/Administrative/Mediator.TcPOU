@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Mediator
@@ -401,7 +401,7 @@ FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
 	END_IF
 END_FOR
 
-FOR i := 0 TO GVL.NUM_TRACKS - 1 DO
+FOR i := 0 TO GVL.NUM_TRACKS DO
 	IF TrackArray[i] <> 0 THEN
 		TrackArray[i]^.Cyclic();
 	END_IF
