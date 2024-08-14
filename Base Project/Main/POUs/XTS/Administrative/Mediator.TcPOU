@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK Mediator
+    <Declaration><![CDATA[{attribute 'reflection'}
+FUNCTION_BLOCK Mediator
 VAR_INPUT
 
 	MoverArray				: ARRAY [1..GVL.NUM_MOVERS] OF POINTER TO Mover;
@@ -24,7 +25,7 @@ VAR
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
 	{attribute 'hide'}
-	InstancePath		: STRING;	// instance naming, for diagnostics purposes
+	internalInstancePath		: STRING;	// instance naming, for diagnostics purposes
 
 	internalMoverList				: MoverList;
 	internalM1DetectFlag			: BOOL;
@@ -32,6 +33,7 @@ VAR
 	internalEnableGroupFlag			: BOOL;
 	internalEnableGroupState		: INT;
 	internalEnabled					: BOOL;
+	internalMover1Error				: BOOL;
 	
 	// ========= XTS Utility Diagnostics =========
 	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
@@ -512,14 +514,22 @@ END_CASE
 
 // monitor for the group reset flag and act on it
 CASE internalM1DetectState OF 
-	0:	// wait for flag and envrionment
-		IF internalM1DetectFlag AND EnvironmentIsReady AND_THEN NOT THIS^.Mover1DetectionComplete THEN
+	0:	// wait for flag
+		IF internalM1DetectFlag THEN
+			// clear previous error flag
+			internalMover1Error := FALSE;
+			internalM1DetectState := 5;
+		END_IF
+
+	5:
+	// wait for envrionment
+		IF EnvironmentIsReady AND_THEN NOT THIS^.Mover1DetectionComplete THEN
  			internalM1DetectState := 10;
 		END_IF;
 		
 	10:	// check for mover 1 mode
 		eMoverIdDetectionMode := XPU.GetMoverIdDetectionMode();
-		IF (eMoverIdDetectionMode = MoverIdDetectionMode.Mover1) THEN
+		IF (eMoverIdDetectionMode = MoverIdDetectionMode.Mover1 OR eMoverIdDetectionMode = MoverIdDetectionMode.MultipleMover1) THEN
 			// mover 1 detection sequence
 			internalM1DetectState := 100;
 		ELSE
@@ -547,6 +557,18 @@ CASE internalM1DetectState OF
 	200: // set flags and clean up
 		// flag is read directly from XPU in Mover1DetectionComplete property
 		internalM1DetectState := 0;
+	
+	900:
+		// error state
+		// set error flag for movers to respond
+		internalMover1Error := TRUE;
+		// send message
+		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.Mover1Detection,0 );
+		MsgCreate.ipArguments.Clear();
+		MsgCreate.Send(0);
+		// return to idle
+		internalM1DetectState := 0;
+		
 		
 END_CASE
 
@@ -582,15 +604,15 @@ CASE internalEnableGroupState OF
 		
 		IF fbGroupStatus.Error THEN
 			ErrorID						:= fbGroupStatus.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupStatus' );
+			ErrorOrigin					:= CONCAT( internalInstancePath, '.fbGroupStatus' );
 			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupStatus,0 );
-			MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDINT(THIS^.ErrorID);
+			MsgCreate.ipArguments.Clear().AddString(THIS^.internalInstancePath).AddUDINT(THIS^.ErrorID);
 			internalEnableGroupState	:= 900;
 		ELSIF fbGroupReset.Error THEN
 			ErrorID						:= fbGroupReset.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupReset' );
+			ErrorOrigin					:= CONCAT( internalInstancePath, '.fbGroupReset' );
 			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupReset,0 );
-			MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDINT(THIS^.ErrorID);
+			MsgCreate.ipArguments.Clear().AddString(THIS^.internalInstancePath).AddUDINT(THIS^.ErrorID);
 			internalEnableGroupState	:= 900;
 		END_IF
 		
@@ -604,9 +626,9 @@ CASE internalEnableGroupState OF
 			internalEnableGroupState	:= 100;
 		ELSIF fbGroupEnable.Error THEN
 			ErrorID						:= fbGroupEnable.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbGroupEnable' );
+			ErrorOrigin					:= CONCAT( internalInstancePath, '.fbGroupEnable' );
 			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupEnable,0 );
-			MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDINT(THIS^.ErrorID);
+			MsgCreate.ipArguments.Clear().AddString(THIS^.internalInstancePath).AddUDINT(THIS^.ErrorID);
 			MsgCreate.Send(0);
 			internalEnableGroupState	:= 900;
 		END_IF
@@ -818,6 +840,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="InstancePath" Id="{bb75667d-d680-0397-38c7-96136879329d}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY InstancePath : string]]></Declaration>
+      <Get Name="Get" Id="{b9a804e4-bca0-0f1c-39b3-bb2c5353dcf1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InstancePath := internalInstancePath;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Mover1DetectionComplete" Id="{b3d53d33-3d35-07f8-35ed-d0dbe454a97c}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Mover1DetectionComplete : BOOL]]></Declaration>
       <Get Name="Get" Id="{e92705b4-cdc3-0cc7-25dc-0275953572ce}">
@@ -827,6 +860,17 @@ END_VAR
         <Implementation>
           <ST><![CDATA[Mover1DetectionComplete := THIS^.EnvironmentIsReady AND_THEN (XPU.GetIsMoverIdDetectionValid() AND NOT XPU.GetIsMoverIdDetectionActive());
 ]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Mover1DetectionError" Id="{75004eac-41b5-0213-3156-b53daed26144}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Mover1DetectionError : bool]]></Declaration>
+      <Get Name="Get" Id="{e224f7d4-69bc-07c0-2d34-8a91c1a73da1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Mover1DetectionError := internalMover1Error;]]></ST>
         </Implementation>
       </Get>
     </Property>
