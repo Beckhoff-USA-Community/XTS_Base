@@ -296,6 +296,12 @@ CASE internalState OF
 			fbDelayM1Timer( IN := FALSE );
 			internalState	:= MV_ENABLING;
 		END_IF
+		
+		// on mover 1 detection error disable the mover and report the error
+		IF (Mediator.Mover1DetectionError) THEN
+			ErrorOrigin				:= CONCAT( Mediator.InstancePath, '.Mover1DetectionError' );
+			internalState := MV_ERROR;
+		END_IF
 			
 	MV_ENABLING: // ------------------------------------------------------- axis is enabling
 	
