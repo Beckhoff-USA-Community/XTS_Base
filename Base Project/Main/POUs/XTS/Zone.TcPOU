@@ -26,7 +26,7 @@ END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[internalMoverList.UnregisterAll();
 
-FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[1]) - 1 DO
+FOR i := 1 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
     IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.IsTrackReady AND internalTrackedMovers[i]^.CurrentTrack <> 0 THEN
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrackId) THEN
@@ -157,42 +157,5 @@ END_IF]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <LineIds Name="Zone">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.CurrentMoverList.Get">
-      <LineId Id="3" Count="3" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="7" Count="22" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.EndPosition.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.EndPosition.Set">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.GetMover">
-      <LineId Id="3" Count="16" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.StartPosition.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.StartPosition.Set">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.TrackId.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.TrackId.Set">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Zone.ZoneLength.Get">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
