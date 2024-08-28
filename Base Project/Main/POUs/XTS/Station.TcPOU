@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
   <POU Name="Station" Id="{92e40052-9fe7-43db-83b2-957f02760d97}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective
 VAR
@@ -108,9 +108,11 @@ END_VAR]]></Declaration>
     // This mover is no longer destined for any station
     IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.CurrentMoveType <> MOVETYPE_STATION THEN
         internalTrackedMovers[i] := 0;
+		internalTrackedMoverCount := internalTrackedMoverCount - 1;
         // This mover is no longer destined for this specific station. Comparing instance path seems to be the best way to do this comparison?
     ELSIF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.CurrentObjective <> InstancePath THEN
         internalTrackedMovers[i] := 0;
+		internalTrackedMoverCount := internalTrackedMoverCount - 1;
     END_IF
 
 END_FOR
@@ -326,84 +328,5 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <LineIds Name="Station">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.Blocked.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.CurrentMover.Get">
-      <LineId Id="3" Count="8" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="39" Count="6" />
-      <LineId Id="16" Count="3" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="20" Count="4" />
-    </LineIds>
-    <LineIds Name="Station.Cyclic">
-      <LineId Id="87" Count="14" />
-      <LineId Id="191" Count="2" />
-      <LineId Id="195" Count="0" />
-      <LineId Id="197" Count="2" />
-      <LineId Id="102" Count="4" />
-      <LineId Id="201" Count="1" />
-      <LineId Id="200" Count="0" />
-      <LineId Id="107" Count="0" />
-      <LineId Id="203" Count="2" />
-      <LineId Id="207" Count="3" />
-      <LineId Id="108" Count="3" />
-      <LineId Id="212" Count="0" />
-      <LineId Id="214" Count="0" />
-      <LineId Id="213" Count="0" />
-      <LineId Id="112" Count="13" />
-      <LineId Id="218" Count="2" />
-      <LineId Id="239" Count="0" />
-      <LineId Id="221" Count="0" />
-      <LineId Id="126" Count="6" />
-      <LineId Id="216" Count="1" />
-      <LineId Id="133" Count="8" />
-      <LineId Id="173" Count="0" />
-      <LineId Id="142" Count="15" />
-      <LineId Id="17" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.GroupSize.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.GroupSize.Set">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.MoverInPosition.Get">
-      <LineId Id="3" Count="9" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="27" Count="4" />
-      <LineId Id="13" Count="1" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="17" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.Position.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.Position.Set">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.ResetStatistics">
-      <LineId Id="8" Count="3" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="12" Count="2" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="15" Count="2" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="18" Count="5" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="38" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.TrackId.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.TrackId.Set">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
