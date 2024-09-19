@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
   <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mediator
@@ -51,6 +51,7 @@ VAR
 	fbGroupEnable			: MC_GroupEnable;
 	fbGroupReset			: MC_GroupReset;
 	fbGroupStop				: MC_GroupStop;
+	bHighDriveReady: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -396,6 +397,12 @@ VAR_INST
 	StopPositions	: ARRAY [1..TcIoXtsEnvironmentParameterList.MaxXtsStopPositionsPerStation] OF LREAL := [0.0];
 	i				: UDINT;
 	j				: UDINT;
+	
+	H				: UDINT;
+	U				: UDINT;
+	nDriveStatus	: INT;
+	nParts			: UDINT;
+	nModulesInPart	: UDINT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// this method contains multiple state machines denoted by the headers below
@@ -745,6 +752,29 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS TH
 	END_CASE
 
 
+END_IF
+
+// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
+IF fbXtsEnvironment.P_IsInitialized THEN
+CASE nDriveStatus OF
+	0:// Get number of parts. 
+		//Environment.XpuTcIo(1).PartTcIo(1).ModuleTcIo(1).GetDriveState() 
+	nParts:= fbXtsEnvironment.XpuTcIo(1).GetPartCount();
+	IF nParts <> 0 THEN
+		nDriveStatus:= 10;
+	END_IF
+	
+	10:// Get number of modules per part and check their state
+	bHighDriveReady:= TRUE;
+	FOR H := 1 TO nParts DO 
+		nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).GetModuleCount();
+		FOR U := 1 TO nModulesInPart DO
+			IF NOT (fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).ModuleTcIo(UDINT_TO_UINT(U)).GetDriveStatusValue() = 4135) THEN
+				bHighDriveReady:= FALSE;
+			END_IF 
+		END_FOR
+	END_FOR
+END_CASE
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -815,6 +845,17 @@ END_VAR
         <Implementation>
           <ST><![CDATA[// sum of various error bits throughout the mediator
 GroupError := fbGroupStatus.GroupErrorStop;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="HighDriveReady" Id="{e4a76f20-75da-0820-2f6d-be0ad375c645}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY HighDriveReady : Bool]]></Declaration>
+      <Get Name="Get" Id="{f8eb48d2-a530-04d2-2b29-7da0e49d088b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HighDriveReady:= bHighDriveReady;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -902,5 +943,90 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <LineIds Name="Mediator">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddMover">
+      <LineId Id="3" Count="41" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddMoverList">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddPositionTrigger">
+      <LineId Id="3" Count="32" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddStation">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddTrack">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddZone">
+      <LineId Id="3" Count="32" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.CompleteMoverList.Get">
+      <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Cyclic">
+      <LineId Id="3" Count="346" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="384" Count="21" />
+      <LineId Id="383" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.DetectMover1">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.EnableGroup">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Environment.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.EnvironmentIsReady.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupEnabled.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupError.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.HighDriveReady.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InfoServer.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InfoServerIsReady.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InstancePath.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Mover1DetectionComplete.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Mover1DetectionError.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.ResetStatistics">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.XPU.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
