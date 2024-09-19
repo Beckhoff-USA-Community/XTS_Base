@@ -769,7 +769,7 @@ CASE nDriveStatus OF
 	FOR H := 1 TO nParts DO 
 		nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).GetModuleCount();
 		FOR U := 1 TO nModulesInPart DO
-			IF NOT (fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).ModuleTcIo(UDINT_TO_UINT(U)).GetDriveStatusValue() = 4135) THEN
+			IF NOT (fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).ModuleTcIo(UDINT_TO_UINT(U)).GetDriveStatusValue() = 4135) and not fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation THEN
 				bHighDriveReady:= FALSE;
 			END_IF 
 		END_FOR
