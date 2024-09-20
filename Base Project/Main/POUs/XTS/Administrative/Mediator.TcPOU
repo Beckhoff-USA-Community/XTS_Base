@@ -15,11 +15,6 @@ VAR_INPUT
 
 	GROUP_REF				: AXES_GROUP_REF;
 	
-	
-	H				: UDINT;
-	U				: UDINT;
-	nParts			: UDINT;
-	nModulesInPart	: UDINT;
 END_VAR
 VAR_OUTPUT
 	Error			: BOOL;			// error is currently active
@@ -354,6 +349,38 @@ IF __ISVALIDREF( Zone ) THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="AllMotorModulesReady" Id="{e4a76f20-75da-0820-2f6d-be0ad375c645}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY AllMotorModulesReady : Bool]]></Declaration>
+      <Get Name="Get" Id="{f8eb48d2-a530-04d2-2b29-7da0e49d088b}">
+        <Declaration><![CDATA[VAR
+	I				: UDINT;
+	J				: UDINT;
+	nParts			: UDINT;
+	nModulesInPart	: UDINT;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
+IF fbXtsEnvironment.P_IsInitialized THEN
+// Get number of parts. 
+	nParts:= fbXtsEnvironment.XpuTcIo(1).GetPartCount();
+	IF nParts <> 0 THEN
+// Get number of modules per part and check their state
+		bHighDriveReady:= TRUE;
+		FOR I := 1 TO nParts DO 
+			nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).GetModuleCount();
+			FOR J := 1 TO nModulesInPart DO
+				IF NOT (fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue() = 4135) AND NOT fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation THEN
+					bHighDriveReady:= FALSE;
+				END_IF 
+			END_FOR
+		END_FOR
+	END_IF
+END_IF
+AllMotorModulesReady:= bHighDriveReady;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="CompleteMoverList" Id="{41f8f92e-6d81-02a1-048b-3da9baf27ff9}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY CompleteMoverList : iMoverList]]></Declaration>
       <Get Name="Get" Id="{0ba48769-41e2-05d1-1ed6-465e4a354ad7}">
@@ -828,34 +855,6 @@ GroupError := fbGroupStatus.GroupErrorStop;]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <Property Name="HighDriveReady" Id="{e4a76f20-75da-0820-2f6d-be0ad375c645}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY HighDriveReady : Bool]]></Declaration>
-      <Get Name="Get" Id="{f8eb48d2-a530-04d2-2b29-7da0e49d088b}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
-IF fbXtsEnvironment.P_IsInitialized THEN
-// Get number of parts. 
-	nParts:= fbXtsEnvironment.XpuTcIo(1).GetPartCount();
-	IF nParts <> 0 THEN
-// Get number of modules per part and check their state
-		bHighDriveReady:= TRUE;
-		FOR H := 1 TO nParts DO 
-			nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).GetModuleCount();
-			FOR U := 1 TO nModulesInPart DO
-				IF NOT (fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).ModuleTcIo(UDINT_TO_UINT(U)).GetDriveStatusValue() = 4135) AND NOT fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation THEN
-					bHighDriveReady:= FALSE;
-				END_IF 
-			END_FOR
-		END_FOR
-	END_IF
-END_IF
-HighDriveReady:= bHighDriveReady;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Property Name="InfoServer" Id="{816a507a-b5f1-077f-3d31-6cc9a0af8cb5}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY InfoServer : I_TcIoXtsInfoServer]]></Declaration>
       <Get Name="Get" Id="{880f5fd5-5a90-005a-341d-63c8b7f4f011}">
@@ -967,6 +966,10 @@ END_VAR
       <LineId Id="3" Count="32" />
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="Mediator.AllMotorModulesReady.Get">
+      <LineId Id="58" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
     <LineIds Name="Mediator.CompleteMoverList.Get">
       <LineId Id="3" Count="7" />
       <LineId Id="2" Count="0" />
@@ -997,11 +1000,6 @@ END_VAR
     </LineIds>
     <LineIds Name="Mediator.GroupError.Get">
       <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.HighDriveReady.Get">
-      <LineId Id="6" Count="15" />
-      <LineId Id="5" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.InfoServer.Get">

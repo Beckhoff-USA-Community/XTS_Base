@@ -249,6 +249,8 @@ CASE internalState OF
 		internalDisable			:= FALSE;
 		IF internalEnable THEN
 			// clear enable on commands (allows commands to hold error IDs until next enable signle for debugging
+			
+			internalReissue					:= FALSE;
 			fbMoveAbsCA[0].Execute			:= FALSE;
 			fbMoveAbsCA[1].Execute			:= FALSE;
 			fbMoveRelCA[0].Execute			:= FALSE;
@@ -340,6 +342,8 @@ CASE internalState OF
 			InGroup						:= TRUE;
 			IdentInGroup				:= AxisReference.NcToPlc.AxisId - 1;
 			fbAddToGroup.Execute		:= FALSE;
+			
+			Mediator.EnableGroup();
 			internalState				:= MV_ENABLEGROUP;
 		ELSIF fbAddToGroup.Error THEN
 			ErrorID						:= fbAddToGroup.ErrorId;
@@ -348,14 +352,11 @@ CASE internalState OF
 		END_IF
 		
 	MV_ENABLEGROUP:	// ----------------------------------------------- have mediator enable group
-		IF NOT Mediator.GroupEnabled THEN
-			Mediator.EnableGroup();
-		END_IF
-		IF Mediator.GroupEnabled AND Mediator.HighDriveReady THEN
+
+		IF Mediator.GroupEnabled AND Mediator.AllMotorModulesReady THEN
 			internalState := MV_RUN;
 		END_IF
-	
-		
+			
 	MV_RUN: // ------------------------------------------------------- mover enabled, ready
 	
 		Ready	:= TRUE;
@@ -460,7 +461,7 @@ CASE internalState OF
 			internalState			:= MV_ERROR;
 		ELSIF AxisReference.Status.Error THEN
 			ErrorID					:= AxisReference.Status.ErrorID;
-			ErrorOrigin				:= Concat(InstancePath, '.GeneralNCerror');
+			ErrorOrigin				:= Concat(InstancePath, ': General NC Error');
 			InternalState			:= MV_ERROR;
 		END_IF
 		
@@ -560,7 +561,6 @@ CASE internalState OF
 		Busy	:= FALSE;
 		Error	:= TRUE;
 		
-		internalReissue := FALSE;
 		InternalCurrentMoveType:= MOVETYPE_NONE;
 		
 		internalEnable			:= FALSE;		
@@ -1925,16 +1925,22 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
     <LineIds Name="Mover.Cyclic">
       <LineId Id="3" Count="11" />
       <LineId Id="488" Count="0" />
-      <LineId Id="15" Count="19" />
+      <LineId Id="15" Count="8" />
+      <LineId Id="507" Count="1" />
+      <LineId Id="24" Count="10" />
       <LineId Id="489" Count="0" />
-      <LineId Id="35" Count="89" />
+      <LineId Id="35" Count="78" />
+      <LineId Id="511" Count="0" />
+      <LineId Id="510" Count="0" />
+      <LineId Id="114" Count="7" />
+      <LineId Id="124" Count="0" />
       <LineId Id="490" Count="0" />
-      <LineId Id="125" Count="105" />
+      <LineId Id="125" Count="2" />
+      <LineId Id="129" Count="101" />
       <LineId Id="492" Count="2" />
       <LineId Id="491" Count="0" />
       <LineId Id="231" Count="96" />
       <LineId Id="496" Count="0" />
-      <LineId Id="328" Count="0" />
       <LineId Id="495" Count="0" />
       <LineId Id="329" Count="0" />
       <LineId Id="497" Count="0" />
