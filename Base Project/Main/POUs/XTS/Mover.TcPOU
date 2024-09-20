@@ -103,6 +103,7 @@ VAR
 	lastCallSetGap		: LREAL;
 	lastCallActivateTrack : LREAL;
 	
+	TestVar: BOOL;
 END_VAR
 VAR_IN_OUT
 	
@@ -352,7 +353,7 @@ CASE internalState OF
 		END_IF
 		
 	MV_ENABLEGROUP:	// ----------------------------------------------- have mediator enable group
-
+		TestVar:= Mediator.AllMotorModulesReady;
 		IF Mediator.GroupEnabled AND Mediator.AllMotorModulesReady THEN
 			internalState := MV_RUN;
 		END_IF

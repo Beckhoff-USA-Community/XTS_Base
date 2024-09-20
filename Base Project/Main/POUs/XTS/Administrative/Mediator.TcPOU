@@ -357,8 +357,9 @@ END_IF]]></ST>
 	J				: UDINT;
 	nParts			: UDINT;
 	nModulesInPart	: UDINT;
-END_VAR
-]]></Declaration>
+	
+	DriveStatusStorage: INT;
+END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
 IF fbXtsEnvironment.P_IsInitialized THEN
@@ -370,7 +371,8 @@ IF fbXtsEnvironment.P_IsInitialized THEN
 		FOR I := 1 TO nParts DO 
 			nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).GetModuleCount();
 			FOR J := 1 TO nModulesInPart DO
-				IF NOT (fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue() = 4135) AND NOT fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation THEN
+				DriveStatusStorage:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue();
+				IF NOT (DriveStatusStorage = 4135) AND NOT (fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation) THEN
 					bHighDriveReady:= FALSE;
 				END_IF 
 			END_FOR
@@ -967,7 +969,7 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AllMotorModulesReady.Get">
-      <LineId Id="58" Count="16" />
+      <LineId Id="91" Count="17" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.CompleteMoverList.Get">

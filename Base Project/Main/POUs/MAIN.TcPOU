@@ -75,7 +75,7 @@ CASE MainState OF
 	MainStateMachine_enum.MS_ENABLED:	// -------------------------------------------
 	
 		// Recovery logic
-		IF MainCommands.Start THEN
+		IF MainCommands.Start AND system.AllMotorModulesReady AND system.GroupEnabled THEN
 			System.CompleteMoverList.SetAllVelocity(mediumVelocity).MoveAllToStation( Station[0] );
 			System.ResetStatistics();
 			// Reinit nextStation
