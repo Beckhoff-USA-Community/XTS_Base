@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
   <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mediator
@@ -51,6 +51,7 @@ VAR
 	fbGroupEnable			: MC_GroupEnable;
 	fbGroupReset			: MC_GroupReset;
 	fbGroupStop				: MC_GroupStop;
+	bHighDriveReady: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -348,6 +349,40 @@ IF __ISVALIDREF( Zone ) THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="AllMotorModulesReady" Id="{e4a76f20-75da-0820-2f6d-be0ad375c645}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY AllMotorModulesReady : Bool]]></Declaration>
+      <Get Name="Get" Id="{f8eb48d2-a530-04d2-2b29-7da0e49d088b}">
+        <Declaration><![CDATA[VAR
+	I				: UDINT;
+	J				: UDINT;
+	nParts			: UDINT;
+	nModulesInPart	: UDINT;
+	
+	DriveStatusStorage: INT;
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
+IF fbXtsEnvironment.P_IsInitialized THEN
+// Get number of parts. 
+	nParts:= fbXtsEnvironment.XpuTcIo(1).GetPartCount();
+	IF nParts <> 0 THEN
+// Get number of modules per part and check their state
+		bHighDriveReady:= TRUE;
+		FOR I := 1 TO nParts DO 
+			nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).GetModuleCount();
+			FOR J := 1 TO nModulesInPart DO
+				DriveStatusStorage:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue();
+				IF NOT (DriveStatusStorage = 4135) AND NOT (fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation) THEN
+					bHighDriveReady:= FALSE;
+				END_IF 
+			END_FOR
+		END_FOR
+	END_IF
+END_IF
+AllMotorModulesReady:= bHighDriveReady;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="CompleteMoverList" Id="{41f8f92e-6d81-02a1-048b-3da9baf27ff9}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY CompleteMoverList : iMoverList]]></Declaration>
       <Get Name="Get" Id="{0ba48769-41e2-05d1-1ed6-465e4a354ad7}">
@@ -396,6 +431,8 @@ VAR_INST
 	StopPositions	: ARRAY [1..TcIoXtsEnvironmentParameterList.MaxXtsStopPositionsPerStation] OF LREAL := [0.0];
 	i				: UDINT;
 	j				: UDINT;
+	
+
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// this method contains multiple state machines denoted by the headers below
@@ -745,7 +782,9 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS TH
 	END_CASE
 
 
-END_IF]]></ST>
+END_IF
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="DetectMover1" Id="{1d387785-e892-0967-22d4-73d2923e67ae}" FolderPath="Methods\">
@@ -902,5 +941,91 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <LineIds Name="Mediator">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddMover">
+      <LineId Id="3" Count="41" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddMoverList">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddPositionTrigger">
+      <LineId Id="3" Count="32" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddStation">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddTrack">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddZone">
+      <LineId Id="3" Count="32" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AllMotorModulesReady.Get">
+      <LineId Id="91" Count="17" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.CompleteMoverList.Get">
+      <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Cyclic">
+      <LineId Id="3" Count="346" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="439" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.DetectMover1">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.EnableGroup">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Environment.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.EnvironmentIsReady.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupEnabled.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupError.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InfoServer.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InfoServerIsReady.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InstancePath.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Mover1DetectionComplete.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Mover1DetectionError.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.ResetStatistics">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.XPU.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
@@ -103,6 +103,7 @@ VAR
 	lastCallSetGap		: LREAL;
 	lastCallActivateTrack : LREAL;
 	
+	TestVar: BOOL;
 END_VAR
 VAR_IN_OUT
 	
@@ -238,6 +239,7 @@ MotionParameters.Acceleration	:= LIMIT( 0, MotionParameters.Acceleration, 1E300 
 MotionParameters.Deceleration	:= LIMIT( 0, MotionParameters.Deceleration, 1E300 );
 MotionParameters.Jerk			:= LIMIT( 0, MotionParameters.Jerk, 1E300 );
 MotionParameters.Velocity		:= LIMIT( 0, MotionParameters.Velocity, 1E300 );
+AxisReference.ReadStatus();
 
 CASE internalState OF
 	MV_IDLE:	// ------------------------------------------------------- idle state
@@ -248,6 +250,8 @@ CASE internalState OF
 		internalDisable			:= FALSE;
 		IF internalEnable THEN
 			// clear enable on commands (allows commands to hold error IDs until next enable signle for debugging
+			
+			internalReissue					:= FALSE;
 			fbMoveAbsCA[0].Execute			:= FALSE;
 			fbMoveAbsCA[1].Execute			:= FALSE;
 			fbMoveRelCA[0].Execute			:= FALSE;
@@ -259,6 +263,7 @@ CASE internalState OF
 			fbHaltCA.Execute				:= FALSE;
 			fbAddToGroup.Execute			:= FALSE;
 			fbRemoveFromGroup.Execute		:= FALSE;
+			fbReset.Execute					:= FALSE;
 		
 			internalEnable		:= FALSE;
 			internalState		:= MV_RESET;
@@ -338,6 +343,8 @@ CASE internalState OF
 			InGroup						:= TRUE;
 			IdentInGroup				:= AxisReference.NcToPlc.AxisId - 1;
 			fbAddToGroup.Execute		:= FALSE;
+			
+			Mediator.EnableGroup();
 			internalState				:= MV_ENABLEGROUP;
 		ELSIF fbAddToGroup.Error THEN
 			ErrorID						:= fbAddToGroup.ErrorId;
@@ -346,13 +353,11 @@ CASE internalState OF
 		END_IF
 		
 	MV_ENABLEGROUP:	// ----------------------------------------------- have mediator enable group
-		IF NOT Mediator.GroupEnabled THEN
-			Mediator.EnableGroup();
-		ELSE
+		TestVar:= Mediator.AllMotorModulesReady;
+		IF Mediator.GroupEnabled AND Mediator.AllMotorModulesReady THEN
 			internalState := MV_RUN;
 		END_IF
-	
-		
+			
 	MV_RUN: // ------------------------------------------------------- mover enabled, ready
 	
 		Ready	:= TRUE;
@@ -455,6 +460,10 @@ CASE internalState OF
 			ErrorID					:= fbActivateTrack.ErrorId;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbActivateTrack');
 			internalState			:= MV_ERROR;
+		ELSIF AxisReference.Status.Error THEN
+			ErrorID					:= AxisReference.Status.ErrorID;
+			ErrorOrigin				:= Concat(InstancePath, ': General NC Error');
+			InternalState			:= MV_ERROR;
 		END_IF
 		
 	MV_BEGIN_HALTING:	// --------------------------------------------------- begin stopping process
@@ -552,6 +561,8 @@ CASE internalState OF
 		Ready	:= FALSE;
 		Busy	:= FALSE;
 		Error	:= TRUE;
+		
+		InternalCurrentMoveType:= MOVETYPE_NONE;
 		
 		internalEnable			:= FALSE;		
 		IF internalDisable THEN
@@ -1887,5 +1898,166 @@ END_IF
 lastCallValidateTrack		:= newCallTime;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="Mover">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.ActivateTrack">
+      <LineId Id="3" Count="25" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentDestinationPosition.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentDestinationTrack.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentMoveType.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentObjective.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentTrack.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Cyclic">
+      <LineId Id="3" Count="11" />
+      <LineId Id="488" Count="0" />
+      <LineId Id="15" Count="8" />
+      <LineId Id="507" Count="1" />
+      <LineId Id="24" Count="10" />
+      <LineId Id="489" Count="0" />
+      <LineId Id="35" Count="78" />
+      <LineId Id="511" Count="0" />
+      <LineId Id="510" Count="0" />
+      <LineId Id="114" Count="7" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="490" Count="0" />
+      <LineId Id="125" Count="2" />
+      <LineId Id="129" Count="101" />
+      <LineId Id="492" Count="2" />
+      <LineId Id="491" Count="0" />
+      <LineId Id="231" Count="96" />
+      <LineId Id="496" Count="0" />
+      <LineId Id="495" Count="0" />
+      <LineId Id="329" Count="0" />
+      <LineId Id="497" Count="0" />
+      <LineId Id="330" Count="148" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Disable">
+      <LineId Id="3" Count="13" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Enable">
+      <LineId Id="3" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.GroupStop">
+      <LineId Id="3" Count="30" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Halt">
+      <LineId Id="3" Count="41" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsSyncedToAxis.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsSyncedToMover.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsTrackReady.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.LogUserEvent">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MasterMover.Get">
+      <LineId Id="3" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveToPosition">
+      <LineId Id="3" Count="82" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveToStation">
+      <LineId Id="3" Count="86" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveVelocity">
+      <LineId Id="3" Count="85" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.NextMover.Get">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Payload.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Payload.Set">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.PreviousMover.Get">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.ReissueCommand">
+      <LineId Id="3" Count="4" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetAcceleration">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetDeceleration">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetDirection">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetGap">
+      <LineId Id="3" Count="15" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetGapMode">
+      <LineId Id="3" Count="27" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetJerk">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetVelocity">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SyncToAxis">
+      <LineId Id="3" Count="104" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SyncToMover">
+      <LineId Id="3" Count="102" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.UnregisterFromAll">
+      <LineId Id="3" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.ValidateTrack">
+      <LineId Id="3" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
