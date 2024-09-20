@@ -15,6 +15,11 @@ VAR_INPUT
 
 	GROUP_REF				: AXES_GROUP_REF;
 	
+	
+	H				: UDINT;
+	U				: UDINT;
+	nParts			: UDINT;
+	nModulesInPart	: UDINT;
 END_VAR
 VAR_OUTPUT
 	Error			: BOOL;			// error is currently active
@@ -398,11 +403,7 @@ VAR_INST
 	i				: UDINT;
 	j				: UDINT;
 	
-	H				: UDINT;
-	U				: UDINT;
-	nDriveStatus	: INT;
-	nParts			: UDINT;
-	nModulesInPart	: UDINT;
+
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// this method contains multiple state machines denoted by the headers below
@@ -754,28 +755,7 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS TH
 
 END_IF
 
-// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
-IF fbXtsEnvironment.P_IsInitialized THEN
-CASE nDriveStatus OF
-	0:// Get number of parts. 
-		//Environment.XpuTcIo(1).PartTcIo(1).ModuleTcIo(1).GetDriveState() 
-	nParts:= fbXtsEnvironment.XpuTcIo(1).GetPartCount();
-	IF nParts <> 0 THEN
-		nDriveStatus:= 10;
-	END_IF
-	
-	10:// Get number of modules per part and check their state
-	bHighDriveReady:= TRUE;
-	FOR H := 1 TO nParts DO 
-		nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).GetModuleCount();
-		FOR U := 1 TO nModulesInPart DO
-			IF NOT (fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).ModuleTcIo(UDINT_TO_UINT(U)).GetDriveStatusValue() = 4135) and not fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation THEN
-				bHighDriveReady:= FALSE;
-			END_IF 
-		END_FOR
-	END_FOR
-END_CASE
-END_IF]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="DetectMover1" Id="{1d387785-e892-0967-22d4-73d2923e67ae}" FolderPath="Methods\">
@@ -855,7 +835,24 @@ GroupError := fbGroupStatus.GroupErrorStop;]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[HighDriveReady:= bHighDriveReady;]]></ST>
+          <ST><![CDATA[// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
+IF fbXtsEnvironment.P_IsInitialized THEN
+// Get number of parts. 
+	nParts:= fbXtsEnvironment.XpuTcIo(1).GetPartCount();
+	IF nParts <> 0 THEN
+// Get number of modules per part and check their state
+		bHighDriveReady:= TRUE;
+		FOR H := 1 TO nParts DO 
+			nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).GetModuleCount();
+			FOR U := 1 TO nModulesInPart DO
+				IF NOT (fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(H)).ModuleTcIo(UDINT_TO_UINT(U)).GetDriveStatusValue() = 4135) AND NOT fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation THEN
+					bHighDriveReady:= FALSE;
+				END_IF 
+			END_FOR
+		END_FOR
+	END_IF
+END_IF
+HighDriveReady:= bHighDriveReady;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -977,8 +974,8 @@ END_VAR
     <LineIds Name="Mediator.Cyclic">
       <LineId Id="3" Count="346" />
       <LineId Id="2" Count="0" />
-      <LineId Id="384" Count="21" />
-      <LineId Id="383" Count="0" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="439" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.DetectMover1">
       <LineId Id="3" Count="1" />
@@ -1003,6 +1000,8 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.HighDriveReady.Get">
+      <LineId Id="6" Count="15" />
+      <LineId Id="5" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.InfoServer.Get">
