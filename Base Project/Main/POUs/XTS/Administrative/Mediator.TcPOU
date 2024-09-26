@@ -441,8 +441,13 @@ END_VAR]]></Declaration>
 
 FOR i := 1 TO GVL.NUM_MOVERS DO
 	IF MoverArray[i] <> 0 THEN
+		// handle cyclic calls
 		MoverArray[i]^.Cyclic( GROUP_REF );			// could make this ca group addition clener
 		MoverArray[i]^.AxisReference.ReadStatus();
+		// update global data
+		MoverData.Position[i] := LREAL_TO_REAL(MoverArray[i]^.TrackInfo.TrackPosition);
+		MoverData.Error[i] := MoverArray[i]^.Error;
+		MoverData.ErrorID[i] := MoverArray[i]^.ErrorID;
 	END_IF
 END_FOR
 
@@ -941,91 +946,5 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <LineIds Name="Mediator">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddMover">
-      <LineId Id="3" Count="41" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddMoverList">
-      <LineId Id="3" Count="24" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddPositionTrigger">
-      <LineId Id="3" Count="32" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddStation">
-      <LineId Id="3" Count="24" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddTrack">
-      <LineId Id="3" Count="24" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AddZone">
-      <LineId Id="3" Count="32" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.AllMotorModulesReady.Get">
-      <LineId Id="91" Count="17" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.CompleteMoverList.Get">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.Cyclic">
-      <LineId Id="3" Count="346" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="384" Count="0" />
-      <LineId Id="439" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.DetectMover1">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.EnableGroup">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.Environment.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.EnvironmentIsReady.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.GroupEnabled.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.GroupError.Get">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.InfoServer.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.InfoServerIsReady.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.InstancePath.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.Mover1DetectionComplete.Get">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.Mover1DetectionError.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.ResetStatistics">
-      <LineId Id="3" Count="6" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Mediator.XPU.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
