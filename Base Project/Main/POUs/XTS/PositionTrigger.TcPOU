@@ -84,8 +84,9 @@ FOR i := 1 TO GVL.NUM_MOVERS DO
 		
 			// Determine if a position rollover occured in the last cycle
 			modTrackPosition := MODABS( internalTrackedMovers[i]^.TrackInfo.TrackPosition, GVL.TRACK_LENGTH);
-			positionDifference := moverLastPos[i] - modTrackPosition;
-			rolloverOccured := (positionDifference) > (GVL.TRACK_LENGTH - 0.1);
+			positionDifference := moverLastPos[i] - modTrackPosition;			
+			rolloverOccured := ABS( positionDifference ) > ( GVL.TRACK_LENGTH / 2 );
+			
 			// and if so, modify the stored last position values to be nonmodulo to compensate
 			IF rolloverOccured AND positionDifference > 0 THEN
 				moverLastPos[i]		:= moverLastPos[i] - GVL.TRACK_LENGTH;
@@ -137,6 +138,7 @@ IF THIS^.MoverPassedPosition AND internalLastMoverPassedPosition = FALSE THEN
 	IF (internalStatisticsReset) THEN
 		// reset flag
 		internalStatisticsReset := FALSE;
+		Statistics.ProcessedMoverCount									:= Statistics.ProcessedMoverCount + 1;
 		// set weight of first mover to 1
 		alphaEMA := 1.0;
 	ELSE
