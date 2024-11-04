@@ -774,6 +774,7 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS TH
 									StationTcIO.SetEndPositionOnPart(xtsSTation.Position - PartStartEnd[nStationPartNum][0]);
 									StationTcIo.SetStopPositions(StopPositions);
 									StationTcIo.SetStationColor(16#FFEF0000);	// Beckhoff red
+									StationTcIO.SetIsEnabled(true);	// v4.x "dims" the color of disabled stations
 								END_IF;
 							END_IF;
 						END_IF;
