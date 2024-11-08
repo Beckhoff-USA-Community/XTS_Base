@@ -1642,6 +1642,7 @@ ELSE
 		fbGearInPosAxisCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbGearInPosAxisCA[0].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
 		fbGearInPosAxisCA[0].Options.GapControlMode := MotionParameters.GapMode;
+		fbGearInPosAxisCA[0].Gap := MotionParameters.Gap;
 
 		IF MotionParameters.Direction = mcDirectionPositive THEN
 			fbGearInPosAxisCA[0].SyncMode		:= mcSyncModePositive;
@@ -1675,6 +1676,7 @@ ELSE
 		fbGearInPosAxisCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		fbGearInPosAxisCA[1].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
 		fbGearInPosAxisCA[1].Options.GapControlMode := MotionParameters.GapMode;
+		fbGearInPosAxisCA[1].Gap := MotionParameters.Gap;
 		
 		IF MotionParameters.Direction = mcDirectionPositive THEN
 			fbGearInPosAxisCA[1].SyncMode		:= mcSyncModePositive;
@@ -1771,6 +1773,7 @@ ELSE	// let 'er rip
 		fbGearInPosMoverCA[0].Options.DynamicsReferenceSystem				:= CurrentTrack^.OTCID;
 		fbGearInPosMoverCA[0].Options.SlaveSyncPositionReferenceSystem		:= CurrentTrack^.OTCID;
 		fbGearInPosMoverCA[0].Options.GapControlMode						:= MotionParameters.GapMode;
+		fbGearInPosMoverCA[0].Gap											:= MotionParameters.Gap;
 				
 		//fbGearInPosMoverCA[0].Options.MinimalSlavePosition	:= -1E300;
 		
@@ -1799,6 +1802,7 @@ ELSE	// let 'er rip
 		fbGearInPosMoverCA[1].Options.DynamicsReferenceSystem				:= CurrentTrack^.OTCID;
 		fbGearInPosMoverCA[1].Options.SlaveSyncPositionReferenceSystem		:= CurrentTrack^.OTCID;
 		fbGearInPosMoverCA[1].Options.GapControlMode						:= MotionParameters.GapMode;
+		fbGearInPosMoverCA[1].Gap											:= MotionParameters.Gap;
 		
 		//fbGearInPosMoverCA[1].Options.MinimalSlavePosition	:= -1E300;
 		
