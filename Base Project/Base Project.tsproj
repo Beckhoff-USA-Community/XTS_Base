@@ -4135,7 +4135,7 @@ and will return to Group State Standby when the situation permits.
 	</ImageDatas>
 	<Project ProjectGUID="{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
-			<Settings MaxCpus="4" NonWinCpus="2" RouterMemory="1073741824" MaxStackSize="256">
+			<Settings MaxCpus="4" RouterMemory="1073741824" MaxStackSize="256">
 				<Cpu CpuId="2" BaseTime="2500"/>
 				<Cpu CpuId="3"/>
 				<IoIdleTask Priority="10" Affinity="#x00000008"/>
