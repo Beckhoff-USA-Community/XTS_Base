@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="Zone" Id="{de9b5dde-c203-4f4d-abe0-431568995536}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Zone EXTENDS Objective
 VAR
@@ -16,6 +16,18 @@ END_VAR]]></Declaration>
     </Implementation>
     <Folder Name="Methods" Id="{c12d9132-64a8-40b2-b1d9-3d115c20d531}" />
     <Folder Name="Properties" Id="{90c52b3d-9a13-4439-896a-3c5f735e1216}" />
+    <Property Name="CurrentMoverCount" Id="{2570f0bb-44d6-0dc6-396c-15aba6800423}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentMoverCount : USINT]]></Declaration>
+      <Get Name="Get" Id="{6103a49f-65cc-06b3-2883-ee1cd1651525}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentMoverCount := THIS^.CurrentMoverList.TrackedMoverCount;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="CurrentMoverList" Id="{fba40b8e-82e6-48ba-a30f-3cc9abb7a1fc}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY CurrentMoverList : iMoverList]]></Declaration>
       <Get Name="Get" Id="{9681b7d1-44db-47ce-812f-f41b5199fc2d}">
@@ -57,7 +69,8 @@ CurrentMoverList := internalMoverList;]]></ST>
       </Get>
     </Property>
     <Property Name="EndPosition" Id="{0a5f097e-96c3-43a1-b536-04f368f24ca3}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY EndPosition : LREAL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY EndPosition : LREAL]]></Declaration>
       <Get Name="Get" Id="{a512e404-14bd-4b1c-9731-3bba7de351df}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
@@ -102,7 +115,8 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <Property Name="StartPosition" Id="{aacc7e02-3b0c-44c1-b85c-a6193164623c}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY StartPosition : LREAL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY StartPosition : LREAL]]></Declaration>
       <Get Name="Get" Id="{3c066f4a-ee41-4a60-96e5-d5b56be91452}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
@@ -120,7 +134,8 @@ internalStartPosition := StartPosition;]]></ST>
       </Set>
     </Property>
     <Property Name="TrackId" Id="{34504a8f-493b-0e04-3cea-a6a6de9a5490}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TrackId : DINT]]></Declaration>
       <Get Name="Get" Id="{22604838-72af-02be-393b-0a8dbf53fe15}">
         <Declaration><![CDATA[VAR
 END_VAR
