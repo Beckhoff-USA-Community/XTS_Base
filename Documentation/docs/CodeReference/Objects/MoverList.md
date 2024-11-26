@@ -41,7 +41,7 @@ The combination of these functionalities can allow for powerful and concise hand
 
 ```javascript
 // find all movers on track 2 with a destination station of 3 and redirect them to station 4
-Track[2].CurrentMoverList.DestinationStation(Station[3]).MoveAllToStation(Station[4]);
+Track[2].CurrentMoverList.FilterDestinationStation(Station[3]).MoveAllToStation(Station[4]);
 ```
 ```javascript
 // count the number of movers in Zone 2 and Zone 3
@@ -91,9 +91,9 @@ IF MoverListA.Contains( Mover[4] ) THEN
 END_IF
 ```
 
-### DestinationStation
+### FilterDestinationStation
 
-*DestinationStation( Destination : REFERENCE TO Station ) : MoverList*
+*FilterDestinationStation( Destination : REFERENCE TO Station ) : MoverList*
 
 > Filters the mover list to only include movers that have a destination that matches the parameter Destination.
 

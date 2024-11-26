@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mediator
@@ -358,7 +358,7 @@ END_IF]]></ST>
 	nParts			: UDINT;
 	nModulesInPart	: UDINT;
 	
-	DriveStatusStorage: INT;
+	DriveStatusStorage: UINT;
 END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
