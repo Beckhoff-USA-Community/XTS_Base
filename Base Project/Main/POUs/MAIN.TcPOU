@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="MAIN" Id="{c992ed33-41fe-02c4-17ef-23123b9a5b23}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR	
@@ -9,6 +9,7 @@ VAR
 	MainCommands 		: MainCommands_typ; 		// command struct for cycling thru the state machine
 	MainState    		: MainStateMachine_enum;   	// enumeration for the Main state machine
 	System				: Mediator;					// System-level control object
+	RecoveryComplete	: BOOL;						// flag tracking the completeness of start-up recovery
 
 	// ========= Linked NC Variables & References =========
 	
@@ -74,23 +75,52 @@ CASE MainState OF
 	
 	MainStateMachine_enum.MS_ENABLED:	// -------------------------------------------
 	
-		// Recovery logic
+		// Check for system ready or disable command
 		IF MainCommands.Start AND system.AllMotorModulesReady AND system.GroupEnabled THEN
-			System.CompleteMoverList.SetAllVelocity(mediumVelocity).MoveAllToStation( Station[0] );
-			System.ResetStatistics();
-			// Reinit nextStation
-        	nextStation := 4;
-			MainState			:= MainStateMachine_enum.MS_RUN;
+			MainState			:= MainStateMachine_enum.MS_ONESHOT_RECOVER;
 		ELSIF MainCommands.Disable THEN
 			MainCommands.Enable	:= FALSE;
 			System.CompleteMoverList.HaltAll();
 			MainState			:= MainStateMachine_enum.MS_STOPPING;
 			
 		END_IF
+		
+	MainStateMachine_enum.MS_ONESHOT_RECOVER: // -----------------------------------------------
+		// call the one-shot recovery state
+		RecoverOneshot();
+		
+		// immediately continue to recover state
+		MainState := MainStateMachine_enum.MS_RECOVERING;
+		
+	MainStateMachine_enum.MS_RECOVERING: // -----------------------------------------------
+		// reset the recovering complete flag
+		RecoveryComplete := FALSE;
+		// call the recovering logic (sets complete flag when ready
+		Recovering();
+		
+		// test for errors, commands or recovery complete
+		IF System.GroupError THEN
+			// stop on group error user must go through disable/enable to recover
+			MainCommands.Start	:= FALSE;
+			MainState 			:= MainStateMachine_enum.MS_STOPPING;
+		ELSIF MainCommands.Stop THEN
+            MainCommands.Start 	:= FALSE;
+			System.CompleteMoverList.HaltAll();
+            MainState         	:= MainStateMachine_enum.MS_STOPPING;
+        ELSIF MainCommands.Disable THEN
+            MainCommands.Enable := FALSE;
+			System.CompleteMoverList.HaltAll();
+            MainState           := MainStateMachine_enum.MS_STOPPING;
+		ELSIF RecoveryComplete THEN
+			// recovery sequence is complete, move on to run state
+			MainState			:= MainStateMachine_enum.MS_RUN;
+        END_IF
 	
 	MainStateMachine_enum.MS_RUN: // -----------------------------------------------
-	
+		// call the station logic
 		StationLogic();
+		
+		// check for errors or other commands
         IF System.GroupError THEN
 			// stop on group error user must go through disable/enable to recover
 			MainCommands.Start	:= FALSE;
@@ -174,6 +204,30 @@ System.Cyclic();
 	InitialParameterSet.Direction		:= mcDirectionPositive;	
 	
 	System.CompleteMoverList.ApplyAllParameterSet( InitialParameterSet );]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="Recovering" Id="{43063827-0598-00b7-2079-e6fbfd8a6aff}">
+      <Implementation>
+        <ST><![CDATA[// this state is called until all movers have completed their desired recovery tasks
+
+// wait for all movers to reach the standstill state and one mover at station 0
+IF (System.CompleteMoverList.IsAllMoversHalted and Station[0].MoverInPosition) THEN
+	RecoveryComplete := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="RecoverOneshot" Id="{7eb1f3e7-2df1-00d5-25c0-031445570e00}">
+      <Implementation>
+        <ST><![CDATA[// this action is called one time after the start command is issued
+// it is intended to provide a single command to each mover to facilitate recovery
+// other commands such as resetting counters and timers should also be carried out here
+
+// send all movers to station 0
+System.CompleteMoverList.SetAllVelocity(mediumVelocity).MoveAllToStation( Station[0] );
+System.ResetStatistics();
+
+// Reinit nextStation
+nextStation := 4;]]></ST>
       </Implementation>
     </Action>
     <Action Name="Registering" Id="{ef3ef836-2b88-0099-2899-1cd10004220b}">
@@ -279,28 +333,5 @@ System.Cyclic();
         END_IF]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="MAIN">
-      <LineId Id="3" Count="93" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MAIN.Initializing">
-      <LineId Id="2" Count="23" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="49" Count="1" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="41" Count="0" />
-    </LineIds>
-    <LineIds Name="MAIN.Registering">
-      <LineId Id="2" Count="31" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="MAIN.StationLogic">
-      <LineId Id="2" Count="60" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
