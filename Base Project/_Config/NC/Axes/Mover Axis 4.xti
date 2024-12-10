@@ -1,0 +1,2861 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.12" ClassName="CNcAxisDef" SubType="1">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>2</Elements>
+			</ArrayInfo>
+			<Format Name="ArrayView" Preview="[%u, %u]">
+				<Printf>[%u, %u]</Printf>
+				<Parameter>[0]</Parameter>
+				<Parameter>[1]</Parameter>
+			</Format>
+			<Format Name="MixedView" Preview="%x [%u, %u]">
+				<Printf>0x%08x [%u, %u]</Printf>
+				<Parameter>.</Parameter>
+				<Parameter>[0]</Parameter>
+				<Parameter>[1]</Parameter>
+			</Format>
+			<Format Name="32bitView" Preview="%x (%u)">
+				<Printf>0x%08x (%u)</Printf>
+				<Parameter>.</Parameter>
+				<Parameter>.</Parameter>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{901C2423-655B-45CE-B7E3-21F174F0F99F}" Namespace="MC" TcBaseType="true">NCENCODERSTRUCT_IN2B</Name>
+			<BitSize>320</BitSize>
+			<SubItem>
+				<Name>nDataIn1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>72</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>80</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<Comment><![CDATA[Encoder Status 4 (automatically linked):
+0x01 (Bit 0) = IO data invalid (e.g. EtherCAT 'WcState')
+0x02 (Bit 1) = IO data input toggle (e.g. EtherCAT 'InputToggle')
+]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>88</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>224</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>232</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState7</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>240</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState8</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>248</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDcInputTime</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>256</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn7</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<Comment><![CDATA[Drive Velocity Actual Value
+]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>288</BitOffs>
+			</SubItem>
+			<Relations>
+				<Relation>
+					<Type GUID="{55728D3F-7B02-4448-8096-580617CECBA3}">NCENCODERSTRUCT_IN</Type>
+					<MapEntry>
+						<BitSize>96</BitSize>
+					</MapEntry>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
+			<Name GUID="{9CC50AB2-5D79-4869-A3C2-1FA7761BAFEA}" Namespace="MC" TcBaseType="true">NCENCODERSTRUCT_OUT2</Name>
+			<BitSize>320</BitSize>
+			<SubItem>
+				<Name>nDataOut1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataOut2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>72</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>80</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>88</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataOut3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataOut4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataOut5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataOut6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>224</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>232</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl7</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>240</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl8</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>248</BitOffs>
+			</SubItem>
+			<Relations>
+				<Relation>
+					<Type GUID="{5FE34D39-3B85-4458-8264-8C4874D8985C}">NCENCODERSTRUCT_OUT</Type>
+					<MapEntry>
+						<BitSize>96</BitSize>
+					</MapEntry>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
+			<Name GUID="{F95C7C69-0C87-46C4-9559-1285CCA5B23A}" Namespace="MC" TcBaseType="true">NCDRIVESTRUCT_IN2</Name>
+			<BitSize>320</BitSize>
+			<SubItem>
+				<Name>nDataIn1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>72</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>80</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<Comment><![CDATA[Drive Status 4 (automatically linked):
+0x01 (0000 0001) = IO data invalid (e.g. EtherCAT 'WcState')
+0x02 (0000 0010) = IO data input toggle (e.g. EtherCAT 'InputToggle')
+
+Drive Status 4 (manually linked):
+0x80 (1000 0000) = Fast axis stop (digital IO interrupt)
+]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>88</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataIn6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>224</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>232</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState7</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>240</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nState8</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<Comment><![CDATA[Digital Inputs 1..8
+]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>248</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDcOutputTime</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>256</BitOffs>
+			</SubItem>
+			<Relations>
+				<Relation>
+					<Type GUID="{9AC463DC-3417-4DEA-AD2A-5FBD4C9C15AA}">NCDRIVESTRUCT_IN</Type>
+					<MapEntry>
+						<BitSize>96</BitSize>
+					</MapEntry>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
+			<Name GUID="{644DC4BD-3D15-4DCB-94C7-24F3A5D579AA}" Namespace="MC" TcBaseType="true">NCDRIVESTRUCT_OUT2</Name>
+			<BitSize>320</BitSize>
+			<SubItem>
+				<Name>nDataOut1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataOut2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>72</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>80</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>88</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataOut3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataOut4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataOut5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nDataOut6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl5</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>224</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl6</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>232</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl7</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>240</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nCtrl8</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>248</BitOffs>
+			</SubItem>
+			<Relations>
+				<Relation>
+					<Type GUID="{595E16A9-7783-4B1C-A30C-48BA6EFCC859}">NCDRIVESTRUCT_OUT</Type>
+					<MapEntry>
+						<BitSize>96</BitSize>
+					</MapEntry>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
+			<Name GUID="{875D2B22-B7EB-497E-B933-0C004593CCF3}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">PLCTONC_AXIS_REF_CTRL</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>Enable</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>FeedEnablePlus</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>FeedEnableMinus</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HomingSensor</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AcceptBlockedDrive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PlcDebugFlag</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>30</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NcDebugFlag</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>31</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC" TcBaseType="true">PLCTONC_AXIS_REF</Name>
+			<BitSize>1024</BitSize>
+			<SubItem>
+				<Name>ControlDWord</Name>
+				<Type GUID="{875D2B22-B7EB-497E-B933-0C004593CCF3}" Namespace="MC">PLCTONC_AXIS_REF_CTRL</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Override</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeRequest</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeDWord</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeLReal</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PositionCorrection</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>256</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>320</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetAcc</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>384</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetDirection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>448</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtControllerOutput</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>512</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio1</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>576</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio2</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>640</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio3</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>704</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio4</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>768</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MapState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>832</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PlcCycleControl</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000001}">BYTE</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>840</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PlcCycleCount</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000001}">BYTE</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>848</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtTorque</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>896</BitOffs>
+			</SubItem>
+			<Properties>
+				<Property>
+					<Name>NcStructType</Name>
+					<Value>1</Value>
+				</Property>
+			</Properties>
+			<Relations>
+				<Relation Priority="100">
+					<Type GUID="{60392271-8688-4F4C-B404-618DF106325D}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}"></Type>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
+			<Name GUID="{CBC83B73-B816-4597-A9E5-2B03263CA131}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>Operational</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Homed</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NotMoving</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>InPositionArea</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>InTargetPosition</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Protected</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ErrorPropagationDelayed</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HasBeenStopped</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>7</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HasJob</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PositiveDirection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>9</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NegativeDirection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>10</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HomingBusy</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>11</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ConstantVelocity</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>12</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Compensating</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>13</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetPointGenEnabled</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>14</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PhasingActive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>15</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExternalLatchValid</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NewTargetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>17</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>IsDriveLimitActive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>18</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ContinuousMotion</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>19</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ControlLoopClosed</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>20</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamTableQueued</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>21</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamDataQueued</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>22</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamScalingPending</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>23</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CmdBuffered</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>24</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PTPmode</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>25</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SoftLimitMinExceeded</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>26</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SoftLimitMaxExceeded</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>27</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>DriveDeviceError</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>28</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MotionCommandsLocked</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>29</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>IoDataInvalid</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>30</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>31</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+			<Relations>
+				<Relation Priority="100">
+					<Type>{4C3FC5AC-D5AA-44C6-AC5A-159774BA0F6D}</Type>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
+			<Name GUID="{6BDEED54-7268-405F-A18B-665A0AE0FEE9}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_OPMODE</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>OpModePosAreaMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeTargetPosMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeLoop</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeMotionMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModePEHTimeMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeBacklashCompensation</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeDelayedErrorReaction</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeModulo</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>7</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeSimulationAxis</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeStopMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>12</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeOutputSmoothingFilter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>13</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModePosLagMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeVeloLagMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>17</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeSoftLimitMinMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>18</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeSoftLimitMaxMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>19</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModePosCorrection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>20</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeAllowSlaveCommands</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>21</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeAllowExtSetAxisCommands</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>22</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ApplicationRequest</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>23</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{303D9411-849C-467F-8A4C-5C8CD0F3DD46}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE2_FLAGS</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>AvoidingCollision</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{669F3788-48FD-42CF-8A59-2DA946853FB6}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE2</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>Value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Flags</Name>
+				<Type GUID="{303D9411-849C-467F-8A4C-5C8CD0F3DD46}" Namespace="MC">NCTOPLC_AXIS_REF_STATE2_FLAGS</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{F7B9FC50-054E-4547-B468-83A9E72D8064}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE3_FLAGS</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>TouchProbe1InputState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TouchProbe2InputState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{60E203BA-3CEE-4BB0-8728-643B1F529592}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE3</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>Value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Flags</Name>
+				<Type GUID="{F7B9FC50-054E-4547-B468-83A9E72D8064}" Namespace="MC">NCTOPLC_AXIS_REF_STATE3_FLAGS</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{BA9D9D0F-1A4A-4A27-A19F-3032626A8491}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_CAMCOUPLINGSTATE</Name>
+			<BitSize>8</BitSize>
+			<SubItem>
+				<Name>CamActivationPending</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamDeactivationPending</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamActive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamDataQueued</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamScalingPending</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>7</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-000000000039}" TcBaseType="true" HideType="true">UINTARR8</Name>
+			<BitSize>128</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>8</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC" TcBaseType="true">NCTOPLC_AXIS_REF</Name>
+			<BitSize>2048</BitSize>
+			<SubItem>
+				<Name>StateDWord</Name>
+				<Type GUID="{CBC83B73-B816-4597-A9E5-2B03263CA131}" Namespace="MC">NCTOPLC_AXIS_REF_STATE</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ErrorCode</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeConfirmation</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HomingState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CoupleState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SvbEntries</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SafEntries</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>224</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisId</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>256</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeDWord</Name>
+				<Type GUID="{6BDEED54-7268-405F-A18B-665A0AE0FEE9}" Namespace="MC">NCTOPLC_AXIS_REF_OPMODE</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>288</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>320</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloActPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>384</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActiveControlLoopIndex</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>448</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ControlLoopIndex</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>464</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloActTurns</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>480</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>512</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PosDiff</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>576</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>640</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>704</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetAcc</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>768</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TargetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>832</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloSetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>896</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloSetTurns</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>960</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CmdNo</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>992</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CmdState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>1008</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetJerk</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1024</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetTorque</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1088</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActTorque</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1152</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>StateDWord2</Name>
+				<Type GUID="{669F3788-48FD-42CF-8A59-2DA946853FB6}" Namespace="MC">NCTOPLC_AXIS_REF_STATE2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1216</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>StateDWord3</Name>
+				<Type GUID="{60E203BA-3CEE-4BB0-8728-643B1F529592}" Namespace="MC">NCTOPLC_AXIS_REF_STATE3</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1248</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TouchProbeState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1280</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TouchProbeCounter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1312</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamCouplingState</Name>
+				<Type GUID="{BA9D9D0F-1A4A-4A27-A19F-3032626A8491}" Namespace="MC">NCTOPLC_AXIS_REF_CAMCOUPLINGSTATE</Type>
+				<ArrayInfo>
+					<LBound>0</LBound>
+					<Elements>8</Elements>
+				</ArrayInfo>
+				<BitSize>64</BitSize>
+				<BitOffs>1344</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamCouplingTableID</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000039}">UINTARR8</Type>
+				<BitSize>128</BitSize>
+				<BitOffs>1408</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActTorqueDerivative</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1536</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetTorqueDerivative</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1600</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AbsPhasingPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1664</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TorqueOffset</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1728</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActPosWithoutPosCorrection</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1792</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActAcc</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1856</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>DcTimeStamp</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1920</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>UserData</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1984</BitOffs>
+			</SubItem>
+			<Properties>
+				<Property>
+					<Name>NcStructType</Name>
+					<Value>2</Value>
+				</Property>
+			</Properties>
+			<Relations>
+				<Relation Priority="100">
+					<Type GUID="{429B767E-373B-40AE-BFA5-E1C08B444DF3}">NCAXLESTRUCT_TOPLC</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{E8DA524A-605F-4879-82E6-B86EF6986572}">NCAXLESTRUCT_TOPLC2</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{B507963E-69F3-4B64-BB8C-2BD7A560976D}">NCAXLESTRUCT_TOPLC3</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{F794B740-82D7-4637-848E-4F74A711D038}">NCAXLESTRUCT_TOPLC4</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{40BD39B0-C3EA-4F74-9F4F-5F1982786F7C}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{40BD39B2-C3EA-4F74-9F4F-5F1982786F7C}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{8CDE0C45-AB9D-42DB-BC94-1CF7521AB268}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}"></Type>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
+			<Name GUID="{96A64B44-550C-4DD1-99F9-8396ECC7C10D}" Namespace="XTS">XtsMoverParameterSetOTCID</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+			<Properties>
+				<Property>
+					<Name>OTCID</Name>
+				</Property>
+				<Property>
+					<Name>TcCategoryOID</Name>
+					<Value>XtsMoverParameterSet</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{F2C3FC80-2DFA-4639-B505-900CDB3E734D}" Namespace="XTS">ParameterSetChangeMode</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[Automatic]]></Text>
+				<Enum>0</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[UseDefaultSet]]></Text>
+				<Enum>1</Enum>
+			</EnumInfo>
+			<Properties>
+				<Property>
+					<Name>plcAttribute_qualified_only</Name>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{01E5C78E-D451-4377-9F02-F3812CC92C14}" Namespace="XTS">XtsMoverControllerOTCID</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+			<Properties>
+				<Property>
+					<Name>OTCID</Name>
+				</Property>
+				<Property>
+					<Name>TcCategoryOID</Name>
+					<Value>XtsMoverController</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{0898D61D-6948-4A74-AE61-D590D99DCC07}" Namespace="XTS">MoverControllerOperationMode</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[CyclicSynchronousPosition]]></Text>
+				<Enum>8</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[CyclicSynchronousVelocity]]></Text>
+				<Enum>9</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[CyclicSynchronousForce]]></Text>
+				<Enum>10</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[CyclicSynchronousForceWithCommutationAngle]]></Text>
+				<Enum>11</Enum>
+			</EnumInfo>
+			<Default>
+				<EnumText>CyclicSynchronousPosition</EnumText>
+			</Default>
+			<Properties>
+				<Property>
+					<Name>plcAttribute_qualified_only</Name>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{09B6174D-73C1-4464-A814-F90496539525}" Namespace="XTS">Mc3ActData</Name>
+			<BitSize>384</BitSize>
+			<SubItem>
+				<Name>ActDCTimeStamp</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000004E}">LTIME</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActPartPosition</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActVelocity</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActFollowingError</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActForce</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>256</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActPartObjectId</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>320</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActOperationMode</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>352</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Status</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>368</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{2A85EBE9-41B7-479E-845C-0F50265F088C}" Namespace="XTS">MoverIdDetectionStatus</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[OFF]]></Text>
+				<Enum>0</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[ACTIVE]]></Text>
+				<Enum>1</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[ERROR]]></Text>
+				<Enum>2</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[FOUND_STANDARD]]></Text>
+				<Enum>3</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[FOUND_MOVER1]]></Text>
+				<Enum>4</Enum>
+			</EnumInfo>
+			<Properties>
+				<Property>
+					<Name>plcAttribute_qualified_only</Name>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{C8A3EBBF-E67F-491F-AAC6-16D5D5E9699B}" Namespace="XTS">TcVersion</Name>
+			<BitSize>128</BitSize>
+			<SubItem>
+				<Name>Major</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Minor</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Build</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Revision</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{72091DE6-F3FC-DC0F-3824-F4C2D6EA9A34}">MoverControllerEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[MoverControllerEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="14">Mover1FoundInfo</Name>
+				<DisplayName TxtId="14"><![CDATA[{0}: Mover 1 found]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="15">StandardMoverFoundInfo</Name>
+				<DisplayName TxtId="15"><![CDATA[{0}: Standard mover found]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="16">ProcessingLineInitializedInfo</Name>
+				<DisplayName TxtId="16"><![CDATA[Initialized {0} XTS Controller(s) on {1} (CPU {2}, {3} μs).]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="17">ParameterSetsInitializedInfo</Name>
+				<DisplayName TxtId="17"><![CDATA[Initialized {0} XTS Controller Parameter Set(s).]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="18">NoManagerFoundInfo</Name>
+				<DisplayName TxtId="18"><![CDATA[No XTS Controller Manager in configuration detected. Initialize default Manager...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="19">ForceCouplingActiveInfo</Name>
+				<DisplayName TxtId="19"><![CDATA[{0}: Force coupling with {1} is active.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="20">TuningAssistNumberOfMaximaInfo</Name>
+				<DisplayName TxtId="20"><![CDATA[{0}: Number of maxima found in the current spectrum = {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="21">TuningAssistRuleInfo</Name>
+				<DisplayName TxtId="21"><![CDATA[{0}: Calculate with rule {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="22">BodePlotIsStoppedInfo</Name>
+				<DisplayName TxtId="22"><![CDATA[{0}: Bode plot is stopped.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5031">InvalidParameterValue_MinMax_UInt32Warning</Name>
+				<DisplayName TxtId="5031"><![CDATA[{0}: Invalid {1} parameter value (min={2}/max={3})]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5032">InvalidParameterValue_MinMax_FloatWarning</Name>
+				<DisplayName TxtId="5032"><![CDATA[{0}: Invalid {1} parameter value (min={2}/max={3})]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5033">InvalidParameterValue_Min_UInt32Warning</Name>
+				<DisplayName TxtId="5033"><![CDATA[{0}: Invalid {1} parameter value (min={2})]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5034">Mover1DetectionWhileAxisEnabledSingleWarning</Name>
+				<DisplayName TxtId="5034"><![CDATA[{0} (0x1002): New Mover 1 detection while axis is enabled.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5035">Mover1DetectionWhileAxisEnabledMultipleWarning</Name>
+				<DisplayName TxtId="5035"><![CDATA[{0} (0x1002): New Mover 1 detection while axis is enabled. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5036">Mover1HWErrorSingleWarning</Name>
+				<DisplayName TxtId="5036"><![CDATA[{0} (0x1003): Hardware error occur after Mover 1 detection is started.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5037">Mover1HWErrorMultipleWarning</Name>
+				<DisplayName TxtId="5037"><![CDATA[{0} (0x1003): Hardware error occur after Mover 1 detection is started. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5038">Mover1MovementErrorSingleWarning</Name>
+				<DisplayName TxtId="5038"><![CDATA[{0} (0x1005): Movements of Mover while Mover 1 detection do not fit together.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5039">Mover1MovementErrorMultipleWarning</Name>
+				<DisplayName TxtId="5039"><![CDATA[{0} (0x1005): Movements of Mover while Mover 1 detection do not fit together. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5040">Mover1HwNotReadySingleWarning</Name>
+				<DisplayName TxtId="5040"><![CDATA[{0} (0x1004): Hardware is not ready for Mover 1 detection - e.g. power is missing or HW has an error.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5041">Mover1HwNotReadyMultipleWarning</Name>
+				<DisplayName TxtId="5041"><![CDATA[{0} (0x1004): Hardware is not ready for Mover 1 detection - e.g. power is missing or HW has an error. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5042">Mover1VeloErrorSingleWarning</Name>
+				<DisplayName TxtId="5042"><![CDATA[{0} (0x1007): Min velocity could not reached long enough.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5043">Mover1VeloErrorMultipleWarning</Name>
+				<DisplayName TxtId="5043"><![CDATA[{0} (0x1007): Min velocity could not reached long enough. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5044">Mover1MinMovementErrorSingleWarning</Name>
+				<DisplayName TxtId="5044"><![CDATA[{0} (0x1006): Min movement could not reached with the actual current.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5045">Mover1MinMovementErrorMultipleWarning</Name>
+				<DisplayName TxtId="5045"><![CDATA[{0} (0x1006): Min movement could not reached with the actual current. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5046">NoWriteAccessInOPWarning</Name>
+				<DisplayName TxtId="5046"><![CDATA[{0}: No write access in TCom state OP for {1}.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5047">BandwidthIsLimitedWarning</Name>
+				<DisplayName TxtId="5047"><![CDATA[{0} Observer: Bandwidth is limited by cycle time (limited Bandwidth = {1})]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5048">VeloDiffTooBigForEmergencyRampSingleWarning</Name>
+				<DisplayName TxtId="5048"><![CDATA[{0} (0x1101): Velocity difference too big for emergency ramp down.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5049">VeloDiffTooBigForEmergencyRampMultipleWarning</Name>
+				<DisplayName TxtId="5049"><![CDATA[{0} (0x1101): Velocity difference too big for emergency ramp down. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5050">AreaStartPositionMustSmallerWarning</Name>
+				<DisplayName TxtId="5050"><![CDATA[{0}: AreaStartPosition[{1}] must be smaller then AreaEndPosition.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5051">AreaStartPositionMustGreaterWarning</Name>
+				<DisplayName TxtId="5051"><![CDATA[{0}: AreaStartPosition[{1}] must be greater or equal then Zero.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5052">AreaStartPositionMustSmallerHardwareModuloWarning</Name>
+				<DisplayName TxtId="5052"><![CDATA[{0}: AreaStartPosition[{1}] must be smaller or equal then HardwareModulo.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5053">GetAxisInterfaceFailedWarning</Name>
+				<DisplayName TxtId="5053"><![CDATA[{0}: Failed to get interface of NC/MC3 axis.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5054">InvalidParameterValue_Min_FloatWarning</Name>
+				<DisplayName TxtId="5054"><![CDATA[{0}: Invalid {1} parameter value (min={2})]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5055">TuningAssistMovementWarning</Name>
+				<DisplayName TxtId="5055"><![CDATA[{0}: Probably no enough movement during spectrum measure]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5056">TuningAssistNoFilterSuggestionWarning</Name>
+				<DisplayName TxtId="5056"><![CDATA[{0}: No filter suggestion could be calculated - please evaluate the spectrum manually]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5057">TuningAssistInvalidMaximaWarning</Name>
+				<DisplayName TxtId="5057"><![CDATA[{0}: Invalid number of maxima found in the current spectrum]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5058">TuningAssistNoMaximaFoundWarning</Name>
+				<DisplayName TxtId="5058"><![CDATA[{0}: No maxima found in the current spectrum]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5059">TuningAssistTooManyMaximaWarning</Name>
+				<DisplayName TxtId="5059"><![CDATA[{0}: Too many maxima found in the current spectrum]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5060">TuningAssistErrorInBiquadLowPassWarning</Name>
+				<DisplayName TxtId="5060"><![CDATA[TuningAssist: Error in Bi_Quad calc with LowPassfreqeuncy = {0}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5061">TuningAssistErrorInBiquadHighPassWarning</Name>
+				<DisplayName TxtId="5061"><![CDATA[TuningAssist: Error in Bi_Quad calc with HighPassfreqeuncy = {0}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5062">TuningAssistErrorInLowPassWarning</Name>
+				<DisplayName TxtId="5062"><![CDATA[TuningAssist: Error in LowPass2 calc with LowPassfreqeuncy = {0}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5063">TuningAssistNoFrictionCompensationSuggestionParaWarning</Name>
+				<DisplayName TxtId="5063"><![CDATA[{0}: No friction compensation suggestion could be calculated - due to wrong parameter {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5064">TuningAssistNoParameterSetWarning</Name>
+				<DisplayName TxtId="5064"><![CDATA[{0}:Can't download values. Please select a valid ParameterSet!]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5065">CantStartBodePlotWhileForceCouplingWarning</Name>
+				<DisplayName TxtId="5065"><![CDATA[{0}: Can't start bode plot while force coupling is enabled.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9017">InputPointerNotSetError</Name>
+				<DisplayName TxtId="9017"><![CDATA[{0}: Input pointer not set.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9018">OutputPointerNotSetError</Name>
+				<DisplayName TxtId="9018"><![CDATA[{0}: Output pointer to not set.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9019">InputPointerInitFailedError</Name>
+				<DisplayName TxtId="9019"><![CDATA[{0}: Failed to initialize input pointer.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9020">OutputPointerInitFailedError</Name>
+				<DisplayName TxtId="9020"><![CDATA[{0}: Failed to initialize output pointer.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9021">InputOutputPointerDifferentError</Name>
+				<DisplayName TxtId="9021"><![CDATA[{0}: Input and output pointer have different targets.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9022">GetMoverFailedError</Name>
+				<DisplayName TxtId="9022"><![CDATA[{0}: Can't get interface of linked mover.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9023">GetTaskFailedError</Name>
+				<DisplayName TxtId="9023"><![CDATA[{0}: Failed to get task context of {1}. Check if context of {1} is set.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9024">GetCoupledMoverFailedError</Name>
+				<DisplayName TxtId="9024"><![CDATA[{0}: Failed to get interface of coupled XTS Mover Controller with OTCID {1}.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9025">CoupledMoverOnDifferentTasksError</Name>
+				<DisplayName TxtId="9025"><![CDATA[{0}: The coupled controller ({1}) is on a different task. Make sure that both Mover has the same task context.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9026">NoParameterSetConfiguredError</Name>
+				<DisplayName TxtId="9026"><![CDATA[{0}: No parameter set is configured.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9027">GetParameterSetFailedError</Name>
+				<DisplayName TxtId="9027"><![CDATA[{0}: Failed to get parameter set with OTCID {1}. Please make sure the object {1} is a XTS Controller Parameter Set.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9028">CouldNotRegisterByError</Name>
+				<DisplayName TxtId="9028"><![CDATA[Could not register {0} ('{1}') by {2}.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9029">CouldNotGetInterfaceOfTaskError</Name>
+				<DisplayName TxtId="9029"><![CDATA[Could not get interface of task (Object ID = {0}, Error = {1}).]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9030">CouldNotGetRTInterfaceOfTaskError</Name>
+				<DisplayName TxtId="9030"><![CDATA[Could not get RT-interface of task (Object ID = {0}, Error = {1}).]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9031">DifferentObjectVersionsError</Name>
+				<DisplayName TxtId="9031"><![CDATA[Different versions of {0} ({1}) and {2} ({3}) detected.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9032">VelocityFollowingErrorSingleError</Name>
+				<DisplayName TxtId="9032"><![CDATA[{0} (0x1201): Velocity following error - check setpoint generation & commutation (actual velcoity != command velocity).]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9033">VelocityFollowingErrorMultipleError</Name>
+				<DisplayName TxtId="9033"><![CDATA[{0} (0x1201): Velocity following error - check setpoint generation & commutation (actual velcoity != command velocity). {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9034">ResortWhileAxisEnabledSingleError</Name>
+				<DisplayName TxtId="9034"><![CDATA[{0} (0x1001): New mover resort while axis is enabled.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9035">ResortWhileAxisEnabledMultipleError</Name>
+				<DisplayName TxtId="9035"><![CDATA[{0} (0x1001): New mover resort while axis is enabled. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9036">EmergencyRampTooLongSingleError</Name>
+				<DisplayName TxtId="9036"><![CDATA[{0} (0x1102): Emergency ramp take too long.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9037">EmergencyRampTooLongMultipleError</Name>
+				<DisplayName TxtId="9037"><![CDATA[{0} (0x1102): Emergency ramp take too long. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9038">GetExternalPositionFailedError</Name>
+				<DisplayName TxtId="9038"><![CDATA[{0}: Failed to get interface (IXtsExternalPosition) of interface with OTCID {1}.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9039">GetExternalForceFailedError</Name>
+				<DisplayName TxtId="9039"><![CDATA[{0}: Failed to get interface (IXtsExternalForce) of external force object with OTCID {1}.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9040">CantChangeControllerWhileTuningError</Name>
+				<DisplayName TxtId="9040"><![CDATA[{0}: Can't change the controller while tuning process is active ({1}).]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9041">GetMoverControllerFailedError</Name>
+				<DisplayName TxtId="9041"><![CDATA[{0}: Failed to get mover controller with OTCID {1}. Please make sure the object {1} is a XTS Controller Parameter Set.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9042">CantStartTuningAssistantError</Name>
+				<DisplayName TxtId="9042"><![CDATA[{0}: Can't start tuning, tuning process is already running.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9043">TuningAssistantJobTaskMissingError</Name>
+				<DisplayName TxtId="9043"><![CDATA[{0}: Please select a Job Task for Tuning Assistant calculations.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9044">CouldNotGetInterfaceObJobTaskError</Name>
+				<DisplayName TxtId="9044"><![CDATA[{0}: Could not get interface of Job task (Object ID = {1}, Error = {2}).]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9045">MissingMoverLinkError</Name>
+				<DisplayName TxtId="9045"><![CDATA[{0}: Missing link to XTS mover.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9046">MissingParameterSetError</Name>
+				<DisplayName TxtId="9046"><![CDATA[{0}: {1} is missing. At least one {1} is required.]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="15001">MessageDebug</Name>
+				<DisplayName TxtId="15001"><![CDATA[DEBUG-MSG: '{0}', '{1}', '{2}', '{3}']]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+		</DataType>
+	</DataTypes>
+	<ImageDatas>
+		<ImageData Id="1000">424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000900000009000000ababab00a6a6a600a0a0a0009b9b9b0095959500909090008a8a8a0085858500808080007a7a7a00757575006f6f6f006a6a6a00646464000900000009000000b4b4b400afafaf00004dff00004dff00004dff00004dff00004dff00004dff00004dff00004dff007e7e7e0078787800737373006e6e6e000900000009000000bcbcbd00b8b8b800004dff00adadad00a7a7a800a2a2a2009d9d9d009797970092929200004dff0087878700828282007c7c7c007777770009000000090000004c7be9007f99d600004dff007892cf004473e100ababab00a6a6a600a0a0a0009b9b9b00004dff00909090008b8b8b0085858500808080000900000009000000aab8d9001157fa00004dff001056f90098a6c700b4b4b400afafaf00aaaaaa00a4a4a400004dff0099999900949494008e8e8e00898989000900000009000000d9d9d9008ba5e200014eff00849edb00c3c3c300bebebe00b8b8b800b3b3b300adadad00004dff007a7a7a004949490096969600929292000900000009000000e2e2e2006991ee000852fe00658de900cccccc00535353005353530053535300b7b7b700004dff00a0a0a0002e2e2e00282828008e8e8e000900000009000000ebebeb000b54fe00004dff000049f2000000000053535300535353005353530000000000000000000000000000000000000000002b2b2b000900000009000000f4f4f4007199f7000a54fe006d95f200dfdfdf00535353005353530053535300c9c9c900c3c3c300b1b1b100333333002c2c2c009f9f9f000900000009000000fbfbfb00f8f8f800f3f3f300ededed00e8e8e800e2e2e200dddddd00d7d7d700d2d2d200cdcdcd00959595005a5a5a00bababa00b7b7b7000900000009000000fbfbfb00fbfbfb00fbfbfb00f6f6f600f1f1f100ebebeb00e6e6e600e1e1e100dbdbdb00d6d6d600d0d0d000cbcbcb00c5c5c500c0c0c0000900000009000000fbfbfb00fbfbfb00fbfbfb00fbfbfb00fafafa00f5f5f500efefef00eaeaea00e4e4e400dfdfdf00d9d9d900d4d4d400cfcfcf00c9c9c9000900000009000000fbfbfb00fbfbfb00fbfbfb00fbfbfb00fbfbfb00fbfbfb00f8f8f800f3f3f300ededed00e8e8e800e3e3e300dddddd00d8d8d800d2d2d2000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000</ImageData>
+	</ImageDatas>
+	<Axis Id="4" CreateSymbols="true" AxisType="1">
+		<Name>__FILENAME__</Name>
+		<AxisPara>
+			<Dynamic AccelerationMaximum="80000" DecelerationMaximum="80000" Acceleration="20000" Deceleration="20000" Jerk="200000"/>
+			<Velo Maximum="4000"/>
+			<PositionAreaControl Enable="false"/>
+			<TargetPosControl Enable="false"/>
+			<OtherSettings AllowMotionCmdToSlave="true" AllowMotionCmdToExtSetGenAxis="true"/>
+		</AxisPara>
+		<Encoder Name="Enc" EncType="28">
+			<LinkedTo ObjectId="#x01010240"/>
+			<EncPara ModuloFactor="4000" ToleranceWndModuloStart="0.2" MaxCount="#xffffffff"/>
+			<Vars VarGrpType="1">
+				<Name>Inputs</Name>
+				<Var>
+					<Name>In</Name>
+					<Type GUID="{901C2423-655B-45CE-B7E3-21F174F0F99F}" Namespace="MC">NCENCODERSTRUCT_IN2B</Type>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn1</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn2</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn3</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn4</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn5</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn6</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn7</Name>
+						<Comment><![CDATA[Drive Velocity Actual Value
+]]></Comment>
+					</SubVar>
+				</Var>
+			</Vars>
+			<Vars VarGrpType="2">
+				<Name>Outputs</Name>
+				<Var>
+					<Name>Out</Name>
+					<Type GUID="{9CC50AB2-5D79-4869-A3C2-1FA7761BAFEA}" Namespace="MC">NCENCODERSTRUCT_OUT2</Type>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut1</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut2</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut3</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut4</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut5</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut6</Name>
+					</SubVar>
+				</Var>
+			</Vars>
+		</Encoder>
+		<Drive Name="Drive" DrvType="22">
+			<LinkedTo ObjectId="#x01010240"/>
+			<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00000100">
+				<Analog VeloReferenz="4200" TorqueSetpointScale="10"/>
+				<TimeComp TaskDelayCycles="1"/>
+			</DrvPara>
+			<Vars VarGrpType="1">
+				<Name>Inputs</Name>
+				<Var>
+					<Name>In</Name>
+					<Type GUID="{F95C7C69-0C87-46C4-9559-1285CCA5B23A}" Namespace="MC">NCDRIVESTRUCT_IN2</Type>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn1</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn2</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn3</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn4</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn5</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataIn6</Name>
+					</SubVar>
+				</Var>
+			</Vars>
+			<Vars VarGrpType="2">
+				<Name>Outputs</Name>
+				<Var>
+					<Name>Out</Name>
+					<Type GUID="{644DC4BD-3D15-4DCB-94C7-24F3A5D579AA}" Namespace="MC">NCDRIVESTRUCT_OUT2</Type>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut1</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut2</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut3</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut4</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut5</Name>
+					</SubVar>
+					<SubVar TypeFormatIndex="2">
+						<Name>nDataOut6</Name>
+					</SubVar>
+				</Var>
+			</Vars>
+		</Drive>
+		<Controller Name="Ctrl" CtrType="1">
+			<CtrPara PriorControlFactor="1">
+				<PosDiffControl Range="10"/>
+				<Observer BandWidth="20"/>
+			</CtrPara>
+		</Controller>
+		<Vars VarGrpType="1" InsertType="1">
+			<Name>Inputs</Name>
+			<Var>
+				<Name>FromPlc</Name>
+				<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+			</Var>
+		</Vars>
+		<Vars VarGrpType="2" InsertType="1">
+			<Name>Outputs</Name>
+			<Var>
+				<Name>ToPlc</Name>
+				<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+			</Var>
+		</Vars>
+		<Module Id="#x01010240" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.0.98.0">
+			<Name>Mover Controller 4</Name>
+			<ImageId>1000</ImageId>
+			<TmcDesc GUID="{168BD96C-155E-4474-9DAD-83ECB801D40D}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.0.98.0">
+				<Name>XtsMoverController</Name>
+				<CLSID ClassFactory="TcIoXts">{168BD96C-155E-4474-9DAD-83ECB801D40D}</CLSID>
+				<Info>
+					<ImageData>424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000900000009000000ababab00a6a6a600a0a0a0009b9b9b0095959500909090008a8a8a0085858500808080007a7a7a00757575006f6f6f006a6a6a00646464000900000009000000b4b4b400afafaf00004dff00004dff00004dff00004dff00004dff00004dff00004dff00004dff007e7e7e0078787800737373006e6e6e000900000009000000bcbcbd00b8b8b800004dff00adadad00a7a7a800a2a2a2009d9d9d009797970092929200004dff0087878700828282007c7c7c007777770009000000090000004c7be9007f99d600004dff007892cf004473e100ababab00a6a6a600a0a0a0009b9b9b00004dff00909090008b8b8b0085858500808080000900000009000000aab8d9001157fa00004dff001056f90098a6c700b4b4b400afafaf00aaaaaa00a4a4a400004dff0099999900949494008e8e8e00898989000900000009000000d9d9d9008ba5e200014eff00849edb00c3c3c300bebebe00b8b8b800b3b3b300adadad00004dff007a7a7a004949490096969600929292000900000009000000e2e2e2006991ee000852fe00658de900cccccc00535353005353530053535300b7b7b700004dff00a0a0a0002e2e2e00282828008e8e8e000900000009000000ebebeb000b54fe00004dff000049f2000000000053535300535353005353530000000000000000000000000000000000000000002b2b2b000900000009000000f4f4f4007199f7000a54fe006d95f200dfdfdf00535353005353530053535300c9c9c900c3c3c300b1b1b100333333002c2c2c009f9f9f000900000009000000fbfbfb00f8f8f800f3f3f300ededed00e8e8e800e2e2e200dddddd00d7d7d700d2d2d200cdcdcd00959595005a5a5a00bababa00b7b7b7000900000009000000fbfbfb00fbfbfb00fbfbfb00f6f6f600f1f1f100ebebeb00e6e6e600e1e1e100dbdbdb00d6d6d600d0d0d000cbcbcb00c5c5c500c0c0c0000900000009000000fbfbfb00fbfbfb00fbfbfb00fbfbfb00fafafa00f5f5f500efefef00eaeaea00e4e4e400dfdfdf00d9d9d900d4d4d400cfcfcf00c9c9c9000900000009000000fbfbfb00fbfbfb00fbfbfb00fbfbfb00fbfbfb00fbfbfb00f8f8f800f3f3f300ededed00e8e8e800e3e3e300dddddd00d8d8d800d2d2d2000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000090000000900000009000000</ImageData>
+				</Info>
+				<InitSequence>PSO</InitSequence>
+				<Contexts>
+					<Context>
+						<Id>1</Id>
+						<ManualConfig>
+							<OTCID>#x02010040</OTCID>
+						</ManualConfig>
+						<Priority>1</Priority>
+						<CycleTime>250000</CycleTime>
+					</Context>
+				</Contexts>
+				<Interfaces>
+					<Interface>
+						<Type GUID="{00000012-0000-0000-E000-000000000064}">ITComObject</Type>
+					</Interface>
+					<Interface>
+						<Type GUID="{03000012-0000-0000-E000-000000000064}">ITcADI</Type>
+					</Interface>
+					<Interface>
+						<Type GUID="{03000018-0000-0000-E000-000000000064}">ITcWatchSource</Type>
+					</Interface>
+					<Interface>
+						<Type GUID="{05100010-0000-0000-E000-000000000064}">ITcSoftDrive</Type>
+					</Interface>
+				</Interfaces>
+				<Parameters>
+					<Group><![CDATA[General]]></Group>
+					<Group><![CDATA[Coupling]]></Group>
+					<Group><![CDATA[External IO]]></Group>
+					<Group><![CDATA[MC3]]></Group>
+					<Group><![CDATA[Info]]></Group>
+					<Parameter Group="General">
+						<Name>BlendInTime</Name>
+						<Comment><![CDATA[The blend in time for parameter set change.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[s]]></Unit>
+						<Default>
+							<Value>0.03</Value>
+						</Default>
+						<PTCID>#x0308040c</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>DefaultParameterSet</Name>
+						<Comment><![CDATA[Set the default parameter set of the XTS Mover Controller.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{96A64B44-550C-4DD1-99F9-8396ECC7C10D}" Namespace="XTS">XtsMoverParameterSetOTCID</BaseType>
+						<Default>
+							<Value>#x00000000</Value>
+						</Default>
+						<PTCID>#x03080401</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>ParameterSetChange</Name>
+						<Comment><![CDATA[Set how the parameter set is changed.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{F2C3FC80-2DFA-4639-B505-900CDB3E734D}" Namespace="XTS">ParameterSetChangeMode</BaseType>
+						<Default>
+							<EnumText>Automatic</EnumText>
+						</Default>
+						<PTCID>#x0308040f</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>ToolId</Name>
+						<Comment><![CDATA[Set the actual Tool ID for this Controller.]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03080410</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="Coupling">
+						<Name>ForceCouple</Name>
+						<Comment><![CDATA[Set the controller, which force is coupled to the controller.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{01E5C78E-D451-4377-9F02-F3812CC92C14}" Namespace="XTS">XtsMoverControllerOTCID</BaseType>
+						<Default>
+							<Value>#x00000000</Value>
+						</Default>
+						<PTCID>#x03080407</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="Coupling">
+						<Name>InvertForceCouple</Name>
+						<Comment><![CDATA[Set to invert the coupled force.]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Default>
+							<EnumText>FALSE</EnumText>
+						</Default>
+						<PTCID>#x0308040a</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="General">
+						<Name>Error</Name>
+						<Comment><![CDATA[Error of Mover Controller.]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03080408</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="General">
+						<Name>OperationMode</Name>
+						<Comment><![CDATA[Operation mode of Controller and Hardware.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{0898D61D-6948-4A74-AE61-D590D99DCC07}" Namespace="XTS">MoverControllerOperationMode</BaseType>
+						<Default>
+							<EnumText>CyclicSynchronousPosition</EnumText>
+						</Default>
+						<PTCID>#x03080419</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" HideParameter="true" ReadOnly="true" Group="General">
+						<Name>ActBlendingFactor</Name>
+						<Comment><![CDATA[Actual blending factor when changing a parameter set.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x0308040d</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="General">
+						<Name>ActArea</Name>
+						<Comment><![CDATA[Actual area.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+						<Default>
+							<Value>#x00000000</Value>
+						</Default>
+						<PTCID>#x0308040e</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="General">
+						<Name>ActParameterSet</Name>
+						<Comment><![CDATA[Actual active Parameter Set.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+						<Default>
+							<Value>#x00000000</Value>
+						</Default>
+						<PTCID>#x03080411</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="General">
+						<Name>ActiveForceLimit</Name>
+						<Comment><![CDATA[Get the active force limit for the controller.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[N]]></Unit>
+						<PTCID>#x03080451</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="External IO">
+						<Name>ExternalPosition</Name>
+						<Comment><![CDATA[Position which is returned form IXtsExternalPosition interface.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x0308040b</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="MC3">
+						<Name>TcMc3ActData</Name>
+						<Comment><![CDATA[Gets the actual data for the cyclic MC3 call.]]></Comment>
+						<BitSize>384</BitSize>
+						<BaseType GUID="{09B6174D-73C1-4464-A814-F90496539525}" Namespace="XTS">Mc3ActData</BaseType>
+						<PTCID>#x03080402</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="MC3">
+						<Name>MC3Diagnostic</Name>
+						<Comment><![CDATA[Gets the actual MC3 diagnosis the SoftDrive is connected with.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03080403</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="MC3">
+						<Name>DetectionStatus</Name>
+						<Comment><![CDATA[Status of the mover 1 detection.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{2A85EBE9-41B7-479E-845C-0F50265F088C}" Namespace="XTS">MoverIdDetectionStatus</BaseType>
+						<Default>
+							<EnumText>Off</EnumText>
+						</Default>
+						<PTCID>#x03080404</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
+						<Name>VersionString</Name>
+						<Comment><![CDATA[Returns the version string of the driver.]]></Comment>
+						<BitSize>384</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00010000002F}">STRING(47)</BaseType>
+						<PTCID>#x03080287</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
+						<Name>Version</Name>
+						<Comment><![CDATA[Returns the version of the driver.]]></Comment>
+						<BitSize>128</BitSize>
+						<BaseType GUID="{C8A3EBBF-E67F-491F-AAC6-16D5D5E9699B}" Namespace="XTS">TcVersion</BaseType>
+						<PTCID>#x03080510</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+				</Parameters>
+				<DataAreas>
+					<DataArea>
+						<AreaNo AreaType="Internal" CreateSymbols="true">32</AreaNo>
+						<Name>MoverControllerScopeVariable</Name>
+						<ContextId>1</ContextId>
+						<ByteSize>92</ByteSize>
+						<Symbol CreateSymbol="true">
+							<Name>ActPos</Name>
+							<Comment><![CDATA[Actual position]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[mm]]></Unit>
+							<BitOffs>0</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>ActVelo</Name>
+							<Comment><![CDATA[Actual velocity]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[mm/s]]></Unit>
+							<BitOffs>64</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>ActHwPos</Name>
+							<Comment><![CDATA[Actual position from HW]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[mm]]></Unit>
+							<BitOffs>128</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>ActPosError</Name>
+							<Comment><![CDATA[Actual position following error]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[mm]]></Unit>
+							<BitOffs>192</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>ActVeloError</Name>
+							<Comment><![CDATA[Actual velocity error]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[mm/s]]></Unit>
+							<BitOffs>256</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>SetPosItp</Name>
+							<Comment><![CDATA[Setpoint position from Interpolator]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[mm]]></Unit>
+							<BitOffs>320</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>SetVeloItp</Name>
+							<Comment><![CDATA[Setpoint velocity from Interpolator]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[mm/s]]></Unit>
+							<BitOffs>384</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>SetAccItp</Name>
+							<Comment><![CDATA[Setpoint acceleration from interpolator]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[mm/s²]]></Unit>
+							<BitOffs>448</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>SetJerkItp</Name>
+							<Comment><![CDATA[Setpoint jerk from interpolator]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[mm/s^3]]></Unit>
+							<BitOffs>512</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>SetCurr</Name>
+							<Comment><![CDATA[Setpoint current from velocity control and FFT]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[A]]></Unit>
+							<BitOffs>576</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>SetForce</Name>
+							<Comment><![CDATA[Setpoint force from velocity control and FFT]]></Comment>
+							<BitSize>64</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+							<Unit><![CDATA[N]]></Unit>
+							<BitOffs>640</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>Control</Name>
+							<Comment><![CDATA[DS402 control word of the soft drive]]></Comment>
+							<BitSize>16</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+							<BitOffs>704</BitOffs>
+						</Symbol>
+						<Symbol CreateSymbol="true">
+							<Name>Status</Name>
+							<Comment><![CDATA[DS402 status word of the soft drive]]></Comment>
+							<BitSize>16</BitSize>
+							<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+							<BitOffs>720</BitOffs>
+						</Symbol>
+					</DataArea>
+				</DataAreas>
+				<EventMessages>
+					<EventMessage>
+						<Id>14</Id>
+						<Message><![CDATA[{0}: Mover 1 found]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>15</Id>
+						<Message><![CDATA[{0}: Standard mover found]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>16</Id>
+						<Message><![CDATA[Initialized {0} XTS Controller(s) on {1} (CPU {2}, {3} μs).]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>17</Id>
+						<Message><![CDATA[Initialized {0} XTS Controller Parameter Set(s).]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>18</Id>
+						<Message><![CDATA[No XTS Controller Manager in configuration detected. Initialize default Manager...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>19</Id>
+						<Message><![CDATA[{0}: Force coupling with {1} is active.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>20</Id>
+						<Message><![CDATA[{0}: Number of maxima found in the current spectrum = {1}]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>21</Id>
+						<Message><![CDATA[{0}: Calculate with rule {1}]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>22</Id>
+						<Message><![CDATA[{0}: Bode plot is stopped.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5031</Id>
+						<Message><![CDATA[{0}: Invalid {1} parameter value (min={2}/max={3})]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5032</Id>
+						<Message><![CDATA[{0}: Invalid {1} parameter value (min={2}/max={3})]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5033</Id>
+						<Message><![CDATA[{0}: Invalid {1} parameter value (min={2})]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5034</Id>
+						<Message><![CDATA[{0} (0x1002): New Mover 1 detection while axis is enabled.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5035</Id>
+						<Message><![CDATA[{0} (0x1002): New Mover 1 detection while axis is enabled. {1} more XTS Mover Controllers with this error...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5036</Id>
+						<Message><![CDATA[{0} (0x1003): Hardware error occur after Mover 1 detection is started.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5037</Id>
+						<Message><![CDATA[{0} (0x1003): Hardware error occur after Mover 1 detection is started. {1} more XTS Mover Controllers with this error...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5038</Id>
+						<Message><![CDATA[{0} (0x1005): Movements of Mover while Mover 1 detection do not fit together.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5039</Id>
+						<Message><![CDATA[{0} (0x1005): Movements of Mover while Mover 1 detection do not fit together. {1} more XTS Mover Controllers with this error...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5040</Id>
+						<Message><![CDATA[{0} (0x1004): Hardware is not ready for Mover 1 detection - e.g. power is missing or HW has an error.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5041</Id>
+						<Message><![CDATA[{0} (0x1004): Hardware is not ready for Mover 1 detection - e.g. power is missing or HW has an error. {1} more XTS Mover Controllers with this error...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5042</Id>
+						<Message><![CDATA[{0} (0x1007): Min velocity could not reached long enough.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5043</Id>
+						<Message><![CDATA[{0} (0x1007): Min velocity could not reached long enough. {1} more XTS Mover Controllers with this error...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5044</Id>
+						<Message><![CDATA[{0} (0x1006): Min movement could not reached with the actual current.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5045</Id>
+						<Message><![CDATA[{0} (0x1006): Min movement could not reached with the actual current. {1} more XTS Mover Controllers with this error...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5046</Id>
+						<Message><![CDATA[{0}: No write access in TCom state OP for {1}.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5047</Id>
+						<Message><![CDATA[{0} Observer: Bandwidth is limited by cycle time (limited Bandwidth = {1})]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5048</Id>
+						<Message><![CDATA[{0} (0x1101): Velocity difference too big for emergency ramp down.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5049</Id>
+						<Message><![CDATA[{0} (0x1101): Velocity difference too big for emergency ramp down. {1} more XTS Mover Controllers with this error...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5050</Id>
+						<Message><![CDATA[{0}: AreaStartPosition[{1}] must be smaller then AreaEndPosition.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5051</Id>
+						<Message><![CDATA[{0}: AreaStartPosition[{1}] must be greater or equal then Zero.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5052</Id>
+						<Message><![CDATA[{0}: AreaStartPosition[{1}] must be smaller or equal then HardwareModulo.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5053</Id>
+						<Message><![CDATA[{0}: Failed to get interface of NC/MC3 axis.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5054</Id>
+						<Message><![CDATA[{0}: Invalid {1} parameter value (min={2})]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5055</Id>
+						<Message><![CDATA[{0}: Probably no enough movement during spectrum measure]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5056</Id>
+						<Message><![CDATA[{0}: No filter suggestion could be calculated - please evaluate the spectrum manually]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5057</Id>
+						<Message><![CDATA[{0}: Invalid number of maxima found in the current spectrum]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5058</Id>
+						<Message><![CDATA[{0}: No maxima found in the current spectrum]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5059</Id>
+						<Message><![CDATA[{0}: Too many maxima found in the current spectrum]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5060</Id>
+						<Message><![CDATA[TuningAssist: Error in Bi_Quad calc with LowPassfreqeuncy = {0}]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5061</Id>
+						<Message><![CDATA[TuningAssist: Error in Bi_Quad calc with HighPassfreqeuncy = {0}]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5062</Id>
+						<Message><![CDATA[TuningAssist: Error in LowPass2 calc with LowPassfreqeuncy = {0}]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5063</Id>
+						<Message><![CDATA[{0}: No friction compensation suggestion could be calculated - due to wrong parameter {1}]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5064</Id>
+						<Message><![CDATA[{0}:Can't download values. Please select a valid ParameterSet!]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>5065</Id>
+						<Message><![CDATA[{0}: Can't start bode plot while force coupling is enabled.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9017</Id>
+						<Message><![CDATA[{0}: Input pointer not set.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9018</Id>
+						<Message><![CDATA[{0}: Output pointer to not set.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9019</Id>
+						<Message><![CDATA[{0}: Failed to initialize input pointer.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9020</Id>
+						<Message><![CDATA[{0}: Failed to initialize output pointer.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9021</Id>
+						<Message><![CDATA[{0}: Input and output pointer have different targets.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9022</Id>
+						<Message><![CDATA[{0}: Can't get interface of linked mover.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9023</Id>
+						<Message><![CDATA[{0}: Failed to get task context of {1}. Check if context of {1} is set.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9024</Id>
+						<Message><![CDATA[{0}: Failed to get interface of coupled XTS Mover Controller with OTCID {1}.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9025</Id>
+						<Message><![CDATA[{0}: The coupled controller ({1}) is on a different task. Make sure that both Mover has the same task context.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9026</Id>
+						<Message><![CDATA[{0}: No parameter set is configured.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9027</Id>
+						<Message><![CDATA[{0}: Failed to get parameter set with OTCID {1}. Please make sure the object {1} is a XTS Controller Parameter Set.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9028</Id>
+						<Message><![CDATA[Could not register {0} ('{1}') by {2}.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9029</Id>
+						<Message><![CDATA[Could not get interface of task (Object ID = {0}, Error = {1}).]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9030</Id>
+						<Message><![CDATA[Could not get RT-interface of task (Object ID = {0}, Error = {1}).]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9031</Id>
+						<Message><![CDATA[Different versions of {0} ({1}) and {2} ({3}) detected.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9032</Id>
+						<Message><![CDATA[{0} (0x1201): Velocity following error - check setpoint generation & commutation (actual velcoity != command velocity).]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9033</Id>
+						<Message><![CDATA[{0} (0x1201): Velocity following error - check setpoint generation & commutation (actual velcoity != command velocity). {1} more XTS Mover Controllers with this error...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9034</Id>
+						<Message><![CDATA[{0} (0x1001): New mover resort while axis is enabled.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9035</Id>
+						<Message><![CDATA[{0} (0x1001): New mover resort while axis is enabled. {1} more XTS Mover Controllers with this error...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9036</Id>
+						<Message><![CDATA[{0} (0x1102): Emergency ramp take too long.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9037</Id>
+						<Message><![CDATA[{0} (0x1102): Emergency ramp take too long. {1} more XTS Mover Controllers with this error...]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9038</Id>
+						<Message><![CDATA[{0}: Failed to get interface (IXtsExternalPosition) of interface with OTCID {1}.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9039</Id>
+						<Message><![CDATA[{0}: Failed to get interface (IXtsExternalForce) of external force object with OTCID {1}.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9040</Id>
+						<Message><![CDATA[{0}: Can't change the controller while tuning process is active ({1}).]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9041</Id>
+						<Message><![CDATA[{0}: Failed to get mover controller with OTCID {1}. Please make sure the object {1} is a XTS Controller Parameter Set.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9042</Id>
+						<Message><![CDATA[{0}: Can't start tuning, tuning process is already running.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9043</Id>
+						<Message><![CDATA[{0}: Please select a Job Task for Tuning Assistant calculations.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9044</Id>
+						<Message><![CDATA[{0}: Could not get interface of Job task (Object ID = {1}, Error = {2}).]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9045</Id>
+						<Message><![CDATA[{0}: Missing link to XTS mover.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>9046</Id>
+						<Message><![CDATA[{0}: {1} is missing. At least one {1} is required.]]></Message>
+					</EventMessage>
+					<EventMessage>
+						<Id>15001</Id>
+						<Message><![CDATA[DEBUG-MSG: '{0}', '{1}', '{2}', '{3}']]></Message>
+					</EventMessage>
+				</EventMessages>
+				<EventClasses>
+					<EventClass>
+						<Type GUID="{72091DE6-F3FC-DC0F-3824-F4C2D6EA9A34}">MoverControllerEventClass</Type>
+					</EventClass>
+				</EventClasses>
+				<Properties>
+					<Property>
+						<Name>Category</Name>
+						<Value>XTS</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>TcIoXts</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsMoverController</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>AxisChild</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>McAxisNoSimulation</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>McAxisDrive</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>McAxisEncoder</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XConverterChild</Value>
+					</Property>
+					<Property>
+						<Name>ChildCategory</Name>
+						<Value>XtsMoverControllerChild</Value>
+					</Property>
+					<Property>
+						<Name>McAxisIoType</Name>
+						<Value>TcCom</Value>
+					</Property>
+					<Property>
+						<Name>McAxisProfile</Name>
+						<Value>TcCom_XtsMoverController</Value>
+					</Property>
+				</Properties>
+				<ParentOTCID>#x05010040</ParentOTCID>
+				<ParameterValues>
+					<Value>
+						<Name>BlendInTime</Name>
+						<Value>0.03</Value>
+					</Value>
+					<Value>
+						<Name>DefaultParameterSet</Name>
+						<Value>16842784</Value>
+					</Value>
+					<Value>
+						<Name>ParameterSetChange</Name>
+						<EnumText>Automatic</EnumText>
+					</Value>
+					<Value>
+						<Name>ToolId</Name>
+						<Value>0</Value>
+					</Value>
+					<Value>
+						<Name>ForceCouple</Name>
+						<Value>0</Value>
+					</Value>
+					<Value>
+						<Name>InvertForceCouple</Name>
+						<EnumText>FALSE</EnumText>
+					</Value>
+				</ParameterValues>
+			</TmcDesc>
+		</Module>
+	</Axis>
+</TcSmItem>
