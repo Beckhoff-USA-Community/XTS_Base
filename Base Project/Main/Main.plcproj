@@ -84,6 +84,9 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\MAIN_LD.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\XTS\Administrative\ErrorMover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -115,6 +118,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VISUs\Controls.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="VISUs\Controls_LD.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
