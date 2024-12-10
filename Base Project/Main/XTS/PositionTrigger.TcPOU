@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="PositionTrigger" Id="{e261b23c-fca2-43e5-b385-fb66bc9fcaf5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK PositionTrigger EXTENDS Objective
 
@@ -302,79 +302,40 @@ END_VAR]]></Declaration>
       </Set>
     </Property>
     <LineIds Name="PositionTrigger">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.CurrentMover.Get">
-      <LineId Id="3" Count="9" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="10" />
     </LineIds>
     <LineIds Name="PositionTrigger.Cyclic">
-      <LineId Id="86" Count="3" />
-      <LineId Id="160" Count="0" />
-      <LineId Id="90" Count="0" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="199" Count="3" />
-      <LineId Id="198" Count="0" />
-      <LineId Id="92" Count="1" />
-      <LineId Id="185" Count="0" />
-      <LineId Id="172" Count="0" />
-      <LineId Id="170" Count="0" />
-      <LineId Id="94" Count="5" />
-      <LineId Id="104" Count="33" />
-      <LineId Id="139" Count="6" />
-      <LineId Id="242" Count="5" />
-      <LineId Id="241" Count="0" />
-      <LineId Id="146" Count="5" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="250" Count="0" />
-      <LineId Id="249" Count="0" />
-      <LineId Id="248" Count="0" />
-      <LineId Id="74" Count="11" />
-      <LineId Id="203" Count="4" />
-      <LineId Id="91" Count="0" />
-      <LineId Id="208" Count="7" />
-      <LineId Id="100" Count="3" />
-      <LineId Id="216" Count="4" />
+      <LineId Id="1" Count="117" />
     </LineIds>
     <LineIds Name="PositionTrigger.MoverPassedPosition.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.MuteCurrent">
-      <LineId Id="14" Count="6" />
-      <LineId Id="3" Count="2" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="10" />
     </LineIds>
     <LineIds Name="PositionTrigger.Position.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.Position.Set">
-      <LineId Id="6" Count="0" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="PositionTrigger.ResetStatistics">
-      <LineId Id="6" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="2" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="20" Count="0" />
+      <LineId Id="1" Count="13" />
     </LineIds>
     <LineIds Name="PositionTrigger.TrackId.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.TrackId.Set">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.TriggerDirection.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="PositionTrigger.TriggerDirection.Set">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

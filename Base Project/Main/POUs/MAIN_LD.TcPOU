@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="MAIN_LD" Id="{4697cc62-040b-0c2c-26a5-d75e283b1a86}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN_LD
 VAR	
 
 	// ========= System Control / FSM Variables =========
 	
-	MainCommands 		: MainCommands_typ; 		// command struct for cycling thru the state machine
-	MainState    		: MainStateMachine_enum;   	// enumeration for the Main state machine
+	MainCommands 		: XTSCommands_typ; 		// command struct for cycling thru the state machine
+	MainState    		: XTSStateMachine_enum;   	// enumeration for the Main state machine
 	System				: Mediator;					// System-level control object
 
 	// ========= Linked NC Variables & References =========
@@ -161,7 +161,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_DISABLED"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_DISABLED"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -305,7 +305,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_INITIALIZING"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_INITIALIZING"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -449,7 +449,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_ENABLED"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_ENABLED"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -593,7 +593,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_RUN"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_RUN"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -737,7 +737,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_STOPPING"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_STOPPING"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -881,7 +881,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_STOPPED"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_STOPPED"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -1025,7 +1025,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_DISABLING"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_DISABLING"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -1169,7 +1169,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_ERROR"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_ERROR"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -1313,7 +1313,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_DEBUG"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_DEBUG"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -1544,7 +1544,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_INITIALIZING"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_INITIALIZING"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -2163,7 +2163,7 @@ END_VAR
                         </o>
                         <o t="BoxTreeOperand">
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"MainStateMachine_enum.MS_ENABLED"</v>
+                            <v n="Operand">"XTSStateMachine_enum.MS_ENABLED"</v>
                             <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -2451,7 +2451,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_DISABLING"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_DISABLING"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -3449,7 +3449,7 @@ END_VAR
                         </o>
                         <o t="BoxTreeOperand">
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"MainStateMachine_enum.MS_RUN"</v>
+                            <v n="Operand">"XTSStateMachine_enum.MS_RUN"</v>
                             <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -3872,7 +3872,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_STOPPING"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_STOPPING"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -4177,7 +4177,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_STOPPING"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_STOPPING"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -4486,7 +4486,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_STOPPING"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_STOPPING"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -4814,7 +4814,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_STOPPING"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_STOPPING"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -5005,7 +5005,7 @@ END_VAR
                         </o>
                         <o t="BoxTreeOperand">
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"MainStateMachine_enum.MS_STOPPED"</v>
+                            <v n="Operand">"XTSStateMachine_enum.MS_STOPPED"</v>
                             <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -5325,7 +5325,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_DISABLING"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_DISABLING"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -5561,7 +5561,7 @@ END_VAR
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"MainStateMachine_enum.MS_ENABLED"</v>
+                              <v n="Operand">"XTSStateMachine_enum.MS_ENABLED"</v>
                               <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -5752,7 +5752,7 @@ END_VAR
                         </o>
                         <o t="BoxTreeOperand">
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"MainStateMachine_enum.MS_DISABLED"</v>
+                            <v n="Operand">"XTSStateMachine_enum.MS_DISABLED"</v>
                             <v n="Type">"MAINSTATEMACHINE_ENUM"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>

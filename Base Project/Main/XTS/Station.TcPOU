@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="Station" Id="{92e40052-9fe7-43db-83b2-957f02760d97}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective
 VAR
@@ -328,5 +328,41 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
+    <LineIds Name="Station">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.Blocked.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.CurrentMover.Get">
+      <LineId Id="1" Count="27" />
+    </LineIds>
+    <LineIds Name="Station.Cyclic">
+      <LineId Id="1" Count="101" />
+    </LineIds>
+    <LineIds Name="Station.GroupSize.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.GroupSize.Set">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.MoverInPosition.Get">
+      <LineId Id="1" Count="20" />
+    </LineIds>
+    <LineIds Name="Station.Position.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.Position.Set">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.ResetStatistics">
+      <LineId Id="1" Count="21" />
+    </LineIds>
+    <LineIds Name="Station.TrackId.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Station.TrackId.Set">
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

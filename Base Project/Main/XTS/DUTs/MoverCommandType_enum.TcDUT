@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <DUT Name="MoverCommandType_enum" Id="{cfb76be7-0d79-49cb-87ba-a046be8c33bb}">
     <Declaration><![CDATA[{attribute 'strict'}
 TYPE MoverCommandType_enum : (

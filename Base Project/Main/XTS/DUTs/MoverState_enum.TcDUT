@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <DUT Name="MoverState_enum" Id="{89a812d1-f23a-47af-b019-1e4ee25dac44}">
     <Declaration><![CDATA[{attribute 'strict'}
 TYPE MoverState_enum : (

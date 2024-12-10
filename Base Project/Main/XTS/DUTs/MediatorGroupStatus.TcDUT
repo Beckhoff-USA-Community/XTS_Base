@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <DUT Name="MediatorGroupStatus" Id="{32999573-d701-00d8-1ee2-09643aad92ba}">
     <Declaration><![CDATA[TYPE MediatorGroupStatus :
 STRUCT

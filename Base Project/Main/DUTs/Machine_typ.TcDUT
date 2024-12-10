@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <DUT Name="Machine_typ" Id="{bab696e4-20d7-02e1-200d-c8d80adb2f41}">
+    <Declaration><![CDATA[TYPE Machine_typ :
+STRUCT
+	Cmd	: MachineCmd_typ;
+	Sts	: MachineSts_typ;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

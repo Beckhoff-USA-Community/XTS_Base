@@ -172,5 +172,38 @@ END_IF]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <LineIds Name="Zone">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.CurrentMoverCount.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.CurrentMoverList.Get">
+      <LineId Id="1" Count="28" />
+    </LineIds>
+    <LineIds Name="Zone.EndPosition.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.EndPosition.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="Zone.GetMover">
+      <LineId Id="1" Count="17" />
+    </LineIds>
+    <LineIds Name="Zone.StartPosition.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.StartPosition.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="Zone.TrackId.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.TrackId.Set">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="Zone.ZoneLength.Get">
+      <LineId Id="1" Count="9" />
+    </LineIds>
   </POU>
 </TcPlcObject>

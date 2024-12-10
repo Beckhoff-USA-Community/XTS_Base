@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <DUT Name="TrackInfo" Id="{e1df8d7d-bb5e-01fd-14ad-401c12b84a9f}">
     <Declaration><![CDATA[TYPE TrackInfo :
 STRUCT

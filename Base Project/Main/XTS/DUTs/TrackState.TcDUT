@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <DUT Name="TrackState" Id="{b8cf507c-0268-0834-24f4-900859769bcf}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}

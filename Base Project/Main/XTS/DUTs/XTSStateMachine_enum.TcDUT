@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <DUT Name="XTSStateMachine_enum" Id="{95d9048c-947b-0f01-3cd5-5e396a74ec2a}">
+    <Declaration><![CDATA[{attribute 'to_string'}
+TYPE XTSStateMachine_enum :
+(
+	XTS_DISABLED		:= 0,
+	XTS_INITIALIZING	:= 10,
+	XTS_ENABLED			:= 20,
+	XTS_STOPPING		:= 60,
+	XTS_STOPPED			:= 70,
+	XTS_DISABLING		:= 80,
+	XTS_ERROR			:= 90,
+	XTS_DEBUG			:= 100	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

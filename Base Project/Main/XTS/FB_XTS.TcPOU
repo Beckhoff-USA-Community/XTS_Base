@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <POU Name="FB_XTS" Id="{cc740f0b-abda-0b00-3df6-66091ad83846}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_XTS
+VAR_INPUT
+
+	// ========= System Control / FSM Variables =========
+	Commands 		: XTSCommands_typ; 		// command struct for cycling thru the state machine
+	State    		: XTSStateMachine_enum; // enumeration for the Main state machine
+	System			: Mediator;				// System-level control object
+
+	// ========= Linked NC Variables & References =========
+	Mover    			: ARRAY[1..GVL.NUM_MOVERS] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
+	
+	// ========= Objectives & Parameters =========
+	ParameterSet		: MotionParameters_typ;
+	
+	MoverList			: ARRAY[0..GVL.NUM_MOVERLISTS-1] OF MoverList;
+	PositionTrigger		: ARRAY[0..GVL.NUM_POSITIONTRIGGERS-1] OF PositionTrigger;
+	Station				: ARRAY[0..GVL.NUM_STATIONS-1] OF Station;
+	Track				: ARRAY[0..GVL.NUM_TRACKS] OF Track;
+	Zone				: ARRAY[0..GVL.NUM_ZONES-1] OF Zone;
+	
+	InitialParameterSet		: MotionParameters_typ;
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+
+    // ========= Helper, State, & Index Variables =========
+    i                	: UINT; 	// index variable; gets reused in various FOR loops
+    n                	: UINT; 	// secondary index variable, for enabling movers
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="CyclicLogic" Id="{e13cb496-3256-0037-0b46-6393bcb4467b}">
+      <Declaration><![CDATA[METHOD CyclicLogic
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE State OF
+	XTS_DISABLED: // ------------------------------------------
+	
+		// XTS is idle. Motive power is disabled.	
+		IF Commands.Enable THEN
+			Commands.Disable			:= FALSE;
+			State						:= XTS_INITIALIZING;
+		END_IF
+
+	XTS_INITIALIZING: // --------------------------------------
+	
+		Registering();			// Add all objectives & movers to the system-level Mediator object
+		//Initializing();			// Set basic application parameters for the objects
+		System.CompleteMoverList.ApplyAllParameterSet( InitialParameterSet );
+
+		System.CompleteMoverList.EnableAll();
+		System.CompleteMoverList.ActivateAllTrack( Track[1] );
+		
+		IF System.CompleteMoverList.IsAllTrackReady AND System.CompleteMoverList.IsAllMoversReady
+		 AND system.AllMotorModulesReady AND system.GroupEnabled THEN
+			System.ResetStatistics();
+			State	:= XTS_ENABLED;
+		END_IF
+		
+		IF Commands.Disable THEN
+			Commands.Enable	:= FALSE;
+			System.CompleteMoverList.DisableAll();
+			State			:= XTS_DISABLING;
+		END_IF
+	
+	XTS_ENABLED:	// -------------------------------------------
+
+        IF System.GroupError THEN
+			// stop on group error user must go through disable/enable to recover
+			State 			:= XTS_STOPPING;
+		ELSIF Commands.Stop THEN
+			System.CompleteMoverList.HaltAll();
+            State         	:= XTS_STOPPING;
+        ELSIF Commands.Disable THEN
+            Commands.Enable := FALSE;
+			System.CompleteMoverList.HaltAll();
+            State           := XTS_STOPPING;
+        END_IF
+		
+	XTS_STOPPING:
+	
+		IF System.CompleteMoverList.IsAllMoversHalted THEN
+			State			:= XTS_STOPPED;
+		END_IF
+		
+	XTS_STOPPED: // -------------------------------------------
+	
+	    IF Commands.Disable THEN
+            Commands.Enable 	:= FALSE;
+			Commands.Stop		:= FALSE;
+			System.CompleteMoverList.DisableAll();
+            State           	:= XTS_DISABLING;
+        END_IF
+		
+	XTS_DISABLING: // -------------------------------------------
+	
+		IF System.CompleteMoverList.IsAllMoversDisabled THEN
+			State			:= XTS_DISABLED;
+		END_IF
+		
+	XTS_ERROR: // ---------------------------------------------
+	XTS_DEBUG: // ---------------------------------------------	
+	
+
+END_CASE
+
+System.Cyclic();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Action Name="Registering" Id="{d9f13b62-fbf8-0bae-267c-953c33b46614}">
+      <Implementation>
+        <ST><![CDATA[// Add all Movers to the Mediator
+FOR i := 1 TO GVL.NUM_MOVERS DO
+	System.AddMover( Mover[i] );
+END_FOR
+
+// Add all Mover Lists to the Mediator
+FOR i := 0 TO GVL.NUM_MOVERLISTS - 1 DO
+	System.AddMoverList( MoverList[i] );
+END_FOR
+
+// Add all PositionTriggers to the Mediator
+FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
+	System.AddPositionTrigger( PositionTrigger[i] );
+END_FOR
+
+// Add all Stations to the Mediator
+FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
+	System.AddStation( Station[i] );
+END_FOR
+
+// Add all Tracks to the Mediator
+// note track zero is a special case, so the loop is one larger than the rest of the initalization loops
+FOR i := 0 TO GVL.NUM_TRACKS DO
+	Track[i].Id := UINT_TO_INT(i);
+	System.AddTrack( Track[i] );
+END_FOR
+
+// Add all Zones to the Mediator
+FOR i := 0 TO GVL.NUM_ZONES - 1 DO
+	System.AddZone( Zone[i] );
+END_FOR]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_XTS">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_XTS.CyclicLogic">
+      <LineId Id="2" Count="30" />
+      <LineId Id="47" Count="2" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="54" Count="6" />
+      <LineId Id="78" Count="10" />
+      <LineId Id="90" Count="2" />
+      <LineId Id="96" Count="15" />
+    </LineIds>
+    <LineIds Name="FB_XTS.Registering">
+      <LineId Id="1" Count="30" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

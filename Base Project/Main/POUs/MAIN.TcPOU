@@ -4,32 +4,11 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR	
 
-	// ========= System Control / FSM Variables =========
-	
-	MainCommands 		: MainCommands_typ; 		// command struct for cycling thru the state machine
-	MainState    		: MainStateMachine_enum;   	// enumeration for the Main state machine
-	System				: Mediator;					// System-level control object
-	RecoveryComplete	: BOOL;						// flag tracking the completeness of start-up recovery
-
-	// ========= Linked NC Variables & References =========
-	
-	Mover    			: ARRAY[1..GVL.NUM_MOVERS] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
-	
-	// ========= Objectives & Parameters =========
-
-	ParameterSet		: MotionParameters_typ;
-	
-	MoverList			: ARRAY[0..GVL.NUM_MOVERLISTS-1] OF MoverList;
-	PositionTrigger		: ARRAY[0..GVL.NUM_POSITIONTRIGGERS-1] OF PositionTrigger;
-	Station				: ARRAY[0..GVL.NUM_STATIONS-1] OF Station;
-	Track				: ARRAY[0..GVL.NUM_TRACKS] OF Track;
-	Zone				: ARRAY[0..GVL.NUM_ZONES-1] OF Zone;
-	
-    // ========= Helper, State, & Index Variables =========
-	
-    i                	: UINT; 	// index variable; gets reused in various FOR loops
-    n                	: UINT; 	// secondary index variable, for enabling movers
-	
+	// Machine
+	MainCommands	: MachineCmd_typ;
+	State			: MachineState_enum;
+	XTS				: FB_XTS;
+	Init			: BOOL;
 	// ========= Example Application Variables =========
 
     nextStation 			: USINT := 4;
@@ -40,170 +19,94 @@ VAR
 	
 	StationTimer 			: ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells
 	InitialParameterSet		: MotionParameters_typ;
+	RecoveryComplete		: BOOL;
 	
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-CASE MainState OF
-	MainStateMachine_enum.MS_DISABLED: // ------------------------------------------
-	
-		// XTS is idle. Motive power is disabled.	
+      <ST><![CDATA[IF NOT Init THEN Initializing(); END_IF
+
+CASE State OF 
+
+	MS_OFF:
 		IF MainCommands.Enable THEN
-			MainCommands.Disable			:= FALSE;
-			MainCommands.Stop				:= FALSE;
-			MainState						:= MainStateMachine_enum.MS_INITIALIZING;
+			XTS.Commands.Enable		:= TRUE;
+			xts.Commands.Disable	:= FALSE;
+			State					:= MS_RESTARTING;
 		END_IF
 
-	MainStateMachine_enum.MS_INITIALIZING: // --------------------------------------
-	
-		Registering();			// Add all objectives & movers to the system-level Mediator object
-		Initializing();			// Set basic application parameters for the objects
-			
-		System.CompleteMoverList.EnableAll();
-		System.CompleteMoverList.ActivateAllTrack( Track[1] );
-		
-		IF System.CompleteMoverList.IsAllTrackReady AND System.CompleteMoverList.IsAllMoversReady THEN
-			MainState	:= MainStateMachine_enum.MS_ENABLED;
-		END_IF
-		
+	MS_RESTARTING:
 		IF MainCommands.Disable THEN
-			MainCommands.Enable	:= FALSE;
-			System.CompleteMoverList.DisableAll();
-			MainState			:= MainStateMachine_enum.MS_DISABLING;
+			XTS.Commands.Enable		:= FALSE;
+			XTS.Commands.Disable	:= TRUE;
+			State					:= MS_STOPPING;
+		ELSIF XTS.State = XTS_ENABLED THEN
+			XTS.Track[1].CurrentMoverList.SetAllVelocity(MediumVelocity).MoveAllToStation(XTS.Station[0]);
+			nextStation := 4;
+			State		:= MS_RUNNING;
 		END_IF
-	
-	MainStateMachine_enum.MS_ENABLED:	// -------------------------------------------
-	
-		// Check for system ready or disable command
-		IF MainCommands.Start AND system.AllMotorModulesReady AND system.GroupEnabled THEN
-			MainState			:= MainStateMachine_enum.MS_ONESHOT_RECOVER;
-		ELSIF MainCommands.Disable THEN
-			MainCommands.Enable	:= FALSE;
-			System.CompleteMoverList.HaltAll();
-			MainState			:= MainStateMachine_enum.MS_STOPPING;
-			
-		END_IF
-		
-	MainStateMachine_enum.MS_ONESHOT_RECOVER: // -----------------------------------------------
-		// call the one-shot recovery state
-		RecoverOneshot();
-		
-		// immediately continue to recover state
-		MainState := MainStateMachine_enum.MS_RECOVERING;
-		
-	MainStateMachine_enum.MS_RECOVERING: // -----------------------------------------------
-		// reset the recovering complete flag
-		RecoveryComplete := FALSE;
-		// call the recovering logic (sets complete flag when ready
-		Recovering();
-		
-		// test for errors, commands or recovery complete
-		IF System.GroupError THEN
-			// stop on group error user must go through disable/enable to recover
-			MainCommands.Start	:= FALSE;
-			MainState 			:= MainStateMachine_enum.MS_STOPPING;
-		ELSIF MainCommands.Stop THEN
-            MainCommands.Start 	:= FALSE;
-			System.CompleteMoverList.HaltAll();
-            MainState         	:= MainStateMachine_enum.MS_STOPPING;
-        ELSIF MainCommands.Disable THEN
-            MainCommands.Enable := FALSE;
-			System.CompleteMoverList.HaltAll();
-            MainState           := MainStateMachine_enum.MS_STOPPING;
-		ELSIF RecoveryComplete THEN
-			// recovery sequence is complete, move on to run state
-			MainState			:= MainStateMachine_enum.MS_RUN;
-        END_IF
-	
-	MainStateMachine_enum.MS_RUN: // -----------------------------------------------
-		// call the station logic
+
+	MS_RUNNING:
 		StationLogic();
 		
-		// check for errors or other commands
-        IF System.GroupError THEN
-			// stop on group error user must go through disable/enable to recover
-			MainCommands.Start	:= FALSE;
-			MainState 			:= MainStateMachine_enum.MS_STOPPING;
-		ELSIF MainCommands.Stop THEN
-            MainCommands.Start 	:= FALSE;
-			System.CompleteMoverList.HaltAll();
-            MainState         	:= MainStateMachine_enum.MS_STOPPING;
-        ELSIF MainCommands.Disable THEN
-            MainCommands.Enable := FALSE;
-			System.CompleteMoverList.HaltAll();
-            MainState           := MainStateMachine_enum.MS_STOPPING;
-        END_IF
-		
-	MainStateMachine_enum.MS_STOPPING:
-	
-		IF System.CompleteMoverList.IsAllMoversHalted THEN
-			MainState			:= MainStateMachine_enum.MS_STOPPED;
+		IF MainCommands.Disable THEN
+			XTS.Commands.Disable	:= TRUE;
+			XTS.Commands.Enable		:= FALSE;
+			State					:= MS_STOPPING;
 		END_IF
-		
-	MainStateMachine_enum.MS_STOPPED: // -------------------------------------------
-	
-	    IF MainCommands.Disable THEN
-            MainCommands.Enable 	:= FALSE;
-			MainCommands.Start		:= FALSE;
-			MainCommands.Stop		:= FALSE;
-			System.CompleteMoverList.DisableAll();
-            MainState           	:= MainStateMachine_enum.MS_DISABLING;
-        ELSIF MainCommands.Start THEN
-            MainCommands.Stop 		:= FALSE;
-            MainState         		:= MainStateMachine_enum.MS_ENABLED;
-        END_IF
-		
-	MainStateMachine_enum.MS_DISABLING: // -------------------------------------------
-	
-		IF System.CompleteMoverList.IsAllMoversDisabled THEN
-			MainState			:= MainStateMachine_enum.MS_DISABLED;
-		END_IF
-		
-	MainStateMachine_enum.MS_ERROR: // ---------------------------------------------
-	MainStateMachine_enum.MS_DEBUG: // ---------------------------------------------	
-	
 
+	MS_CYCLESTOP:
+
+	MS_STOPPING:
+		IF XTS.State = XTS_DISABLED THEN
+			XTS.Commands.Disable	:= FALSE;
+			State					:= MS_OFF;
+		END_IF
+
+	MS_ERROR:
+	
 END_CASE
 
-System.Cyclic();
+XTS.CyclicLogic();
 ]]></ST>
     </Implementation>
     <Action Name="Initializing" Id="{77eee1d6-568e-0448-2c64-a85af70fbf71}">
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[// XTS Object Init
+XTS.Station[0].Position 		:= 5;
+XTS.Station[1].Position 		:= 750;
+XTS.Station[2].Position 		:= 1200;
+XTS.Station[3].Position 		:= 1300;
+XTS.Station[4].Position 		:= 1400;
 
-	// Initialize station positions
-	Station[0].Position 		:= 5;
-	Station[1].Position 		:= 750;
-	Station[2].Position 		:= 1200;
-	Station[3].Position 		:= 1300;
-	Station[4].Position 		:= 1400;
+XTS.PositionTrigger[0].Position := 1500;
+XTS.PositionTrigger[1].Position := 2000;
+XTS.PositionTrigger[2].Position := 3500;
 
-	PositionTrigger[0].Position := 1500;
-	PositionTrigger[1].Position := 2000;
-	PositionTrigger[2].Position := 3500;
+XTS.Zone[0].StartPosition		:= 3750;
+XTS.Zone[0].EndPosition   		:= 750;
 
-	Zone[0].StartPosition		:= 3750;
-	Zone[0].EndPosition   		:= 750;
+XTS.Zone[1].StartPosition 		:= 750;
+XTS.Zone[1].EndPosition   		:= 1750;
 
-	Zone[1].StartPosition 		:= 750;
-	Zone[1].EndPosition   		:= 1750;
+XTS.Zone[2].StartPosition 		:= 1750;
+XTS.Zone[2].EndPosition   		:= 2750;
 
-	Zone[2].StartPosition 		:= 1750;
-	Zone[2].EndPosition   		:= 2750;
+XTS.Zone[3].StartPosition		:= 2750;
+XTS.Zone[3].EndPosition   		:= 3750;
 
-	Zone[3].StartPosition		:= 2750;
-	Zone[3].EndPosition   		:= 3750;
+XTS.InitialParameterSet.Velocity		:= 1000;		// mm/s
+XTS.InitialParameterSet.Acceleration	:= 10_000;		// mm/s2
+XTS.InitialParameterSet.Deceleration	:= 10_000;		// mm/s2
+XTS.InitialParameterSet.Jerk			:= 100_000;		// mm/s3
+XTS.InitialParameterSet.Gap				:= 85;			// mm
+XTS.InitialParameterSet.Direction		:= mcDirectionPositive;	
 
-	InitialParameterSet.Velocity		:= 1000;		// mm/s
-	InitialParameterSet.Acceleration	:= 10_000;		// mm/s2
-	InitialParameterSet.Deceleration	:= 10_000;		// mm/s2
-	InitialParameterSet.Jerk			:= 100_000;		// mm/s3
-	InitialParameterSet.Gap				:= 85;			// mm
-	InitialParameterSet.Direction		:= mcDirectionPositive;	
-	
-	System.CompleteMoverList.ApplyAllParameterSet( InitialParameterSet );]]></ST>
+LowVelocity		:= 300;
+MediumVelocity	:= 800;
+HighVelocity	:= 1200;
+
+Init	:= TRUE;]]></ST>
       </Implementation>
     </Action>
     <Action Name="Recovering" Id="{43063827-0598-00b7-2079-e6fbfd8a6aff}">
@@ -211,7 +114,7 @@ System.Cyclic();
         <ST><![CDATA[// this state is called until all movers have completed their desired recovery tasks
 
 // wait for all movers to reach the standstill state and one mover at station 0
-IF (System.CompleteMoverList.IsAllMoversHalted and Station[0].MoverInPosition) THEN
+IF (XTS.System.CompleteMoverList.IsAllMoversHalted AND XTS.Station[0].MoverInPosition) THEN
 	RecoveryComplete := TRUE;
 END_IF]]></ST>
       </Implementation>
@@ -223,48 +126,11 @@ END_IF]]></ST>
 // other commands such as resetting counters and timers should also be carried out here
 
 // send all movers to station 0
-System.CompleteMoverList.SetAllVelocity(mediumVelocity).MoveAllToStation( Station[0] );
-System.ResetStatistics();
+XTS.System.CompleteMoverList.SetAllVelocity(mediumVelocity).MoveAllToStation( XTS.Station[0] );
+XTS.System.ResetStatistics();
 
 // Reinit nextStation
 nextStation := 4;]]></ST>
-      </Implementation>
-    </Action>
-    <Action Name="Registering" Id="{ef3ef836-2b88-0099-2899-1cd10004220b}">
-      <Implementation>
-        <ST><![CDATA[	
-
-		// Add all Movers to the Mediator
-		FOR i := 1 TO GVL.NUM_MOVERS DO
-			System.AddMover( Mover[i] );
-		END_FOR
-	
-		// Add all Mover Lists to the Mediator
-		FOR i := 0 TO GVL.NUM_MOVERLISTS - 1 DO
-			System.AddMoverList( MoverList[i] );
-		END_FOR
-		
-		// Add all PositionTriggers to the Mediator
-		FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
-			System.AddPositionTrigger( PositionTrigger[i] );
-		END_FOR
-		
-		// Add all Stations to the Mediator
-		FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
-			System.AddStation( Station[i] );
-		END_FOR
-		
-		// Add all Tracks to the Mediator
-		// note track zero is a special case, so the loop is one larger than the rest of the initalization loops
-		FOR i := 0 TO GVL.NUM_TRACKS DO
-			Track[i].Id := UINT_TO_INT(i);
-			System.AddTrack( Track[i] );
-		END_FOR
-		
-		// Add all Zones to the Mediator
-		FOR i := 0 TO GVL.NUM_ZONES - 1 DO
-			System.AddZone( Zone[i] );
-		END_FOR]]></ST>
       </Implementation>
     </Action>
     <Action Name="StationLogic" Id="{ad15b1d3-f9a4-013e-29dd-5430b02980cb}">
@@ -274,22 +140,20 @@ nextStation := 4;]]></ST>
 		here down to the short line break that looks like this: // ============= *)
 	
         // Station 0 Logic
-        IF Station[0].MoverInPosition THEN
+        IF XTS.Station[0].MoverInPosition THEN
             StationTimer[0](IN := TRUE, PT := T#1000MS);
             IF StationTimer[0].Q THEN
-                Station[0].CurrentMover.SetVelocity(mediumVelocity);
-                Station[0].CurrentMover.MoveToStation(Station[1]);
+                XTS.Station[0].CurrentMover.MoveToStation(XTS.Station[1]);
             END_IF
         ELSE
             StationTimer[0](IN := FALSE);
         END_IF
 		
         // Station 1 Logic		
-        IF Station[1].MoverInPosition THEN
+        IF XTS.Station[1].MoverInPosition THEN
             StationTimer[1](IN := TRUE, PT := T#250MS);
             IF StationTimer[1].Q THEN
-                Station[1].CurrentMover.SetVelocity(mediumVelocity);
-                Station[1].CurrentMover.MoveToStation(Station[nextStation]);
+                XTS.Station[1].CurrentMover.MoveToStation(XTS.Station[nextStation]);
                 nextStation := nextStation - 1;
                 IF nextStation = 1 THEN
                     nextStation := 4;
@@ -300,38 +164,59 @@ nextStation := 4;]]></ST>
         END_IF
 		
 		// Group of Stations 2, 3, and 4 Logic
-        IF Station[2].MoverInPosition AND Station[3].MoverInPosition AND Station[4].MoverInPosition THEN
+        IF XTS.Station[2].MoverInPosition AND XTS.Station[3].MoverInPosition AND XTS.Station[4].MoverInPosition THEN
             StationTimer[2](IN := TRUE, PT := T#750MS);
             IF StationTimer[2].Q THEN
 				StationTimer[2](IN := FALSE);
 
-                Station[2].CurrentMover.MoveVelocity(500);
-                Station[3].CurrentMover.MoveVelocity(500);
-                Station[4].CurrentMover.MoveVelocity(500);
+                XTS.Station[2].CurrentMover.MoveVelocity(500);
+                XTS.Station[3].CurrentMover.MoveVelocity(500);
+                XTS.Station[4].CurrentMover.MoveVelocity(500);
             END_IF
         END_IF
 		
         // Position Trigger 0 Logic
-        IF PositionTrigger[0].MoverPassedPosition THEN
-            PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
-            PositionTrigger[0].MuteCurrent();
+        IF XTS.PositionTrigger[0].MoverPassedPosition THEN
+            XTS.PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
+            XTS.PositionTrigger[0].MuteCurrent();
         END_IF
 		
         // Position Trigger 1 Logic
-        IF PositionTrigger[1].MoverPassedPosition THEN
-			PositionTrigger[1].CurrentMover.SetAcceleration(5E2);
-            PositionTrigger[1].CurrentMover.SetVelocity(highVelocity);
-            PositionTrigger[1].MuteCurrent();
+        IF XTS.PositionTrigger[1].MoverPassedPosition THEN
+			XTS.PositionTrigger[1].CurrentMover.SetAcceleration(5E2);
+            XTS.PositionTrigger[1].CurrentMover.SetVelocity(highVelocity);
+            XTS.PositionTrigger[1].MuteCurrent();
         END_IF
 
 		// Position Trigger 2 Logic
-        IF PositionTrigger[2].MoverPassedPosition THEN
-			PositionTrigger[2].CurrentMover.SetAcceleration(1E4);
-            PositionTrigger[2].CurrentMover.SetVelocity(lowVelocity);
-            PositionTrigger[2].CurrentMover.MoveToStation(Station[0]);
-            PositionTrigger[2].MuteCurrent();
+        IF XTS.PositionTrigger[2].MoverPassedPosition THEN
+			XTS.PositionTrigger[2].CurrentMover.SetAcceleration(1E4);
+            XTS.PositionTrigger[2].CurrentMover.SetVelocity(lowVelocity);
+            XTS.PositionTrigger[2].CurrentMover.MoveToStation(XTS.Station[0]);
+            XTS.PositionTrigger[2].MuteCurrent();
         END_IF]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="MAIN">
+      <LineId Id="249" Count="42" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Initializing">
+      <LineId Id="38" Count="33" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Recovering">
+      <LineId Id="2" Count="4" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.RecoverOneshot">
+      <LineId Id="2" Count="8" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.StationLogic">
+      <LineId Id="63" Count="58" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

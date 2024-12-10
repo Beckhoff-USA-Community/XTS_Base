@@ -22,37 +22,16 @@
     <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\MainCommands_typ.TcDUT">
+    <Compile Include="DUTs\MachineCmd_typ.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\MainStateMachine_enum.TcDUT">
+    <Compile Include="DUTs\MachineState_enum.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\MediatorGroupStatus.TcDUT">
+    <Compile Include="DUTs\MachineSts_typ.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\MoverCommandType_enum.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\MotionParameters_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\MoverState_enum.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\PositionTriggerStats_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\StationStats_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\TrackCyclicState.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\TrackInfo.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\TrackState.TcDUT">
+    <Compile Include="DUTs\Machine_typ.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
@@ -66,15 +45,6 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="ITFs\iMoverList.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ITFs\iMover.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ITFs\iTrack.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -82,33 +52,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN_LD.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\Administrative\ErrorMover.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\Administrative\Mediator.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\Administrative\Objective.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\Mover.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\MoverList.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\PositionTrigger.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\Station.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\Track.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\XTS\Zone.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">
@@ -126,15 +69,88 @@
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
+    <Compile Include="XTS\Administrative\ErrorMover.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Administrative\Mediator.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Administrative\Objective.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\XTSCommands_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\XTSStateMachine_enum.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\MediatorGroupStatus.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\MotionParameters_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\MoverCommandType_enum.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\MoverState_enum.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\PositionTriggerStats_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\StationStats_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\TrackCyclicState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\TrackInfo.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\DUTs\TrackState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\FB_XTS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\ITFs\iMover.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\ITFs\iMoverList.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\ITFs\iTrack.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\MoverList.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\PositionTrigger.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Station.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Track.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Zone.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
-    <Folder Include="ITFs" />
-    <Folder Include="POUs\XTS" />
-    <Folder Include="POUs\XTS\Administrative" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
+    <Folder Include="XTS" />
+    <Folder Include="XTS\Administrative" />
+    <Folder Include="XTS\DUTs" />
+    <Folder Include="XTS\ITFs" />
   </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="System_VisuElemMeter">
@@ -407,8 +423,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -2721,16 +2737,16 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="Int32">System.Int32</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-          <Type n="UInt32">System.UInt32</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="Int32">System.Int32</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+    <Type n="UInt32">System.UInt32</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

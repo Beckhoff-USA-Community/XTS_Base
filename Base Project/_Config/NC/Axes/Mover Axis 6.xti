@@ -1613,377 +1613,377 @@ External Setpoint Generation:
 			<DisplayName TxtId=""><![CDATA[MoverControllerEventClass]]></DisplayName>
 			<EventId>
 				<Name Id="14">Mover1FoundInfo</Name>
-				<DisplayName TxtId="14"><![CDATA[{0}: Mover 1 found]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Mover 1 found]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="15">StandardMoverFoundInfo</Name>
-				<DisplayName TxtId="15"><![CDATA[{0}: Standard mover found]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Standard mover found]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="16">ProcessingLineInitializedInfo</Name>
-				<DisplayName TxtId="16"><![CDATA[Initialized {0} XTS Controller(s) on {1} (CPU {2}, {3} μs).]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[Initialized {0} XTS Controller(s) on {1} (CPU {2}, {3} μs).]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="17">ParameterSetsInitializedInfo</Name>
-				<DisplayName TxtId="17"><![CDATA[Initialized {0} XTS Controller Parameter Set(s).]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[Initialized {0} XTS Controller Parameter Set(s).]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="18">NoManagerFoundInfo</Name>
-				<DisplayName TxtId="18"><![CDATA[No XTS Controller Manager in configuration detected. Initialize default Manager...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[No XTS Controller Manager in configuration detected. Initialize default Manager...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="19">ForceCouplingActiveInfo</Name>
-				<DisplayName TxtId="19"><![CDATA[{0}: Force coupling with {1} is active.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Force coupling with {1} is active.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="20">TuningAssistNumberOfMaximaInfo</Name>
-				<DisplayName TxtId="20"><![CDATA[{0}: Number of maxima found in the current spectrum = {1}]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Number of maxima found in the current spectrum = {1}]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="21">TuningAssistRuleInfo</Name>
-				<DisplayName TxtId="21"><![CDATA[{0}: Calculate with rule {1}]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Calculate with rule {1}]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="22">BodePlotIsStoppedInfo</Name>
-				<DisplayName TxtId="22"><![CDATA[{0}: Bode plot is stopped.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Bode plot is stopped.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5031">InvalidParameterValue_MinMax_UInt32Warning</Name>
-				<DisplayName TxtId="5031"><![CDATA[{0}: Invalid {1} parameter value (min={2}/max={3})]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Invalid {1} parameter value (min={2}/max={3})]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5032">InvalidParameterValue_MinMax_FloatWarning</Name>
-				<DisplayName TxtId="5032"><![CDATA[{0}: Invalid {1} parameter value (min={2}/max={3})]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Invalid {1} parameter value (min={2}/max={3})]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5033">InvalidParameterValue_Min_UInt32Warning</Name>
-				<DisplayName TxtId="5033"><![CDATA[{0}: Invalid {1} parameter value (min={2})]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Invalid {1} parameter value (min={2})]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5034">Mover1DetectionWhileAxisEnabledSingleWarning</Name>
-				<DisplayName TxtId="5034"><![CDATA[{0} (0x1002): New Mover 1 detection while axis is enabled.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1002): New Mover 1 detection while axis is enabled.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5035">Mover1DetectionWhileAxisEnabledMultipleWarning</Name>
-				<DisplayName TxtId="5035"><![CDATA[{0} (0x1002): New Mover 1 detection while axis is enabled. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1002): New Mover 1 detection while axis is enabled. {1} more XTS Mover Controllers with this error...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5036">Mover1HWErrorSingleWarning</Name>
-				<DisplayName TxtId="5036"><![CDATA[{0} (0x1003): Hardware error occur after Mover 1 detection is started.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1003): Hardware error occur after Mover 1 detection is started.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5037">Mover1HWErrorMultipleWarning</Name>
-				<DisplayName TxtId="5037"><![CDATA[{0} (0x1003): Hardware error occur after Mover 1 detection is started. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1003): Hardware error occur after Mover 1 detection is started. {1} more XTS Mover Controllers with this error...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5038">Mover1MovementErrorSingleWarning</Name>
-				<DisplayName TxtId="5038"><![CDATA[{0} (0x1005): Movements of Mover while Mover 1 detection do not fit together.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1005): Movements of Mover while Mover 1 detection do not fit together.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5039">Mover1MovementErrorMultipleWarning</Name>
-				<DisplayName TxtId="5039"><![CDATA[{0} (0x1005): Movements of Mover while Mover 1 detection do not fit together. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1005): Movements of Mover while Mover 1 detection do not fit together. {1} more XTS Mover Controllers with this error...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5040">Mover1HwNotReadySingleWarning</Name>
-				<DisplayName TxtId="5040"><![CDATA[{0} (0x1004): Hardware is not ready for Mover 1 detection - e.g. power is missing or HW has an error.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1004): Hardware is not ready for Mover 1 detection - e.g. power is missing or HW has an error.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5041">Mover1HwNotReadyMultipleWarning</Name>
-				<DisplayName TxtId="5041"><![CDATA[{0} (0x1004): Hardware is not ready for Mover 1 detection - e.g. power is missing or HW has an error. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1004): Hardware is not ready for Mover 1 detection - e.g. power is missing or HW has an error. {1} more XTS Mover Controllers with this error...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5042">Mover1VeloErrorSingleWarning</Name>
-				<DisplayName TxtId="5042"><![CDATA[{0} (0x1007): Min velocity could not reached long enough.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1007): Min velocity could not reached long enough.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5043">Mover1VeloErrorMultipleWarning</Name>
-				<DisplayName TxtId="5043"><![CDATA[{0} (0x1007): Min velocity could not reached long enough. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1007): Min velocity could not reached long enough. {1} more XTS Mover Controllers with this error...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5044">Mover1MinMovementErrorSingleWarning</Name>
-				<DisplayName TxtId="5044"><![CDATA[{0} (0x1006): Min movement could not reached with the actual current.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1006): Min movement could not reached with the actual current.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5045">Mover1MinMovementErrorMultipleWarning</Name>
-				<DisplayName TxtId="5045"><![CDATA[{0} (0x1006): Min movement could not reached with the actual current. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1006): Min movement could not reached with the actual current. {1} more XTS Mover Controllers with this error...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5046">NoWriteAccessInOPWarning</Name>
-				<DisplayName TxtId="5046"><![CDATA[{0}: No write access in TCom state OP for {1}.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: No write access in TCom state OP for {1}.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5047">BandwidthIsLimitedWarning</Name>
-				<DisplayName TxtId="5047"><![CDATA[{0} Observer: Bandwidth is limited by cycle time (limited Bandwidth = {1})]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} Observer: Bandwidth is limited by cycle time (limited Bandwidth = {1})]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5048">VeloDiffTooBigForEmergencyRampSingleWarning</Name>
-				<DisplayName TxtId="5048"><![CDATA[{0} (0x1101): Velocity difference too big for emergency ramp down.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1101): Velocity difference too big for emergency ramp down.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5049">VeloDiffTooBigForEmergencyRampMultipleWarning</Name>
-				<DisplayName TxtId="5049"><![CDATA[{0} (0x1101): Velocity difference too big for emergency ramp down. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1101): Velocity difference too big for emergency ramp down. {1} more XTS Mover Controllers with this error...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5050">AreaStartPositionMustSmallerWarning</Name>
-				<DisplayName TxtId="5050"><![CDATA[{0}: AreaStartPosition[{1}] must be smaller then AreaEndPosition.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: AreaStartPosition[{1}] must be smaller then AreaEndPosition.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5051">AreaStartPositionMustGreaterWarning</Name>
-				<DisplayName TxtId="5051"><![CDATA[{0}: AreaStartPosition[{1}] must be greater or equal then Zero.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: AreaStartPosition[{1}] must be greater or equal then Zero.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5052">AreaStartPositionMustSmallerHardwareModuloWarning</Name>
-				<DisplayName TxtId="5052"><![CDATA[{0}: AreaStartPosition[{1}] must be smaller or equal then HardwareModulo.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: AreaStartPosition[{1}] must be smaller or equal then HardwareModulo.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5053">GetAxisInterfaceFailedWarning</Name>
-				<DisplayName TxtId="5053"><![CDATA[{0}: Failed to get interface of NC/MC3 axis.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Failed to get interface of NC/MC3 axis.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5054">InvalidParameterValue_Min_FloatWarning</Name>
-				<DisplayName TxtId="5054"><![CDATA[{0}: Invalid {1} parameter value (min={2})]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Invalid {1} parameter value (min={2})]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5055">TuningAssistMovementWarning</Name>
-				<DisplayName TxtId="5055"><![CDATA[{0}: Probably no enough movement during spectrum measure]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Probably no enough movement during spectrum measure]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5056">TuningAssistNoFilterSuggestionWarning</Name>
-				<DisplayName TxtId="5056"><![CDATA[{0}: No filter suggestion could be calculated - please evaluate the spectrum manually]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: No filter suggestion could be calculated - please evaluate the spectrum manually]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5057">TuningAssistInvalidMaximaWarning</Name>
-				<DisplayName TxtId="5057"><![CDATA[{0}: Invalid number of maxima found in the current spectrum]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Invalid number of maxima found in the current spectrum]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5058">TuningAssistNoMaximaFoundWarning</Name>
-				<DisplayName TxtId="5058"><![CDATA[{0}: No maxima found in the current spectrum]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: No maxima found in the current spectrum]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5059">TuningAssistTooManyMaximaWarning</Name>
-				<DisplayName TxtId="5059"><![CDATA[{0}: Too many maxima found in the current spectrum]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Too many maxima found in the current spectrum]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5060">TuningAssistErrorInBiquadLowPassWarning</Name>
-				<DisplayName TxtId="5060"><![CDATA[TuningAssist: Error in Bi_Quad calc with LowPassfreqeuncy = {0}]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[TuningAssist: Error in Bi_Quad calc with LowPassfreqeuncy = {0}]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5061">TuningAssistErrorInBiquadHighPassWarning</Name>
-				<DisplayName TxtId="5061"><![CDATA[TuningAssist: Error in Bi_Quad calc with HighPassfreqeuncy = {0}]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[TuningAssist: Error in Bi_Quad calc with HighPassfreqeuncy = {0}]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5062">TuningAssistErrorInLowPassWarning</Name>
-				<DisplayName TxtId="5062"><![CDATA[TuningAssist: Error in LowPass2 calc with LowPassfreqeuncy = {0}]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[TuningAssist: Error in LowPass2 calc with LowPassfreqeuncy = {0}]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5063">TuningAssistNoFrictionCompensationSuggestionParaWarning</Name>
-				<DisplayName TxtId="5063"><![CDATA[{0}: No friction compensation suggestion could be calculated - due to wrong parameter {1}]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: No friction compensation suggestion could be calculated - due to wrong parameter {1}]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5064">TuningAssistNoParameterSetWarning</Name>
-				<DisplayName TxtId="5064"><![CDATA[{0}:Can't download values. Please select a valid ParameterSet!]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}:Can't download values. Please select a valid ParameterSet!]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="5065">CantStartBodePlotWhileForceCouplingWarning</Name>
-				<DisplayName TxtId="5065"><![CDATA[{0}: Can't start bode plot while force coupling is enabled.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Can't start bode plot while force coupling is enabled.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9017">InputPointerNotSetError</Name>
-				<DisplayName TxtId="9017"><![CDATA[{0}: Input pointer not set.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Input pointer not set.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9018">OutputPointerNotSetError</Name>
-				<DisplayName TxtId="9018"><![CDATA[{0}: Output pointer to not set.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Output pointer to not set.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9019">InputPointerInitFailedError</Name>
-				<DisplayName TxtId="9019"><![CDATA[{0}: Failed to initialize input pointer.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Failed to initialize input pointer.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9020">OutputPointerInitFailedError</Name>
-				<DisplayName TxtId="9020"><![CDATA[{0}: Failed to initialize output pointer.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Failed to initialize output pointer.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9021">InputOutputPointerDifferentError</Name>
-				<DisplayName TxtId="9021"><![CDATA[{0}: Input and output pointer have different targets.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Input and output pointer have different targets.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9022">GetMoverFailedError</Name>
-				<DisplayName TxtId="9022"><![CDATA[{0}: Can't get interface of linked mover.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Can't get interface of linked mover.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9023">GetTaskFailedError</Name>
-				<DisplayName TxtId="9023"><![CDATA[{0}: Failed to get task context of {1}. Check if context of {1} is set.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Failed to get task context of {1}. Check if context of {1} is set.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9024">GetCoupledMoverFailedError</Name>
-				<DisplayName TxtId="9024"><![CDATA[{0}: Failed to get interface of coupled XTS Mover Controller with OTCID {1}.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Failed to get interface of coupled XTS Mover Controller with OTCID {1}.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9025">CoupledMoverOnDifferentTasksError</Name>
-				<DisplayName TxtId="9025"><![CDATA[{0}: The coupled controller ({1}) is on a different task. Make sure that both Mover has the same task context.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: The coupled controller ({1}) is on a different task. Make sure that both Mover has the same task context.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9026">NoParameterSetConfiguredError</Name>
-				<DisplayName TxtId="9026"><![CDATA[{0}: No parameter set is configured.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: No parameter set is configured.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9027">GetParameterSetFailedError</Name>
-				<DisplayName TxtId="9027"><![CDATA[{0}: Failed to get parameter set with OTCID {1}. Please make sure the object {1} is a XTS Controller Parameter Set.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Failed to get parameter set with OTCID {1}. Please make sure the object {1} is a XTS Controller Parameter Set.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9028">CouldNotRegisterByError</Name>
-				<DisplayName TxtId="9028"><![CDATA[Could not register {0} ('{1}') by {2}.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[Could not register {0} ('{1}') by {2}.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9029">CouldNotGetInterfaceOfTaskError</Name>
-				<DisplayName TxtId="9029"><![CDATA[Could not get interface of task (Object ID = {0}, Error = {1}).]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[Could not get interface of task (Object ID = {0}, Error = {1}).]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9030">CouldNotGetRTInterfaceOfTaskError</Name>
-				<DisplayName TxtId="9030"><![CDATA[Could not get RT-interface of task (Object ID = {0}, Error = {1}).]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[Could not get RT-interface of task (Object ID = {0}, Error = {1}).]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9031">DifferentObjectVersionsError</Name>
-				<DisplayName TxtId="9031"><![CDATA[Different versions of {0} ({1}) and {2} ({3}) detected.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[Different versions of {0} ({1}) and {2} ({3}) detected.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9032">VelocityFollowingErrorSingleError</Name>
-				<DisplayName TxtId="9032"><![CDATA[{0} (0x1201): Velocity following error - check setpoint generation & commutation (actual velcoity != command velocity).]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1201): Velocity following error - check setpoint generation & commutation (actual velcoity != command velocity).]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9033">VelocityFollowingErrorMultipleError</Name>
-				<DisplayName TxtId="9033"><![CDATA[{0} (0x1201): Velocity following error - check setpoint generation & commutation (actual velcoity != command velocity). {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1201): Velocity following error - check setpoint generation & commutation (actual velcoity != command velocity). {1} more XTS Mover Controllers with this error...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9034">ResortWhileAxisEnabledSingleError</Name>
-				<DisplayName TxtId="9034"><![CDATA[{0} (0x1001): New mover resort while axis is enabled.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1001): New mover resort while axis is enabled.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9035">ResortWhileAxisEnabledMultipleError</Name>
-				<DisplayName TxtId="9035"><![CDATA[{0} (0x1001): New mover resort while axis is enabled. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1001): New mover resort while axis is enabled. {1} more XTS Mover Controllers with this error...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9036">EmergencyRampTooLongSingleError</Name>
-				<DisplayName TxtId="9036"><![CDATA[{0} (0x1102): Emergency ramp take too long.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1102): Emergency ramp take too long.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9037">EmergencyRampTooLongMultipleError</Name>
-				<DisplayName TxtId="9037"><![CDATA[{0} (0x1102): Emergency ramp take too long. {1} more XTS Mover Controllers with this error...]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0} (0x1102): Emergency ramp take too long. {1} more XTS Mover Controllers with this error...]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9038">GetExternalPositionFailedError</Name>
-				<DisplayName TxtId="9038"><![CDATA[{0}: Failed to get interface (IXtsExternalPosition) of interface with OTCID {1}.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Failed to get interface (IXtsExternalPosition) of interface with OTCID {1}.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9039">GetExternalForceFailedError</Name>
-				<DisplayName TxtId="9039"><![CDATA[{0}: Failed to get interface (IXtsExternalForce) of external force object with OTCID {1}.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Failed to get interface (IXtsExternalForce) of external force object with OTCID {1}.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9040">CantChangeControllerWhileTuningError</Name>
-				<DisplayName TxtId="9040"><![CDATA[{0}: Can't change the controller while tuning process is active ({1}).]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Can't change the controller while tuning process is active ({1}).]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9041">GetMoverControllerFailedError</Name>
-				<DisplayName TxtId="9041"><![CDATA[{0}: Failed to get mover controller with OTCID {1}. Please make sure the object {1} is a XTS Controller Parameter Set.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Failed to get mover controller with OTCID {1}. Please make sure the object {1} is a XTS Controller Parameter Set.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9042">CantStartTuningAssistantError</Name>
-				<DisplayName TxtId="9042"><![CDATA[{0}: Can't start tuning, tuning process is already running.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Can't start tuning, tuning process is already running.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9043">TuningAssistantJobTaskMissingError</Name>
-				<DisplayName TxtId="9043"><![CDATA[{0}: Please select a Job Task for Tuning Assistant calculations.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Please select a Job Task for Tuning Assistant calculations.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9044">CouldNotGetInterfaceObJobTaskError</Name>
-				<DisplayName TxtId="9044"><![CDATA[{0}: Could not get interface of Job task (Object ID = {1}, Error = {2}).]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Could not get interface of Job task (Object ID = {1}, Error = {2}).]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9045">MissingMoverLinkError</Name>
-				<DisplayName TxtId="9045"><![CDATA[{0}: Missing link to XTS mover.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: Missing link to XTS mover.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="9046">MissingParameterSetError</Name>
-				<DisplayName TxtId="9046"><![CDATA[{0}: {1} is missing. At least one {1} is required.]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[{0}: {1} is missing. At least one {1} is required.]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="15001">MessageDebug</Name>
-				<DisplayName TxtId="15001"><![CDATA[DEBUG-MSG: '{0}', '{1}', '{2}', '{3}']]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[DEBUG-MSG: '{0}', '{1}', '{2}', '{3}']]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 		</DataType>
