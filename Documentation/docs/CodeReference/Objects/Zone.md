@@ -50,7 +50,21 @@ ZoneRightSide.GetMover( 3, MC_Negative_Direction ).SetVelocity( 1200 );
 
 ## Properties
 
+### .CurrentMoverCount
+
+*USINT*
+
+> Provides a count of the number of movers that are currently withing the boundaries set by Start Position and End Position.
+
+```javascript
+IF Zone.CurrentMoverCount < 3 THEN
+	// code to allow more movers into this zone
+END_IF
+```
+
 ### .CurrentMoverList
+
+*MoverList*
 
 > Provides a MoverList object reference, containing all Movers that are currently within the boundaries set by Start Position and End Position. As a MoverList, methods are provided to command all movers as a group. See [MoverList](MoverList.md) objective for more information
 
@@ -67,15 +81,35 @@ Zone.CurrentMoverList.GetMoverByLocation(0,Zone.EndPosition,MC_Positive_Directio
 ```
 ### .EndPosition
 
+*LREAL*
+
 > Defines the upper bound for the track region considered by the Zone object.
 
 ### .StartPosition
 
+*LREAL*
+
 > Defines the lower bound for the track region considered by the Zone object.
 
 ### .TrackId
+
+*DINT*
+
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
 
 ### .ZoneLength
 
+*LREAL*
+
 > Calculates the length of the defined zone, in millimeters.
+
+## Properties provided by MoverList
+
+The following properties are available from a Zone object, but are provided by the underlying [MoverList](MoverList.md) and [Objective](Objective.md).
+
+> !!! IMPORTANT These properties return all movers registered with the zone (not just movers currently in the zone) and are not typically used with Zones. The related Zone properties are noted below:
+
+- TrackedMoverCount - use Zone.CurrentMoverCount for the number of movers inside the zone at this instant.
+- TrackedMovers - use Zone.CurrentMoverList for the list of movers inside the zone at this instant.
+
+
