@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <DUT Name="MainStateMachine_enum" Id="{95d9048c-947b-0f01-3cd5-5e396a74ec2a}">
     <Declaration><![CDATA[{attribute 'strict'}
 {attribute 'to_string'}
@@ -8,12 +8,14 @@ TYPE MainStateMachine_enum :
 	MS_DISABLED			:= 0,
 	MS_INITIALIZING		:= 10,
 	MS_ENABLED			:= 20,
-	MS_RUN				:= 30,
-	MS_STOPPING			:= 40,
-	MS_STOPPED			:= 50,
-	MS_DISABLING		:= 60,
-	MS_ERROR			:= 70,
-	MS_DEBUG			:= 80	
+	MS_ONESHOT_RECOVER	:= 30,
+	MS_RECOVERING		:= 40,
+	MS_RUN				:= 50,
+	MS_STOPPING			:= 60,
+	MS_STOPPED			:= 70,
+	MS_DISABLING		:= 80,
+	MS_ERROR			:= 90,
+	MS_DEBUG			:= 100	
 );
 END_TYPE
 ]]></Declaration>

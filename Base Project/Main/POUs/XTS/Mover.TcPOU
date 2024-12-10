@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
@@ -326,6 +326,10 @@ CASE internalState OF
 			ErrorID						:= fbPower.ErrorID;
 			ErrorOrigin					:= CONCAT( InstancePath, '.fbPower' );
 			internalState				:= MV_ERROR;
+		ELSIF AxisReference.Status.Error THEN
+			ErrorID					:= AxisReference.Status.ErrorID;
+			ErrorOrigin				:= Concat(InstancePath, ': General NC Error during Enabling');
+			InternalState			:= MV_ERROR;
 		END_IF
 		
 	MV_ADDTOGROUP: // ------------------------------------------------------- axis is adding to a group
@@ -349,6 +353,10 @@ CASE internalState OF
 			ErrorID						:= fbAddToGroup.ErrorId;
 			ErrorOrigin					:= CONCAT( InstancePath, '.fbAddToGroup' );
 			internalState				:= MV_ERROR;
+		ELSIF AxisReference.Status.Error THEN
+			ErrorID					:= AxisReference.Status.ErrorID;
+			ErrorOrigin				:= Concat(InstancePath, ': General NC Error during add to group');
+			InternalState			:= MV_ERROR;
 		END_IF
 		
 	MV_ENABLEGROUP:	// ----------------------------------------------- have mediator enable group
@@ -461,7 +469,7 @@ CASE internalState OF
 			internalState			:= MV_ERROR;
 		ELSIF AxisReference.Status.Error THEN
 			ErrorID					:= AxisReference.Status.ErrorID;
-			ErrorOrigin				:= Concat(InstancePath, ': General NC Error');
+			ErrorOrigin				:= Concat(InstancePath, ': General NC Error during run');
 			InternalState			:= MV_ERROR;
 		END_IF
 		
@@ -873,6 +881,18 @@ Halt	:= THIS^;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="IsCollisionAvoidanceActive" Id="{44271435-f54e-01be-23aa-f70858e56360}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsCollisionAvoidanceActive : bool]]></Declaration>
+      <Get Name="Get" Id="{44467e48-1af3-057a-2f30-25c270d1fac3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsCollisionAvoidanceActive := AxisReference.NcToPlc.StateDword2.Flags.AvoidingCollision;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="IsSyncedToAxis" Id="{f2757d0f-8cc6-01d8-3ce1-c233354ecef8}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY IsSyncedToAxis : BOOL]]></Declaration>
@@ -1443,7 +1463,7 @@ THIS^.ReissueCommand();
 
 IF ( newCallTime - lastCallSetDir ) > 1 THEN
 	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetDirection,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddInt(Direction);
+	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddInt(TO_INT(Direction));
 	MsgCreate.Send(0);
 END_IF
 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <Task Name="PlcTask" Id="{c7000017-7336-4b6e-a639-80e6acb30489}">
     <!--CycleTime in micro seconds.-->
     <CycleTime>1000</CycleTime>

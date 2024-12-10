@@ -1,3 +1,5 @@
+# Visualization
+
 Visualization of the XTS system without actual hardware or on an HMI in production can be accomplished in three ways.
 
 # Where to see visualizations

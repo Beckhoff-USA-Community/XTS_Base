@@ -474,6 +474,17 @@ Use the ^ operator to dereference the pointer and query track properties
 currentTrackId := Mover[1].CurrentTrack^.Id
 ```
 
+### .IsCollisionAvoidanceActive
+
+*BOOL*
+
+> Returns true if collision avoidance is affecting the desired motion profile of this mover
+
+```javascript
+IF Mover[1].IsCollisionAvoidanceActive THEN
+	// additional commands
+END_IF;
+
 ### .IsSyncedToAxis
 
 *BOOL*

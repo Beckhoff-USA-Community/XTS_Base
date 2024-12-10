@@ -56,3 +56,5 @@ _ModuleInstall/
 *.plcproj.orig
 Documentation/site/
 XTS_Samples.pptx
+*.~u
+*.vsidx

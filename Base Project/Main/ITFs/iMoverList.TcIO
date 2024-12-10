@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <Itf Name="iMoverList" Id="{9cc4a2ad-2506-4bdd-acf3-bfbfde25ab77}">
     <Declaration><![CDATA[INTERFACE iMoverList]]></Declaration>
     <Folder Name="Methods" Id="{82f0078e-13af-0a56-283e-d65bfe6ce910}" />
@@ -28,19 +28,18 @@ END_VAR
 
 ]]></Declaration>
     </Method>
-    <Method Name="DestinationStation" Id="{5911a55f-1122-0e1b-277d-d8250281482e}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD DestinationStation : iMoverList
-VAR_INPUT
-	Destination	: REFERENCE TO Station;
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="DisableAll" Id="{d1bc30a1-2326-0110-1e1d-60e4d87b0a39}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD DisableAll : iMoverList]]></Declaration>
     </Method>
     <Method Name="EnableAll" Id="{538e372e-ce64-0d62-157f-b6c50867c4a3}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD EnableAll : iMoverList
 ]]></Declaration>
+    </Method>
+    <Method Name="FilterDestinationStation" Id="{b5113a7e-9ae7-0917-17b2-1010bf143979}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD FilterDestinationStation : iMoverList
+VAR_INPUT
+	Destination	: REFERENCE TO Station;
+END_VAR]]></Declaration>
     </Method>
     <Method Name="GetMoverByLocation" Id="{08ab6dd2-55e6-476a-991b-26d3f0ccc58d}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE to Mover
