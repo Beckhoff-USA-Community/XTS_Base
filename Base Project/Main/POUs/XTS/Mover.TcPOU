@@ -326,6 +326,10 @@ CASE internalState OF
 			ErrorID						:= fbPower.ErrorID;
 			ErrorOrigin					:= CONCAT( InstancePath, '.fbPower' );
 			internalState				:= MV_ERROR;
+		ELSIF AxisReference.Status.Error THEN
+			ErrorID					:= AxisReference.Status.ErrorID;
+			ErrorOrigin				:= Concat(InstancePath, ': General NC Error during Enabling');
+			InternalState			:= MV_ERROR;
 		END_IF
 		
 	MV_ADDTOGROUP: // ------------------------------------------------------- axis is adding to a group
@@ -349,6 +353,10 @@ CASE internalState OF
 			ErrorID						:= fbAddToGroup.ErrorId;
 			ErrorOrigin					:= CONCAT( InstancePath, '.fbAddToGroup' );
 			internalState				:= MV_ERROR;
+		ELSIF AxisReference.Status.Error THEN
+			ErrorID					:= AxisReference.Status.ErrorID;
+			ErrorOrigin				:= Concat(InstancePath, ': General NC Error during add to group');
+			InternalState			:= MV_ERROR;
 		END_IF
 		
 	MV_ENABLEGROUP:	// ----------------------------------------------- have mediator enable group
@@ -461,7 +469,7 @@ CASE internalState OF
 			internalState			:= MV_ERROR;
 		ELSIF AxisReference.Status.Error THEN
 			ErrorID					:= AxisReference.Status.ErrorID;
-			ErrorOrigin				:= Concat(InstancePath, ': General NC Error');
+			ErrorOrigin				:= Concat(InstancePath, ': General NC Error during run');
 			InternalState			:= MV_ERROR;
 		END_IF
 		
