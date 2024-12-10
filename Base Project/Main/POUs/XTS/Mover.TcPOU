@@ -873,6 +873,18 @@ Halt	:= THIS^;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="IsCollisionAvoidanceActive" Id="{44271435-f54e-01be-23aa-f70858e56360}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsCollisionAvoidanceActive : bool]]></Declaration>
+      <Get Name="Get" Id="{44467e48-1af3-057a-2f30-25c270d1fac3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsCollisionAvoidanceActive := AxisReference.NcToPlc.StateDword2.Flags.AvoidingCollision;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="IsSyncedToAxis" Id="{f2757d0f-8cc6-01d8-3ce1-c233354ecef8}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY IsSyncedToAxis : BOOL]]></Declaration>

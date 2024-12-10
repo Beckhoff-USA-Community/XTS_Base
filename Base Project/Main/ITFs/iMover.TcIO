@@ -76,6 +76,13 @@ END_VAR
 
 ]]></Declaration>
     </Method>
+    <Property Name="IsCollisionAvoidanceActive" Id="{0751312f-b9a3-06a1-1a1f-fea82cf8f457}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsCollisionAvoidanceActive : BOOL]]></Declaration>
+      <Get Name="Get" Id="{fb9a85de-7cdc-0fdb-02d9-2039ba013b8c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="IsTrackReady" Id="{a749704e-a727-05fa-1be8-d11fd5732682}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY IsTrackReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{3d58532e-56d6-0a5a-0811-67af41cc16bc}">
