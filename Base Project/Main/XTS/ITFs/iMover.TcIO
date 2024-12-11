@@ -99,6 +99,12 @@ END_VAR
 
 ]]></Declaration>
     </Method>
+    <Property Name="MoverIndex" Id="{30bd3b07-1e07-05cd-1854-8bb6e4b79051}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY MoverIndex : UINT]]></Declaration>
+      <Get Name="Get" Id="{0eeb762f-30db-0fd6-2116-b05e28e22627}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="MoveToPosition" Id="{12a28052-bce3-440a-bab1-51b28f359a72}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
 VAR_INPUT

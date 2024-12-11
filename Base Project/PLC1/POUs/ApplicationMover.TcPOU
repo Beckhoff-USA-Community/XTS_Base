@@ -8,6 +8,7 @@ VAR_OUTPUT
 END_VAR
 VAR
 	cnt: UDINT;
+	_PositionLag: LREAL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -24,14 +25,31 @@ END_VAR
 
 // Add ApplicationMover specific code here
 cnt:= cnt + 1;
+_PositionLag:= THIS^.AxisReference.NcToPlc.PosDiff;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="PositionLag" Id="{e8668cdc-886f-009c-21b4-613db3d210f4}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY PositionLag : LREAL]]></Declaration>
+      <Get Name="Get" Id="{100ef7df-9e0b-0f3c-03dd-74232cc0eb01}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[PositionLag:= _PositionLag;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <LineIds Name="ApplicationMover">
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="ApplicationMover.Cyclic">
-      <LineId Id="1" Count="4" />
+      <LineId Id="1" Count="5" />
+    </LineIds>
+    <LineIds Name="ApplicationMover.PositionLag.Get">
+      <LineId Id="1" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

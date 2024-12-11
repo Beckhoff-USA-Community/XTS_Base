@@ -1,0 +1,1923 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcModuleLibrary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2017/03/TcModuleLibrary">
+	<Vendor>
+		<Name>Beckhoff Automation GmbH</Name>
+	</Vendor>
+	<Licenses>
+		<License>
+			<LicenseId>{C13CAEC7-1F41-4491-935E-FF6254005C74}</LicenseId>
+			<DisplayName>TC3 Physics Base</DisplayName>
+		</License>
+	</Licenses>
+	<Library>
+		<Name>Tc3_Physics</Name>
+		<Version>3.3.39.0</Version>
+		<Group>Motion</Group>
+		<POUs>
+			<!-- Spatial functions -->
+			<!-- Geometries - Base -->
+			<!-- 2D GeomBase -->
+			<POU Folder="POUs\_Internal">
+				<Name GUID="{C51C3AA2-6DF8-45AB-AB67-0E9B69745D6F}" Namespace="Tc3_Physics">IPlcGeometry2D</Name>
+				<Comment><![CDATA[Internal representation of an object in the planar space.]]></Comment>
+				<BitSize X64="768">768</BitSize>
+				<!-- SubItems -->
+				<SubItem>
+					<Name>px</Name>
+					<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					<Comment><![CDATA[x-coordinate of the instance.]]></Comment>
+					<BitOffs X64="64">64</BitOffs>
+				</SubItem>
+				<SubItem>
+					<Name>py</Name>
+					<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					<Comment><![CDATA[y-coordinate of the instance.]]></Comment>
+					<BitOffs X64="128">128</BitOffs>
+				</SubItem>
+				<SubItem>
+					<Name>pc</Name>
+					<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					<Comment><![CDATA[c-rotation of the instance given in degrees [Â°].]]></Comment>
+					<BitOffs X64="192">192</BitOffs>
+				</SubItem>
+				<SubItem>
+					<Name>nErrorId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+					<Comment><![CDATA[ErrorCode for last method execution]]></Comment>
+					<BitOffs X64="448">448</BitOffs>
+					<Properties>
+						<Property>
+							<Name>ItemType</Name>
+							<Value>Output</Value>
+						</Property>
+					</Properties>
+				</SubItem>
+				<SubItem>
+					<Name>bError</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					<Comment><![CDATA[Error during last method execution]]></Comment>
+					<BitOffs X64="480">480</BitOffs>
+					<Properties>
+						<Property>
+							<Name>ItemType</Name>
+							<Value>Output</Value>
+						</Property>
+					</Properties>
+				</SubItem>
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call' :='do not call this POU directly</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_assign_warning</Name>
+					</Property>
+					<Property>
+						<Name>Private</Name>
+					</Property>
+				</Properties>
+				<Licenses>
+					<License>
+						<LicenseId>{C13CAEC7-1F41-4491-935E-FF6254005C74}</LicenseId>
+					</License>
+				</Licenses>
+			</POU>
+			<!-- Spatials -->
+			<!-- PositionXY -->
+			<POU Folder="POUs\Spatial\Positions">
+				<Name GUID="{119F8BEA-1CCE-4ACF-9F36-7E441D9751B8}" Namespace="Tc3_Physics">PositionXY</Name>
+				<Comment><![CDATA[Position in the 2D Cartesian space.]]></Comment>
+				<BitSize X64="768">768</BitSize>
+				<ExtendsType Namespace="Tc3_Physics" GUID="{C51C3AA2-6DF8-45AB-AB67-0E9B69745D6F}">IPlcGeometry2D</ExtendsType>
+				<!-- Properties -->
+				<PropertyItem>
+					<Name>x</Name>
+					<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>y</Name>
+					<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>ReferenceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
+					<Comment><![CDATA[Id of the reference system this position is in.]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_reinit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<ReturnBitSize>8</ReturnBitSize>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- Initialization-->
+				<Method>
+					<Name>SetZero</Name>
+					<Comment><![CDATA[Set the coordinates of this position to '0.0'.]]></Comment>
+				</Method>
+				<Method>
+					<Name>SetValues</Name>
+					<Comment><![CDATA[Set the coordinates of this position.]]></Comment>
+					<Parameter>
+						<Name>positionXY</Name>
+						<Comment><![CDATA[The coordinate values to set.]]></Comment>
+						<Type Direction="inout" Namespace="Tc3_Physics" GUID="{119F8BEA-1CCE-4ACF-9F36-7E441D9751B8}">PositionXY</Type>
+						<BitSize X64="768">768</BitSize>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>SetValuesXY</Name>
+					<Comment><![CDATA[Set the xy-coordinates of this position.]]></Comment>
+					<Parameter>
+						<Name>x</Name>
+						<Comment><![CDATA[x-component of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>y</Name>
+						<Comment><![CDATA[y-component of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>SetValuesRP</Name>
+					<Comment><![CDATA[Set the components of this position in polar coordinates.]]></Comment>
+					<Parameter>
+						<Name>radius</Name>
+						<Comment><![CDATA[Distance from the origin.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>phi</Name>
+						<Comment><![CDATA[Polar angle of this position in degrees [Â°].]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>SetValuesXYReferenceId</Name>
+					<Comment><![CDATA[Set the xy-coordinates of this position and the reference id.]]></Comment>
+					<Parameter>
+						<Name>x</Name>
+						<Comment><![CDATA[x-component of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>y</Name>
+						<Comment><![CDATA[y-component of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>ReferenceId</Name>
+						<Comment><![CDATA[reference id of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
+					</Parameter>
+				</Method>
+				<!-- Information -->
+				<Method>
+					<Name>GetRadius</Name>
+					<Comment>Get the distance from the origin.</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</ReturnType>
+				</Method>
+				<Method>
+					<Name>GetPhi</Name>
+					<Comment>Get the polar angle scaled in degrees [Â°].</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</ReturnType>
+				</Method>
+				<!-- Assignments -->
+				<Method>
+					<Name>Invert</Name>
+					<Comment><![CDATA[Invert this position.]]></Comment>
+				</Method>
+				<Method>
+					<Name>ConcatenateWith</Name>
+					<Comment><![CDATA[Concatenate with a 2nd position.]]></Comment>
+					<Parameter>
+						<Name>position</Name>
+						<Comment><![CDATA[The 2nd position to concatenate with.]]></Comment>
+						<Type Direction="inout" Namespace="Tc3_Physics" GUID="{119F8BEA-1CCE-4ACF-9F36-7E441D9751B8}">PositionXY</Type>
+						<BitSize X64="768">768</BitSize>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>ShiftByXY</Name>
+					<Comment><![CDATA[Displace the components of this position.]]></Comment>
+					<Parameter>
+						<Name>dx</Name>
+						<Comment><![CDATA[Shift of the x-component of this position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>dy</Name>
+						<Comment><![CDATA[Shift of the y-component of this position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+				</Method>
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call' :='do not call this POU directly</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_assign_warning</Name>
+					</Property>
+				</Properties>
+				<Licenses>
+					<License>
+						<LicenseId>{C13CAEC7-1F41-4491-935E-FF6254005C74}</LicenseId>
+					</License>
+				</Licenses>
+			</POU>
+			<POU Folder="POUs\Spatial\Positions">
+				<Name GUID="{94A53257-712C-4289-8A19-3DB09306B40A}" Namespace="Tc3_Physics">PositionXYC</Name>
+				<Comment><![CDATA[A position in the xy-plane with an in-plane direction c.]]></Comment>
+				<BitSize X64="768">768</BitSize>
+				<ExtendsType Namespace="Tc3_Physics" GUID="{C51C3AA2-6DF8-45AB-AB67-0E9B69745D6F}">IPlcGeometry2D</ExtendsType>
+				<!-- Properties -->
+				<PropertyItem>
+					<Name>x</Name>
+					<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>y</Name>
+					<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>c</Name>
+					<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>ReferenceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
+					<Comment><![CDATA[Id of the reference system this position is in.]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_reinit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<ReturnBitSize>8</ReturnBitSize>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- Initialization -->
+				<Method>
+					<Name>SetZero</Name>
+					<Comment><![CDATA[Set the components of this vector to '0.0'.]]></Comment>
+				</Method>
+				<Method>
+					<Name>SetValues</Name>
+					<Comment><![CDATA[Set the components of this position.]]></Comment>
+					<Parameter>
+						<Name>positionXYC</Name>
+						<Comment><![CDATA[The values to set.]]></Comment>
+						<Type Direction="inout" Namespace="Tc3_Physics" GUID="{94A53257-712C-4289-8A19-3DB09306B40A}">PositionXYC</Type>
+						<BitSize X64="768">768</BitSize>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>SetValuesXY</Name>
+					<Comment><![CDATA[Set the spatial components of this position.]]></Comment>
+					<Parameter>
+						<Name>x</Name>
+						<Comment><![CDATA[x-component of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>y</Name>
+						<Comment><![CDATA[y-component of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>SetValuesXYC</Name>
+					<Comment><![CDATA[Set the components of this position.]]></Comment>
+					<Parameter>
+						<Name>x</Name>
+						<Comment><![CDATA[x-component of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>y</Name>
+						<Comment><![CDATA[y-component of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>c</Name>
+						<Comment><![CDATA[c-component of the position scaled in degrees [Â°].]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>SetValuesXYCReferenceId</Name>
+					<Comment><![CDATA[Set the components of this position.]]></Comment>
+					<Parameter>
+						<Name>x</Name>
+						<Comment><![CDATA[x-component of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>y</Name>
+						<Comment><![CDATA[y-component of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>c</Name>
+						<Comment><![CDATA[c-component of the position scaled in degrees [Â°].]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>ReferenceId</Name>
+						<Comment><![CDATA[reference id of the position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
+					</Parameter>
+				</Method>
+				<!-- Information -->
+				<!-- Assignments -->
+				<Method>
+					<Name>Invert</Name>
+					<Comment><![CDATA[Invert this position.]]></Comment>
+				</Method>
+				<Method>
+					<Name>ConcatenateWith</Name>
+					<Comment><![CDATA[Multiply this position by a 2nd from the right.]]></Comment>
+					<Parameter>
+						<Name>position</Name>
+						<Comment><![CDATA[The position to concatenate with.]]></Comment>
+						<Type Direction="inout" Namespace="Tc3_Physics" GUID="{94A53257-712C-4289-8A19-3DB09306B40A}">PositionXYC</Type>
+						<BitSize X64="768">768</BitSize>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>StepByLocalXY</Name>
+					<Comment><![CDATA[Apply a local step in respect to the local coordinate frame without changing the orientation.]]></Comment>
+					<Parameter>
+						<Name>dx</Name>
+						<Comment><![CDATA[The displacement within the local x-direction.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>dy</Name>
+						<Comment><![CDATA[The displacement within the local y-direction.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>ShiftByXY</Name>
+					<Comment><![CDATA[Displace the components of this position.]]></Comment>
+					<Parameter>
+						<Name>dx</Name>
+						<Comment><![CDATA[Shift of the x-component of this position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>dy</Name>
+						<Comment><![CDATA[Shift of the y-component of this position.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>TurnByC</Name>
+					<Comment><![CDATA[Rotate the attached orientation without changing the Cartesian coodinates.]]></Comment>
+					<Parameter>
+						<Name>dc</Name>
+						<Comment><![CDATA[Angular displacement given in degrees [Â°].]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+					</Parameter>
+				</Method>
+				<!-- Operations -->
+				<Method>
+					<Name>Transform</Name>
+					<Comment><![CDATA[Place a PositionXY into the coordinate system referenced by this position.]]></Comment>
+					<Parameter>
+						<Name>positionXY</Name>
+						<Comment><![CDATA[Position to transform.]]></Comment>
+						<Type Direction="inout" Namespace="Tc3_Physics" GUID="{119F8BEA-1CCE-4ACF-9F36-7E441D9751B8}">PositionXY</Type>
+					</Parameter>
+				</Method>
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call' :='do not call this POU directly</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_assign_warning</Name>
+					</Property>
+				</Properties>
+				<Licenses>
+					<License>
+						<LicenseId>{C13CAEC7-1F41-4491-935E-FF6254005C74}</LicenseId>
+					</License>
+				</Licenses>
+			</POU>
+			<!-- Geometries - 2D -->
+			<!-- Geometries - 3D -->
+			<!-- Geometry Functions -->
+			<!-- Paths -->
+			<!-- Dynamic Constraints -->
+			<POU Folder="POUs\_Internal">
+				<Name GUID="{EA3D3C21-4B7E-4D6D-B9DA-2008E963DFF1}" Namespace="Tc3_Physics">IPlcDynamicConstraint</Name>
+				<Comment><![CDATA[Internal representation of dynamic constraints.]]></Comment>
+				<BitSize X64="384">320</BitSize>
+				<!-- SubItems -->
+				<SubItem>
+					<Name>_reserved0</Name>
+					<Type>ULINT</Type>
+					<BitOffs X64="64">64</BitOffs>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</SubItem>
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- Modification -->
+				<!-- Information -->
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call</Name>
+						<Value>do not call this POU directly</Value>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_assign_warning</Name>
+					</Property>
+					<Property>
+						<Name>Private</Name>
+					</Property>
+				</Properties>
+			</POU>
+			<POU Folder="POUs\Dynamics">
+				<Name GUID="{8E1E6D08-D0CE-45B6-AD1D-4CB65D6701C2}" Namespace="Tc3_Physics">DynamicConstraint_Container</Name>
+				<Comment><![CDATA[A container for dynamic constraints.]]></Comment>
+				<BitSize X64="384">320</BitSize>
+				<ExtendsType Namespace="Tc3_Physics" GUID="{EA3D3C21-4B7E-4D6D-B9DA-2008E963DFF1}">IPlcDynamicConstraint</ExtendsType>
+				<!-- SubItems -->
+				<!-- Properties -->
+				<PropertyItem>
+					<Name NoSetter="true">Count</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+					<Comment><![CDATA[Number of dynamic constraints in the container.]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- Modification -->
+				<Method>
+					<Name>Clear</Name>
+					<Comment><![CDATA[Removes all dynamic constraints from the container.]]></Comment>
+				</Method>
+				<Method>
+					<Name>AddConstraint</Name>
+					<Comment><![CDATA[Adds a copy of a dynamic constraint to the container. If the dynamic constraint changes afterwards, the value in the container will not reflect that change.]]></Comment>
+					<Parameter>
+						<Name>Constraint</Name>
+						<Comment><![CDATA[A reference to the constraint to be added.]]></Comment>
+						<Type ReferenceTo="true" Direction="in" Namespace="Tc3_Physics" GUID="{EA3D3C21-4B7E-4D6D-B9DA-2008E963DFF1}">IPlcDynamicConstraint</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>AddConstraintByReference</Name>
+					<Comment><![CDATA[Adds a reference to a dynamic constraint to the container. If the dynamic constraint changes afterwards, the value in the container will reflect that change.]]></Comment>
+					<Parameter>
+						<Name>Constraint</Name>
+						<Comment><![CDATA[A reference to the constraint to be added.]]></Comment>
+						<Type ReferenceTo="true" Direction="in" Namespace="Tc3_Physics" GUID="{EA3D3C21-4B7E-4D6D-B9DA-2008E963DFF1}">IPlcDynamicConstraint</Type>
+					</Parameter>
+				</Method>
+				<!-- Information -->
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call</Name>
+						<Value>do not call this POU directly</Value>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_assign_warning</Name>
+					</Property>
+				</Properties>
+			</POU>
+			<POU Folder="POUs\Dynamics">
+				<Name GUID="{C3E0328F-5D94-4562-88BB-6AEBFD2613C5}" Namespace="Tc3_Physics">DynamicConstraint_CartesianXY</Name>
+				<Comment><![CDATA[Dynamic constraint for movement in the XY-plane, including non-tangential effects.]]></Comment>
+				<BitSize X64="448">384</BitSize>
+				<ExtendsType Namespace="Tc3_Physics" GUID="{EA3D3C21-4B7E-4D6D-B9DA-2008E963DFF1}">IPlcDynamicConstraint</ExtendsType>
+				<!-- SubItems -->
+				<!-- Properties -->
+				<PropertyItem>
+					<Name>V</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum velocity]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>A</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum acceleration]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>J</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum jerk]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- Modification -->
+				<Method>
+					<Name>SetValuesVAJ</Name>
+					<Comment><![CDATA[Set the dynamic limits of this instance.]]></Comment>
+					<Parameter>
+						<Name>V</Name>
+						<Comment><![CDATA[Maximum velocity.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>A</Name>
+						<Comment><![CDATA[Maximum acceleration.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>J</Name>
+						<Comment><![CDATA[Maximum jerk.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+				</Method>
+				<!-- Information -->
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call</Name>
+						<Value>do not call this POU directly</Value>
+					</Property>
+				</Properties>
+			</POU>
+			<POU Folder="POUs\Dynamics">
+				<Name GUID="{EC76A6AB-B64E-4581-9836-D27A8CC58995}" Namespace="Tc3_Physics">DynamicConstraint_CartesianXYZ</Name>
+				<Comment><![CDATA[Dynamic constraint for movement in the XYZ-space, including non-tangential effects.]]></Comment>
+				<BitSize X64="448">384</BitSize>
+				<ExtendsType Namespace="Tc3_Physics" GUID="{EA3D3C21-4B7E-4D6D-B9DA-2008E963DFF1}">IPlcDynamicConstraint</ExtendsType>
+				<!-- SubItems -->
+				<!-- Properties -->
+				<PropertyItem>
+					<Name>V</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum velocity]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>A</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum acceleration]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>J</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum jerk]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- Modification -->
+				<Method>
+					<Name>SetValuesVAJ</Name>
+					<Comment><![CDATA[Set the dynamic limits of this instance.]]></Comment>
+					<Parameter>
+						<Name>V</Name>
+						<Comment><![CDATA[Maximum velocity.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>A</Name>
+						<Comment><![CDATA[Maximum acceleration.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>J</Name>
+						<Comment><![CDATA[Maximum jerk.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+				</Method>
+				<!-- Information -->
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call</Name>
+						<Value>do not call this POU directly</Value>
+					</Property>
+				</Properties>
+			</POU>
+			<POU Folder="POUs\Dynamics">
+				<Name GUID="{554C232B-0E9C-45CD-84B9-382348FE474A}" Namespace="Tc3_Physics">DynamicConstraint_Path</Name>
+				<Comment><![CDATA[DEPRECATED. Please replace with either DynamicConstraint_PathXY or DynamicConstraint_Coordinates, depending on use case.]]></Comment>
+				<BitSize X64="448">384</BitSize>
+				<ExtendsType Namespace="Tc3_Physics" GUID="{460D10D3-426A-4509-B2D2-78BBA97FD3E8}">DynamicConstraint_PathXY</ExtendsType>
+				<!-- SubItems -->
+				<!-- Properties -->
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- Information -->
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_hide</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call</Name>
+						<Value>do not call this POU directly</Value>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_assign_warning</Name>
+					</Property>
+				</Properties>
+			</POU>
+			<POU Folder="POUs\Dynamics">
+				<Name GUID="{460D10D3-426A-4509-B2D2-78BBA97FD3E8}" Namespace="Tc3_Physics">DynamicConstraint_PathXY</Name>
+				<Comment><![CDATA[One dimensional dynamic constraint along the XY-components of a path, ignoring non-tangential effects.]]></Comment>
+				<BitSize X64="448">384</BitSize>
+				<ExtendsType Namespace="Tc3_Physics" GUID="{EA3D3C21-4B7E-4D6D-B9DA-2008E963DFF1}">IPlcDynamicConstraint</ExtendsType>
+				<!-- SubItems -->
+				<!-- Properties -->
+				<PropertyItem>
+					<Name>V</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum velocity]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>A</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum acceleration]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>D</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum deceleration]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>J</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum jerk]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- Modification -->
+				<Method>
+					<Name>SetValuesVADJ</Name>
+					<Comment><![CDATA[Set the dynamic limits of this instance.]]></Comment>
+					<Parameter>
+						<Name>V</Name>
+						<Comment><![CDATA[Maximum velocity.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>A</Name>
+						<Comment><![CDATA[Maximum acceleration.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>D</Name>
+						<Comment><![CDATA[Maximum deceleration.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>J</Name>
+						<Comment><![CDATA[Maximum jerk.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+				</Method>
+				<!-- Information -->
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call</Name>
+						<Value>do not call this POU directly</Value>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_assign_warning</Name>
+					</Property>
+				</Properties>
+			</POU>
+			<POU Folder="POUs\Dynamics">
+				<Name GUID="{13EB675D-2925-49C4-8BA6-AC5C76CBFC11}" Namespace="Tc3_Physics">DynamicConstraint_PathXYZ</Name>
+				<Comment><![CDATA[One dimensional dynamic constraint along the XYZ-components of a path, ignoring non-tangential effects.]]></Comment>
+				<BitSize X64="448">384</BitSize>
+				<ExtendsType Namespace="Tc3_Physics" GUID="{EA3D3C21-4B7E-4D6D-B9DA-2008E963DFF1}">IPlcDynamicConstraint</ExtendsType>
+				<!-- SubItems -->
+				<!-- Properties -->
+				<PropertyItem>
+					<Name>V</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum velocity]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>A</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum acceleration]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>D</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum deceleration]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<PropertyItem>
+					<Name>J</Name>
+					<Type GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					<Comment><![CDATA[Maximum jerk]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- Modification -->
+				<Method>
+					<Name>SetValuesVADJ</Name>
+					<Comment><![CDATA[Set the dynamic limits of this instance.]]></Comment>
+					<Parameter>
+						<Name>V</Name>
+						<Comment><![CDATA[Maximum velocity.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>A</Name>
+						<Comment><![CDATA[Maximum acceleration.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>D</Name>
+						<Comment><![CDATA[Maximum deceleration.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>J</Name>
+						<Comment><![CDATA[Maximum jerk.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+				</Method>
+				<!-- Information -->
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call</Name>
+						<Value>do not call this POU directly</Value>
+					</Property>
+				</Properties>
+			</POU>
+			<POU Folder="POUs\Dynamics">
+				<Name GUID="{01CB846B-199D-493D-ABAE-9E2763755672}" Namespace="Tc3_Physics">DynamicConstraint_Coordinates</Name>
+				<Comment><![CDATA[Dynamic constraints for individual coordinates.]]></Comment>
+				<BitSize X64="384">320</BitSize>
+				<ExtendsType Namespace="Tc3_Physics" GUID="{EA3D3C21-4B7E-4D6D-B9DA-2008E963DFF1}">IPlcDynamicConstraint</ExtendsType>
+				<!-- SubItems -->
+				<!-- Properties -->
+				<PropertyItem>
+					<Name NoSetter="true">Count</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+					<Comment><![CDATA[Number of coordinates that are constrained.]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</PropertyItem>
+				<!-- Standard Plc-methods -->
+				<Action>
+					<Name>MAIN</Name>
+				</Action>
+				<Method>
+					<Name>FB_init</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInitRetains</Name>
+						<Comment><![CDATA[ if TRUE, the retain variables are initialized (warm start / cold start)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the instance afterwards gets moved into the copy code (online change)]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<Method>
+					<Name>FB_exit</Name>
+					<Comment>Internal method</Comment>
+					<ReturnType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</ReturnType>
+					<Parameter>
+						<Name>bInCopyCode</Name>
+						<Comment><![CDATA[ if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					</Parameter>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</Method>
+				<!-- Modification -->
+				<Method>
+					<Name>AddLimit</Name>
+					<Comment><![CDATA[Adds limits for a specific coordinate. If the coordinate is already limited, limits are merged.]]></Comment>
+					<Parameter>
+						<Name>Coordinate</Name>
+						<Comment><![CDATA[Coordinate type. E.g. Coord_Mcs_X, Coord_Mcs_Y, ...]]></Comment>
+						<Type Direction="in">CoordinateType</Type>
+					</Parameter>
+					<Parameter>
+						<Name>V</Name>
+						<Comment><![CDATA[Maximum velocity.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>A</Name>
+						<Comment><![CDATA[Maximum acceleration.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>D</Name>
+						<Comment><![CDATA[Maximum deceleration.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>J</Name>
+						<Comment><![CDATA[Maximum jerk.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>SetLimit</Name>
+					<Comment><![CDATA[Sets limits for a specific coordinate. If the coordinate is already limited, existing limits are overwritten.]]></Comment>
+					<Parameter>
+						<Name>Coordinate</Name>
+						<Comment><![CDATA[Coordinate type. E.g. Coord_Mcs_X, Coord_Mcs_Y, ...]]></Comment>
+						<Type Direction="in">CoordinateType</Type>
+					</Parameter>
+					<Parameter>
+						<Name>V</Name>
+						<Comment><![CDATA[Maximum velocity.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>A</Name>
+						<Comment><![CDATA[Maximum acceleration.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>D</Name>
+						<Comment><![CDATA[Maximum deceleration.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+					<Parameter>
+						<Name>J</Name>
+						<Comment><![CDATA[Maximum jerk.]]></Comment>
+						<Type Direction="in" GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>RemoveLimit</Name>
+					<Comment><![CDATA[Removes limits for a specific coordinate.]]></Comment>
+					<Parameter>
+						<Name>Coordinate</Name>
+						<Comment><![CDATA[Coordinate type. E.g. Coord_Mcs_X, Coord_Mcs_Y, ...]]></Comment>
+						<Type Direction="in">CoordinateType</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>Clear</Name>
+					<Comment><![CDATA[Removes limits for all coordinates.]]></Comment>
+				</Method>
+				<!-- Information -->
+				<Method>
+					<Name>GetV</Name>
+					<Comment><![CDATA[Gets the contained velocity limit for a specific coordinate. If no limits for the coordinate are set, returns MC_INVALID.]]></Comment>
+					<ReturnType GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</ReturnType>
+					<Parameter>
+						<Name>Coordinate</Name>
+						<Comment><![CDATA[Coordinate type. E.g. Coord_Mcs_X, Coord_Mcs_Y, ...]]></Comment>
+						<Type Direction="in">CoordinateType</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>GetA</Name>
+					<Comment><![CDATA[Gets the contained acceleration limit for a specific coordinate. If no limits for the coordinate are set, returns MC_INVALID.]]></Comment>
+					<ReturnType GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</ReturnType>
+					<Parameter>
+						<Name>Coordinate</Name>
+						<Comment><![CDATA[Coordinate type. E.g. Coord_Mcs_X, Coord_Mcs_Y, ...]]></Comment>
+						<Type Direction="in">CoordinateType</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>GetD</Name>
+					<Comment><![CDATA[Gets the contained deceleration limit for a specific coordinate. If no limits for the coordinate are set, returns MC_INVALID.]]></Comment>
+					<ReturnType GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</ReturnType>
+					<Parameter>
+						<Name>Coordinate</Name>
+						<Comment><![CDATA[Coordinate type. E.g. Coord_Mcs_X, Coord_Mcs_Y, ...]]></Comment>
+						<Type Direction="in">CoordinateType</Type>
+					</Parameter>
+				</Method>
+				<Method>
+					<Name>GetJ</Name>
+					<Comment><![CDATA[Gets the contained jerk limit for a specific coordinate. If no limits for the coordinate are set, returns MC_INVALID.]]></Comment>
+					<ReturnType GUID="{0100FF8A-3F83-4535-990A-614CFBA4DA63}">MC_LREAL</ReturnType>
+					<Parameter>
+						<Name>Coordinate</Name>
+						<Comment><![CDATA[Coordinate type. E.g. Coord_Mcs_X, Coord_Mcs_Y, ...]]></Comment>
+						<Type Direction="in">CoordinateType</Type>
+					</Parameter>
+				</Method>
+				<!-- FB properties -->
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>FunctionBlock</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_explicit_call</Name>
+						<Value>do not call this POU directly</Value>
+					</Property>
+					<Property>
+						<Name>plcAttribute_no_assign_warning</Name>
+					</Property>
+				</Properties>
+			</POU>
+			<!-- Dynamic Profiles -->
+			<!-- Coordinate Functions -->
+			<POU Folder="POUs\Coordinates">
+				<Name GUID="{B0AAF5B2-FA86-4229-A9EE-B3C3904F83BE}" CName="GetMcsCoordinateType*" Namespace="Tc3_Physics">GetMcsCoordinateType</Name>
+				<Comment><![CDATA[Creates a CoordinateType FB from E_McsCoordType.]]></Comment>
+				<BitSize X64="64">32</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000018}">PVOID</BaseType>
+				<FunctionPointer>
+					<ReturnType Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</ReturnType>
+					<Parameter>
+						<Name>mcsType</Name>
+						<Comment><![CDATA[Mcs coordinate type.]]></Comment>
+						<Type Direction="in" Namespace="Tc3_Physics" GUID="{C211B6A9-DE9E-40CA-870B-484A1D599B36}">E_McsCoordType</Type>
+					</Parameter>
+				</FunctionPointer>
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>Function</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+				</Properties>
+			</POU>
+			<POU Folder="POUs\Coordinates">
+				<Name GUID="{B8194C26-853F-4050-82DF-3A988C09CB1D}" CName="GetUninterpretedCoordinateType*" Namespace="Tc3_Physics">GetUninterpretedCoordinateType</Name>
+				<Comment><![CDATA[Creates a CoordinateType FB from an index.]]></Comment>
+				<BitSize X64="64">32</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000018}">PVOID</BaseType>
+				<FunctionPointer>
+					<ReturnType Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</ReturnType>
+					<Parameter>
+						<Name>mcsType</Name>
+						<Comment><![CDATA[Mcs coordinate type.]]></Comment>
+						<Type Direction="in" GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+					</Parameter>
+				</FunctionPointer>
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>Function</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+				</Properties>
+			</POU>
+		</POUs>
+		<!-- DUTs -->
+		<DUTs>
+			<DUT Folder="DUTs\Enumerations">
+				<Name GUID="{BF8BCC1E-925E-4A57-801C-CC42AFDDA86D}" Namespace="Tc3_Physics">E_RotationCoordinates</Name>
+				<Comment><![CDATA[Enumeration of rotation conventions. 
+			    The order of letters defines the order of rotation around local axes.
+			    This also defines order in which user should program rotation values.]]></Comment>
+				<BitSize>32</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+				<EnumInfo>
+					<Text><![CDATA[ABC]]></Text>
+					<Enum>0</Enum>
+					<Comment><![CDATA[ABC]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[ACB]]></Text>
+					<Enum>1</Enum>
+					<Comment><![CDATA[ACB]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[BCA]]></Text>
+					<Enum>2</Enum>
+					<Comment><![CDATA[BCA]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[BAC]]></Text>
+					<Enum>3</Enum>
+					<Comment><![CDATA[BAC]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[CAB]]></Text>
+					<Enum>4</Enum>
+					<Comment><![CDATA[CAB]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[CBA]]></Text>
+					<Enum>5</Enum>
+					<Comment><![CDATA[CBA]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[ABA]]></Text>
+					<Enum>6</Enum>
+					<Comment><![CDATA[ABA]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[ACA]]></Text>
+					<Enum>7</Enum>
+					<Comment><![CDATA[ACA]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[BCB]]></Text>
+					<Enum>8</Enum>
+					<Comment><![CDATA[BCB]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[BAB]]></Text>
+					<Enum>9</Enum>
+					<Comment><![CDATA[BAB]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[CAC]]></Text>
+					<Enum>10</Enum>
+					<Comment><![CDATA[CAC]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[CBC]]></Text>
+					<Enum>11</Enum>
+					<Comment><![CDATA[CBC]]></Comment>
+				</EnumInfo>
+				<Properties>
+					<Property>
+						<Name>plcAttribute_qualified_only</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_strict</Name>
+					</Property>
+				</Properties>
+			</DUT>
+			<DUT Folder="DUTs\Enumerations">
+				<Name GUID="{EEDF219F-66FC-49CE-9225-543FADD76336}" Namespace="Tc3_Physics">E_CoordCategory</Name>
+				<Comment><![CDATA[Enumeration coordinate categories.]]></Comment>
+				<BitSize>32</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+				<EnumInfo>
+					<Text><![CDATA[Invalid]]></Text>
+					<Enum>#x0</Enum>
+					<Comment><![CDATA[Invalid]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[MCS]]></Text>
+					<Enum>#x1</Enum>
+					<Comment><![CDATA[MCS]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[ACS]]></Text>
+					<Enum>#x2</Enum>
+					<Comment><![CDATA[ACS]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[Uninterpreted]]></Text>
+					<Enum>#x3</Enum>
+					<Comment><![CDATA[Uninterpreted]]></Comment>
+				</EnumInfo>
+				<Properties>
+					<Property>
+						<Name>plcAttribute_qualified_only</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_strict</Name>
+					</Property>
+				</Properties>
+			</DUT>
+			<DUT Folder="DUTs\Enumerations">
+				<Name GUID="{C211B6A9-DE9E-40CA-870B-484A1D599B36}" Namespace="Tc3_Physics">E_McsCoordType</Name>
+				<Comment><![CDATA[Enumeration of MCS coordinate types.]]></Comment>
+				<BitSize>32</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+				<EnumInfo>
+					<Text><![CDATA[Invalid]]></Text>
+					<Enum>#x0</Enum>
+					<Comment><![CDATA[Invalid]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[X]]></Text>
+					<Enum>#x11</Enum>
+					<Comment><![CDATA[X]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[Y]]></Text>
+					<Enum>#x21</Enum>
+					<Comment><![CDATA[Y]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[Z]]></Text>
+					<Enum>#x31</Enum>
+					<Comment><![CDATA[Z]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[A1]]></Text>
+					<Enum>#x41</Enum>
+					<Comment><![CDATA[A1]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[A2]]></Text>
+					<Enum>#x42</Enum>
+					<Comment><![CDATA[A2]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[A3]]></Text>
+					<Enum>#x43</Enum>
+					<Comment><![CDATA[A3]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[B1]]></Text>
+					<Enum>#x51</Enum>
+					<Comment><![CDATA[B1]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[B2]]></Text>
+					<Enum>#x52</Enum>
+					<Comment><![CDATA[B2]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[B3]]></Text>
+					<Enum>#x53</Enum>
+					<Comment><![CDATA[B3]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[C1]]></Text>
+					<Enum>#x61</Enum>
+					<Comment><![CDATA[C1]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[C2]]></Text>
+					<Enum>#x62</Enum>
+					<Comment><![CDATA[C2]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text><![CDATA[C3]]></Text>
+					<Enum>#x63</Enum>
+					<Comment><![CDATA[C3]]></Comment>
+				</EnumInfo>
+				<Properties>
+					<Property>
+						<Name>plcAttribute_qualified_only</Name>
+					</Property>
+					<Property>
+						<Name>plcAttribute_strict</Name>
+					</Property>
+				</Properties>
+			</DUT>
+			<DUT Folder="DUTs">
+				<Name GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}" Namespace="Tc3_Physics">CoordinateType</Name>
+				<Comment><![CDATA[Coordinate type. Use provided constants such as Coord_Mcs_X or factory functions such as GetMcsCoordinateType for creation.]]></Comment>
+				<BitSize>64</BitSize>
+				<SubItem>
+					<Name>_reserved0</Name>
+					<Type>ULINT</Type>
+					<Comment><![CDATA[Reserved.]]></Comment>
+					<BitOffs>0</BitOffs>
+					<Default>
+						<Value>0</Value>
+					</Default>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</SubItem>
+			</DUT>
+		</DUTs>
+		<!-- GVLs -->
+		<GVLs>
+			<GVL Folder="GVLs">
+				<Name>GVL</Name>
+				<SubItem>
+					<Name>Coord_Mcs_X</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.X)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_Y</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.Y)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_Z</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.Z)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_A1</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.A1)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_A2</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.A2)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_A3</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.A3)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_B1</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.B1)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_B2</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.B2)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_B3</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.B3)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_C1</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.C1)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_C2</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.C2)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Mcs_C3</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetMcsCoordinateType(E_McsCoordType.C3)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Uninterpreted1</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetUninterpretedCoordinateType(1)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Uninterpreted2</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetUninterpretedCoordinateType(2)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Uninterpreted3</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetUninterpretedCoordinateType(3)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Uninterpreted4</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetUninterpretedCoordinateType(4)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Uninterpreted5</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetUninterpretedCoordinateType(5)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Uninterpreted6</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetUninterpretedCoordinateType(6)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Uninterpreted7</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetUninterpretedCoordinateType(7)</EnumText>
+					</Default>
+				</SubItem>
+				<SubItem>
+					<Name>Coord_Uninterpreted8</Name>
+					<Type Namespace="Tc3_Physics" GUID="{ABF37E9D-1614-4226-99CD-162368D15A32}">CoordinateType</Type>
+					<Default>
+						<EnumText>GetUninterpretedCoordinateType(8)</EnumText>
+					</Default>
+				</SubItem>
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>GVL</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>Constant</Name>
+					</Property>
+				</Properties>
+			</GVL>
+		</GVLs>
+		<References>
+		</References>
+		<Deployment>
+		</Deployment>
+	</Library>
+</TcModuleLibrary>

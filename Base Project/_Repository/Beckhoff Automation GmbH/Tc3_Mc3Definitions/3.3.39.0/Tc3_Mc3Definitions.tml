@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcModuleLibrary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2017/03/TcModuleLibrary">
+	<Vendor>
+		<Name>Beckhoff Automation GmbH</Name>
+	</Vendor>
+	<DataTypes/>
+	<Licenses>
+	</Licenses>
+	<Library>
+		<Name>Tc3_Mc3Definitions</Name>
+		<Version>3.3.39.0</Version>
+		<Group>Motion</Group>
+		<POUs>
+		</POUs>
+		<DUTs>
+			<!--MC_BUFFER_MODE-->
+			<DUT Folder="DUTs\Enums">
+				<Name GUID="{DDFDCD66-8309-49CA-A53D-7FA707D3BD14}" Namespace="Tc3_Mc3Definitions">MC_BUFFER_MODE</Name>
+				<Comment><![CDATA[Buffer mode between buffered commands.]]></Comment>
+				<BitSize>16</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+				<EnumInfo>
+					<Text>mcAborting</Text>
+					<Enum>0</Enum>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcBuffered</Text>
+					<Enum>1</Enum>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcBlendingLow</Text>
+					<Enum>18</Enum>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcBlendingPrevious</Text>
+					<Enum>19</Enum>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcBlendingNext</Text>
+					<Enum>20</Enum>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcBlendingHigh</Text>
+					<Enum>21</Enum>
+				</EnumInfo>
+			</DUT>
+			<!--MC_COMPENSATION_TYPE-->
+			<DUT Folder="DUTs\Enums">
+				<Name GUID="{1D1D6601-228F-4905-B350-257D8C55771D}" Namespace="Tc3_Mc3Definitions">MC_COMPENSATION_TYPE</Name>
+				<Comment><![CDATA[Compensation type.]]></Comment>
+				<BitSize>16</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+				<EnumInfo>
+					<Text>mcTypeInvalidCompensation</Text>
+					<Enum>0</Enum>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcTypeGeoCompensation</Text>
+					<Enum>1</Enum>
+				</EnumInfo>
+			</DUT>
+			<!--MC_DIRECTION-->
+			<DUT Folder="DUTs\Enums">
+				<Name GUID="{FA9CA56B-5BDF-42DB-BC74-B14868EB8B42}" Namespace="Tc3_Mc3Definitions">MC_DIRECTION</Name>
+				<Comment><![CDATA[Defines the direction of the movement (e.g for an Modulo Axis).]]></Comment>
+				<BitSize>16</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+				<EnumInfo>
+					<Text>mcDirectionNonModulo</Text>
+					<Enum>0</Enum>
+					<Comment><![CDATA[Position is interpreted as absolute position.]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcDirectionPositive</Text>
+					<Enum>1</Enum>
+					<Comment><![CDATA[Moves in positive direction.]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcDirectionShortestWay</Text>
+					<Enum>2</Enum>
+					<Comment><![CDATA[The direction of movement depends on whether the positive direction of movement or the negative direction of movement is the shortest distance from the target position.]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcDirectionNegative</Text>
+					<Enum>3</Enum>
+					<Comment><![CDATA[Moves in negative direction.]]></Comment>
+				</EnumInfo>
+			</DUT>
+			<!--MC_SYNC_MODE-->
+			<DUT Folder="DUTs\Enums">
+				<Name GUID="{30552E3C-EE95-43B2-B7BD-6C4855D1128D}" Namespace="Tc3_Mc3Definitions">MC_SYNC_MODE</Name>
+				<Comment><![CDATA[Defines the direction of the synchronization position of modulo axes.]]></Comment>
+				<BitSize>16</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+				<EnumInfo>
+					<Text>mcSyncModeNonModulo</Text>
+					<Enum>0</Enum>
+					<Comment><![CDATA[SyncSlavePosition is interpreted as absolute position.]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcSyncModePositive</Text>
+					<Enum>1</Enum>
+					<Comment><![CDATA[Synchronizes in positive direction.]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcSyncModeNegative</Text>
+					<Enum>3</Enum>
+					<Comment><![CDATA[Synchronizes in negative direction.]]></Comment>
+				</EnumInfo>
+			</DUT>
+			<!--MC_SYNC_STRATEGY-->
+			<DUT Folder="DUTs\Enums">
+				<Name GUID="{772FD8E8-D243-40B5-8930-77ADD422F215}" Namespace="Tc3_Mc3Definitions">MC_SYNC_STRATEGY</Name>
+				<Comment><![CDATA[Execution mode.]]></Comment>
+				<BitSize>16</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+				<EnumInfo>
+					<Text>mcSyncStrategyLate</Text>
+					<Enum>1</Enum>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcSyncStrategySlow</Text>
+					<Enum>2</Enum>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>mcSyncStrategyEarly</Text>
+					<Enum>3</Enum>
+				</EnumInfo>
+			</DUT>
+			<!--MC_SYNC_DIRECTIONS-->
+			<DUT Folder="DUTs\Enums">
+				<Name GUID="{6C8D631A-5C85-43C8-8499-5CD667654B14}" Namespace="Tc3_Mc3Definitions">MC_SYNC_DIRECTIONS</Name>
+				<Comment><![CDATA[Directions in which a slave is allowed to move during synchronizing phase.]]></Comment>
+				<BitSize>16</BitSize>
+				<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+				<EnumInfo>
+					<Text>Invalid</Text>
+					<Enum>0</Enum>
+					<Comment><![CDATA[Indicates invalid information, e.g. no connection or component not yet ready.]]></Comment>
+					<Properties>
+						<Property>
+							<Name>plcAttribute_hide</Name>
+						</Property>
+					</Properties>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>Positive</Text>
+					<Enum>1</Enum>
+					<Comment><![CDATA[Movement is allowed only in positive direction while synchronizing.]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>Negative</Text>
+					<Enum>2</Enum>
+					<Comment><![CDATA[Movement is allowed only in negative direction while synchronizing.]]></Comment>
+				</EnumInfo>
+				<EnumInfo>
+					<Text>Both</Text>
+					<Enum>3</Enum>
+					<Comment><![CDATA[Movement is allowed in any direction while synchronizing.]]></Comment>
+				</EnumInfo>
+				<Default>
+					<EnumText>Invalid</EnumText>
+				</Default>
+				<Properties>
+					<Property>
+						<Name>plcAttribute_qualified_only</Name>
+					</Property>
+				</Properties>
+			</DUT>
+		</DUTs>
+		<GVLs>
+			<GVL Folder="GVLs">
+				<Name>GVL</Name>
+				<!--MC_DEFAULT-->
+				<SubItem>
+					<Name>MC_DEFAULT</Name>
+					<Type>LREAL</Type>
+					<Default>
+						<Value>1E300</Value>
+					</Default>
+				</SubItem>
+				<!--MC_IGNORE-->
+				<SubItem>
+					<Name>MC_IGNORE</Name>
+					<Type>LREAL</Type>
+					<Default>
+						<Value>1E301</Value>
+					</Default>
+				</SubItem>
+				<!--MC_INVALID-->
+				<SubItem>
+					<Name>MC_INVALID</Name>
+					<Type>LREAL</Type>
+					<Default>
+						<Value>1E302</Value>
+					</Default>
+				</SubItem>
+				<!--MC_MAXIMUM-->
+				<SubItem>
+					<Name>MC_MAXIMUM</Name>
+					<Type>LREAL</Type>
+					<Default>
+						<Value>1E303</Value>
+					</Default>
+				</SubItem>
+				<Properties>
+					<Property>
+						<Name>PouType</Name>
+						<Value>GVL</Value>
+					</Property>
+					<Property>
+						<Name>TcExternalPou</Name>
+					</Property>
+					<Property>
+						<Name>Constant</Name>
+					</Property>
+				</Properties>
+			</GVL>
+		</GVLs>
+		<Deployment>
+		</Deployment>
+	</Library>
+</TcModuleLibrary>

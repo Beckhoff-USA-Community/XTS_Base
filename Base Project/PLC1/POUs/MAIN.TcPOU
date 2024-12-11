@@ -7,7 +7,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[P_ST();
-//MAIN_LD();
+//P_LD();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">

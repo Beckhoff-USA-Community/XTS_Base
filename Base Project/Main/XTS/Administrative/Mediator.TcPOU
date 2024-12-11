@@ -64,7 +64,8 @@ END_VAR
 VAR_INPUT
 	
 	Mover		: REFERENCE TO Mover;
-
+	MoverIndex	: UINT;
+	
 END_VAR
 
 VAR
@@ -99,7 +100,8 @@ IF __ISVALIDREF( Mover ) THEN
 	IF duplicateFound = FALSE THEN
 		
 		THIS^.MoverArray[emptyIDX]		:= ADR( Mover );	// new mover into empty array element
-
+		Mover.MoverIndex				:= MoverIndex;
+		
 		// Automatically register the mover with any Position Triggers
 		FOR i := 0 TO SIZEOF( PositionTriggerArray ) / SIZEOF( PositionTriggerArray[0] ) - 1 DO
 			IF PositionTriggerArray[i] <> 0 THEN
@@ -951,7 +953,9 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AddMover">
-      <LineId Id="3" Count="41" />
+      <LineId Id="3" Count="26" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="30" Count="14" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AddMoverList">
@@ -975,12 +979,10 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AllMotorModulesReady.Get">
-      <LineId Id="3" Count="17" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="18" />
     </LineIds>
     <LineIds Name="Mediator.CompleteMoverList.Get">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="8" />
     </LineIds>
     <LineIds Name="Mediator.Cyclic">
       <LineId Id="3" Count="354" />
@@ -995,41 +997,38 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.Environment.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.EnvironmentIsReady.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="2" />
     </LineIds>
     <LineIds Name="Mediator.GroupEnabled.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.GroupError.Get">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="Mediator.InfoServer.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.InfoServerIsReady.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.InstancePath.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.Mover1DetectionComplete.Get">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="Mediator.Mover1DetectionError.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.ResetStatistics">
       <LineId Id="3" Count="6" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.XPU.Get">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

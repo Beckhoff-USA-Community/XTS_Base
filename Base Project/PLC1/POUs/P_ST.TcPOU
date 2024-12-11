@@ -22,6 +22,8 @@ VAR
 	RecoveryComplete		: BOOL;
 	
 	mcDirectionPositive		: Tc2_MC2.MC_Direction;
+	Trig0MoverIndex			: UINT;
+	Trig0MoverPosLag		: LREAL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -179,7 +181,12 @@ nextStation := 4;]]></ST>
         // Position Trigger 0 Logic
         IF XTS.PositionTrigger[0].MoverPassedPosition THEN
             XTS.PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
+			
+			Trig0MoverIndex		:= XTS.PositionTrigger[0].CurrentMover.MoverIndex;
+			Trig0MoverPosLag	:= XTS.Mover[Trig0MoverIndex].PositionLag;
+			
             XTS.PositionTrigger[0].MuteCurrent();
+						
         END_IF
 		
         // Position Trigger 1 Logic
@@ -211,7 +218,7 @@ nextStation := 4;]]></ST>
       <LineId Id="1" Count="9" />
     </LineIds>
     <LineIds Name="P_ST.StationLogic">
-      <LineId Id="1" Count="59" />
+      <LineId Id="1" Count="64" />
     </LineIds>
   </POU>
 </TcPlcObject>

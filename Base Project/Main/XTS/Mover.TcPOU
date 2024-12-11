@@ -35,6 +35,7 @@ VAR
 	{attribute 'hide'}
 	InstancePath		: STRING;	// instance naming, for diagnostics purposes
 	
+	internalMoverIndex	: UINT;		// array index of Mover Array
 	internalEnable		: BOOL;		// moves the axis from Disabled to Standstill, adds Axis to CA group, and triggers M1 Detection if configured
 	internalDisable		: BOOL;		// moves the axis from Standstill to Disabled, removes Axis from CA Group
 	
@@ -971,6 +972,28 @@ ELSE
 END_IF]]></ST>
         </Implementation>
       </Get>
+    </Property>
+    <Property Name="MoverIndex" Id="{2bc444fb-f6db-08cf-2a51-e61f20503065}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY MoverIndex : UINT]]></Declaration>
+      <Get Name="Get" Id="{f9ece493-5d58-0603-2e44-9698eda7fa8e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoverIndex:= internalMoverIndex;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{2f888c3b-7bb5-0519-10f2-196801cddfd1}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[internalMoverIndex:= MoverIndex;
+]]></ST>
+        </Implementation>
+      </Set>
     </Property>
     <Method Name="MoveToPosition" Id="{c28d081f-5f21-4357-8651-768a8cf4ef0e}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD PUBLIC MoveToPosition : iMover
@@ -1974,6 +1997,12 @@ lastCallValidateTrack		:= newCallTime;]]></ST>
     </LineIds>
     <LineIds Name="Mover.MasterMover.Get">
       <LineId Id="1" Count="6" />
+    </LineIds>
+    <LineIds Name="Mover.MoverIndex.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="Mover.MoverIndex.Set">
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="Mover.MoveToPosition">
       <LineId Id="1" Count="83" />

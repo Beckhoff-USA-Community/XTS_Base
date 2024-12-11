@@ -122,7 +122,7 @@ System.Cyclic();
       <Implementation>
         <ST><![CDATA[// Add all Movers to the Mediator
 FOR i := 1 TO XTS_BaseLib.Param.NUM_MOVERS DO
-	System.AddMover( Mover[i] );
+	System.AddMover( Mover[i] , i );
 END_FOR
 
 // Add all Mover Lists to the Mediator
