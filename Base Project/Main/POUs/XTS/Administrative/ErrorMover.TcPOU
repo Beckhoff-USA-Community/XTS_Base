@@ -298,6 +298,25 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="Reset" Id="{b25b0e31-2545-07cf-0a81-6639eb8e9a82}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Reset : iMover
+VAR_INPUT
+END_VAR
+VAR
+	newCallTime: LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// If this method was called within the last second, do not write to ADS
+newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+
+IF ( newCallTime - lastCallHalt ) > 1 THEN
+	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, ' The Reset method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
+END_IF
+
+lastCallHalt	:= newCallTime;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SetAcceleration" Id="{90f501cd-2aae-43a2-a87f-fdbe1a4cb2d2}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAcceleration : iMover
 VAR_INPUT
