@@ -144,6 +144,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="Reset" Id="{49a2194c-f21d-0657-2837-ae940c650381}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Reset : iMover
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="SetAcceleration" Id="{8d0e79e2-9192-4e14-ba95-b7dae3613c61}" FolderPath="Methods\">
       <Declaration><![CDATA[
 METHOD SetAcceleration : iMover

@@ -213,6 +213,22 @@ ELSIF xUpdateCommand THEN
 END_IF
 ```
 
+### Reset
+
+*Reset()*
+
+*Chainable*
+
+> Calls a reset on the underlying axis immediately. The state machine unaffected and will, for example, keep the mover in the enabled state if .Reset() is called while is in the enable state.
+
+The mover's error properties will be cleared, and if and Axis error continues to exist after the reset, the error properties will continue to reflect this.
+
+```javascript
+// mover has an error
+IF Mover[1].Error THEN
+	Mover[1]
+```
+
 ### SetAcceleration
 
 *SetAcceleration( DesiredAccel : LREAL )*
