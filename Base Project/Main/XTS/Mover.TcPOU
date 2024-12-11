@@ -1290,13 +1290,13 @@ END_VAR
           <ST><![CDATA[
 
 minimumDifference		:= 1E300;
-FOR i := 1 TO GVL.NUM_MOVERS DO	
+FOR i := 1 TO Param.NUM_MOVERS DO	
 	IF Mediator.MoverArray[i] <> 0 AND_THEN Mediator.MoverArray[i] <> THIS THEN		// pointer validity
 		currentDifference			:= Mediator.MoverArray[i]^.AxisReference.NcToPlc.SetPos - THIS^.AxisReference.NcToPlc.SetPos;
 						
 		// remain within the same lap
 		IF currentDifference < 0 THEN
-			currentDifference 		:= currentDifference + GVL.TRACK_LENGTH;
+			currentDifference 		:= currentDifference + Param.TRACK_LENGTH;
 		END_IF
 	
 		IF currentDifference < minimumDifference THEN
@@ -1346,13 +1346,13 @@ END_VAR
           <ST><![CDATA[
 
 minimumDifference		:= 1E300;
-FOR i := 1 TO GVL.NUM_MOVERS DO
+FOR i := 1 TO Param.NUM_MOVERS DO
 	IF Mediator.MoverArray[i] <> 0 AND_THEN Mediator.MoverArray[i] <> THIS THEN		// pointer validity
 		currentDifference			:= THIS^.AxisReference.NcToPlc.SetPos - Mediator.MoverArray[i]^.AxisReference.NcToPlc.SetAcc;
 		
 		// remain within the same lap
 		IF currentDifference < 0 THEN
-			currentDifference		:= currentDifference + GVL.TRACK_LENGTH;
+			currentDifference		:= currentDifference + Param.TRACK_LENGTH;
 		END_IF
 		
 		IF currentDifference < minimumDifference THEN
@@ -1774,8 +1774,8 @@ ELSE	// let 'er rip
 	
 	
 	syncPos			:= internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap;
-	CWDistToSync	:= MODABS( syncPos - THIS^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
-	CWDistToMaster	:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - THIS^.AxisReference.NcToPlc.ActPos, GVL.TRACK_LENGTH );
+	CWDistToSync	:= MODABS( syncPos - THIS^.AxisReference.NcToPlc.ActPos, Param.TRACK_LENGTH );
+	CWDistToMaster	:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - THIS^.AxisReference.NcToPlc.ActPos, Param.TRACK_LENGTH );
 		
 	IF fbGearInPosMoverCA[0].Busy = FALSE THEN
 		
@@ -1785,7 +1785,7 @@ ELSE	// let 'er rip
 		fbGearInPosMoverCA[0].RatioDenumerator		:= 1;
 		
 		fbGearInPosMoverCA[0].MasterSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos;
-		fbGearInPosMoverCA[0].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
+		fbGearInPosMoverCA[0].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, Param.TRACK_LENGTH);
 		
 		fbGearInPosMoverCA[0].SyncStrategy			:= mcSyncStrategyEarly;		
 		fbGearInPosMoverCA[0].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
@@ -1814,7 +1814,7 @@ ELSE	// let 'er rip
 		fbGearInPosMoverCA[1].RatioDenumerator		:= 1;
 		
 		fbGearInPosMoverCA[1].MasterSyncPosition		:= internalMasterMover.AxisReference.NcToPlc.ActPos;
-		fbGearInPosMoverCA[1].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, GVL.TRACK_LENGTH);
+		fbGearInPosMoverCA[1].SlaveSyncPosition		:= MODABS( internalMasterMover.AxisReference.NcToPlc.ActPos - internalGap, Param.TRACK_LENGTH);
 		
 		fbGearInPosMoverCA[1].SyncStrategy			:= mcSyncStrategyEarly;
 		fbGearInPosMoverCA[1].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
@@ -1875,19 +1875,19 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-FOR i := 0 TO GVL.NUM_MOVERLISTS-1 DO
+FOR i := 0 TO Param.NUM_MOVERLISTS-1 DO
 	Mediator.MoverListArray[i]^.UnregisterMover( THIS^ );
 END_FOR
 
-FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS-1 DO
+FOR i := 0 TO Param.NUM_POSITIONTRIGGERS-1 DO
 	Mediator.PositionTriggerArray[i]^.UnregisterMover( THIS^ );
 END_FOR
 
-FOR i := 0 TO GVL.NUM_STATIONS-1 DO
+FOR i := 0 TO Param.NUM_STATIONS-1 DO
 	Mediator.StationArray[i]^.UnregisterMover( THIS^ );
 END_FOR
 
-FOR i := 0 TO GVL.NUM_ZONES-1 DO
+FOR i := 0 TO Param.NUM_ZONES-1 DO
 	Mediator.ZoneArray[i]^.UnregisterMover( THIS^ );
 END_FOR]]></ST>
       </Implementation>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
-  <POU Name="MAIN_LD" Id="{4697cc62-040b-0c2c-26a5-d75e283b1a86}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM MAIN_LD
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="P_LD" Id="{9747e6e6-772f-01fa-1df6-595ba2259f2f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_LD
 VAR	
 
 	// ========= System Control / FSM Variables =========
@@ -12,17 +12,17 @@ VAR
 
 	// ========= Linked NC Variables & References =========
 	
-	Mover    			: ARRAY[1..GVL.NUM_MOVERS] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
+	Mover    			: ARRAY[1..XTS_BaseLib.Param.NUM_MOVERS] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
 	
 	// ========= Objectives & Parameters =========
 
 	ParameterSet		: MotionParameters_typ;
 	
-	MoverList			: ARRAY[0..GVL.NUM_MOVERLISTS-1] OF MoverList;
-	PositionTrigger		: ARRAY[0..GVL.NUM_POSITIONTRIGGERS-1] OF PositionTrigger;
-	Station				: ARRAY[0..GVL.NUM_STATIONS-1] OF Station;
-	Track				: ARRAY[0..GVL.NUM_TRACKS] OF Track;
-	Zone				: ARRAY[0..GVL.NUM_ZONES-1] OF Zone;
+	MoverList			: ARRAY[0..XTS_BaseLib.Param.NUM_MOVERLISTS-1] OF MoverList;
+	PositionTrigger		: ARRAY[0..XTS_BaseLib.Param.NUM_POSITIONTRIGGERS-1] OF PositionTrigger;
+	Station				: ARRAY[0..XTS_BaseLib.Param.NUM_STATIONS-1] OF Station;
+	Track				: ARRAY[0..XTS_BaseLib.Param.NUM_TRACKS] OF Track;
+	Zone				: ARRAY[0..XTS_BaseLib.Param.NUM_ZONES-1] OF Zone;
 	
     // ========= Helper, State, & Index Variables =========
 	
@@ -37,7 +37,7 @@ VAR
     mediumVelocity 			: LREAL := 800;  	// mm/s
     highVelocity   			: LREAL := 1200; 	// mm/s
 	
-	StationTimer 			: ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells
+	StationTimer 			: ARRAY[0..XTS_BaseLib.Param.NUM_STATIONS] OF TON; // timer blocks, for station dwells
 	InitialParameterSet		: MotionParameters_typ;
 	
 	// ========= Additional Ladder Variables =========
@@ -143,7 +143,7 @@ END_VAR
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -287,7 +287,7 @@ END_VAR
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -431,7 +431,7 @@ END_VAR
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -575,7 +575,7 @@ END_VAR
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -719,7 +719,7 @@ END_VAR
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -863,7 +863,7 @@ END_VAR
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -1007,7 +1007,7 @@ END_VAR
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -1151,7 +1151,7 @@ END_VAR
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -1295,7 +1295,7 @@ END_VAR
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -1436,7 +1436,7 @@ END_VAR
                             <n />
                             <o>
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -1605,7 +1605,7 @@ END_VAR
                   <v n="OutCommented">false</v>
                   <l2 n="NetworkItems" cet="BoxTreeBox">
                     <o>
-                      <v n="BoxType">"Main_LD.Registering"</v>
+                      <v n="BoxType">"P_LD.Registering"</v>
                       <o n="Instance" t="Operand">
                         <n n="Operand" />
                         <v n="Type">""</v>
@@ -1693,7 +1693,7 @@ END_VAR
                   <v n="OutCommented">false</v>
                   <l2 n="NetworkItems" cet="BoxTreeBox">
                     <o>
-                      <v n="BoxType">"Main_LD.Initializing"</v>
+                      <v n="BoxType">"P_LD.Initializing"</v>
                       <o n="Instance" t="Operand">
                         <n n="Operand" />
                         <v n="Type">""</v>
@@ -2036,7 +2036,7 @@ END_VAR
                           <n />
                           <o>
                             <v n="Operand">"MainState"</v>
-                            <v n="Type">"MainStateMachine_enum"</v>
+                            <v n="Type">"XTSStateMachine_enum"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -2270,7 +2270,7 @@ END_VAR
                             <n />
                             <o>
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -3249,7 +3249,7 @@ END_VAR
                           <n />
                           <o>
                             <v n="Operand">"MainState"</v>
-                            <v n="Type">"MainStateMachine_enum"</v>
+                            <v n="Type">"XTSStateMachine_enum"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -3745,7 +3745,7 @@ END_VAR
                             <n />
                             <o>
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -4069,7 +4069,7 @@ END_VAR
                             <n />
                             <o>
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -4286,7 +4286,7 @@ END_VAR
                             <n />
                             <o>
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -4595,7 +4595,7 @@ END_VAR
                             <n />
                             <o>
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -4897,7 +4897,7 @@ END_VAR
                           <n />
                           <o>
                             <v n="Operand">"MainState"</v>
-                            <v n="Type">"MainStateMachine_enum"</v>
+                            <v n="Type">"XTSStateMachine_enum"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -5144,7 +5144,7 @@ END_VAR
                             <n />
                             <o>
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -5434,7 +5434,7 @@ END_VAR
                             <n />
                             <o>
                               <v n="Operand">"MainState"</v>
-                              <v n="Type">"MainStateMachine_enum"</v>
+                              <v n="Type">"XTSStateMachine_enum"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
                               <v n="Address">""</v>
@@ -5644,7 +5644,7 @@ END_VAR
                           <n />
                           <o>
                             <v n="Operand">"MainState"</v>
-                            <v n="Type">"MainStateMachine_enum"</v>
+                            <v n="Type">"XTSStateMachine_enum"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -5921,7 +5921,7 @@ END_VAR
         </XmlArchive>
       </NWL>
     </Implementation>
-    <Action Name="Initializing" Id="{6204caf6-b75e-0f65-08f7-2eef4b87ad88}">
+    <Action Name="Initializing" Id="{89e9bb75-2153-01f2-07eb-8ceca28c2683}">
       <Implementation>
         <ST><![CDATA[
 
@@ -5958,44 +5958,44 @@ END_VAR
 	System.CompleteMoverList.ApplyAllParameterSet( InitialParameterSet );]]></ST>
       </Implementation>
     </Action>
-    <Action Name="Registering" Id="{aee1b0d6-242d-0f99-18bc-e919201d3313}">
+    <Action Name="Registering" Id="{ae860fb9-6200-0f76-37d0-ed29c2ee5e14}">
       <Implementation>
         <ST><![CDATA[	
 
 		// Add all Movers to the Mediator
-		FOR i := 1 TO GVL.NUM_MOVERS DO
+		FOR i := 1 TO Param.NUM_MOVERS DO
 			System.AddMover( Mover[i] );
 		END_FOR
 	
 		// Add all Mover Lists to the Mediator
-		FOR i := 0 TO GVL.NUM_MOVERLISTS - 1 DO
+		FOR i := 0 TO Param.NUM_MOVERLISTS - 1 DO
 			System.AddMoverList( MoverList[i] );
 		END_FOR
 		
 		// Add all PositionTriggers to the Mediator
-		FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
+		FOR i := 0 TO Param.NUM_POSITIONTRIGGERS - 1 DO
 			System.AddPositionTrigger( PositionTrigger[i] );
 		END_FOR
 		
 		// Add all Stations to the Mediator
-		FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
+		FOR i := 0 TO Param.NUM_STATIONS - 1 DO
 			System.AddStation( Station[i] );
 		END_FOR
 		
 		// Add all Tracks to the Mediator
 		// note track zero is a special case, so the loop is one larger than the rest of the initalization loops
-		FOR i := 0 TO GVL.NUM_TRACKS DO
+		FOR i := 0 TO Param.NUM_TRACKS DO
 			Track[i].Id := UINT_TO_INT(i);
 			System.AddTrack( Track[i] );
 		END_FOR
 		
 		// Add all Zones to the Mediator
-		FOR i := 0 TO GVL.NUM_ZONES - 1 DO
+		FOR i := 0 TO Param.NUM_ZONES - 1 DO
 			System.AddZone( Zone[i] );
 		END_FOR]]></ST>
       </Implementation>
     </Action>
-    <Action Name="StationLogic" Id="{ed11c6af-3581-0b60-3f04-f27405a74e68}">
+    <Action Name="StationLogic" Id="{bc3016ba-ce20-036f-0cd0-fd98d95a069c}">
       <Implementation>
         <NWL>
           <XmlArchive>
@@ -9488,20 +9488,11 @@ END_VAR
         </NWL>
       </Implementation>
     </Action>
-    <LineIds Name="MAIN_LD.Initializing">
-      <LineId Id="2" Count="23" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="49" Count="1" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="41" Count="0" />
+    <LineIds Name="P_LD.Initializing">
+      <LineId Id="1" Count="32" />
     </LineIds>
-    <LineIds Name="MAIN_LD.Registering">
-      <LineId Id="2" Count="31" />
-      <LineId Id="1" Count="0" />
+    <LineIds Name="P_LD.Registering">
+      <LineId Id="1" Count="32" />
     </LineIds>
   </POU>
 </TcPlcObject>

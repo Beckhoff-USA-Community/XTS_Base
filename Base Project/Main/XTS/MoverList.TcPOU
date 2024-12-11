@@ -171,8 +171,8 @@ END_VAR
 VAR
 	sortState			: USINT;
 
-	SortedBuffer		: ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover;	// Initially empty array of movers, sorted in order
-	HoldingBuffer		: ARRAY[0..GVL.NUM_MOVERS - 1] OF POINTER TO Mover;	// Holding buffer for sorting operations
+	SortedBuffer		: ARRAY[0..Param.NUM_MOVERS - 1] OF POINTER TO Mover;	// Initially empty array of movers, sorted in order
+	HoldingBuffer		: ARRAY[0..Param.NUM_MOVERS - 1] OF POINTER TO Mover;	// Holding buffer for sorting operations
 	
 	place				: UDINT;	// placement index
 	level				: UDINT;	// level tracker
@@ -258,26 +258,26 @@ WHILE allsorted = FALSE DO
 				IF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
 					directionalDistance_i		:= Position - SortedBuffer[i]^.TrackInfo.TrackPosition;
 				ELSIF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition > Position THEN
-					directionalDistance_i		:= Position + ( GVL.TRACK_LENGTH - SortedBuffer[i]^.TrackInfo.TrackPosition );
+					directionalDistance_i		:= Position + ( Param.TRACK_LENGTH - SortedBuffer[i]^.TrackInfo.TrackPosition );
 				END_IF;	
 				// Calculate for j
 				IF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
 					directionalDistance_j		:= Position - SortedBuffer[j]^.TrackInfo.TrackPosition;
 				ELSIF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition > Position THEN
-					directionalDistance_j		:= Position + ( GVL.TRACK_LENGTH - SortedBuffer[j]^.TrackInfo.TrackPosition );					 
+					directionalDistance_j		:= Position + ( Param.TRACK_LENGTH - SortedBuffer[j]^.TrackInfo.TrackPosition );					 
 				END_IF
 				
 			ELSIF Direction = MC_Negative_Direction THEN
 				
 				// Calculate for i
 				IF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
-					directionalDistance_i		:= SortedBuffer[i]^.TrackInfo.TrackPosition + ( GVL.TRACK_LENGTH - Position );
+					directionalDistance_i		:= SortedBuffer[i]^.TrackInfo.TrackPosition + ( Param.TRACK_LENGTH - Position );
 				ELSIF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition > Position THEN
 					directionalDistance_i		:= SortedBuffer[i]^.TrackInfo.TrackPosition - Position;
 				END_IF
 				// Calculate for j
 				IF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
-					directionalDistance_j		:= SortedBuffer[j]^.TrackInfo.TrackPosition + ( GVL.TRACK_LENGTH - Position );
+					directionalDistance_j		:= SortedBuffer[j]^.TrackInfo.TrackPosition + ( Param.TRACK_LENGTH - Position );
 				ELSIF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition > Position THEN
 					directionalDistance_j		:= SortedBuffer[j]^.TrackInfo.TrackPosition - Position;
 				END_IF
@@ -478,7 +478,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
-FOR i := 1 TO GVL.NUM_MOVERS DO
+FOR i := 1 TO Param.NUM_MOVERS DO
 	
 	IF NOT THIS^.Contains( Mediator.MoverArray[i]^ ) THEN
 		LogicalComplement.RegisterMover( Mediator.MoverArray[i]^ );
@@ -502,7 +502,7 @@ END_VAR
         <ST><![CDATA[
 
 
-FOR i := 1 TO GVL.NUM_MOVERS DO
+FOR i := 1 TO Param.NUM_MOVERS DO
 	
 	IF THIS^.Contains( Mediator.MoverArray[i]^ ) AND NOT MoverList.Contains( Mediator.MoverArray[i]^ ) THEN
 		LogicalDifference.RegisterMover( Mediator.MoverArray[i]^ );
@@ -525,7 +525,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
-FOR i := 1 TO GVL.NUM_MOVERS DO
+FOR i := 1 TO Param.NUM_MOVERS DO
 	
 	IF MoverList.Contains( Mediator.MoverArray[i]^ ) AND THIS^.Contains( Mediator.MoverArray[i]^ ) THEN
 		LogicalIntersect.RegisterMover( Mediator.MoverArray[i]^ );	

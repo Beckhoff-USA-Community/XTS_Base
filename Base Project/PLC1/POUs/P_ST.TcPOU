@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
-  <POU Name="MAIN" Id="{c992ed33-41fe-02c4-17ef-23123b9a5b23}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM MAIN
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="P_ST" Id="{d6058fae-6f22-0e77-2647-3c036015a24f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_ST
 VAR	
 
 	// Machine
@@ -17,10 +17,11 @@ VAR
     mediumVelocity 			: LREAL := 800;  	// mm/s
     highVelocity   			: LREAL := 1200; 	// mm/s
 	
-	StationTimer 			: ARRAY[0..GVL.NUM_STATIONS] OF TON; // timer blocks, for station dwells
+	StationTimer 			: ARRAY[0..XTS_BaseLib.Param.NUM_STATIONS] OF TON; // timer blocks, for station dwells
 	InitialParameterSet		: MotionParameters_typ;
 	RecoveryComplete		: BOOL;
 	
+	mcDirectionPositive		: Tc2_MC2.MC_Direction;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -70,7 +71,7 @@ END_CASE
 XTS.CyclicLogic();
 ]]></ST>
     </Implementation>
-    <Action Name="Initializing" Id="{77eee1d6-568e-0448-2c64-a85af70fbf71}">
+    <Action Name="Initializing" Id="{1bfed93c-6153-0409-1a23-c60a46e85016}">
       <Implementation>
         <ST><![CDATA[// XTS Object Init
 XTS.Station[0].Position 		:= 5;
@@ -100,7 +101,7 @@ XTS.InitialParameterSet.Acceleration	:= 10_000;		// mm/s2
 XTS.InitialParameterSet.Deceleration	:= 10_000;		// mm/s2
 XTS.InitialParameterSet.Jerk			:= 100_000;		// mm/s3
 XTS.InitialParameterSet.Gap				:= 85;			// mm
-XTS.InitialParameterSet.Direction		:= mcDirectionPositive;	
+XTS.InitialParameterSet.Direction		:= mcDirectionPositive;
 
 LowVelocity		:= 300;
 MediumVelocity	:= 800;
@@ -109,7 +110,7 @@ HighVelocity	:= 1200;
 Init	:= TRUE;]]></ST>
       </Implementation>
     </Action>
-    <Action Name="Recovering" Id="{43063827-0598-00b7-2079-e6fbfd8a6aff}">
+    <Action Name="Recovering" Id="{41908e14-1e32-0343-178b-b7e168161889}">
       <Implementation>
         <ST><![CDATA[// this state is called until all movers have completed their desired recovery tasks
 
@@ -119,7 +120,7 @@ IF (XTS.System.CompleteMoverList.IsAllMoversHalted AND XTS.Station[0].MoverInPos
 END_IF]]></ST>
       </Implementation>
     </Action>
-    <Action Name="RecoverOneshot" Id="{7eb1f3e7-2df1-00d5-25c0-031445570e00}">
+    <Action Name="RecoverOneshot" Id="{0c13b8a3-fd5a-0041-3f13-12c786601dbf}">
       <Implementation>
         <ST><![CDATA[// this action is called one time after the start command is issued
 // it is intended to provide a single command to each mover to facilitate recovery
@@ -133,7 +134,7 @@ XTS.System.ResetStatistics();
 nextStation := 4;]]></ST>
       </Implementation>
     </Action>
-    <Action Name="StationLogic" Id="{ad15b1d3-f9a4-013e-29dd-5430b02980cb}">
+    <Action Name="StationLogic" Id="{9737a796-fa78-0039-0eea-091d761156c0}">
       <Implementation>
         <ST><![CDATA[		(*Mover routing logic should be written here to define the system's operating behavior.
 		Station implementations, Position Trigger logic, etc. In general, you can remove the example code
@@ -197,26 +198,20 @@ nextStation := 4;]]></ST>
         END_IF]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="MAIN">
-      <LineId Id="249" Count="42" />
-      <LineId Id="248" Count="0" />
-      <LineId Id="2" Count="0" />
+    <LineIds Name="P_ST">
+      <LineId Id="1" Count="44" />
     </LineIds>
-    <LineIds Name="MAIN.Initializing">
-      <LineId Id="38" Count="33" />
-      <LineId Id="1" Count="0" />
+    <LineIds Name="P_ST.Initializing">
+      <LineId Id="1" Count="34" />
     </LineIds>
-    <LineIds Name="MAIN.Recovering">
-      <LineId Id="2" Count="4" />
-      <LineId Id="1" Count="0" />
+    <LineIds Name="P_ST.Recovering">
+      <LineId Id="1" Count="5" />
     </LineIds>
-    <LineIds Name="MAIN.RecoverOneshot">
-      <LineId Id="2" Count="8" />
-      <LineId Id="1" Count="0" />
+    <LineIds Name="P_ST.RecoverOneshot">
+      <LineId Id="1" Count="9" />
     </LineIds>
-    <LineIds Name="MAIN.StationLogic">
-      <LineId Id="63" Count="58" />
-      <LineId Id="1" Count="0" />
+    <LineIds Name="P_ST.StationLogic">
+      <LineId Id="1" Count="59" />
     </LineIds>
   </POU>
 </TcPlcObject>

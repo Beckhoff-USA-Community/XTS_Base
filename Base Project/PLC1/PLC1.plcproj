@@ -1,140 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <FileVersion>1.0.0.0</FileVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{dd3a0b29-8e7c-4e32-989d-b0222c998777}</ProjectGuid>
-    <SubObjectsSortedByName>True</SubObjectsSortedByName>
+    <ProjectGuid>{f5e41d65-797b-4a29-b4b7-e4aba5c27f73}</ProjectGuid>
+    <SubObjectsSortedByName>true</SubObjectsSortedByName>
     <DownloadApplicationInfo>true</DownloadApplicationInfo>
-    <WriteProductVersion>true</WriteProductVersion>
+    <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
-    <Name>Main</Name>
+    <Name>PLC1</Name>
     <ProgramVersion>3.1.4026.12</ProgramVersion>
-    <Application>{4aad4b07-8544-4a4a-85a6-bcc87a471a4a}</Application>
-    <TypeSystem>{2d2f50a8-8039-4540-9b70-b5591df2aca6}</TypeSystem>
-    <Implicit_Task_Info>{f651b4e4-4e5e-4ff5-98bf-9ff99fb35d4a}</Implicit_Task_Info>
-    <Implicit_KindOfTask>{9a0a4d91-bd0f-4770-aa9d-74c75c221948}</Implicit_KindOfTask>
-    <Implicit_Jitter_Distribution>{8d2bd756-1f5f-4dde-b2b1-88f6b8a24120}</Implicit_Jitter_Distribution>
-    <LibraryReferences>{ab7c54f8-a013-441d-912f-9897e608763c}</LibraryReferences>
-    <Released>false</Released>
-    <CombineIds>true</CombineIds>
-    <AllowChecksForLibrary>false</AllowChecksForLibrary>
-    <POUsForPropertyAccessIncluded>false</POUsForPropertyAccessIncluded>
-    <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
-    <VirtualLibrary>true</VirtualLibrary>
-    <Company>XTS_Base Github</Company>
-    <Title>XTS_BaseLib</Title>
-    <ProjectVersion>1.0.0</ProjectVersion>
+    <Application>{301ffd39-a44b-46bc-b6c0-e02b8d615cb9}</Application>
+    <TypeSystem>{caaea55f-e934-40fe-9366-d75ac4ac94e6}</TypeSystem>
+    <Implicit_Task_Info>{f1f0b047-b0f8-4450-8caf-c7f29a7b08d2}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{b4d515e2-409e-434f-8db6-da75e1b63c66}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{9d5cb5fe-2a64-4c14-aebd-e0e8332083e5}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{db050161-b8d9-4192-b969-a0d6625b4c9c}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\MachineCmd_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\MachineState_enum.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\MachineSts_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\Machine_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\GVL.TcGVL">
+    <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\MoverData.TcGVL">
+    <Compile Include="POUs\ApplicationMover.TcPOU">
       <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\Param.TcGVL">
+    <Compile Include="POUs\FB_XTS.TcPOU">
       <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\P_ST.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\P_LD.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XTS\Administrative\ErrorMover.TcPOU">
+    <Compile Include="VISUs\Controls.TcVIS">
       <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
-    <Compile Include="XTS\Administrative\Mediator.TcPOU">
+    <Compile Include="VISUs\Controls_LD.TcVIS">
       <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
-    <Compile Include="XTS\Administrative\Objective.TcPOU">
+    <Compile Include="VISUs\DiagnosticVisu.TcVIS">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\XTSCommands_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\XTSStateMachine_enum.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\MediatorGroupStatus.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\MotionParameters_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\MoverCommandType_enum.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\MoverState_enum.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\PositionTriggerStats_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\StationStats_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\TrackCyclicState.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\TrackInfo.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\DUTs\TrackState.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\ITFs\iMover.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\ITFs\iMoverList.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\ITFs\iTrack.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\Mover.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\MoverList.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\PositionTrigger.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\Station.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\Track.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS\Zone.TcPOU">
-      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
-    <Folder Include="POUs" />
     <Folder Include="VISUs" />
-    <Folder Include="XTS" />
-    <Folder Include="XTS\Administrative" />
-    <Folder Include="XTS\DUTs" />
-    <Folder Include="XTS\ITFs" />
+    <Folder Include="POUs" />
   </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="System_VisuElemMeter">
@@ -185,25 +110,9 @@
       <SystemLibrary>true</SystemLibrary>
       <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
     </PlaceholderReference>
-    <PlaceholderReference Include="Tc2_EtherCAT">
-      <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc2_EtherCAT</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc2_IoFunctions">
-      <DefaultResolution>Tc2_IoFunctions, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc2_IoFunctions</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc2_Math">
-      <DefaultResolution>Tc2_Math, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc2_Math</Namespace>
-    </PlaceholderReference>
     <PlaceholderReference Include="Tc2_MC2">
       <DefaultResolution>Tc2_MC2, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_MC2</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc2_NC">
-      <DefaultResolution>Tc2_NC, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc2_NC</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Standard">
       <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
@@ -212,195 +121,45 @@
     <PlaceholderReference Include="Tc2_System">
       <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_System</Namespace>
-      <Parameters>
-        <Parameter ListName="PARAM">
-          <Key>STRING_LENGTH_ADDRESS</Key>
-          <Value>20</Value>
-        </Parameter>
-        <Parameter ListName="PARAM">
-          <Key>STRING_LENGTH_COMMENT</Key>
-          <Value>255</Value>
-        </Parameter>
-        <Parameter ListName="PARAM">
-          <Key>STRING_LENGTH_EXP</Key>
-          <Value>255</Value>
-        </Parameter>
-        <Parameter ListName="PARAM">
-          <Key>STRING_LENGTH_OUTSTRING</Key>
-          <Value>255</Value>
-        </Parameter>
-        <Parameter ListName="PARAM">
-          <Key>TABLE_SHOW_VALID_ITEMS</Key>
-          <Value>FALSE</Value>
-        </Parameter>
-        <Parameter ListName="PARAM">
-          <Key>TABLE_UPPER_BOUND</Key>
-          <Value>15</Value>
-        </Parameter>
-      </Parameters>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc2_Utilities">
-      <DefaultResolution>Tc2_Utilities, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc2_Utilities</Namespace>
-      <Parameters>
-        <Parameter ListName="PARAMETERLIST">
-          <Key>CMAXCHARACTERS</Key>
-          <Value>16#FFFFFFF0</Value>
-        </Parameter>
-        <Parameter ListName="PARAMETERLIST">
-          <Key>CMAXCSVFIELDVALUESIZE</Key>
-          <Value>255</Value>
-        </Parameter>
-        <Parameter ListName="PARAMETERLIST">
-          <Key>NMAXCPUCOUNT</Key>
-          <Value>64</Value>
-        </Parameter>
-        <Parameter ListName="PARAMETERLIST">
-          <Key>NMAXFILESONDONGLE</Key>
-          <Value>20</Value>
-        </Parameter>
-        <Parameter ListName="PARAMETERLIST">
-          <Key>NMAXLICENSEDEVICES</Key>
-          <Value>16</Value>
-        </Parameter>
-        <Parameter ListName="PARAMETERLIST">
-          <Key>NMAXLICENSES</Key>
-          <Value>50</Value>
-        </Parameter>
-      </Parameters>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc3_EventLogger">
-      <DefaultResolution>Tc3_EventLogger, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc3_EventLogger</Namespace>
-      <Parameters>
-        <Parameter ListName="PARAMETERLIST" xmlns="">
-          <Key>CSOURCENAMESIZE</Key>
-          <Value>256</Value>
-        </Parameter>
-      </Parameters>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc3_McCollisionAvoidance">
-      <DefaultResolution>Tc3_McCollisionAvoidance, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc3_McCollisionAvoidance</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc3_McCoordinatedMotion">
-      <DefaultResolution>Tc3_McCoordinatedMotion, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc3_McCoordinatedMotion</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc3_Module">
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
+      <SystemLibrary>true</SystemLibrary>
     </PlaceholderReference>
-    <PlaceholderReference Include="Tc3_XTS_Utility">
-      <DefaultResolution>Tc3_XTS_Utility, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc3_XTS_Utility</Namespace>
-      <Parameters>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXAREASPERPART</Key>
-          <Value>25</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXETHERCATMASTER</Key>
-          <Value>80</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXMESSAGECOMMANDHISTORY</Key>
-          <Value>25</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXMODULESPERPART</Key>
-          <Value>250</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXPARTSPERTRACK</Key>
-          <Value>10</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSCAGROUP</Key>
-          <Value>5</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSFILTERPARAMETERSET</Key>
-          <Value>2</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSINFOSERVER</Key>
-          <Value>1</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSINFOSTATION</Key>
-          <Value>50</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSMOVERSPERXPU</Key>
-          <Value>200</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSPARAMETERSET</Key>
-          <Value>10</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSPARTSPERXPU</Key>
-          <Value>25</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSPROCESSINGUNITS</Key>
-          <Value>5</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSSTOPPOSITIONSPERSTATION</Key>
-          <Value>25</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSTASKSPERXPU</Key>
-          <Value>8</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST">
-          <Key>MAXXTSTRACKSPERXPU</Key>
-          <Value>50</Value>
-        </Parameter>
-        <Parameter ListName="XTSPARAM">
-          <Key>MAX_EC_MASTER_PER_XTS</Key>
-          <Value>10</Value>
-        </Parameter>
-        <Parameter ListName="XTSPARAM">
-          <Key>MAX_LAST_MESSAGE</Key>
-          <Value>25</Value>
-        </Parameter>
-        <Parameter ListName="XTSPARAM">
-          <Key>MAX_MODULE_NUMBER</Key>
-          <Value>70</Value>
-        </Parameter>
-        <Parameter ListName="XTSPARAM">
-          <Key>MAX_MOVER_NUMBER</Key>
-          <Value>70</Value>
-        </Parameter>
-        <Parameter ListName="XTSPARAM">
-          <Key>MAX_NUM_MOVERS_ON_MODULE</Key>
-          <Value>5</Value>
-        </Parameter>
-        <Parameter ListName="XTSVISUPARAM">
-          <Key>MAX_CA_GROUP</Key>
-          <Value>5</Value>
-        </Parameter>
-        <Parameter ListName="XTSVISUPARAM">
-          <Key>MAX_XTS_SYSTEM</Key>
-          <Value>5</Value>
-        </Parameter>
-      </Parameters>
-    </PlaceholderReference>
-    <PlaceholderReference Include="VisuDialogs">
-      <DefaultResolution>VisuDialogs, * (System)</DefaultResolution>
-      <Namespace>VisuDialogs</Namespace>
+    <PlaceholderReference Include="[XTS_BaseLib]">
+      <DefaultResolution>[XTS_BaseLib], * (XTS_Base Github)</DefaultResolution>
+      <Namespace>XTS_BaseLib</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
-    <LibraryReference Include="VisuSymbols,3.5.10.0,System">
-      <Namespace>VisuSymbols</Namespace>
-    </LibraryReference>
+    <PlaceholderResolution Include="System_VisuElemMeter">
+      <Resolution>VisuElemMeter, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuElems">
+      <Resolution>VisuElems, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuElemsSpecialControls">
+      <Resolution>VisuElemsSpecialControls, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuElemsWinControls">
+      <Resolution>VisuElemsWinControls, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuElemTextEditor">
+      <Resolution>VisuElemTextEditor, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuElemXYChart">
+      <Resolution>VisuElemXYChart, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuInputs">
+      <Resolution>VisuInputs, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuNativeControl">
+      <Resolution>VisuNativeControl, * (System)</Resolution>
+    </PlaceholderResolution>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Main.tmc">
+    <None Include="PLC1.tmc">
       <SubType>Content</SubType>
     </None>
   </ItemGroup>
@@ -2715,7 +2474,7 @@
           <d n="SubKeys" t="Hashtable" />
           <d n="Values" t="Hashtable" ckt="String" cvt="String">
             <v>DisabledWarningIds</v>
-            <v>5410</v>
+            <v>410,5410</v>
           </d>
         </o>
         <v>{F66C7017-BDD8-4114-926C-81D6D687E35F}</v>

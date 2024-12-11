@@ -66,7 +66,7 @@ FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) D
 
 			difference := ABS(internalTrackedMovers[i]^.TrackInfo.TrackPosition - Position);
 
-			IF MIN(difference, GVL.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
+			IF MIN(difference, Param.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
 				CurrentMover                    REF= internalTrackedMovers[i]^;
 				CurrentMover.SourceInstancePath := THIS^.InstancePath;
 			END_IF
@@ -103,7 +103,7 @@ VAR_INST
 	
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[FOR i := 1 TO GVL.NUM_MOVERS DO
+        <ST><![CDATA[FOR i := 1 TO Param.NUM_MOVERS DO
 
     // This mover is no longer destined for any station
     IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.CurrentMoveType <> MOVETYPE_STATION THEN
@@ -133,7 +133,7 @@ IF THIS^.MoverInPosition = FALSE AND internalLastMoverInPosition THEN
 		internalRingBufferIDX				:= internalRingBufferIDX + 1;
 		internalBlocked						:= TRUE;
 		// reset alphaema to global value for subsequent movers
-		alphaEMAOccupied := GVL.ALPHA_EMA;
+		alphaEMAOccupied := Param.ALPHA_EMA;
 	END_IF
 ELSIF THIS^.MoverInPosition AND internalLastMoverInPosition = FALSE THEN
 	// skip statistics on reset flag
@@ -148,7 +148,7 @@ ELSIF THIS^.MoverInPosition AND internalLastMoverInPosition = FALSE THEN
 		Statistics.EmptyTimeHistory[internalRingBufferIDX]	:= internalStationEmptyTimer.ET;
 		Statistics.AverageTimeEmpty			:= LREAL_TO_TIME(( alphaEMAEmpty * TIME_TO_LREAL(internalStationEmptyTimer.ET) ) + (( 1 - alphaEMAEmpty ) * TIME_TO_LREAL(Statistics.AverageTimeEmpty) ));
 		// reset alphaema to global value for subsequent movers
-		alphaEMAEmpty := GVL.ALPHA_EMA;
+		alphaEMAEmpty := Param.ALPHA_EMA;
 	END_IF
 END_IF
 internalLastMoverInPosition		:= THIS^.MoverInPosition;
@@ -163,7 +163,7 @@ IF internalBlocked THEN
 	internalStationBlockedTimer(IN := internalBlocked, PT := T#40D, ET => Statistics.TimeBlocked);
 	// calculate the previous mover's distance traveled and compare to gap*station group (minimum distance required to receive next mover)
 	lastMoverDist :=  ABS(Position - internalLastMover.TrackInfo.TrackPosition);
-	IF MIN(lastMoverDist, GVL.TRACK_LENGTH - lastMoverDist) >= internalLastMover.MotionParameters.Gap * GroupSize THEN
+	IF MIN(lastMoverDist, Param.TRACK_LENGTH - lastMoverDist) >= internalLastMover.MotionParameters.Gap * GroupSize THEN
 		// use 1.0 as alphaema on reset
 		IF (internalStationBlockedReset) THEN
 			alphaEMABlocked := 1.0;
@@ -177,7 +177,7 @@ IF internalBlocked THEN
 		// reset timer
 		internalStationBlockedTimer(IN := FALSE);
 		// use global alphaema for subsequent movers
-		alphaEMABlocked := GVL.ALPHA_EMA;
+		alphaEMABlocked := Param.ALPHA_EMA;
 	END_IF
 END_IF
 
@@ -251,7 +251,7 @@ FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) D
 		IF (moverTrackId = internalTrackId) THEN
 			difference := ABS(Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition);
 
-			IF MIN(difference, GVL.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
+			IF MIN(difference, Param.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
 				MoverInPosition := TRUE;
 			END_IF
 		END_IF;

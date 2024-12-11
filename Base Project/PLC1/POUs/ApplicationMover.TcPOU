@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="ApplicationMover" Id="{ffb0b918-a788-06af-0ba6-fb837daa928d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ApplicationMover EXTENDS Mover
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	cnt: UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Cyclic" Id="{2f2ea0e0-71e7-0aaa-09f0-ac24bc564bf6}">
+      <Declaration><![CDATA[METHOD Cyclic : XTS_BaseLib.iMover
+VAR_IN_OUT
+	GroupReference	: XTS_BaseLib.AXES_GROUP_REF;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^.Cyclic(GroupReference);
+
+// Add ApplicationMover specific code here
+cnt:= cnt + 1;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="ApplicationMover">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="ApplicationMover.Cyclic">
+      <LineId Id="1" Count="4" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

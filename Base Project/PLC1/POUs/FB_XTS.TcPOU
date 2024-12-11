@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
-  <POU Name="FB_XTS" Id="{cc740f0b-abda-0b00-3df6-66091ad83846}" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_XTS" Id="{80fa3c95-ee20-05cc-0ee7-23f3313a0d5b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_XTS
 VAR_INPUT
 
@@ -10,16 +10,16 @@ VAR_INPUT
 	System			: Mediator;				// System-level control object
 
 	// ========= Linked NC Variables & References =========
-	Mover    			: ARRAY[1..GVL.NUM_MOVERS] OF Mover; 	// instantiation of Mover objects. Matches the number of movers on the system
+	Mover    			: ARRAY[1..XTS_BaseLib.Param.NUM_MOVERS] OF ApplicationMover; 	// instantiation of Mover objects. Matches the number of movers on the system
 	
 	// ========= Objectives & Parameters =========
 	ParameterSet		: MotionParameters_typ;
 	
-	MoverList			: ARRAY[0..GVL.NUM_MOVERLISTS-1] OF MoverList;
-	PositionTrigger		: ARRAY[0..GVL.NUM_POSITIONTRIGGERS-1] OF PositionTrigger;
-	Station				: ARRAY[0..GVL.NUM_STATIONS-1] OF Station;
-	Track				: ARRAY[0..GVL.NUM_TRACKS] OF Track;
-	Zone				: ARRAY[0..GVL.NUM_ZONES-1] OF Zone;
+	MoverList			: ARRAY[0..XTS_BaseLib.Param.NUM_MOVERLISTS-1] OF MoverList;
+	PositionTrigger		: ARRAY[0..XTS_BaseLib.Param.NUM_POSITIONTRIGGERS-1] OF PositionTrigger;
+	Station				: ARRAY[0..XTS_BaseLib.Param.NUM_STATIONS-1] OF Station;
+	Track				: ARRAY[0..XTS_BaseLib.Param.NUM_TRACKS] OF Track;
+	Zone				: ARRAY[0..XTS_BaseLib.Param.NUM_ZONES-1] OF Zone;
 	
 	InitialParameterSet		: MotionParameters_typ;
 	
@@ -37,7 +37,7 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="CyclicLogic" Id="{e13cb496-3256-0037-0b46-6393bcb4467b}">
+    <Method Name="CyclicLogic" Id="{abc84b77-fb84-0d57-1328-a048505049b2}">
       <Declaration><![CDATA[METHOD CyclicLogic
 VAR_INPUT
 END_VAR
@@ -118,37 +118,37 @@ System.Cyclic();
 ]]></ST>
       </Implementation>
     </Method>
-    <Action Name="Registering" Id="{d9f13b62-fbf8-0bae-267c-953c33b46614}">
+    <Action Name="Registering" Id="{64e0816f-5ae0-0ad8-0275-1bf7bc6688fe}">
       <Implementation>
         <ST><![CDATA[// Add all Movers to the Mediator
-FOR i := 1 TO GVL.NUM_MOVERS DO
+FOR i := 1 TO XTS_BaseLib.Param.NUM_MOVERS DO
 	System.AddMover( Mover[i] );
 END_FOR
 
 // Add all Mover Lists to the Mediator
-FOR i := 0 TO GVL.NUM_MOVERLISTS - 1 DO
+FOR i := 0 TO XTS_BaseLib.Param.NUM_MOVERLISTS - 1 DO
 	System.AddMoverList( MoverList[i] );
 END_FOR
 
 // Add all PositionTriggers to the Mediator
-FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
+FOR i := 0 TO XTS_BaseLib.Param.NUM_POSITIONTRIGGERS - 1 DO
 	System.AddPositionTrigger( PositionTrigger[i] );
 END_FOR
 
 // Add all Stations to the Mediator
-FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
+FOR i := 0 TO XTS_BaseLib.Param.NUM_STATIONS - 1 DO
 	System.AddStation( Station[i] );
 END_FOR
 
 // Add all Tracks to the Mediator
 // note track zero is a special case, so the loop is one larger than the rest of the initalization loops
-FOR i := 0 TO GVL.NUM_TRACKS DO
+FOR i := 0 TO XTS_BaseLib.Param.NUM_TRACKS DO
 	Track[i].Id := UINT_TO_INT(i);
 	System.AddTrack( Track[i] );
 END_FOR
 
 // Add all Zones to the Mediator
-FOR i := 0 TO GVL.NUM_ZONES - 1 DO
+FOR i := 0 TO XTS_BaseLib.Param.NUM_ZONES - 1 DO
 	System.AddZone( Zone[i] );
 END_FOR]]></ST>
       </Implementation>
@@ -157,13 +157,7 @@ END_FOR]]></ST>
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_XTS.CyclicLogic">
-      <LineId Id="2" Count="30" />
-      <LineId Id="47" Count="2" />
-      <LineId Id="51" Count="1" />
-      <LineId Id="54" Count="6" />
-      <LineId Id="78" Count="10" />
-      <LineId Id="90" Count="2" />
-      <LineId Id="96" Count="15" />
+      <LineId Id="1" Count="72" />
     </LineIds>
     <LineIds Name="FB_XTS.Registering">
       <LineId Id="1" Count="30" />

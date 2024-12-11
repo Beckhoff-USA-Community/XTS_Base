@@ -164,7 +164,7 @@ PROPERTY ZoneLength : LREAL]]></Declaration>
     ZoneLength := internalEndPosition - internalStartPosition;
 ELSIF internalStartPosition > internalEndPosition THEN
     // Zone DOES include the rollover point
-    ZoneLength := internalEndPosition + (internalEndPosition + GVL.TRACK_LENGTH - internalStartPosition);
+    ZoneLength := internalEndPosition + (internalEndPosition + Param.TRACK_LENGTH - internalStartPosition);
 ELSE
     // Start and end position are coincident, ZL is 0
     ZoneLength := 0;

@@ -10,8 +10,8 @@ VAR
     internalCurrentMover     	 : POINTER TO Mover;
 	internalLastMoverPassedPosition		: BOOL;
 	internalTrackId				: DINT := 1;
-    moverLastPos              	: ARRAY[1..GVL.NUM_MOVERS] OF LREAL; // Positions of tracked movers from last cycle
-	moverInitialized			: ARRAY [1..GVL.NUM_MOVERS] OF BOOL; // first scan-like flag to prevent erronious triggers on first scan
+    moverLastPos              	: ARRAY[1..Param.NUM_MOVERS] OF LREAL; // Positions of tracked movers from last cycle
+	moverInitialized			: ARRAY [1..Param.NUM_MOVERS] OF BOOL; // first scan-like flag to prevent erronious triggers on first scan
 	
 	lastCallMuteCurrent: LREAL;
 	internalInterarrivalTimer			: TON;
@@ -71,7 +71,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[currentIsRegistered		:= FALSE;
 
-FOR i := 1 TO GVL.NUM_MOVERS DO
+FOR i := 1 TO Param.NUM_MOVERS DO
     IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.IsTrackReady AND internalTrackedMovers[i]^.CurrentTrack <> 0 THEN
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrackId) THEN
@@ -83,15 +83,15 @@ FOR i := 1 TO GVL.NUM_MOVERS DO
 			END_IF
 		
 			// Determine if a position rollover occured in the last cycle
-			modTrackPosition := MODABS( internalTrackedMovers[i]^.TrackInfo.TrackPosition, GVL.TRACK_LENGTH);
+			modTrackPosition := MODABS( internalTrackedMovers[i]^.TrackInfo.TrackPosition, Param.TRACK_LENGTH);
 			positionDifference := moverLastPos[i] - modTrackPosition;			
-			rolloverOccured := ABS( positionDifference ) > ( GVL.TRACK_LENGTH / 2 );
+			rolloverOccured := ABS( positionDifference ) > ( Param.TRACK_LENGTH / 2 );
 			
 			// and if so, modify the stored last position values to be nonmodulo to compensate
 			IF rolloverOccured AND positionDifference > 0 THEN
-				moverLastPos[i]		:= moverLastPos[i] - GVL.TRACK_LENGTH;
+				moverLastPos[i]		:= moverLastPos[i] - Param.TRACK_LENGTH;
 			ELSIF rolloverOccured AND positionDifference < 0 THEN
-				moverLastPos[i]		:= moverLastPos[i] + GVL.TRACK_LENGTH;
+				moverLastPos[i]		:= moverLastPos[i] + Param.TRACK_LENGTH;
 			END_IF
 		
 			// Look for movers passing over the threshold this cycle and assign it to the
@@ -150,7 +150,7 @@ IF THIS^.MoverPassedPosition AND internalLastMoverPassedPosition = FALSE THEN
 		Statistics.AverageInterarrivalTime	:= LREAL_TO_TIME(( alphaEMA * TIME_TO_LREAL(internalInterarrivalTimer.ET )) + (( 1 - alphaEMA) * TIME_TO_LREAL( Statistics.AverageInterarrivalTime )));
 		internalInterarrivalTimer( IN := FALSE );
 		// reset alphaema to global value for subsequent movers
-		alphaEMA := GVL.ALPHA_EMA;
+		alphaEMA := Param.ALPHA_EMA;
 	END_IF;
 END_IF
 internalLastMoverPassedPosition		:= THIS^.MoverPassedPosition;

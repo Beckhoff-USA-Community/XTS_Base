@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <GVL Name="Param" Id="{673621fc-c806-000b-08ea-fd34161e1bd8}" ParameterList="True">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	TRACK_LENGTH 			: LREAL := 4000; // This should be set to the exact length [mm] of the track system
+		
+	NUM_MOVERS   			: USINT := 6;   // This should be set to the exact number of movers on the system
+	
+	// The following should be set to a value **equal to or greater than** the number of objectives needed
+	NUM_MOVERLISTS			: USINT := 10;	// Mover Lists
+	NUM_POSITIONTRIGGERS	: USINT := 10;	// Position Triggers
+	NUM_STATIONS			: USINT := 10;	// Stations
+	NUM_ZONES				: USINT := 10;	// Zones
+	
+	NUM_TRACKS				: USINT	:= 1;	// Tracks (Typically 1)
+
+	PART_ARRAY_SIZE			: UDINT := 100;
+	AUTO_POPULATE_STATIONS  : BOOL := TRUE; // use the Station[x] array to label stations on the visualization. Turn off if manually entering stations in the configurator.
+	
+	// statistics weighted average
+	ALPHA_EMA				: LREAL := 0.1;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
