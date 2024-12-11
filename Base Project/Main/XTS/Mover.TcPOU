@@ -35,7 +35,7 @@ VAR
 	{attribute 'hide'}
 	InstancePath		: STRING;	// instance naming, for diagnostics purposes
 	
-	internalMoverIndex	: UINT;		// array index of Mover Array
+	internalMoverIndex	: UDINT;		// array index of Mover Array
 	internalEnable		: BOOL;		// moves the axis from Disabled to Standstill, adds Axis to CA group, and triggers M1 Detection if configured
 	internalDisable		: BOOL;		// moves the axis from Standstill to Disabled, removes Axis from CA Group
 	
@@ -974,7 +974,7 @@ END_IF]]></ST>
       </Get>
     </Property>
     <Property Name="MoverIndex" Id="{2bc444fb-f6db-08cf-2a51-e61f20503065}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY MoverIndex : UINT]]></Declaration>
+      <Declaration><![CDATA[PROPERTY MoverIndex : UDINT]]></Declaration>
       <Get Name="Get" Id="{f9ece493-5d58-0603-2e44-9698eda7fa8e}">
         <Declaration><![CDATA[VAR
 END_VAR

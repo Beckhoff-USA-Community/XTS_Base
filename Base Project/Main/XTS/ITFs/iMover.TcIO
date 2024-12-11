@@ -100,7 +100,7 @@ END_VAR
 ]]></Declaration>
     </Method>
     <Property Name="MoverIndex" Id="{30bd3b07-1e07-05cd-1854-8bb6e4b79051}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY MoverIndex : UINT]]></Declaration>
+      <Declaration><![CDATA[PROPERTY MoverIndex : UDINT]]></Declaration>
       <Get Name="Get" Id="{0eeb762f-30db-0fd6-2116-b05e28e22627}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>

@@ -22,7 +22,7 @@ VAR
 	RecoveryComplete		: BOOL;
 	
 	mcDirectionPositive		: Tc2_MC2.MC_Direction;
-	Trig0MoverIndex			: UINT;
+	Trig0MoverIndex			: UDINT;
 	Trig0MoverPosLag		: LREAL;
 END_VAR
 ]]></Declaration>
