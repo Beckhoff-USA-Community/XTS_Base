@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="ApplicationMover" Id="{ffb0b918-a788-06af-0ba6-fb837daa928d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK ApplicationMover EXTENDS Mover
+    <Declaration><![CDATA[// This function Block extends the Referenced Library Mover (FB), so the user can expand the capabilities of the XTS Mover Functions
+FUNCTION_BLOCK ApplicationMover EXTENDS Mover
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -21,7 +22,12 @@ VAR_IN_OUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SUPER^.Cyclic(GroupReference);
+        <ST><![CDATA[// Call Base Class (Mover) Cyclic Logic
+SUPER^.Cyclic(GroupReference);
+
+//======= 
+// To Call ApplicationMover addon Method/Properties/Variables... 
+//		you must call Mover[] array index directly, as Station/Zone/PositionTrig/SpeedTrig do not know about ApplicationMover add ons
 
 // Add ApplicationMover specific code here
 cnt:= cnt + 1;
@@ -46,7 +52,7 @@ END_VAR
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="ApplicationMover.Cyclic">
-      <LineId Id="1" Count="5" />
+      <LineId Id="1" Count="10" />
     </LineIds>
     <LineIds Name="ApplicationMover.PositionLag.Get">
       <LineId Id="1" Count="1" />

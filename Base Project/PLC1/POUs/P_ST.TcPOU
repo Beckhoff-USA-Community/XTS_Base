@@ -182,7 +182,11 @@ nextStation := 4;]]></ST>
         IF XTS.PositionTrigger[0].MoverPassedPosition THEN
             XTS.PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
 			
+			// To Call ApplicationMover addon Method/Properties/Variables, you must call Mover[] array index directly
+			// Get MoverIndex for later use with ApplicationMover addons
 			Trig0MoverIndex		:= XTS.PositionTrigger[0].CurrentMover.MoverIndex;
+			
+			// Call ApplicationMover Method/Properties/Variables using previously latched MoverIndex
 			Trig0MoverPosLag	:= XTS.Mover[Trig0MoverIndex].PositionLag;
 			
             XTS.PositionTrigger[0].MuteCurrent();
@@ -218,7 +222,7 @@ nextStation := 4;]]></ST>
       <LineId Id="1" Count="9" />
     </LineIds>
     <LineIds Name="P_ST.StationLogic">
-      <LineId Id="1" Count="64" />
+      <LineId Id="1" Count="68" />
     </LineIds>
   </POU>
 </TcPlcObject>
