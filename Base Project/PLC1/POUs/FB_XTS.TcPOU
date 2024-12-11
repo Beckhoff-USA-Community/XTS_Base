@@ -30,7 +30,6 @@ VAR
 
     // ========= Helper, State, & Index Variables =========
     i                	: UINT; 	// index variable; gets reused in various FOR loops
-    n                	: UINT; 	// secondary index variable, for enabling movers
 
 END_VAR
 ]]></Declaration>
@@ -48,7 +47,6 @@ END_VAR
 	
 		// XTS is idle. Motive power is disabled.	
 		IF Commands.Enable THEN
-			Commands.Disable			:= FALSE;
 			State						:= XTS_INITIALIZING;
 		END_IF
 
@@ -67,7 +65,7 @@ END_VAR
 			State	:= XTS_ENABLED;
 		END_IF
 		
-		IF Commands.Disable THEN
+		IF NOT Commands.Enable THEN
 			Commands.Enable	:= FALSE;
 			System.CompleteMoverList.DisableAll();
 			State			:= XTS_DISABLING;
@@ -75,32 +73,16 @@ END_VAR
 	
 	XTS_ENABLED:	// -------------------------------------------
 
-        IF System.GroupError THEN
-			// stop on group error user must go through disable/enable to recover
-			State 			:= XTS_STOPPING;
-		ELSIF Commands.Stop THEN
-			System.CompleteMoverList.HaltAll();
-            State         	:= XTS_STOPPING;
-        ELSIF Commands.Disable THEN
-            Commands.Enable := FALSE;
+        IF System.GroupError OR NOT Commands.Enable THEN
 			System.CompleteMoverList.HaltAll();
             State           := XTS_STOPPING;
         END_IF
 		
 	XTS_STOPPING:
-	
 		IF System.CompleteMoverList.IsAllMoversHalted THEN
-			State			:= XTS_STOPPED;
-		END_IF
-		
-	XTS_STOPPED: // -------------------------------------------
-	
-	    IF Commands.Disable THEN
-            Commands.Enable 	:= FALSE;
-			Commands.Stop		:= FALSE;
 			System.CompleteMoverList.DisableAll();
-            State           	:= XTS_DISABLING;
-        END_IF
+			State			:= XTS_DISABLING;
+		END_IF
 		
 	XTS_DISABLING: // -------------------------------------------
 	
@@ -153,14 +135,5 @@ FOR i := 0 TO XTS_BaseLib.Param.NUM_ZONES - 1 DO
 END_FOR]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_XTS">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_XTS.CyclicLogic">
-      <LineId Id="1" Count="72" />
-    </LineIds>
-    <LineIds Name="FB_XTS.Registering">
-      <LineId Id="1" Count="30" />
-    </LineIds>
   </POU>
 </TcPlcObject>

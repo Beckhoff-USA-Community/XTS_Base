@@ -34,39 +34,77 @@ CASE State OF
 	MS_OFF:
 		IF MainCommands.Enable THEN
 			XTS.Commands.Enable		:= TRUE;
-			xts.Commands.Disable	:= FALSE;
 			State					:= MS_RESTARTING;
 		END_IF
 
 	MS_RESTARTING:
 		IF MainCommands.Disable THEN
+			MainCommands.Enable		:= FALSE;
 			XTS.Commands.Enable		:= FALSE;
-			XTS.Commands.Disable	:= TRUE;
 			State					:= MS_STOPPING;
 		ELSIF XTS.State = XTS_ENABLED THEN
-			XTS.Track[1].CurrentMoverList.SetAllVelocity(MediumVelocity).MoveAllToStation(XTS.Station[0]);
-			nextStation := 4;
-			State		:= MS_RUNNING;
+			State		:= MS_ENABLED;
 		END_IF
+	
+	MS_ENABLED:
+		IF MainCommands.Disable THEN
+			MainCommands.Enable		:= FALSE;
+			XTS.Commands.Enable		:= FALSE;
+			State					:= MS_STOPPING;
+		ELSIF MainCommands.Start THEN
+			State					:= MS_ONESHOT_RECOVER;
+		END_IF
+		
+	MS_ONESHOT_RECOVER:
+		// one time commands before starting typical process motions
+		RecoverOneshot();
+		State := MS_RECOVERING;
+		
+	MS_RECOVERING:
+		// wait for any recovery actions to complete
+		Recovering();
+		// test for errors, commands or recovery complete
+		IF MainCommands.Stop THEN
+			MainCommands.Start		:= FALSE;
+			XTS.System.CompleteMoverList.HaltAll();
+            State         	:= MS_STOPPING;
+        ELSIF MainCommands.Disable THEN
+			MainCommands.Enable		:= FALSE;
+            XTS.Commands.Enable		:= FALSE;
+			XTS.System.CompleteMoverList.HaltAll();
+            State          			:= MS_STOPPING;
+		ELSIF RecoveryComplete THEN
+			// recovery sequence is complete, move on to run state
+			State			:= MS_RUNNING;
+        END_IF
 
 	MS_RUNNING:
+		// run the station-to-station mover logic
 		StationLogic();
 		
+		// monitor for disable
 		IF MainCommands.Disable THEN
-			XTS.Commands.Disable	:= TRUE;
 			XTS.Commands.Enable		:= FALSE;
+			MainCommands.Enable		:= FALSE;
+			XTS.System.CompleteMoverList.HaltAll();
+			State					:= MS_STOPPING;
+		ELSIF MainCommands.Stop THEN
+			MainCommands.Start		:= FALSE;
+			XTS.System.CompleteMoverList.HaltAll();
 			State					:= MS_STOPPING;
 		END_IF
 
-	MS_CYCLESTOP:
-
 	MS_STOPPING:
-		IF XTS.State = XTS_DISABLED THEN
-			XTS.Commands.Disable	:= FALSE;
-			State					:= MS_OFF;
+		IF MainCommands.Disable THEN
+			MainCommands.Enable		:= FALSE;
+			XTS.Commands.Enable := FALSE;
 		END_IF
-
-	MS_ERROR:
+		IF XTS.State = XTS_DISABLED THEN
+			State					:= MS_OFF;
+		ELSIF  MainCommands.Start THEN
+			MainCommands.Stop		:= FALSE;
+			State					:= MS_ONESHOT_RECOVER;
+		END_IF
 	
 END_CASE
 
@@ -205,20 +243,5 @@ nextStation := 4;]]></ST>
         END_IF]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="P_ST">
-      <LineId Id="1" Count="44" />
-    </LineIds>
-    <LineIds Name="P_ST.Initializing">
-      <LineId Id="1" Count="34" />
-    </LineIds>
-    <LineIds Name="P_ST.Recovering">
-      <LineId Id="1" Count="5" />
-    </LineIds>
-    <LineIds Name="P_ST.RecoverOneshot">
-      <LineId Id="1" Count="9" />
-    </LineIds>
-    <LineIds Name="P_ST.StationLogic">
-      <LineId Id="1" Count="64" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -5,12 +5,15 @@
 {attribute 'to_string'}
 TYPE MachineState_enum :
 (
-	MS_OFF		 	:= 0,
-	MS_RESTARTING	:= 1,
-	MS_RUNNING		:= 2,
-	MS_CYCLESTOP	:= 3,
-	MS_STOPPING		:= 4,
-	MS_ERROR		:= 5
+	MS_OFF		 		:= 0,
+	MS_RESTARTING		:= 1,
+	MS_ENABLED			:= 2,
+	MS_ONESHOT_RECOVER	:= 3,
+	MS_RECOVERING		:= 4,
+	MS_RUNNING			:= 5,
+	MS_CYCLESTOP		:= 6,
+	MS_STOPPING			:= 7,
+	MS_ERROR			:= 8
 );
 END_TYPE
 ]]></Declaration>

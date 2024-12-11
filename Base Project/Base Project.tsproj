@@ -32099,7 +32099,7 @@ External Setpoint Generation:
 		<Plc>
 			<Project File="Main.xti"/>
 			<Project GUID="{F5E41D65-797B-4A29-B4B7-E4ABA5C27F73}" Name="PLC1" PrjFilePath="PLC1\PLC1.plcproj" TmcFilePath="PLC1\PLC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{CE618783-B832-F3FD-D12D-05C943B3D69F}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F6549CEA-914D-FA77-5BF5-007A907603DD}">
 					<Name>PLC1 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">

@@ -8,7 +8,6 @@ TYPE XTSStateMachine_enum :
 	XTS_INITIALIZING	:= 10,
 	XTS_ENABLED			:= 20,
 	XTS_STOPPING		:= 60,
-	XTS_STOPPED			:= 70,
 	XTS_DISABLING		:= 80,
 	XTS_ERROR			:= 90,
 	XTS_DEBUG			:= 100	
