@@ -64,8 +64,7 @@ END_VAR
 VAR_INPUT
 	
 	Mover		: REFERENCE TO Mover;
-	MoverIndex	: UINT;
-	
+
 END_VAR
 
 VAR
@@ -100,7 +99,6 @@ IF __ISVALIDREF( Mover ) THEN
 	IF duplicateFound = FALSE THEN
 		
 		THIS^.MoverArray[emptyIDX]		:= ADR( Mover );	// new mover into empty array element
-		Mover.MoverIndex				:= MoverIndex;
 		
 		// Automatically register the mover with any Position Triggers
 		FOR i := 0 TO SIZEOF( PositionTriggerArray ) / SIZEOF( PositionTriggerArray[0] ) - 1 DO
@@ -446,6 +444,8 @@ FOR i := 1 TO Param.NUM_MOVERS DO
 		// handle cyclic calls
 		MoverArray[i]^.Cyclic( GROUP_REF );			// could make this ca group addition clener
 		MoverArray[i]^.AxisReference.ReadStatus();
+		MoverArray[i]^.MoverIndex:= i;
+		
 		// update global data
 		MoverData.Position[i] := LREAL_TO_REAL(MoverArray[i]^.TrackInfo.TrackPosition);
 		MoverData.Error[i] := MoverArray[i]^.Error;
@@ -953,7 +953,7 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AddMover">
-      <LineId Id="3" Count="26" />
+      <LineId Id="3" Count="25" />
       <LineId Id="45" Count="0" />
       <LineId Id="30" Count="14" />
       <LineId Id="2" Count="0" />
@@ -985,7 +985,9 @@ END_VAR
       <LineId Id="1" Count="8" />
     </LineIds>
     <LineIds Name="Mediator.Cyclic">
-      <LineId Id="3" Count="354" />
+      <LineId Id="3" Count="8" />
+      <LineId Id="358" Count="1" />
+      <LineId Id="12" Count="345" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.DetectMover1">

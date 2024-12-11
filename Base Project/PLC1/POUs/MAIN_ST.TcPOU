@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="MAIN_ST" Id="{d6058fae-6f22-0e77-2647-3c036015a24f}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN_ST
@@ -25,7 +25,7 @@ VAR
 	RecoveryComplete		: BOOL;
 	
 	mcDirectionPositive		: Tc2_MC2.MC_Direction;
-	Trig0MoverIndex			: UINT;
+	Trig0MoverIndex			: UDINT;
 	Trig0MoverPosLag		: LREAL;
 END_VAR
 ]]></Declaration>
@@ -218,7 +218,11 @@ nextStation := 4;]]></ST>
         IF XTS.PositionTrigger[0].MoverPassedPosition THEN
             XTS.PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
 			
+			// To Call ApplicationMover addon Method/Properties/Variables, you must call Mover[] array index directly
+			// Get MoverIndex for later use with ApplicationMover addons
 			Trig0MoverIndex		:= XTS.PositionTrigger[0].CurrentMover.MoverIndex;
+			
+			// Call ApplicationMover Method/Properties/Variables using previously latched MoverIndex
 			Trig0MoverPosLag	:= XTS.Mover[Trig0MoverIndex].PositionLag;
 			
             XTS.PositionTrigger[0].MuteCurrent();
@@ -241,5 +245,20 @@ nextStation := 4;]]></ST>
         END_IF]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="P_ST">
+      <LineId Id="1" Count="44" />
+    </LineIds>
+    <LineIds Name="P_ST.Initializing">
+      <LineId Id="1" Count="34" />
+    </LineIds>
+    <LineIds Name="P_ST.Recovering">
+      <LineId Id="1" Count="5" />
+    </LineIds>
+    <LineIds Name="P_ST.RecoverOneshot">
+      <LineId Id="1" Count="9" />
+    </LineIds>
+    <LineIds Name="P_ST.StationLogic">
+      <LineId Id="1" Count="68" />
+    </LineIds>
   </POU>
 </TcPlcObject>
