@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"12"</v>
+          <v n="UniqueIdGenerator">"18"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -88,7 +88,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"P_LD.MainCommands.Enable"</v>
+                      <v n="Value">"MAIN_LD.MainCommands.Enable"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -462,7 +462,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"P_LD.MainCommands.Start"</v>
+                      <v n="Value">"MAIN_LD.MainCommands.Start"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -702,7 +702,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"P_LD.MainCommands.Stop"</v>
+                      <v n="Value">"MAIN_LD.MainCommands.Stop"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -942,7 +942,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"P_LD.MainCommands.Disable"</v>
+                      <v n="Value">"MAIN_LD.MainCommands.Disable"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -1108,7 +1108,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"P_LD.highVelocity"</v>
+                      <v n="Value">"MAIN_LD.highVelocity"</v>
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
@@ -1427,7 +1427,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"P_LD.mediumVelocity"</v>
+                      <v n="Value">"MAIN_LD.mediumVelocity"</v>
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
@@ -1746,7 +1746,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"P_LD.lowVelocity"</v>
+                      <v n="Value">"MAIN_LD.lowVelocity"</v>
                     </o>
                     <o>
                       <v n="Id">823443203L</v>

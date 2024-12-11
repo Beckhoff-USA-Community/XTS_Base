@@ -1,13 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="P_ST" Id="{d6058fae-6f22-0e77-2647-3c036015a24f}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM P_ST
+  <POU Name="MAIN_ST" Id="{d6058fae-6f22-0e77-2647-3c036015a24f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN_ST
+VAR_IN_OUT
+	XTS				: FB_XTS;
+	MainCommands	: MachineCmd_typ;
+END_VAR
 VAR	
 
 	// Machine
-	MainCommands	: MachineCmd_typ;
 	State			: MachineState_enum;
-	XTS				: FB_XTS;
+
 	Init			: BOOL;
 	// ========= Example Application Variables =========
 
@@ -38,8 +41,7 @@ CASE State OF
 		END_IF
 
 	MS_RESTARTING:
-		IF MainCommands.Disable THEN
-			MainCommands.Enable		:= FALSE;
+		IF NOT MainCommands.Enable THEN
 			XTS.Commands.Enable		:= FALSE;
 			State					:= MS_STOPPING;
 		ELSIF XTS.State = XTS_ENABLED THEN
@@ -47,8 +49,7 @@ CASE State OF
 		END_IF
 	
 	MS_ENABLED:
-		IF MainCommands.Disable THEN
-			MainCommands.Enable		:= FALSE;
+		IF NOT MainCommands.Enable THEN
 			XTS.Commands.Enable		:= FALSE;
 			State					:= MS_STOPPING;
 		ELSIF MainCommands.Start THEN
@@ -68,8 +69,7 @@ CASE State OF
 			MainCommands.Start		:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
             State         	:= MS_STOPPING;
-        ELSIF MainCommands.Disable THEN
-			MainCommands.Enable		:= FALSE;
+        ELSIF NOT MainCommands.Enable THEN
             XTS.Commands.Enable		:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
             State          			:= MS_STOPPING;
@@ -83,9 +83,8 @@ CASE State OF
 		StationLogic();
 		
 		// monitor for disable
-		IF MainCommands.Disable THEN
+		IF NOT MainCommands.Enable THEN
 			XTS.Commands.Enable		:= FALSE;
-			MainCommands.Enable		:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
 			State					:= MS_STOPPING;
 		ELSIF MainCommands.Stop THEN
@@ -95,9 +94,8 @@ CASE State OF
 		END_IF
 
 	MS_STOPPING:
-		IF MainCommands.Disable THEN
-			MainCommands.Enable		:= FALSE;
-			XTS.Commands.Enable := FALSE;
+		IF NOT MainCommands.Enable THEN
+			XTS.Commands.Enable 	:= FALSE;
 		END_IF
 		IF XTS.State = XTS_DISABLED THEN
 			State					:= MS_OFF;

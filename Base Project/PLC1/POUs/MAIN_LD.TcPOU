@@ -1,12 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="P_LD" Id="{9747e6e6-772f-01fa-1df6-595ba2259f2f}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM P_LD
+  <POU Name="MAIN_LD" Id="{9747e6e6-772f-01fa-1df6-595ba2259f2f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN_LD
+VAR_IN_OUT
+	XTS				: FB_XTS;
+	MainCommands	: MachineCmd_typ;
+END_VAR
 VAR	
 
 	// ========= System Control / FSM Variables =========
 	
-	MainCommands 		: XTSCommands_typ; 		// command struct for cycling thru the state machine
 	MainState    		: XTSStateMachine_enum;   	// enumeration for the Main state machine
 	System				: Mediator;					// System-level control object
 
@@ -1605,7 +1608,7 @@ END_VAR
                   <v n="OutCommented">false</v>
                   <l2 n="NetworkItems" cet="BoxTreeBox">
                     <o>
-                      <v n="BoxType">"P_LD.Registering"</v>
+                      <v n="BoxType">"MAIN_LD.Registering"</v>
                       <o n="Instance" t="Operand">
                         <n n="Operand" />
                         <v n="Type">""</v>
@@ -1693,7 +1696,7 @@ END_VAR
                   <v n="OutCommented">false</v>
                   <l2 n="NetworkItems" cet="BoxTreeBox">
                     <o>
-                      <v n="BoxType">"P_LD.Initializing"</v>
+                      <v n="BoxType">"MAIN_LD.Initializing"</v>
                       <o n="Instance" t="Operand">
                         <n n="Operand" />
                         <v n="Type">""</v>
@@ -9488,11 +9491,5 @@ END_VAR
         </NWL>
       </Implementation>
     </Action>
-    <LineIds Name="P_LD.Initializing">
-      <LineId Id="1" Count="32" />
-    </LineIds>
-    <LineIds Name="P_LD.Registering">
-      <LineId Id="1" Count="32" />
-    </LineIds>
   </POU>
 </TcPlcObject>

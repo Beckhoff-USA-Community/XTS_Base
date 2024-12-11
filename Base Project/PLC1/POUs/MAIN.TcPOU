@@ -3,15 +3,30 @@
   <POU Name="MAIN" Id="{a35327ac-fd04-0d62-2f0c-284f65227c3f}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
+	MainCommands	: MachineCmd_typ;
+	XTS				: FB_XTS;
+	
+	CodeType		: INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[P_ST();
-//P_LD();
+      <ST><![CDATA[// XTS can run with Structured Text or ladder languages
+// The default is Structed Text
+// The value 1 below runs the structed text code
+CodeType := 1;
+
+// if you would like to run the ladder example change the CodeType value to -1
+
+// call the configured code
+CASE CodeType OF
+	1:
+		// call the structured text code for the application logic
+		MAIN_ST(XTS := XTS, MainCommands := MainCommands);
+	-1:
+		// call the ladder code for the application logic
+		// MAIN_LD(XTS := XTS, Main Commands := MainCommands);
+END_CASE
 ]]></ST>
     </Implementation>
-    <LineIds Name="MAIN">
-      <LineId Id="1" Count="2" />
-    </LineIds>
   </POU>
 </TcPlcObject>

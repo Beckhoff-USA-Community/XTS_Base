@@ -27,16 +27,16 @@
     <Compile Include="POUs\ApplicationMover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_XTS.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\P_ST.TcPOU">
+    <Compile Include="POUs\MAIN_ST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\P_LD.TcPOU">
+    <Compile Include="POUs\MAIN_LD.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\XTS %28Do Not Edit%29\FB_XTS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">
@@ -58,6 +58,7 @@
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
+    <Folder Include="POUs\XTS %28Do Not Edit%29" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
