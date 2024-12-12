@@ -179,7 +179,12 @@ nextStation := 4;]]></ST>
         IF XTS.Station[0].MoverInPosition THEN
             StationTimer[0](IN := TRUE, PT := T#1000MS);
             IF StationTimer[0].Q THEN
-                XTS.Station[0].CurrentMover.MoveToStation(XTS.Station[1]);
+                XTS.Mover[XTS.Station[0].CurrentMover.MoverIndex].MoveToStationByRampTime(
+					DestinationStation:= XTS.Station[1], 
+					Velocity:= 500, 
+					RampTime:= 1.5, 
+					Stiffness:= 0.5, 
+					Gap:= 85);
             END_IF
         ELSE
             StationTimer[0](IN := FALSE);
@@ -204,10 +209,15 @@ nextStation := 4;]]></ST>
             StationTimer[2](IN := TRUE, PT := T#750MS);
             IF StationTimer[2].Q THEN
 				StationTimer[2](IN := FALSE);
+				
+				XTS.Station[2].CurrentMover.MotionParameters:= XTS.InitialParameterSet;
+				XTS.Station[3].CurrentMover.MotionParameters:= XTS.InitialParameterSet;
+				XTS.Station[4].CurrentMover.MotionParameters:= XTS.InitialParameterSet;
 
                 XTS.Station[2].CurrentMover.MoveVelocity(500);
                 XTS.Station[3].CurrentMover.MoveVelocity(500);
                 XTS.Station[4].CurrentMover.MoveVelocity(500);
+				
             END_IF
         END_IF
 		

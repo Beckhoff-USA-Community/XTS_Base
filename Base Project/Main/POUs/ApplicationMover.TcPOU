@@ -10,6 +10,7 @@ END_VAR
 VAR
 	cnt: UDINT;
 	_PositionLag: LREAL;
+	fbMC_CalcDynamicsByRampTime: MC_CalcDynamicsByRampTime;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -33,6 +34,43 @@ SUPER^.Cyclic(GroupReference);
 cnt:= cnt + 1;
 _PositionLag:= THIS^.AxisReference.NcToPlc.PosDiff;
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveToStationByRampTime" Id="{30fb390b-b4a8-0444-29f0-600dae10b753}">
+      <Declaration><![CDATA[METHOD MoveToStationByRampTime
+VAR_INPUT
+	DestinationStation	: REFERENCE TO Station;	
+    Velocity     : LREAL;
+    RampTime     : LREAL;
+    Stiffness    : LREAL;
+	Gap			 : LREAL;
+END_VAR
+VAR
+	MotionParameters: MotionParameters_typ;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// This method internally calls MC_CalcDynamicsByRampTime from Tc2_MC2.lib
+// https://infosys.beckhoff.com/content/1033/tcplclib_tc2_mc2/13611300875.html?id=1298283191705576852
+
+fbMC_CalcDynamicsByRampTime(
+	Velocity:= Velocity, 
+	RampTime:= RampTime, 
+	Stiffness:= Stiffness, 
+	Error=> , 
+	ErrorID=> , 
+	Acceleration=> , 
+	Deceleration=> , 
+	Jerk=> );
+
+MotionParameters.Velocity			:= Velocity;
+MotionParameters.Acceleration		:= fbMC_CalcDynamicsByRampTime.Acceleration;
+MotionParameters.Deceleration		:= fbMC_CalcDynamicsByRampTime.Deceleration;
+MotionParameters.Jerk				:= fbMC_CalcDynamicsByRampTime.Jerk;
+MotionParameters.Gap				:= Gap;
+MotionParameters.Direction			:= Tc2_Mc2.MC_Direction.MC_Positive_Direction;
+
+SUPER^.MotionParameters:= MotionParameters;
+SUPER^.MoveToStation(DestinationStation);]]></ST>
       </Implementation>
     </Method>
     <Property Name="PositionLag" Id="{2f9b4da0-9f46-0501-2862-3b56ba7816bb}">
