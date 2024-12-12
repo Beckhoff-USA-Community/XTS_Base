@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="ErrorMover" Id="{bd3df610-8473-440e-a9dc-a09f811846e0}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK ErrorMover EXTENDS Mover IMPLEMENTS iMover]]></Declaration>
@@ -77,9 +77,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallCyclic ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallCyclic ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Cyclic method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallCyclic	:= newCallTime;
+	LocalVars.lastCallCyclic	:= newCallTime;
 END_IF
 
 ]]></ST>
@@ -97,9 +97,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallDisable ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallDisable ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Disable method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallDisable	:= newCallTime;
+	LocalVars.lastCallDisable	:= newCallTime;
 END_IF
 
 ]]></ST>
@@ -117,9 +117,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallEnable ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallEnable ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The Enable method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallEnable	:= newCallTime;
+	LocalVars.lastCallEnable	:= newCallTime;
 END_IF
 
 ]]></ST>
@@ -137,11 +137,11 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallGroupStop ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallGroupStop ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The GroupStop method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
 END_IF
 
-lastCallGroupStop	:= newCallTime;]]></ST>
+LocalVars.lastCallGroupStop	:= newCallTime;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Halt" Id="{8cf1fd35-c92c-43a7-89e5-e709149394be}" FolderPath="Methods\">
@@ -156,11 +156,11 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallHalt ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallHalt ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, ' The Halt method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
 END_IF
 
-lastCallHalt	:= newCallTime;]]></ST>
+LocalVars.lastCallHalt	:= newCallTime;]]></ST>
       </Implementation>
     </Method>
     <Property Name="IsSyncedToMover" Id="{6b623c29-8901-4623-afb3-f30839740c89}" FolderPath="Properties\">
@@ -216,9 +216,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallMovePos ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallMovePos ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The MoveToPosition method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallMovePos		:= newCallTime;
+	LocalVars.lastCallMovePos		:= newCallTime;
 END_IF
 
 ]]></ST>
@@ -237,9 +237,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallMoveSta ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallMoveSta ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The MoveToStation method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallMoveSta		:= newCallTime;
+	LocalVars.lastCallMoveSta		:= newCallTime;
 END_IF
 
 ]]></ST>
@@ -259,9 +259,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallMoveVel ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallMoveVel ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The MoveVelocity method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallMoveVel		:= newCallTime;
+	LocalVars.lastCallMoveVel		:= newCallTime;
 END_IF
 
 ]]></ST>
@@ -303,9 +303,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallReissue ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallReissue ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The ReissueCommand method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallReissue		:= newCallTime;
+	LocalVars.lastCallReissue		:= newCallTime;
 END_IF
 
 ]]></ST>
@@ -323,11 +323,11 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallHalt ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallHalt ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, ' The Reset method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
 END_IF
 
-lastCallHalt	:= newCallTime;]]></ST>
+LocalVars.lastCallHalt	:= newCallTime;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetAcceleration" Id="{90f501cd-2aae-43a2-a87f-fdbe1a4cb2d2}" FolderPath="Methods\">
@@ -344,9 +344,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallSetAcc ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallSetAcc ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SetAcceleration method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallSetAcc		:= newCallTime;
+	LocalVars.lastCallSetAcc		:= newCallTime;
 END_IF
 	]]></ST>
       </Implementation>
@@ -365,9 +365,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallSetDec ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallSetDec ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SetDeceleration method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallSetDec		:= newCallTime;
+	LocalVars.lastCallSetDec		:= newCallTime;
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -385,9 +385,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallSetDir ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallSetDir ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SetDirection method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallSetDir		:= newCallTime;
+	LocalVars.lastCallSetDir		:= newCallTime;
 END_IF
 ]]></ST>
       </Implementation>
@@ -406,9 +406,9 @@ END_VAR]]></Declaration>
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallSetJerk ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallSetJerk ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SetJerk method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallSetJerk		:= newCallTime;
+	LocalVars.lastCallSetJerk		:= newCallTime;
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -426,9 +426,9 @@ END_VAR]]></Declaration>
 // If this method was called in the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallSetVel ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallSetVel ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SetVelocity method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallSetVel		:= newCallTime;
+	LocalVars.lastCallSetVel		:= newCallTime;
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -453,9 +453,9 @@ END_VAR
 // If this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF (newCallTime - lastCallSync) > 1 THEN
+IF (newCallTime - LocalVars.lastCallSync) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR,'The SyncToAxis method has been called on an invalid Mover reference returned by %s',THIS^.SourceInstancePath);
-	lastCallSync		:= newCallTime;
+	LocalVars.lastCallSync		:= newCallTime;
 END_IF
 
 
@@ -479,9 +479,9 @@ END_VAR]]></Declaration>
 // IF this method was called within the last second, do not write to ADS
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 
-IF ( newCallTime - lastCallSync ) > 1 THEN
+IF ( newCallTime - LocalVars.lastCallSync ) > 1 THEN
 	ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The SyncToMover method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);
-	lastCallSync	:= newCallTime;
+	LocalVars.lastCallSync	:= newCallTime;
 END_IF
 	]]></ST>
       </Implementation>

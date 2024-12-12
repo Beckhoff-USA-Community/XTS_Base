@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <DUT Name="InternalMoverVars_typ" Id="{a861371d-e4e6-0e14-0d10-1372a7987892}">
+    <Declaration><![CDATA[TYPE InternalMoverVars_typ :
+STRUCT
+
+	_MoverIndex	: UDINT;		// array index of Mover Array
+	Enable		: BOOL;		// moves the axis from Disabled to Standstill, adds Axis to CA group, and triggers M1 Detection if configured
+	Disable		: BOOL;		// moves the axis from Standstill to Disabled, removes Axis from CA Group
+	
+	_CurrentMoveType			: MoverCommandType_enum;	// Most recent move command type
+	Reissue					: BOOL;						// reissue last command flag alows summing of all reissue commands per-scan
+	
+	CurrentDestPosition		: LREAL;	// Track position of the current motion destination;
+	CurrentDestObjective	: STRING;	// Instance path of the current destination objective
+	CurrentDestStation		: REFERENCE TO Station;		// Reference to a destination station, if that is the current movetype
+
+	State					: MoverState_enum;		// Internal state variable
+	TrackState				: TrackState;			// Internal state variable for track
+	TrackStateDelay 		: TON;					// Internal timer for activate track delay
+	
+	_MasterMover				: REFERENCE TO Mover;	// Internal reference to a target master mover
+	MasterAxis				: REFERENCE TO AXIS_REF;	// Internal reference to a target master external axis
+	Gap						: LREAL;	// Gap distance to master mover during sync
+	
+	// Configurable Payload description	
+	_Payload			: USINT;	// E.g. 0: No Product, 1: Product Loaded, 2: Product Reject. Can be modified for application
+	
+	// Track management
+	Track				: POINTER TO Track;	// Internal current track
+	TrackIsReady		: BOOL := TRUE;			// track is ready for commands (off when .ActivateTrack is working)
+	ActivatingTrack 	: POINTER TO Track;	// while NOT .internalTrackIsReady the in-transition-to track is held here
+	ActivateTrackFlag	: BOOL;				// activate track requested
+	
+	// Internal function blocks	
+	fbPower					: MC_Power;
+	fbReset					: MC_Reset;
+	
+	fbHaltCA				: MC_HaltCA;
+
+	fbMoveAbsCA				: ARRAY[0..1] OF MC_MoveAbsoluteCA;
+	fbAddToGroup			: MC_AddAxisToGroup;
+	fbRemoveFromGroup		: MC_RemoveAxisFromGroup;
+	
+	fbGearInPosAxisCA		: ARRAY[0..1] OF MC_GearInPosCA;
+	fbGearInPosMoverCA		: ARRAY[0..1] OF MC_GearInPosCA;
+	
+	fbMoveRelCA				: ARRAY[0..1] OF MC_MoveRelativeCA;
+	
+	fbActivateTrack			: MC_ActivateTrack;
+	fbReadTrackPositions	: MC_ReadTrackPositions;
+	
+	fbDelayM1Timer			: TON;
+	
+	// vars to store system time of most recent method calls, for filtering event logger
+	
+	lastCallCyclic		: LREAL;
+	lastCallDisable		: LREAL;
+	lastCallEnable		: LREAL;
+	lastCallGroupStop	: LREAL;
+	lastCallHalt		: LREAL;
+	lastCallMovePos		: LREAL;
+	lastCallMoveSta		: LREAL;
+	lastCallMoveVel		: LREAL;
+	lastCallReissue		: LREAL;
+	lastCallSetAcc		: LREAL;
+	lastCallSetDec		: LREAL;
+	lastCallSetDir		: LREAL;
+	lastCallSetJerk		: LREAL;
+	lastCallSetVel		: LREAL;
+	lastCallSync		: LREAL;
+	lastCallValidateTrack : LREAL;
+	lastCallSetGap		: LREAL;
+	lastCallActivateTrack : LREAL;
+	
+	TestVar: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

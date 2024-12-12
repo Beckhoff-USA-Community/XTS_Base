@@ -75,6 +75,12 @@
     <Compile Include="XTS %28Do Not Edit%29\Administrative\Objective.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\DUTs\InternalMoverVars_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\DUTs\XTSCommands_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS %28Do Not Edit%29\DUTs\XTSStateMachine_enum.TcDUT">
       <SubType>Code</SubType>
     </Compile>
