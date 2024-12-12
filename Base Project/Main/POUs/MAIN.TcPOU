@@ -33,13 +33,13 @@ CASE State OF
 
 	MS_OFF:
 		IF MainCommands.Enable THEN
-			XTS.Commands.Enable		:= TRUE;
+			XTS.Enable				:= TRUE;
 			State					:= MS_RESTARTING;
 		END_IF
 
 	MS_RESTARTING:
 		IF NOT MainCommands.Enable THEN
-			XTS.Commands.Enable		:= FALSE;
+			XTS.Enable				:= FALSE;
 			State					:= MS_STOPPING;
 		ELSIF XTS.State = XTS_ENABLED THEN
 			State		:= MS_ENABLED;
@@ -47,7 +47,7 @@ CASE State OF
 	
 	MS_ENABLED:
 		IF NOT MainCommands.Enable THEN
-			XTS.Commands.Enable		:= FALSE;
+			XTS.Enable				:= FALSE;
 			State					:= MS_STOPPING;
 		ELSIF MainCommands.Start THEN
 			State					:= MS_ONESHOT_RECOVER;
@@ -67,12 +67,12 @@ CASE State OF
 			XTS.System.CompleteMoverList.HaltAll();
             State         	:= MS_STOPPING;
         ELSIF NOT MainCommands.Enable THEN
-            XTS.Commands.Enable		:= FALSE;
+            XTS.Enable		:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
             State          			:= MS_STOPPING;
 		ELSIF RecoveryComplete THEN
 			// recovery sequence is complete, move on to run state
-			State			:= MS_RUNNING;
+			State					:= MS_RUNNING;
         END_IF
 
 	MS_RUNNING:
@@ -81,7 +81,7 @@ CASE State OF
 		
 		// monitor for disable
 		IF NOT MainCommands.Enable THEN
-			XTS.Commands.Enable		:= FALSE;
+			XTS.Enable				:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
 			State					:= MS_STOPPING;
 		ELSIF MainCommands.Stop THEN
@@ -92,7 +92,7 @@ CASE State OF
 
 	MS_STOPPING:
 		IF NOT MainCommands.Enable THEN
-			XTS.Commands.Enable 	:= FALSE;
+			XTS.Enable 				:= FALSE;
 		END_IF
 		IF XTS.State = XTS_DISABLED THEN
 			State					:= MS_OFF;
@@ -252,5 +252,25 @@ nextStation := 4;]]></ST>
         END_IF]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="MAIN">
+      <LineId Id="3" Count="76" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Initializing">
+      <LineId Id="2" Count="33" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Recovering">
+      <LineId Id="2" Count="4" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.RecoverOneshot">
+      <LineId Id="2" Count="8" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.StationLogic">
+      <LineId Id="2" Count="77" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

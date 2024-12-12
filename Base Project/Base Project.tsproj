@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.12">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.10">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C929B002-BF94-48A2-937B-5D20DED8EF3B}">OperationMode</Name>
@@ -2819,9 +2819,9 @@ and will return to Group State Standby when the situation permits.
 	</ImageDatas>
 	<Project ProjectGUID="{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
-			<Settings MaxCpus="20" NonWinCpus="1" RouterMemory="1073741824" MaxStackSize="256" PCoreAffinity="4095" ECoreAffinity="1044480">
-				<Cpu CpuId="18" BaseTime="2500"/>
-				<Cpu CpuId="19" BaseTime="2500"/>
+			<Settings MaxCpus="10" NonWinCpus="2" RouterMemory="1073741824" MaxStackSize="256">
+				<Cpu CpuId="8" BaseTime="2500"/>
+				<Cpu CpuId="9" BaseTime="2500"/>
 				<IoIdleTask Priority="10"/>
 			</Settings>
 			<Licenses>
@@ -2837,7 +2837,7 @@ and will return to Group State Standby when the situation permits.
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
-				<Task Id="4" Priority="1" CycleTime="2500" AmsPort="351" Affinity="#x00080000" ExceedWarning="1" AdtTasks="true">
+				<Task Id="4" Priority="1" CycleTime="2500" AmsPort="351" Affinity="#x00000200" ExceedWarning="1" AdtTasks="true">
 					<Name>XTS Task 1</Name>
 				</Task>
 			</Tasks>
