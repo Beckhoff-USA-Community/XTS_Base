@@ -5,7 +5,7 @@
 VAR_GLOBAL CONSTANT
 	TRACK_LENGTH 			: LREAL := 4000; // This should be set to the exact length [mm] of the track system
 		
-	NUM_MOVERS   			: USINT := 6;   // This should be set to the exact number of movers on the system
+	MAX_MOVERS   			: USINT := 100;   // This is the maximum number of movers that can be added to the system
 	
 	// The following should be set to a value **equal to or greater than** the number of objectives needed
 	NUM_MOVERLISTS			: USINT := 10;	// Mover Lists

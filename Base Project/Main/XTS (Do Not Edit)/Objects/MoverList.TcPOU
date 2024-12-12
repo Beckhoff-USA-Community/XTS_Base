@@ -171,8 +171,8 @@ END_VAR
 VAR
 	sortState			: USINT;
 
-	SortedBuffer		: ARRAY[0..Param.NUM_MOVERS - 1] OF POINTER TO Mover;	// Initially empty array of movers, sorted in order
-	HoldingBuffer		: ARRAY[0..Param.NUM_MOVERS - 1] OF POINTER TO Mover;	// Holding buffer for sorting operations
+	SortedBuffer		: ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover;	// Initially empty array of movers, sorted in order
+	HoldingBuffer		: ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover;	// Holding buffer for sorting operations
 	
 	place				: UDINT;	// placement index
 	level				: UDINT;	// level tracker
@@ -478,7 +478,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
-FOR i := 1 TO Param.NUM_MOVERS DO
+FOR i := 1 TO Param.MAX_MOVERS DO
 	
 	IF NOT THIS^.Contains( Mediator.MoverArray[i]^ ) THEN
 		LogicalComplement.RegisterMover( Mediator.MoverArray[i]^ );
@@ -502,7 +502,7 @@ END_VAR
         <ST><![CDATA[
 
 
-FOR i := 1 TO Param.NUM_MOVERS DO
+FOR i := 1 TO Param.MAX_MOVERS DO
 	
 	IF THIS^.Contains( Mediator.MoverArray[i]^ ) AND NOT MoverList.Contains( Mediator.MoverArray[i]^ ) THEN
 		LogicalDifference.RegisterMover( Mediator.MoverArray[i]^ );
@@ -525,7 +525,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
-FOR i := 1 TO Param.NUM_MOVERS DO
+FOR i := 1 TO Param.MAX_MOVERS DO
 	
 	IF MoverList.Contains( Mediator.MoverArray[i]^ ) AND THIS^.Contains( Mediator.MoverArray[i]^ ) THEN
 		LogicalIntersect.RegisterMover( Mediator.MoverArray[i]^ );	

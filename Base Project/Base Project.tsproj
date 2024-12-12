@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.10">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.12">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C929B002-BF94-48A2-937B-5D20DED8EF3B}">OperationMode</Name>
@@ -33687,8 +33687,6 @@ and will return to Group State Standby when the situation permits.
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{08502041-0010-0500-4020-500810001205}" Id="#x02030020" Watchdog="08000000040000000400000004000000"/>
-		<MappingInfo Identifier="{08502041-0010-0500-4020-500850000403}" Id="#x02030010" Watchdog="08000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 3">
 			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Part 2^Module 15">
 				<Link VarA="Term 29 (AT2002-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>

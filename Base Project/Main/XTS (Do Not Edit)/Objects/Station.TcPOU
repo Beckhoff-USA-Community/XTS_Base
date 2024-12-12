@@ -103,7 +103,7 @@ VAR_INST
 	
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[FOR i := 1 TO Param.NUM_MOVERS DO
+        <ST><![CDATA[FOR i := 1 TO Param.MAX_MOVERS DO
 
     // This mover is no longer destined for any station
     IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.CurrentMoveType <> MOVETYPE_STATION THEN

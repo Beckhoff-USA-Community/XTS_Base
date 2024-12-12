@@ -10,8 +10,8 @@ VAR
     internalCurrentMover     	 : POINTER TO Mover;
 	internalLastMoverPassedPosition		: BOOL;
 	internalTrackId				: DINT := 1;
-    moverLastPos              	: ARRAY[1..Param.NUM_MOVERS] OF LREAL; // Positions of tracked movers from last cycle
-	moverInitialized			: ARRAY [1..Param.NUM_MOVERS] OF BOOL; // first scan-like flag to prevent erronious triggers on first scan
+    moverLastPos              	: ARRAY[1..Param.MAX_MOVERS] OF LREAL; // Positions of tracked movers from last cycle
+	moverInitialized			: ARRAY [1..Param.MAX_MOVERS] OF BOOL; // first scan-like flag to prevent erronious triggers on first scan
 	
 	lastCallMuteCurrent: LREAL;
 	internalInterarrivalTimer			: TON;
@@ -71,8 +71,8 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[currentIsRegistered		:= FALSE;
 
-FOR i := 1 TO Param.NUM_MOVERS DO
-    IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.IsTrackReady AND internalTrackedMovers[i]^.CurrentTrack <> 0 THEN
+FOR i := 1 TO Param.MAX_MOVERS DO
+    IF internalTrackedMovers[i] <> 0 AND_THEN (internalTrackedMovers[i]^.IsTrackReady AND internalTrackedMovers[i]^.CurrentTrack <> 0) THEN
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrackId) THEN
 			
