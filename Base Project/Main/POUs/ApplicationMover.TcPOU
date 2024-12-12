@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1">
-  <POU Name="ApplicationMover" Id="{ffb0b918-a788-06af-0ba6-fb837daa928d}" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <POU Name="ApplicationMover" Id="{516536b5-5233-0a95-01e8-9585147c75fa}" SpecialFunc="None">
     <Declaration><![CDATA[// This function Block extends the Referenced Library Mover (FB), so the user can expand the capabilities of the XTS Mover Functions
 FUNCTION_BLOCK ApplicationMover EXTENDS Mover
 VAR_INPUT
@@ -15,10 +15,10 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Cyclic" Id="{2f2ea0e0-71e7-0aaa-09f0-ac24bc564bf6}">
-      <Declaration><![CDATA[METHOD Cyclic : XTS_BaseLib.iMover
+    <Method Name="Cyclic" Id="{a81886a0-983c-0294-0adc-9591fa48a449}">
+      <Declaration><![CDATA[METHOD Cyclic : iMover
 VAR_IN_OUT
-	GroupReference	: XTS_BaseLib.AXES_GROUP_REF;
+	GroupReference	: AXES_GROUP_REF;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -35,10 +35,10 @@ _PositionLag:= THIS^.AxisReference.NcToPlc.PosDiff;
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="PositionLag" Id="{e8668cdc-886f-009c-21b4-613db3d210f4}">
+    <Property Name="PositionLag" Id="{2f9b4da0-9f46-0501-2862-3b56ba7816bb}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY PositionLag : LREAL]]></Declaration>
-      <Get Name="Get" Id="{100ef7df-9e0b-0f3c-03dd-74232cc0eb01}">
+      <Get Name="Get" Id="{8ea91099-3f22-02ba-0930-a3b600f2f5d6}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -48,14 +48,5 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <LineIds Name="ApplicationMover">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="ApplicationMover.Cyclic">
-      <LineId Id="1" Count="10" />
-    </LineIds>
-    <LineIds Name="ApplicationMover.PositionLag.Get">
-      <LineId Id="1" Count="1" />
-    </LineIds>
   </POU>
 </TcPlcObject>

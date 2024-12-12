@@ -328,41 +328,5 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <LineIds Name="Station">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.Blocked.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.CurrentMover.Get">
-      <LineId Id="1" Count="27" />
-    </LineIds>
-    <LineIds Name="Station.Cyclic">
-      <LineId Id="1" Count="101" />
-    </LineIds>
-    <LineIds Name="Station.GroupSize.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.GroupSize.Set">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.MoverInPosition.Get">
-      <LineId Id="1" Count="20" />
-    </LineIds>
-    <LineIds Name="Station.Position.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.Position.Set">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.ResetStatistics">
-      <LineId Id="1" Count="21" />
-    </LineIds>
-    <LineIds Name="Station.TrackId.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Station.TrackId.Set">
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

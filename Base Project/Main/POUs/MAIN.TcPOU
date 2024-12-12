@@ -1,13 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1">
-  <POU Name="MAIN_ST" Id="{d6058fae-6f22-0e77-2647-3c036015a24f}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM MAIN_ST
-VAR_IN_OUT
-	XTS				: FB_XTS;
-	MainCommands	: MachineCmd_typ;
-END_VAR
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <POU Name="MAIN" Id="{e5121501-3133-07a7-12bf-96dcd5d9e348}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
 VAR	
-
+	XTS				: FB_XTS<6>;
+	MainCommands	: MachineCmd_typ;
 	// Machine
 	State			: MachineState_enum;
 
@@ -20,7 +17,7 @@ VAR
     mediumVelocity 			: LREAL := 800;  	// mm/s
     highVelocity   			: LREAL := 1200; 	// mm/s
 	
-	StationTimer 			: ARRAY[0..XTS_BaseLib.Param.NUM_STATIONS] OF TON; // timer blocks, for station dwells
+	StationTimer 			: ARRAY[0..Param.NUM_STATIONS] OF TON; // timer blocks, for station dwells
 	InitialParameterSet		: MotionParameters_typ;
 	RecoveryComplete		: BOOL;
 	
@@ -109,7 +106,7 @@ END_CASE
 XTS.CyclicLogic();
 ]]></ST>
     </Implementation>
-    <Action Name="Initializing" Id="{1bfed93c-6153-0409-1a23-c60a46e85016}">
+    <Action Name="Initializing" Id="{0bad743d-cb82-0efe-1988-42b77153463d}">
       <Implementation>
         <ST><![CDATA[// XTS Object Init
 XTS.Station[0].Position 		:= 5;
@@ -148,7 +145,7 @@ HighVelocity	:= 1200;
 Init	:= TRUE;]]></ST>
       </Implementation>
     </Action>
-    <Action Name="Recovering" Id="{41908e14-1e32-0343-178b-b7e168161889}">
+    <Action Name="Recovering" Id="{4b8b03ac-750a-0276-1b31-6724bd5608d0}">
       <Implementation>
         <ST><![CDATA[// this state is called until all movers have completed their desired recovery tasks
 
@@ -158,7 +155,7 @@ IF (XTS.System.CompleteMoverList.IsAllMoversHalted AND XTS.Station[0].MoverInPos
 END_IF]]></ST>
       </Implementation>
     </Action>
-    <Action Name="RecoverOneshot" Id="{0c13b8a3-fd5a-0041-3f13-12c786601dbf}">
+    <Action Name="RecoverOneshot" Id="{b08aba9f-35eb-0e63-04bc-615de48f82c9}">
       <Implementation>
         <ST><![CDATA[// this action is called one time after the start command is issued
 // it is intended to provide a single command to each mover to facilitate recovery
@@ -172,7 +169,7 @@ XTS.System.ResetStatistics();
 nextStation := 4;]]></ST>
       </Implementation>
     </Action>
-    <Action Name="StationLogic" Id="{9737a796-fa78-0039-0eea-091d761156c0}">
+    <Action Name="StationLogic" Id="{1adacb9d-add1-0f3c-1a94-78c322ce5f05}">
       <Implementation>
         <ST><![CDATA[		(*Mover routing logic should be written here to define the system's operating behavior.
 		Station implementations, Position Trigger logic, etc. In general, you can remove the example code
@@ -245,20 +242,5 @@ nextStation := 4;]]></ST>
         END_IF]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="P_ST">
-      <LineId Id="1" Count="44" />
-    </LineIds>
-    <LineIds Name="P_ST.Initializing">
-      <LineId Id="1" Count="34" />
-    </LineIds>
-    <LineIds Name="P_ST.Recovering">
-      <LineId Id="1" Count="5" />
-    </LineIds>
-    <LineIds Name="P_ST.RecoverOneshot">
-      <LineId Id="1" Count="9" />
-    </LineIds>
-    <LineIds Name="P_ST.StationLogic">
-      <LineId Id="1" Count="68" />
-    </LineIds>
   </POU>
 </TcPlcObject>

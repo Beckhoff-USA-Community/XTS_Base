@@ -301,41 +301,5 @@ END_VAR]]></Declaration>
         </Implementation>
       </Set>
     </Property>
-    <LineIds Name="PositionTrigger">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.CurrentMover.Get">
-      <LineId Id="1" Count="10" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.Cyclic">
-      <LineId Id="1" Count="117" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.MoverPassedPosition.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.MuteCurrent">
-      <LineId Id="1" Count="10" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.Position.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.Position.Set">
-      <LineId Id="1" Count="1" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.ResetStatistics">
-      <LineId Id="1" Count="13" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.TrackId.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.TrackId.Set">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.TriggerDirection.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="PositionTrigger.TriggerDirection.Set">
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

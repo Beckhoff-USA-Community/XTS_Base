@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1">
-  <POU Name="MAIN_LD" Id="{9747e6e6-772f-01fa-1df6-595ba2259f2f}" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <POU Name="MAIN_LD" Id="{45308ac2-de42-005a-317f-c689cffde7e8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN_LD
 VAR_IN_OUT
 	XTS				: FB_XTS;
@@ -5924,7 +5924,7 @@ END_VAR
         </XmlArchive>
       </NWL>
     </Implementation>
-    <Action Name="Initializing" Id="{89e9bb75-2153-01f2-07eb-8ceca28c2683}">
+    <Action Name="Initializing" Id="{d329280d-73f8-0090-2396-12181e53a72d}">
       <Implementation>
         <ST><![CDATA[
 
@@ -5961,7 +5961,7 @@ END_VAR
 	System.CompleteMoverList.ApplyAllParameterSet( InitialParameterSet );]]></ST>
       </Implementation>
     </Action>
-    <Action Name="Registering" Id="{ae860fb9-6200-0f76-37d0-ed29c2ee5e14}">
+    <Action Name="Registering" Id="{eb5bd43b-b5b5-0a48-2629-d08c38b7b6b5}">
       <Implementation>
         <ST><![CDATA[	
 
@@ -5998,7 +5998,7 @@ END_VAR
 		END_FOR]]></ST>
       </Implementation>
     </Action>
-    <Action Name="StationLogic" Id="{bc3016ba-ce20-036f-0cd0-fd98d95a069c}">
+    <Action Name="StationLogic" Id="{db45d750-7380-01ab-085e-18de236042de}">
       <Implementation>
         <NWL>
           <XmlArchive>

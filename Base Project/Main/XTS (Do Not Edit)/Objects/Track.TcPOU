@@ -202,41 +202,5 @@ FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[1]) - 1 DO
 END_FOR;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="Track">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.CurrentMoverCount.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.CurrentMoverList.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.Cyclic">
-      <LineId Id="1" Count="34" />
-    </LineIds>
-    <LineIds Name="Track.Id.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.Id.Set">
-      <LineId Id="1" Count="3" />
-    </LineIds>
-    <LineIds Name="Track.isInitialized.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.OTCID.Get">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="Track.OTCID.Set">
-      <LineId Id="1" Count="2" />
-    </LineIds>
-    <LineIds Name="Track.RegisterMover">
-      <LineId Id="1" Count="11" />
-    </LineIds>
-    <LineIds Name="Track.UnregisterAll">
-      <LineId Id="1" Count="5" />
-    </LineIds>
-    <LineIds Name="Track.UnregisterMover">
-      <LineId Id="1" Count="11" />
-    </LineIds>
   </POU>
 </TcPlcObject>
