@@ -5,13 +5,13 @@
 FUNCTION_BLOCK Mediator
 VAR_INPUT
 
-	MoverArray				: ARRAY [1..Param.NUM_MOVERS] OF POINTER TO Mover;
+	MoverArray				: ARRAY [1..GVL.NUM_MOVERS] OF POINTER TO Mover;
 	
-	MoverListArray			: ARRAY [0..Param.NUM_MOVERLISTS-1] OF POINTER TO MoverList;
-	PositionTriggerArray	: ARRAY [0..Param.NUM_POSITIONTRIGGERS-1] OF POINTER TO PositionTrigger;
-	StationArray			: ARRAY [0..Param.NUM_STATIONS-1] OF POINTER TO Station;
-	ZoneArray				: ARRAY [0..Param.NUM_ZONES-1] OF POINTER TO Zone;
-	TrackArray				: ARRAY [0..Param.NUM_TRACKS] OF POINTER TO Track;	// track 0 is a special absolute case, this makes the array 1 larger than normal	
+	MoverListArray			: ARRAY [0..GVL.NUM_MOVERLISTS-1] OF POINTER TO MoverList;
+	PositionTriggerArray	: ARRAY [0..GVL.NUM_POSITIONTRIGGERS-1] OF POINTER TO PositionTrigger;
+	StationArray			: ARRAY [0..GVL.NUM_STATIONS-1] OF POINTER TO Station;
+	ZoneArray				: ARRAY [0..GVL.NUM_ZONES-1] OF POINTER TO Zone;
+	TrackArray				: ARRAY [0..GVL.NUM_TRACKS] OF POINTER TO Track;	// track 0 is a special absolute case, this makes the array 1 larger than normal	
 
 	GROUP_REF				: AXES_GROUP_REF;
 	
@@ -421,7 +421,7 @@ VAR_INST
 	
 	// station info state machine support
 	nInfoServerState : INT;
-	PartStartEnd : ARRAY [1..Param.PART_ARRAY_SIZE] OF ARRAY [0..1] OF LREAL;
+	PartStartEnd : ARRAY [1..GVL.PART_ARRAY_SIZE] OF ARRAY [0..1] OF LREAL;
 	nPartsInTrack1	: UDINT;
 	TrackPartInfo	: ARRAY[1..TcIoXtsEnvironmentParameterList.MaxPartsPerTrack] OF ST_PartInfoItems;
 	PartInfo 		: St_PartInfoItems;
@@ -443,12 +443,11 @@ END_VAR]]></Declaration>
 
 // Handle all project cyclic calls
 
-FOR i := 1 TO Param.NUM_MOVERS DO
+FOR i := 1 TO GVL.NUM_MOVERS DO
 	IF MoverArray[i] <> 0 THEN
 		// handle cyclic calls
 		MoverArray[i]^.Cyclic( GROUP_REF );			// could make this ca group addition clener
 		MoverArray[i]^.AxisReference.ReadStatus();
-		MoverArray[i]^.MoverIndex:= i;
 		// update global data
 		MoverData.Position[i] := LREAL_TO_REAL(MoverArray[i]^.TrackInfo.TrackPosition);
 		MoverData.Error[i] := MoverArray[i]^.Error;
@@ -456,19 +455,19 @@ FOR i := 1 TO Param.NUM_MOVERS DO
 	END_IF
 END_FOR
 
-FOR i := 0 TO Param.NUM_STATIONS - 1 DO
+FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
 	IF StationArray[i] <> 0 THEN
 		StationArray[i]^.Cyclic();
 	END_IF
 END_FOR
 
-FOR i := 0 TO Param.NUM_POSITIONTRIGGERS - 1 DO
+FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
 	IF PositionTriggerArray[i] <> 0 THEN
 		PositionTriggerArray[i]^.Cyclic();
 	END_IF
 END_FOR
 
-FOR i := 0 TO Param.NUM_TRACKS DO
+FOR i := 0 TO GVL.NUM_TRACKS DO
 	IF TrackArray[i] <> 0 THEN
 		TrackArray[i]^.Cyclic();
 	END_IF
@@ -741,7 +740,7 @@ fbGroupStop( AxesGroup := GROUP_REF );
 // populate TcCom XTS station objects with positions and part numbers from code for easier visibility in simulation
 
 // check for environment
-IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS THEN
+IF THIS^.InfoServerIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS THEN
 	
 	CASE nInfoServerState OF
 		
@@ -760,7 +759,7 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 		20:
 			// get info for each part start and end position (or max size of array)
 			TrackPartInfo := internalXPU.TrackTcIo(1).GetPartInfoItems();
-			FOR i := 1 TO MIN(nPartsInTrack1, Param.PART_ARRAY_SIZE) DO
+			FOR i := 1 TO MIN(nPartsInTrack1, GVL.PART_ARRAY_SIZE) DO
 				PartInfo := TrackPartInfo[i];
 				PartStartEnd[i][0] := PartInfo.fOffset;
 				PartStartEnd[i][1] := PartInfo.fLength + PartInfo.fOffset;
@@ -775,7 +774,7 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 			
 		40:
 			// calculate minimum number of stations that can be set up
-			nUsableStations := MIN(nInfoServerStations, Param.NUM_STATIONS);
+			nUsableStations := MIN(nInfoServerStations, GVL.NUM_STATIONS);
 			FOR i := 1 TO nUsableStations DO
 				// get XTS_Base Station pointer
 				xtsStationPointer := StationArray[i];
@@ -955,10 +954,10 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// reset statistics at all postion triggers and stations
-FOR i := 0 TO Param.NUM_POSITIONTRIGGERS-1 DO
+FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS-1 DO
 	PositionTriggerArray[i]^.ResetStatistics();
 END_FOR
-FOR i := 0 TO Param.NUM_STATIONS-1 DO
+FOR i := 0 TO GVL.NUM_STATIONS-1 DO
 	StationArray[i]^.ResetStatistics();
 END_FOR
 ]]></ST>
@@ -975,5 +974,112 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <LineIds Name="Mediator">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddMover">
+      <LineId Id="3" Count="41" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddMoverList">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddPositionTrigger">
+      <LineId Id="3" Count="32" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddStation">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddTrack">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddZone">
+      <LineId Id="3" Count="32" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AllMotorModulesReady.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="12" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.CompleteMoverList.Get">
+      <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Cyclic">
+      <LineId Id="3" Count="71" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="75" Count="54" />
+      <LineId Id="406" Count="19" />
+      <LineId Id="405" Count="0" />
+      <LineId Id="130" Count="1" />
+      <LineId Id="133" Count="99" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="233" Count="16" />
+      <LineId Id="428" Count="3" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="432" Count="0" />
+      <LineId Id="251" Count="1" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="253" Count="97" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="356" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.DetectMover1">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.EnableGroup">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Environment.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.EnvironmentIsReady.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupEnabled.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupError.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InfoServer.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InfoServerIsReady.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InstancePath.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Mover1DetectionComplete.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Mover1DetectionError.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.ResetStatistics">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.XPU.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
