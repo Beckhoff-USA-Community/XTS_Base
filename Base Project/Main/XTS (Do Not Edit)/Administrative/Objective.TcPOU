@@ -12,7 +12,7 @@ VAR
 
     internalTrackedMoverCount 	: USINT;
    
-    internalTrackedMovers 		: ARRAY[1..Param.NUM_MOVERS] OF POINTER TO Mover;
+    internalTrackedMovers 		: ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover;
 
 	{attribute 'hide'}
     ErrorMover 					: ErrorMover;
@@ -100,7 +100,7 @@ VAR
     i                : ULINT;
     duplicateFound   : BOOL;
     emptyIDX         : USINT;
-    arrTrackedMovers : ARRAY[0..Param.NUM_MOVERS - 1] OF POINTER TO Mover;
+    arrTrackedMovers : ARRAY[0..(Param.MAX_MOVERS - 1)] OF POINTER TO Mover;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[(*
@@ -129,7 +129,7 @@ END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[TrackedMoverCount := 0;
 
-FOR i := 1 to Param.NUM_MOVERS DO
+FOR i := 1 TO Param.MAX_MOVERS DO
 
     IF internalTrackedMovers[i] <> 0 THEN
         TrackedMoverCount := TrackedMoverCount + 1;
@@ -140,7 +140,7 @@ END_FOR]]></ST>
       </Get>
     </Property>
     <Property Name="TrackedMovers" Id="{f2e27676-d8a8-4b3f-968b-790753e7621e}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY[0..Param.NUM_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
+      <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
       <Get Name="Get" Id="{2692defb-0744-4a89-a02c-657d915f8a30}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
@@ -206,38 +206,5 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="Objective">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.CurrentMover.Get">
-      <LineId Id="3" Count="4" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.RegisterMover">
-      <LineId Id="3" Count="32" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.RegisterMoverList">
-      <LineId Id="3" Count="12" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.TrackedMoverCount.Get">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.TrackedMovers.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterAll">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterCurrent">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Objective.UnregisterMover">
-      <LineId Id="3" Count="24" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.12" ClassName="CTComPlcObjDef">
+	<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" XtvPath="Main\Main Instance.xtv" TmcPath="Main\Main.tmc">
+		<Name>__FILENAME__</Name>
+		<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+		<Contexts>
+			<Context>
+				<Id>0</Id>
+				<Name>PlcTask</Name>
+				<ManualConfig>
+					<OTCID>#x02010030</OTCID>
+				</ManualConfig>
+				<Priority>6</Priority>
+				<CycleTime>1000000</CycleTime>
+			</Context>
+		</Contexts>
+		<TaskPouOids>
+			<TaskPouOid Prio="6" OTCID="#x08502001"/>
+		</TaskPouOids>
+	</Instance>
+	<Mappings>
+		<OwnerA>
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 1">
+				<Link VarA="PlcTask Inputs^MAIN.XTS.Mover[1].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.XTS.Mover[1].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 2">
+				<Link VarA="PlcTask Inputs^MAIN.XTS.Mover[2].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.XTS.Mover[2].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 3">
+				<Link VarA="PlcTask Inputs^MAIN.XTS.Mover[3].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.XTS.Mover[3].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 4">
+				<Link VarA="PlcTask Inputs^MAIN.XTS.Mover[4].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.XTS.Mover[4].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 5">
+				<Link VarA="PlcTask Inputs^MAIN.XTS.Mover[5].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.XTS.Mover[5].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 6">
+				<Link VarA="PlcTask Inputs^MAIN.XTS.Mover[6].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.XTS.Mover[6].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC SAF^Objects^Collision Avoidance">
+				<Link VarA="PlcTask Inputs^MAIN.XTS.System.GROUP_REF.NcToPlc^CA" VarB="Group Outputs^ToPLC"/>
+				<Link VarA="PlcTask Outputs^MAIN.XTS.System.GROUP_REF.PlcToNc^CA" VarB="Group Inputs^FromPLC"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmItem>

@@ -198,7 +198,7 @@ PROPERTY TrackedMoverCount : USINT]]></Declaration>
       </Get>
     </Property>
     <Property Name="TrackedMovers" Id="{c1d0d30a-4686-4f53-a96b-53d64c99ec16}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY[0..Param.NUM_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
+      <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
       <Get Name="Get" Id="{d3d3bfad-1918-438f-8ad5-aa73cc840431}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>

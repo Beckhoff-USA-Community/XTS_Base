@@ -3,6 +3,7 @@
   <POU Name="MAIN" Id="{e5121501-3133-07a7-12bf-96dcd5d9e348}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR	
+	// declare XTS with <number of movers>
 	XTS				: FB_XTS<6>;
 	MainCommands	: MachineCmd_typ;
 	// Machine
@@ -252,25 +253,5 @@ nextStation := 4;]]></ST>
         END_IF]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="MAIN">
-      <LineId Id="3" Count="76" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MAIN.Initializing">
-      <LineId Id="2" Count="33" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="MAIN.Recovering">
-      <LineId Id="2" Count="4" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="MAIN.RecoverOneshot">
-      <LineId Id="2" Count="8" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="MAIN.StationLogic">
-      <LineId Id="2" Count="77" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
