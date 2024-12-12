@@ -118,7 +118,7 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[
-CurrentMoveType		:= LocalVars._CurrentMoveType;]]></ST>
+CurrentMoveType		:= LocalVars.CurrentMoveType;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -346,7 +346,7 @@ CASE LocalVars.State OF
 		IF (LocalVars.Reissue) THEN
 			THIS^.SourceInstancePath	:= 'ReissueCommand';
 
-			CASE LocalVars._CurrentMoveType OF
+			CASE LocalVars.CurrentMoveType OF
 				MOVETYPE_NONE:
 					// No current command to reissue	
 				MOVETYPE_POSITION:
@@ -356,7 +356,7 @@ CASE LocalVars.State OF
 				MOVETYPE_VELOCITY:
 					THIS^.MoveVelocity( MotionParameters.Velocity );
 				MOVETYPE_SYNC_MOVER:
-					THIS^.SyncToMover( LocalVars._MasterMover, LocalVars.Gap );
+					THIS^.SyncToMover( LocalVars.MasterMover, LocalVars.Gap );
 				MOVETYPE_SYNC_AXIS:
 					// This command should perhaps not be compatible with Reissue command
 			END_CASE
@@ -506,7 +506,7 @@ CASE LocalVars.State OF
 		Busy	:= FALSE;
 		Error	:= TRUE;
 		
-		LocalVars._CurrentMoveType:= MOVETYPE_NONE;
+		LocalVars.CurrentMoveType:= MOVETYPE_NONE;
 		
 		LocalVars.Enable			:= FALSE;		
 		IF LocalVars.Disable THEN
@@ -532,8 +532,8 @@ LocalVars.fbMoveAbsCA[1]( Axis := AxisReference );
 LocalVars.fbMoveRelCA[0] ( Axis := AxisReference );
 LocalVars.fbMoveRelCA[1] ( Axis := AxisReference );
 
-LocalVars.fbGearInPosMoverCA[0]( Master := LocalVars._MasterMover.AxisReference, Slave := THIS^.AxisReference );
-LocalVars.fbGearInPosMoverCA[1]( Master := LocalVars._MasterMover.AxisReference, Slave := THIS^.AxisReference );
+LocalVars.fbGearInPosMoverCA[0]( Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference );
+LocalVars.fbGearInPosMoverCA[1]( Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference );
 
 LocalVars.fbGearInPosAxisCA[0]( Master := LocalVars.MasterAxis, Slave := THIS^.AxisReference );
 LocalVars.fbGearInPosAxisCA[1]( Master := LocalVars.MasterAxis, Slave := THIS^.AxisReference );
@@ -746,7 +746,7 @@ ELSE	// otherwise execute the command
 //	fbGroupStop.Jerk			:= MotionParameters.Jerk;
 	
 	memset( ADR( LocalVars.CurrentDestObjective ), 0, SIZEOF( LocalVars.CurrentDestObjective ));
-	LocalVars._CurrentMoveType		:= MoverCommandType_enum.MOVETYPE_NONE;
+	LocalVars.CurrentMoveType		:= MoverCommandType_enum.MOVETYPE_NONE;
 	
 END_IF
 
@@ -799,7 +799,7 @@ ELSE
 	
 END_IF
 
-LocalVars._CurrentMoveType		:= MOVETYPE_NONE;
+LocalVars.CurrentMoveType		:= MOVETYPE_NONE;
 LocalVars.CurrentDestPosition	:= 1E300;
 
 memset( ADR( LocalVars.CurrentDestObjective), 0, SIZEOF( LocalVars.CurrentDestObjective ));
@@ -902,8 +902,8 @@ END_VAR
         <Implementation>
           <ST><![CDATA[
 
-IF THIS^.LocalVars._CurrentMoveType = MOVETYPE_SYNC_MOVER THEN
-	MasterMover		REF= LocalVars._MasterMover;
+IF THIS^.LocalVars.CurrentMoveType = MOVETYPE_SYNC_MOVER THEN
+	MasterMover		REF= LocalVars.MasterMover;
 ELSE
 	MasterMover		REF= 0;
 END_IF]]></ST>
@@ -917,7 +917,7 @@ END_IF]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[MoverIndex:= LocalVars._MoverIndex;
+          <ST><![CDATA[MoverIndex:= LocalVars.MoverIndex;
 ]]></ST>
         </Implementation>
       </Get>
@@ -927,7 +927,7 @@ VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[LocalVars._MoverIndex:= MoverIndex;
+          <ST><![CDATA[LocalVars.MoverIndex:= MoverIndex;
 ]]></ST>
         </Implementation>
       </Set>
@@ -1011,7 +1011,7 @@ ELSE	// otherwise let 'er rip
 	
 END_IF
 
-LocalVars._CurrentMoveType		:= MOVETYPE_POSITION;
+LocalVars.CurrentMoveType		:= MOVETYPE_POSITION;
 LocalVars.CurrentDestPosition := DestinationPosition;
 
 memset( ADR( LocalVars.CurrentDestObjective ), 0, SIZEOF( LocalVars.CurrentDestObjective ));
@@ -1110,7 +1110,7 @@ ELSE	// otherwise let 'er rip
 	LocalVars.CurrentDestPosition		:= DestinationStation.Position;
 	LocalVars.CurrentDestObjective	:= SEL( __ISVALIDREF( DestinationStation ), '', DestinationStation.InstancePath );
 	LocalVars.CurrentDestStation		REF= DestinationStation;
-	LocalVars._CurrentMoveType			:= MOVETYPE_STATION;
+	LocalVars.CurrentMoveType			:= MOVETYPE_STATION;
 	
 	// Register this mover with the station, so the station knows this mover is incoming
 	DestinationStation.RegisterMover( THIS^ );
@@ -1216,7 +1216,7 @@ LocalVars.fbMoveRelCA[0] ( Axis := AxisReference );
 LocalVars.fbMoveRelCA[1] ( Axis := AxisReference );
 
 
-LocalVars._CurrentMoveType		:= MOVETYPE_VELOCITY;
+LocalVars.CurrentMoveType		:= MOVETYPE_VELOCITY;
 LocalVars.CurrentDestPosition := 1E300;
 
 memset( ADR( LocalVars.CurrentDestObjective ), 0, SIZEOF( LocalVars.CurrentDestObjective ));
@@ -1277,7 +1277,7 @@ END_VAR
         <Implementation>
           <ST><![CDATA[
 
-Payload	:= LocalVars._Payload;]]></ST>
+Payload	:= LocalVars.Payload;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{6f8bbb61-047b-455a-a948-12da14d2f890}">
@@ -1287,7 +1287,7 @@ END_VAR
         <Implementation>
           <ST><![CDATA[
 
-LocalVars._Payload	:= Payload;]]></ST>
+LocalVars.Payload	:= Payload;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -1707,7 +1707,7 @@ ELSE
 	
 END_IF
 
-LocalVars._CurrentMoveType			:= MOVETYPE_SYNC_AXIS;
+LocalVars.CurrentMoveType			:= MOVETYPE_SYNC_AXIS;
 LocalVars.CurrentDestPosition		:= 1E300;
 
 memset( ADR( LocalVars.CurrentDestObjective ), 0, SIZEOF( LocalVars.CurrentDestObjective ));
@@ -1753,13 +1753,13 @@ ELSE	// let 'er rip
 	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 	LocalVars.Reissue := FALSE;	// reissue no longer necessary
 
-	LocalVars._MasterMover		REF= MasterMover;
+	LocalVars.MasterMover		REF= MasterMover;
 	LocalVars.Gap				:= Gap;
 	
 	
-	syncPos			:= LocalVars._MasterMover.AxisReference.NcToPlc.ActPos - Gap;
+	syncPos			:= LocalVars.MasterMover.AxisReference.NcToPlc.ActPos - Gap;
 	CWDistToSync	:= MODABS( syncPos - THIS^.AxisReference.NcToPlc.ActPos, Param.TRACK_LENGTH );
-	CWDistToMaster	:= MODABS( LocalVars._MasterMover.AxisReference.NcToPlc.ActPos - THIS^.AxisReference.NcToPlc.ActPos, Param.TRACK_LENGTH );
+	CWDistToMaster	:= MODABS( LocalVars.MasterMover.AxisReference.NcToPlc.ActPos - THIS^.AxisReference.NcToPlc.ActPos, Param.TRACK_LENGTH );
 		
 	IF LocalVars.fbGearInPosMoverCA[0].Busy = FALSE THEN
 		
@@ -1768,8 +1768,8 @@ ELSE	// let 'er rip
 		LocalVars.fbGearInPosMoverCA[0].RatioNumerator			:= 1;
 		LocalVars.fbGearInPosMoverCA[0].RatioDenumerator		:= 1;
 		
-		LocalVars.fbGearInPosMoverCA[0].MasterSyncPosition		:= LocalVars._MasterMover.AxisReference.NcToPlc.ActPos;
-		LocalVars.fbGearInPosMoverCA[0].SlaveSyncPosition		:= MODABS( LocalVars._MasterMover.AxisReference.NcToPlc.ActPos - Gap, Param.TRACK_LENGTH);
+		LocalVars.fbGearInPosMoverCA[0].MasterSyncPosition		:= LocalVars.MasterMover.AxisReference.NcToPlc.ActPos;
+		LocalVars.fbGearInPosMoverCA[0].SlaveSyncPosition		:= MODABS( LocalVars.MasterMover.AxisReference.NcToPlc.ActPos - Gap, Param.TRACK_LENGTH);
 		
 		LocalVars.fbGearInPosMoverCA[0].SyncStrategy			:= mcSyncStrategyEarly;		
 		LocalVars.fbGearInPosMoverCA[0].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
@@ -1788,7 +1788,7 @@ ELSE	// let 'er rip
 		
 		LocalVars.fbGearInPosMoverCA[0].BufferMode				:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
 		
-		LocalVars.fbGearInPosMoverCA[0]( Master := LocalVars._MasterMover.AxisReference, Slave := THIS^.AxisReference );
+		LocalVars.fbGearInPosMoverCA[0]( Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference );
 		
 	ELSIF LocalVars.fbGearInPosMoverCA[1].Busy = FALSE THEN
 		
@@ -1797,8 +1797,8 @@ ELSE	// let 'er rip
 		LocalVars.fbGearInPosMoverCA[1].RatioNumerator			:= 1;
 		LocalVars.fbGearInPosMoverCA[1].RatioDenumerator		:= 1;
 		
-		LocalVars.fbGearInPosMoverCA[1].MasterSyncPosition		:= LocalVars._MasterMover.AxisReference.NcToPlc.ActPos;
-		LocalVars.fbGearInPosMoverCA[1].SlaveSyncPosition		:= MODABS( LocalVars._MasterMover.AxisReference.NcToPlc.ActPos - Gap, Param.TRACK_LENGTH);
+		LocalVars.fbGearInPosMoverCA[1].MasterSyncPosition		:= LocalVars.MasterMover.AxisReference.NcToPlc.ActPos;
+		LocalVars.fbGearInPosMoverCA[1].SlaveSyncPosition		:= MODABS( LocalVars.MasterMover.AxisReference.NcToPlc.ActPos - Gap, Param.TRACK_LENGTH);
 		
 		LocalVars.fbGearInPosMoverCA[1].SyncStrategy			:= mcSyncStrategyEarly;
 		LocalVars.fbGearInPosMoverCA[1].SyncMode				:= SEL( CWDistToSync < CWDistToMaster, mcSyncModeNegative, mcSyncModePositive );
@@ -1818,7 +1818,7 @@ ELSE	// let 'er rip
 		LocalVars.fbGearInPosMoverCA[1].BufferMode				:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
 		
 		
-		LocalVars.fbGearInPosMoverCA[1]( Master := LocalVars._MasterMover.AxisReference, Slave := THIS^.AxisReference );
+		LocalVars.fbGearInPosMoverCA[1]( Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference );
 		
 	ELSE
 		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSyncToMoverOverload,0 );
@@ -1829,7 +1829,7 @@ ELSE	// let 'er rip
 
 END_IF;
 
-LocalVars._CurrentMoveType			:= MOVETYPE_SYNC_MOVER;
+LocalVars.CurrentMoveType			:= MOVETYPE_SYNC_MOVER;
 LocalVars.CurrentDestPosition		:= 1E300;
 
 memset( ADR( LocalVars.CurrentDestObjective ), 0, SIZEOF( LocalVars.CurrentDestObjective ));
@@ -1905,5 +1905,160 @@ END_IF
 LocalVars.lastCallValidateTrack		:= newCallTime;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="Mover">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.ActivateTrack">
+      <LineId Id="3" Count="25" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentDestinationPosition.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentDestinationTrack.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentMoveType.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentObjective.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.CurrentTrack.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Cyclic">
+      <LineId Id="3" Count="500" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Disable">
+      <LineId Id="3" Count="13" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Enable">
+      <LineId Id="3" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.GroupStop">
+      <LineId Id="3" Count="30" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Halt">
+      <LineId Id="3" Count="41" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsCollisionAvoidanceActive.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsSyncedToAxis.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsSyncedToMover.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsTrackReady.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.LogUserEvent">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MasterMover.Get">
+      <LineId Id="3" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoverIndex.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoverIndex.Set">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveToPosition">
+      <LineId Id="3" Count="82" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveToStation">
+      <LineId Id="3" Count="86" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.MoveVelocity">
+      <LineId Id="3" Count="85" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.NextMover.Get">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Payload.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Payload.Set">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.PreviousMover.Get">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.ReissueCommand">
+      <LineId Id="3" Count="4" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.Reset">
+      <LineId Id="3" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetAcceleration">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetDeceleration">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetDirection">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetGap">
+      <LineId Id="3" Count="15" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetGapMode">
+      <LineId Id="3" Count="27" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetJerk">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SetVelocity">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SyncToAxis">
+      <LineId Id="3" Count="106" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.SyncToMover">
+      <LineId Id="3" Count="104" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.UnregisterFromAll">
+      <LineId Id="3" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.ValidateTrack">
+      <LineId Id="3" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

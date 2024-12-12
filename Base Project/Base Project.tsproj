@@ -3922,9 +3922,9 @@ External Setpoint Generation:
 	</ImageDatas>
 	<Project ProjectGUID="{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
-			<Settings MaxCpus="10" NonWinCpus="2" RouterMemory="1073741824" MaxStackSize="256">
-				<Cpu CpuId="8" BaseTime="2500"/>
-				<Cpu CpuId="9" BaseTime="2500"/>
+			<Settings MaxCpus="20" NonWinCpus="1" RouterMemory="1073741824" MaxStackSize="256" PCoreAffinity="4095" ECoreAffinity="1044480">
+				<Cpu CpuId="18" BaseTime="2500"/>
+				<Cpu CpuId="19" BaseTime="2500"/>
 				<IoIdleTask Priority="10"/>
 			</Settings>
 			<Licenses>
@@ -3940,7 +3940,7 @@ External Setpoint Generation:
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
-				<Task Id="4" Priority="1" CycleTime="2500" AmsPort="351" Affinity="#x00000200" ExceedWarning="1" AdtTasks="true">
+				<Task Id="4" Priority="1" CycleTime="2500" AmsPort="351" Affinity="#x00080000" ExceedWarning="1" AdtTasks="true">
 					<Name>XTS Task 1</Name>
 				</Task>
 			</Tasks>
@@ -32098,7 +32098,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="Main" PrjFilePath="Main\Main.plcproj" TmcFilePath="Main\Main.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{92CDFFF9-E4EB-0DE1-3BFE-79CFD64E38D1}" TmcPath="Main\Main.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{DE4B26E6-7010-B965-751F-25555252A1D0}" TmcPath="Main\Main.tmc">
 					<Name>Main Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -34871,6 +34871,8 @@ External Setpoint Generation:
 		</Io>
 	</Project>
 	<Mappings>
+		<MappingInfo Identifier="{08502001-0010-0500-0020-500810001205}" Id="#x02030020" Watchdog="08000000040000000400000004000000"/>
+		<MappingInfo Identifier="{08502001-0010-0500-0020-500850000403}" Id="#x02030010" Watchdog="08000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 3">
 			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Part 2^Module 15">
 				<Link VarA="Term 29 (AT2002-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>

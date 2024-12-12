@@ -4,11 +4,11 @@
     <Declaration><![CDATA[TYPE InternalMoverVars_typ :
 STRUCT
 
-	_MoverIndex	: UDINT;		// array index of Mover Array
+	MoverIndex	: UDINT;		// array index of Mover Array
 	Enable		: BOOL;		// moves the axis from Disabled to Standstill, adds Axis to CA group, and triggers M1 Detection if configured
 	Disable		: BOOL;		// moves the axis from Standstill to Disabled, removes Axis from CA Group
 	
-	_CurrentMoveType			: MoverCommandType_enum;	// Most recent move command type
+	CurrentMoveType			: MoverCommandType_enum;	// Most recent move command type
 	Reissue					: BOOL;						// reissue last command flag alows summing of all reissue commands per-scan
 	
 	CurrentDestPosition		: LREAL;	// Track position of the current motion destination;
@@ -19,12 +19,12 @@ STRUCT
 	TrackState				: TrackState;			// Internal state variable for track
 	TrackStateDelay 		: TON;					// Internal timer for activate track delay
 	
-	_MasterMover				: REFERENCE TO Mover;	// Internal reference to a target master mover
+	MasterMover				: REFERENCE TO Mover;	// Internal reference to a target master mover
 	MasterAxis				: REFERENCE TO AXIS_REF;	// Internal reference to a target master external axis
 	Gap						: LREAL;	// Gap distance to master mover during sync
 	
 	// Configurable Payload description	
-	_Payload			: USINT;	// E.g. 0: No Product, 1: Product Loaded, 2: Product Reject. Can be modified for application
+	Payload			: USINT;	// E.g. 0: No Product, 1: Product Loaded, 2: Product Reject. Can be modified for application
 	
 	// Track management
 	Track				: POINTER TO Track;	// Internal current track
