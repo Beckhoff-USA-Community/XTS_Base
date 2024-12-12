@@ -33,6 +33,18 @@ SUPER^.Cyclic(GroupReference);
 // Add ApplicationMover specific code here
 cnt:= cnt + 1;
 _PositionLag:= THIS^.AxisReference.NcToPlc.PosDiff;
+
+
+
+// Latch Errors
+IF fbMC_CalcDynamicsByRampTime.Error THEN
+	ErrorID						:= fbMC_CalcDynamicsByRampTime.ErrorID;
+	ErrorOrigin					:= CONCAT( InstancePath, '.fbMC_CalcDynamicsByRampTime' );
+	//LocalVars.State				:= MV_ERROR;
+END_IF
+
+// Call Fbs Cyclically
+fbMC_CalcDynamicsByRampTime();
 ]]></ST>
       </Implementation>
     </Method>
@@ -86,5 +98,28 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <LineIds Name="ApplicationMover">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ApplicationMover.Cyclic">
+      <LineId Id="3" Count="9" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="2" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="1" />
+    </LineIds>
+    <LineIds Name="ApplicationMover.MoveToStationByRampTime">
+      <LineId Id="3" Count="20" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ApplicationMover.PositionLag.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
