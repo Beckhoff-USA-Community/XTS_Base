@@ -5,13 +5,13 @@
 FUNCTION_BLOCK Mediator
 VAR_INPUT
 
-	MoverArray				: ARRAY [1..Param.NUM_MOVERS] OF POINTER TO Mover;
+	MoverArray				: ARRAY [1..GVL.NUM_MOVERS] OF POINTER TO Mover;
 	
-	MoverListArray			: ARRAY [0..Param.NUM_MOVERLISTS-1] OF POINTER TO MoverList;
-	PositionTriggerArray	: ARRAY [0..Param.NUM_POSITIONTRIGGERS-1] OF POINTER TO PositionTrigger;
-	StationArray			: ARRAY [0..Param.NUM_STATIONS-1] OF POINTER TO Station;
-	ZoneArray				: ARRAY [0..Param.NUM_ZONES-1] OF POINTER TO Zone;
-	TrackArray				: ARRAY [0..Param.NUM_TRACKS] OF POINTER TO Track;	// track 0 is a special absolute case, this makes the array 1 larger than normal	
+	MoverListArray			: ARRAY [0..GVL.NUM_MOVERLISTS-1] OF POINTER TO MoverList;
+	PositionTriggerArray	: ARRAY [0..GVL.NUM_POSITIONTRIGGERS-1] OF POINTER TO PositionTrigger;
+	StationArray			: ARRAY [0..GVL.NUM_STATIONS-1] OF POINTER TO Station;
+	ZoneArray				: ARRAY [0..GVL.NUM_ZONES-1] OF POINTER TO Zone;
+	TrackArray				: ARRAY [0..GVL.NUM_TRACKS] OF POINTER TO Track;	// track 0 is a special absolute case, this makes the array 1 larger than normal	
 
 	GROUP_REF				: AXES_GROUP_REF;
 	
@@ -34,6 +34,13 @@ VAR
 	internalEnableGroupState		: INT;
 	internalEnabled					: BOOL;
 	internalMover1Error				: BOOL;
+
+	bHighDriveReady			: BOOL;
+	bControlVoltageReady	: BOOL;
+	nParts					: UDINT;
+	nModulesInPart			: UDINT;
+	ControlVoltageStorage	: REAL;
+	bMoverRedectionRequired	: BOOL;
 	
 	// ========= XTS Utility Diagnostics =========
 	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
@@ -51,9 +58,8 @@ VAR
 	fbGroupEnable			: MC_GroupEnable;
 	fbGroupReset			: MC_GroupReset;
 	fbGroupStop				: MC_GroupStop;
-	bHighDriveReady: BOOL;
-END_VAR
-]]></Declaration>
+
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
@@ -99,7 +105,7 @@ IF __ISVALIDREF( Mover ) THEN
 	IF duplicateFound = FALSE THEN
 		
 		THIS^.MoverArray[emptyIDX]		:= ADR( Mover );	// new mover into empty array element
-		
+
 		// Automatically register the mover with any Position Triggers
 		FOR i := 0 TO SIZEOF( PositionTriggerArray ) / SIZEOF( PositionTriggerArray[0] ) - 1 DO
 			IF PositionTriggerArray[i] <> 0 THEN
@@ -355,8 +361,6 @@ END_IF]]></ST>
         <Declaration><![CDATA[VAR
 	I				: UDINT;
 	J				: UDINT;
-	nParts			: UDINT;
-	nModulesInPart	: UDINT;
 	
 	DriveStatusStorage: UINT;
 END_VAR]]></Declaration>
@@ -417,7 +421,7 @@ VAR_INST
 	
 	// station info state machine support
 	nInfoServerState : INT;
-	PartStartEnd : ARRAY [1..Param.PART_ARRAY_SIZE] OF ARRAY [0..1] OF LREAL;
+	PartStartEnd : ARRAY [1..GVL.PART_ARRAY_SIZE] OF ARRAY [0..1] OF LREAL;
 	nPartsInTrack1	: UDINT;
 	TrackPartInfo	: ARRAY[1..TcIoXtsEnvironmentParameterList.MaxPartsPerTrack] OF ST_PartInfoItems;
 	PartInfo 		: St_PartInfoItems;
@@ -432,20 +436,18 @@ VAR_INST
 	i				: UDINT;
 	j				: UDINT;
 	
-
+	XPUDetectionState	: DetectionStateEnum;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// this method contains multiple state machines denoted by the headers below
 
 // Handle all project cyclic calls
 
-FOR i := 1 TO Param.NUM_MOVERS DO
+FOR i := 1 TO GVL.NUM_MOVERS DO
 	IF MoverArray[i] <> 0 THEN
 		// handle cyclic calls
 		MoverArray[i]^.Cyclic( GROUP_REF );			// could make this ca group addition clener
 		MoverArray[i]^.AxisReference.ReadStatus();
-		MoverArray[i]^.MoverIndex:= i;
-		
 		// update global data
 		MoverData.Position[i] := LREAL_TO_REAL(MoverArray[i]^.TrackInfo.TrackPosition);
 		MoverData.Error[i] := MoverArray[i]^.Error;
@@ -453,19 +455,19 @@ FOR i := 1 TO Param.NUM_MOVERS DO
 	END_IF
 END_FOR
 
-FOR i := 0 TO Param.NUM_STATIONS - 1 DO
+FOR i := 0 TO GVL.NUM_STATIONS - 1 DO
 	IF StationArray[i] <> 0 THEN
 		StationArray[i]^.Cyclic();
 	END_IF
 END_FOR
 
-FOR i := 0 TO Param.NUM_POSITIONTRIGGERS - 1 DO
+FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS - 1 DO
 	IF PositionTriggerArray[i] <> 0 THEN
 		PositionTriggerArray[i]^.Cyclic();
 	END_IF
 END_FOR
 
-FOR i := 0 TO Param.NUM_TRACKS DO
+FOR i := 0 TO GVL.NUM_TRACKS DO
 	IF TrackArray[i] <> 0 THEN
 		TrackArray[i]^.Cyclic();
 	END_IF
@@ -509,6 +511,7 @@ CASE nEnvironmentState OF
 			internalEnvironment := fbXtsEnvironment;
 			internalXPU			:= fbXtsEnvironment.XpuTcIo(1);
 			internalInfoServer	:= fbXtsEnvironment.InfoServerTcIo(1);
+
 			// next step
 			nEnvironmentState	:= 3;
 		END_IF
@@ -561,16 +564,36 @@ CASE internalM1DetectState OF
 	0:	// wait for flag
 		IF internalM1DetectFlag THEN
 			// clear previous error flag
-			internalMover1Error := FALSE;
-			internalM1DetectState := 5;
+			internalMover1Error		:= FALSE;
+			internalM1DetectState	:= 1;
 		END_IF
 
-	5:
-	// wait for envrionment
+	1:	// Trigger mover redetection
+		fbXtsEnvironment.XpuTcIo(1).TriggerRedetection();
+ 		internalM1DetectState 		:= 2;
+
+	2:	// Monitor mover redection status
+		XPUDetectionState			:= fbXtsEnvironment.XpuTcIo(1).GetDetectionState();
+		IF XPUDetectionState = DetectionStateEnum.Succeeded THEN
+			internalM1DetectState 	:= 5;
+		ELSIF XPUDetectionState > DetectionStateEnum.Succeeded THEN
+			internalM1DetectState	:= 900;
+		END_IF
+
+		(*	DetectionStateEnum: NotStarted:=0, 
+								Running:=1,
+								Succeeded:=2,
+								FailedDueToEnabledMovers:=3,
+								FailedExpectedMoversNotDetected:=4,
+								FailedNotEnoughMovers:=5,
+								FailedNoTracksIncluded:=6,
+								FailedTooManyActiveMovers:=7) 	*)
+
+	5:	// wait for envrionment
 		IF EnvironmentIsReady AND_THEN NOT THIS^.Mover1DetectionComplete THEN
- 			internalM1DetectState := 10;
-		END_IF;
-		
+ 			internalM1DetectState 	:= 10;
+		END_IF
+
 	10:	// check for mover 1 mode
 		eMoverIdDetectionMode := XPU.GetMoverIdDetectionMode();
 		IF (eMoverIdDetectionMode = MoverIdDetectionMode.Mover1 OR eMoverIdDetectionMode = MoverIdDetectionMode.MultipleMover1) THEN
@@ -667,6 +690,7 @@ CASE internalEnableGroupState OF
 		
 		IF fbGroupEnable.Done THEN
 			fbGroupEnable.Execute		:= FALSE;
+			internalEnableGroupFlag 	:= FALSE;
 			internalEnableGroupState	:= 100;
 		ELSIF fbGroupEnable.Error THEN
 			ErrorID						:= fbGroupEnable.ErrorId;
@@ -678,18 +702,25 @@ CASE internalEnableGroupState OF
 		END_IF
 		
 	100: // clean up flags and rewind
-		internalEnabled := TRUE;
-		internalEnableGroupState := 0;
+		internalEnabled 				:= TRUE;
+		internalEnableGroupState 		:= 0;
 		
 	900: // error
-		Error := TRUE;
-		internalEnabled := FALSE;
-		
+		Error 							:= TRUE;
+		internalEnabled 				:= FALSE;
+		IF NOT internalEnableGroupFlag THEN
+			Error						:= FALSE;
+			ErrorID						:= 0;
+			ErrorOrigin					:= '';
+			internalEnableGroupState	:= 0;
+		END_IF
 		
 END_CASE
 
+internalEnableGroupFlag := FALSE;
+
 // catch error flag and reset custom status bit
-IF (fbGroupStatus.GroupErrorStop) THEN
+IF (fbGroupStatus.GroupErrorStop AND internalEnableGroupState <> 10) THEN
 	Error := TRUE;
 	internalEnabled := FALSE;
 END_IF
@@ -700,7 +731,7 @@ fbGroupReset( AxesGroup := GROUP_REF );
 fbGroupStop( AxesGroup := GROUP_REF );
 
 // always clear the triggering flag
-internalEnableGroupFlag := FALSE;
+//internalEnableGroupFlag := FALSE;
 
 // *************************************************************************
 // station info state machine
@@ -709,7 +740,7 @@ internalEnableGroupFlag := FALSE;
 // populate TcCom XTS station objects with positions and part numbers from code for easier visibility in simulation
 
 // check for environment
-IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS THEN
+IF THIS^.InfoServerIsReady AND internalEnabled AND GVL.AUTO_POPULATE_STATIONS THEN
 	
 	CASE nInfoServerState OF
 		
@@ -728,13 +759,13 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 		20:
 			// get info for each part start and end position (or max size of array)
 			TrackPartInfo := internalXPU.TrackTcIo(1).GetPartInfoItems();
-			FOR i := 1 TO MIN(nPartsInTrack1, Param.PART_ARRAY_SIZE) DO
+			FOR i := 1 TO MIN(nPartsInTrack1, GVL.PART_ARRAY_SIZE) DO
 				PartInfo := TrackPartInfo[i];
 				PartStartEnd[i][0] := PartInfo.fOffset;
 				PartStartEnd[i][1] := PartInfo.fLength + PartInfo.fOffset;
 			END_FOR
 			nInfoServerState := 30;
-			
+
 		30:
 			// get number of stations
 			nInfoServerStations := internalInfoServer.GetInfoStationCount() ;
@@ -743,7 +774,7 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 			
 		40:
 			// calculate minimum number of stations that can be set up
-			nUsableStations := MIN(nInfoServerStations, Param.NUM_STATIONS);
+			nUsableStations := MIN(nInfoServerStations, GVL.NUM_STATIONS);
 			FOR i := 1 TO nUsableStations DO
 				// get XTS_Base Station pointer
 				xtsStationPointer := StationArray[i];
@@ -785,14 +816,8 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 			END_FOR
 			// transition to non-existent state. This routine only runs one time at the first enable signal.
 			nInfoServerState := 50;
-		
-			
 	END_CASE
-
-
-END_IF
-
-]]></ST>
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="DetectMover1" Id="{1d387785-e892-0967-22d4-73d2923e67ae}" FolderPath="Methods\">
@@ -929,10 +954,10 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// reset statistics at all postion triggers and stations
-FOR i := 0 TO Param.NUM_POSITIONTRIGGERS-1 DO
+FOR i := 0 TO GVL.NUM_POSITIONTRIGGERS-1 DO
 	PositionTriggerArray[i]^.ResetStatistics();
 END_FOR
-FOR i := 0 TO Param.NUM_STATIONS-1 DO
+FOR i := 0 TO GVL.NUM_STATIONS-1 DO
 	StationArray[i]^.ResetStatistics();
 END_FOR
 ]]></ST>
@@ -953,9 +978,7 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AddMover">
-      <LineId Id="3" Count="25" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="30" Count="14" />
+      <LineId Id="3" Count="41" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AddMoverList">
@@ -979,16 +1002,39 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.AllMotorModulesReady.Get">
-      <LineId Id="1" Count="18" />
+      <LineId Id="3" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="12" Count="8" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.CompleteMoverList.Get">
-      <LineId Id="1" Count="8" />
+      <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.Cyclic">
-      <LineId Id="3" Count="8" />
-      <LineId Id="358" Count="1" />
-      <LineId Id="12" Count="345" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="3" Count="71" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="75" Count="54" />
+      <LineId Id="406" Count="19" />
+      <LineId Id="405" Count="0" />
+      <LineId Id="130" Count="1" />
+      <LineId Id="133" Count="99" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="233" Count="16" />
+      <LineId Id="428" Count="3" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="432" Count="0" />
+      <LineId Id="251" Count="1" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="253" Count="97" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="356" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.DetectMover1">
       <LineId Id="3" Count="1" />
@@ -999,38 +1045,41 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.Environment.Get">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.EnvironmentIsReady.Get">
-      <LineId Id="1" Count="2" />
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.GroupEnabled.Get">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.GroupError.Get">
-      <LineId Id="1" Count="1" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.InfoServer.Get">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.InfoServerIsReady.Get">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.InstancePath.Get">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.Mover1DetectionComplete.Get">
-      <LineId Id="1" Count="1" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.Mover1DetectionError.Get">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.ResetStatistics">
       <LineId Id="3" Count="6" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mediator.XPU.Get">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
