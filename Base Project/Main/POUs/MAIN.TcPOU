@@ -27,7 +27,38 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF NOT Init THEN Initializing(); END_IF
+      <ST><![CDATA[
+(* ======================================================================================
+
+--- XTS Starter Project ---
+
+This MAIN (PRG) is intended to serve as an example, which can be modified to suit your specific application.
+
+No programming changes should be necessary inside the provided XTS objects / function block definitions.
+They are intended to be simply instantiated and controlled via the provided methods and properties.
+However the objects are provided as open-source for modification and extension as needed.
+
+Documentation for these objects can be found online at:
+https://beckhoff-usa-community.github.io/XTS_Base/
+
+Bug reports, new feature requests, and general feedback is always welcome on our Github page.
+For any other questions, please reach out to your local Application Engineer.
+
+- XTS Application Group | Beckhoff USA
+
+====================================================================================== *)
+
+(*
+All sample code provided by Beckhoff Automation LLC are for illustrative purposes only
+and are provided “as is” and without any warranties, express or implied. Actual
+implementations in applications will vary significantly. Beckhoff Automation LLC shall
+have no liability for, and does not waive any rights in relation to, any code samples that it
+provides or the use of such code samples for any purpose.
+*)
+
+
+
+IF NOT Init THEN Initializing(); END_IF
 
 CASE State OF 
 
@@ -253,6 +284,14 @@ nextStation := 4;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
+      <LineId Id="96" Count="0" />
+      <LineId Id="102" Count="17" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="98" Count="3" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="88" Count="2" />
       <LineId Id="3" Count="76" />
       <LineId Id="2" Count="0" />
     </LineIds>
