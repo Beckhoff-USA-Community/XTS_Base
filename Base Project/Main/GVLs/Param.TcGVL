@@ -3,9 +3,8 @@
   <GVL Name="Param" Id="{673621fc-c806-000b-08ea-fd34161e1bd8}" ParameterList="True">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
-	TRACK_LENGTH 			: LREAL := 4000; // This should be set to the exact length [mm] of the track system
-		
-	MAX_MOVERS   			: USINT := 100;   // This is the maximum number of movers that can be added to the system
+	// The following should be set to a value **equal to or greater than** the number of movers needed
+	MAX_MOVERS   			: USINT := 100;   // Movers
 	
 	// The following should be set to a value **equal to or greater than** the number of objectives needed
 	NUM_MOVERLISTS			: USINT := 10;	// Mover Lists

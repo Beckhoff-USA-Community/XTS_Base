@@ -79,7 +79,7 @@ MotionParameters.Acceleration		:= fbMC_CalcDynamicsByRampTime.Acceleration;
 MotionParameters.Deceleration		:= fbMC_CalcDynamicsByRampTime.Deceleration;
 MotionParameters.Jerk				:= fbMC_CalcDynamicsByRampTime.Jerk;
 MotionParameters.Gap				:= Gap;
-MotionParameters.Direction			:= Tc2_Mc2.MC_Direction.MC_Positive_Direction;
+MotionParameters.Direction			:= Tc3_Mc3Definitions.MC_Direction.mcDirectionPositive;
 
 SUPER^.MotionParameters:= MotionParameters;
 SUPER^.MoveToStation(DestinationStation);]]></ST>
@@ -98,28 +98,5 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <LineIds Name="ApplicationMover">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ApplicationMover.Cyclic">
-      <LineId Id="3" Count="9" />
-      <LineId Id="23" Count="1" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="2" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="21" Count="1" />
-    </LineIds>
-    <LineIds Name="ApplicationMover.MoveToStationByRampTime">
-      <LineId Id="3" Count="20" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ApplicationMover.PositionLag.Get">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

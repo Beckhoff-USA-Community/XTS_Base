@@ -78,10 +78,21 @@ This method will produce a [Log Event](../Diagnostics/EventLogger.md) to aid in 
 
 > Resets the Statistics for this station. See the [Statistics](#statistics) property.
 
+### Set track
+
+*SetTrack(<Track>)*
+
+
+```javascript
+PositionTrigger[1].Position := 1000.0;
+PositionTrigger[1].SetTrack(Track[2]);
+```
 
 ## Properties
 
 ### .MoverPassedPosition
+
+*BOOL*
 
 > Status boolean indicating that at least one mover has passed over the threshold position since being registered
 
@@ -89,6 +100,8 @@ Position Triggers are unique in that the Current Mover output *latches* even tho
 
 
 ### .CurrentMover
+
+*REFERENCE TO Mover*
 
 > Reference variable that refers to the most recent registered mover to cross over the track position since being registered
 
@@ -103,14 +116,22 @@ Position Triggers are unique in that the Current Mover output *latches* even tho
 
 ### .Position
 
+*LREAL*
+
 > Current placement of the Position Trigger threshold along the track
 
 
-### .TrackId
+### .Track
+
+*REFERENCE TO Track*
+
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
 
 
 ### .TriggerDirection
+
+*Tc3_Mc3Definitions.MC_Direction*
+
 > Sets the direction of travel required for the mover to trigger the position trigger.
 
 Options are:

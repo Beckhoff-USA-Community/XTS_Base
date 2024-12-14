@@ -6,7 +6,7 @@ VAR
 
     {attribute 'hide'}
     internalPosition 				: LREAL;
-	internalTrackId 				: DINT := 1; 
+	internalTrack 					: REFERENCE TO Track; 
 	internalGroupSize				: DINT := 1;	// used for calculating blocked statistics for multi-up stations
 	
 	internalStationOccupiedTimer	: TON;
@@ -62,11 +62,11 @@ FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) D
 
     IF internalTrackedMovers[i] <> 0 THEN
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
-		IF (moverTrackId = internalTrackId) THEN
+		IF (moverTrackId = internalTrack.Id) THEN
 
 			difference := ABS(internalTrackedMovers[i]^.TrackInfo.TrackPosition - Position);
 
-			IF MIN(difference, Param.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
+			IF MIN(difference, internalTrack.Length - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
 				CurrentMover                    REF= internalTrackedMovers[i]^;
 				CurrentMover.SourceInstancePath := THIS^.InstancePath;
 			END_IF
@@ -163,7 +163,7 @@ IF internalBlocked THEN
 	internalStationBlockedTimer(IN := internalBlocked, PT := T#40D, ET => Statistics.TimeBlocked);
 	// calculate the previous mover's distance traveled and compare to gap*station group (minimum distance required to receive next mover)
 	lastMoverDist :=  ABS(Position - internalLastMover.TrackInfo.TrackPosition);
-	IF MIN(lastMoverDist, Param.TRACK_LENGTH - lastMoverDist) >= internalLastMover.MotionParameters.Gap * GroupSize THEN
+	IF MIN(lastMoverDist, internalTrack.Length - lastMoverDist) >= internalLastMover.MotionParameters.Gap * GroupSize THEN
 		// use 1.0 as alphaema on reset
 		IF (internalStationBlockedReset) THEN
 			alphaEMABlocked := 1.0;
@@ -248,10 +248,10 @@ FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) D
     // todo: make in-position tolerance adjustable. add condition that mover is stopped?
     IF internalTrackedMovers[i] <> 0  AND_THEN internalTrackedMovers[i]^.CurrentTrack <> 0 THEN
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
-		IF (moverTrackId = internalTrackId) THEN
+		IF (moverTrackId = internalTrack.Id) THEN
 			difference := ABS(Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition);
 
-			IF MIN(difference, Param.TRACK_LENGTH - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
+			IF MIN(difference, internalTrack.Length - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
 				MoverInPosition := TRUE;
 			END_IF
 		END_IF;
@@ -309,6 +309,16 @@ internalStationEmptyReset			:= TRUE;
 internalStationBlockedReset			:= TRUE;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SetTrack" Id="{99aa283a-a1ef-0dc6-17d6-dc52fc38a579}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetTrack : BOOL
+VAR_INPUT
+	Track : REFERENCE TO Track;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[internalTrack REF= Track;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="TrackId" Id="{dd27eb4c-c068-0d87-1f18-811d55fc3099}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
       <Get Name="Get" Id="{be7a013c-37ba-0a27-340c-88598ee84d38}">
@@ -316,17 +326,9 @@ internalStationBlockedReset			:= TRUE;]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[TrackId := internalTrackId;]]></ST>
+          <ST><![CDATA[TrackId := internalTrack.Id;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{bd28dde0-1e47-0849-0f5f-d2aee5da86fa}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[internalTrackId := TrackId;]]></ST>
-        </Implementation>
-      </Set>
     </Property>
   </POU>
 </TcPlcObject>

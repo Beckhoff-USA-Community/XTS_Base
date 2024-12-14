@@ -43,16 +43,16 @@ Stations, Zones and Position Triggers will only return or act on movers that are
 ```javascript
 // position trigger at 150.0 mm on track 2
 PositionTrigger[1].Position := 150.0;
-PositionTrigger[1].TrackId  := 2;
+PositionTrigger[1].SetTrack(Track[2]);
 
 // Zone between 200.0 and 300.0 mm on track 3
 Zone[1].StartPosition := 200.0;
 Zone[1].EndPosition   := 200.0;
-Zone[1].TrackId       := 3;
+Zone[1].SetTrack(Track[3]);
 
 // Station at 250.0 mm on track 3
 Station[1].Position := 250.0;
-Station[1].TrackId  := 3;
+Station[1].SetTrack(Track[3]);
 ```
 
 ### Tracks managing movers

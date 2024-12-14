@@ -25,8 +25,6 @@ VAR
 	mcDirectionPositive		: Tc2_MC2.MC_Direction;
 	Trig0MoverIndex			: UDINT;
 	Trig0MoverPosLag		: LREAL;
-	
-	zoneReadout				: UDINT;			
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -138,7 +136,6 @@ CASE State OF
 END_CASE
 
 XTS.CyclicLogic();
-zoneReadout := XTS.Zone[0].CurrentMoverCount;
 ]]></ST>
     </Implementation>
     <Action Name="Initializing" Id="{0bad743d-cb82-0efe-1988-42b77153463d}">
@@ -171,7 +168,7 @@ XTS.InitialParameterSet.Acceleration	:= 10_000;		// mm/s2
 XTS.InitialParameterSet.Deceleration	:= 10_000;		// mm/s2
 XTS.InitialParameterSet.Jerk			:= 100_000;		// mm/s3
 XTS.InitialParameterSet.Gap				:= 85;			// mm
-XTS.InitialParameterSet.Direction		:= mcDirectionPositive;
+XTS.InitialParameterSet.Direction		:= Tc3_Mc3Definitions.MC_Direction.mcDirectionPositive;
 
 LowVelocity		:= 300;
 MediumVelocity	:= 800;

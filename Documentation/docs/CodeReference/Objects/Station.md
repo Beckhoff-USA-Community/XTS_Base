@@ -60,6 +60,16 @@ The call to Cyclic() is handled automatically after the station has been registe
 
 > Resets the Statistics for this station. See the [Statistics](#statistics) property.
 
+### Set track
+
+*SetTrack(<Track>)*
+
+
+```javascript
+Station[1].Position := 1000.0;
+Station[1].SetTrack(Track[2]);
+```
+
 ## Properties
 
 ### .Blocked
@@ -91,9 +101,14 @@ This value is only used to help calculate throughput `.Statistics` on the mover 
 
 ### .MoverInPosition
 
+*BOOL*
+
 > Status boolean indicating that a mover is currently docked with the Station
 
+
 ### .TrackedMoverCount
+
+*USINT*
 
 > Simply reports the number of Movers that are currently registered with the Station. Because Stations automatically deregister movers that are not currently destined for this Station, this value also represents the current number of incoming movers.
 
@@ -102,6 +117,8 @@ This value is only used to help calculate throughput `.Statistics` on the mover 
 
 
 ### .Position
+
+*LREAL*
 
 > Current placement of the Station along the track
 
@@ -129,8 +146,10 @@ This value is also used to place a marker on the visualization tools representin
 | ThrottledThreshold		| LREAL |  A high throttled threshold (Blocked to Empty ratio) indicates a potential bottleneck station	|
 | ProcessedMoverCount		| UDINT |  Total number of movers processed by this station |
 
-#### .TrackId
-*DINT*
+#### .Track
+
+*REFERENCE TO Track*
+
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
 
 

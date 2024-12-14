@@ -3,7 +3,7 @@
   <POU Name="FB_XTS" Id="{87c35dfd-521b-066c-1ce4-3f633fe319d2}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_XTS
 VAR_GENERIC CONSTANT
-	NUM_MOVERS : USINT;
+	NUM_MOVERS : USINT := 6;
 END_VAR
 VAR_INPUT
 
@@ -128,11 +128,13 @@ END_FOR
 // Add all PositionTriggers to the Mediator
 FOR i := 0 TO Param.NUM_POSITIONTRIGGERS - 1 DO
 	System.AddPositionTrigger( PositionTrigger[i] );
+	PositionTrigger[i].SetTrack(Track[1]);
 END_FOR
 
 // Add all Stations to the Mediator
 FOR i := 0 TO Param.NUM_STATIONS - 1 DO
 	System.AddStation( Station[i] );
+	Station[i].SetTrack(Track[1]);
 END_FOR
 
 // Add all Tracks to the Mediator
@@ -145,6 +147,7 @@ END_FOR
 // Add all Zones to the Mediator
 FOR i := 0 TO Param.NUM_ZONES - 1 DO
 	System.AddZone( Zone[i] );
+	Zone[i].SetTrack(Track[1]);
 END_FOR]]></ST>
       </Implementation>
     </Action>

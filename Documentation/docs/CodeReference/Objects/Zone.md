@@ -47,6 +47,16 @@ ZoneLeftSide.GetMover( 0, MC_Positive_Direction ).MoveToPosition( 2000 );
 ZoneRightSide.GetMover( 3, MC_Negative_Direction ).SetVelocity( 1200 );
 ```
 
+### Set track
+
+*SetTrack(<Track>)*
+
+
+```javascript
+Zone[1].StartPosition := 1000.0;
+Zone[1].EndPosition := 500.0;
+Zone[1].SetTrack(Track[2]);
+```
 
 ## Properties
 
@@ -91,9 +101,9 @@ Zone.CurrentMoverList.GetMoverByLocation(0,Zone.EndPosition,MC_Positive_Directio
 
 > Defines the lower bound for the track region considered by the Zone object.
 
-### .TrackId
+### .Track
 
-*DINT*
+*REFERENCE TO Track*
 
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
 

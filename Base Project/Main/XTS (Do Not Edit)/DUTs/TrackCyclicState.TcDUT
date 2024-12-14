@@ -9,6 +9,7 @@ TYPE TrackCyclicState :
 	CHECK_ZERO_CASE 		:= 10,
 	CHECK_TRACK_COUNT		:= 20,
 	GET_OTCID				:= 30,
+	GET_LENGTH				:= 40,
 	SET_INITIALIZED			:= 100 
 );
 END_TYPE

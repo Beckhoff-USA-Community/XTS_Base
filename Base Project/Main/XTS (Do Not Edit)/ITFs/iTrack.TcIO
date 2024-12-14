@@ -38,6 +38,12 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Property Name="Length" Id="{461850cd-0a22-0a6c-2779-b7ab070c7c29}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Length : LREAL]]></Declaration>
+      <Get Name="Get" Id="{02c325c5-63a3-01dd-0840-f16f8685e1d2}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="OTCID" Id="{7742d262-0d22-0599-170c-d4a1b40d3165}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY OTCID : OTCID]]></Declaration>
       <Get Name="Get" Id="{c75f237a-f500-089c-29f9-aa12a02b9221}">

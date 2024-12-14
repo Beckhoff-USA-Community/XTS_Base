@@ -9,7 +9,7 @@ VAR
     internalMoverPassedPosition : BOOL;
     internalCurrentMover     	 : POINTER TO Mover;
 	internalLastMoverPassedPosition		: BOOL;
-	internalTrackId				: DINT := 1;
+	internalTrack				: REFERENCE TO Track;
     moverLastPos              	: ARRAY[1..Param.MAX_MOVERS] OF LREAL; // Positions of tracked movers from last cycle
 	moverInitialized			: ARRAY [1..Param.MAX_MOVERS] OF BOOL; // first scan-like flag to prevent erronious triggers on first scan
 	
@@ -74,7 +74,7 @@ END_VAR]]></Declaration>
 FOR i := 1 TO Param.MAX_MOVERS DO
     IF internalTrackedMovers[i] <> 0 AND_THEN (internalTrackedMovers[i]^.IsTrackReady AND internalTrackedMovers[i]^.CurrentTrack <> 0) THEN
 		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
-		IF (moverTrackId = internalTrackId) THEN
+		IF (moverTrackId = internalTrack.Id) THEN
 			
 			// last position is invalid on first scan, set it to the current position to avoid a false trigger on the first scan
 			IF NOT moverInitialized[i] THEN
@@ -83,15 +83,15 @@ FOR i := 1 TO Param.MAX_MOVERS DO
 			END_IF
 		
 			// Determine if a position rollover occured in the last cycle
-			modTrackPosition := MODABS( internalTrackedMovers[i]^.TrackInfo.TrackPosition, Param.TRACK_LENGTH);
+			modTrackPosition := MODABS( internalTrackedMovers[i]^.TrackInfo.TrackPosition, internalTrack.Length);
 			positionDifference := moverLastPos[i] - modTrackPosition;			
-			rolloverOccured := ABS( positionDifference ) > ( Param.TRACK_LENGTH / 2 );
+			rolloverOccured := ABS( positionDifference ) > ( internalTrack.Length / 2 );
 			
 			// and if so, modify the stored last position values to be nonmodulo to compensate
 			IF rolloverOccured AND positionDifference > 0 THEN
-				moverLastPos[i]		:= moverLastPos[i] - Param.TRACK_LENGTH;
+				moverLastPos[i]		:= moverLastPos[i] - internalTrack.Length;
 			ELSIF rolloverOccured AND positionDifference < 0 THEN
-				moverLastPos[i]		:= moverLastPos[i] + Param.TRACK_LENGTH;
+				moverLastPos[i]		:= moverLastPos[i] + internalTrack.Length;
 			END_IF
 		
 			// Look for movers passing over the threshold this cycle and assign it to the
@@ -264,6 +264,16 @@ Statistics.ProcessedMoverCount			:= 0;
 internalStatisticsReset					:= TRUE;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SetTrack" Id="{5aa68d70-5aa7-0d74-0a7a-0c04d0a46453}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD SetTrack : BOOL
+VAR_INPUT
+	Track : REFERENCE TO Track;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[internalTrack REF= Track;]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="TrackId" Id="{dbfe845b-02ea-002a-11b5-4efaf37a2e66}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
       <Get Name="Get" Id="{36306272-b6fe-0043-1e2d-da060775dff6}">
@@ -271,17 +281,9 @@ internalStatisticsReset					:= TRUE;]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[TrackId := internalTrackId;]]></ST>
+          <ST><![CDATA[TrackId := internalTrack.Id;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{43412e6e-388b-0c48-14bf-abf9f8d26c08}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[internalTrackId := TrackId;]]></ST>
-        </Implementation>
-      </Set>
     </Property>
     <Property Name="TriggerDirection" Id="{13bb661c-6cea-4df5-a26e-19ba5cdbbe66}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
