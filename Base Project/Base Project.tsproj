@@ -32097,9 +32097,9 @@ External Setpoint Generation:
 			</NC>
 		</Motion>
 		<Plc>
-			<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="Main" PrjFilePath="Main\Main.plcproj" TmcFilePath="Main\Main.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F39C11D3-76E9-33E2-2B74-793F78824599}" TmcPath="Main\Main.tmc">
-					<Name>Main Instance</Name>
+			<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="PLC1" PrjFilePath="PLC1\PLC1.plcproj" TmcFilePath="PLC1\PLC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{0FA0080E-F9FC-DC64-27F2-004AC372DA03}" TmcPath="Main\Main.tmc">
+					<Name>PLC1 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
@@ -35403,7 +35403,7 @@ External Setpoint Generation:
 				<Link VarA="Term 43 (AT2050-0501)^Term 44 (AT2050-5501)^FB Inputs^Value Channel 32" VarB="Data Pointer^RawPositionValues[31]"/>
 			</OwnerB>
 		</OwnerA>
-		<OwnerA Name="TIPC^Main^Main Instance">
+		<OwnerA Name="TIPC^PLC1^PLC1 Instance">
 			<OwnerB Name="TINC^NC SAF^Axes^Mover Axis 1">
 				<Link VarA="PlcTask Inputs^MAIN.XTS.Mover[1].AxisReference.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^MAIN.XTS.Mover[1].AxisReference.PlcToNc" VarB="Inputs^FromPlc"/>
