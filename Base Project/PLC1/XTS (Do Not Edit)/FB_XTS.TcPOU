@@ -32,6 +32,7 @@ VAR_OUTPUT
 	MoverPositions	: ARRAY [1..NUM_MOVERS] OF REAL;
 	MoverErrors		: ARRAY [1..NUM_MOVERS] OF BOOL;
 	MoverErrorIDs	: ARRAY [1..NUM_MOVERS] OF UDINT;
+	NumMovers		: USINT;
 END_VAR
 VAR
 
@@ -110,7 +111,8 @@ FOR i := 1 TO NUM_MOVERS DO
 	MoverPositions[i] := LREAL_TO_REAL(Mover[i].TrackInfo.TrackPosition);
 	MoverErrors[i] := Mover[i].Error;
 	MoverErrorIDs[i] := Mover[i].ErrorID;
-END_FOR]]></ST>
+END_FOR
+NumMovers := NUM_MOVERS;]]></ST>
       </Implementation>
     </Method>
     <Action Name="Registering" Id="{41624cf4-8fb9-0501-1651-f19186cb236b}">
