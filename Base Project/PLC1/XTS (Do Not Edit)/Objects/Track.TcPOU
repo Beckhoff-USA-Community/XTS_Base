@@ -131,7 +131,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[]]></ST>
+          <ST><![CDATA[Length := internalLength;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{c74af95d-1365-01dd-05a7-8fb2224ded8b}">
