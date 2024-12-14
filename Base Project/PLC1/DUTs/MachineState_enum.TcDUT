@@ -12,7 +12,7 @@ TYPE MachineState_enum :
 	MS_RECOVERING		:= 4,
 	MS_RUNNING			:= 5,
 	MS_CYCLESTOP		:= 6,
-	MS_STOPPING			:= 7,
+	MS_STOPPED			:= 7,
 	MS_ERROR			:= 8
 );
 END_TYPE

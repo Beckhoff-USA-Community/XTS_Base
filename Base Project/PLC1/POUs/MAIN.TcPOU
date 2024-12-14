@@ -57,27 +57,31 @@ have no liability for, and does not waive any rights in relation to, any code sa
 provides or the use of such code samples for any purpose.
 *)
 
-
-
+// initialize stations, position triggers and zones one time
 IF NOT Init THEN Initializing(); END_IF
 
+// main state machine
 CASE State OF 
 
+	// off (idle) state, waiting for enable command
 	MS_OFF:
 		IF MainCommands.Enable THEN
 			XTS.Enable				:= TRUE;
 			State					:= MS_RESTARTING;
 		END_IF
-
+		
 	MS_RESTARTING:
+		// restart the system by enabling the XTS and waiting for it to complete
 		IF NOT MainCommands.Enable THEN
 			XTS.Enable				:= FALSE;
 			State					:= MS_STOPPING;
 		ELSIF XTS.State = XTS_ENABLED THEN
 			State		:= MS_ENABLED;
 		END_IF
-	
+
+
 	MS_ENABLED:
+		// XTS is enabled, wait for start command
 		IF NOT MainCommands.Enable THEN
 			XTS.Enable				:= FALSE;
 			State					:= MS_STOPPING;
@@ -111,18 +115,20 @@ CASE State OF
 		// run the station-to-station mover logic
 		StationLogic();
 		
-		// monitor for disable
+		// monitor for disable or stop
 		IF NOT MainCommands.Enable THEN
 			XTS.Enable				:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
-			State					:= MS_STOPPING;
+			State					:= MS_STOPPED;
 		ELSIF MainCommands.Stop THEN
 			MainCommands.Start		:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
-			State					:= MS_STOPPING;
+			State					:= MS_STOPPED;
 		END_IF
 
-	MS_STOPPING:
+	MS_STOPPED:
+		// movers are stopped, but XTS is still enabled
+		// wait for restart or disable
 		IF NOT MainCommands.Enable THEN
 			XTS.Enable 				:= FALSE;
 		END_IF
@@ -135,6 +141,7 @@ CASE State OF
 	
 END_CASE
 
+// call the main XTS logic
 XTS.CyclicLogic();
 ]]></ST>
     </Implementation>
