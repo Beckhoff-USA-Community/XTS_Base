@@ -57,9 +57,6 @@ have no liability for, and does not waive any rights in relation to, any code sa
 provides or the use of such code samples for any purpose.
 *)
 
-// initialize stations, position triggers and zones one time
-IF NOT Init THEN Initializing(); END_IF
-
 // main state machine
 CASE State OF 
 
@@ -74,8 +71,10 @@ CASE State OF
 		// restart the system by enabling the XTS and waiting for it to complete
 		IF NOT MainCommands.Enable THEN
 			XTS.Enable				:= FALSE;
-			State					:= MS_STOPPING;
+			State					:= MS_STOPPED;
 		ELSIF XTS.State = XTS_ENABLED THEN
+			// initialize stations, positions and triggers
+			Initializing();
 			State		:= MS_ENABLED;
 		END_IF
 
@@ -84,7 +83,7 @@ CASE State OF
 		// XTS is enabled, wait for start command
 		IF NOT MainCommands.Enable THEN
 			XTS.Enable				:= FALSE;
-			State					:= MS_STOPPING;
+			State					:= MS_STOPPED;
 		ELSIF MainCommands.Start THEN
 			State					:= MS_ONESHOT_RECOVER;
 		END_IF

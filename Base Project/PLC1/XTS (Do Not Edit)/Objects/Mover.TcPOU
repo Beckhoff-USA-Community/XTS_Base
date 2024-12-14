@@ -98,7 +98,8 @@ CurrentDestinationPosition		:= LocalVars.CurrentDestPosition;]]></ST>
       </Get>
     </Property>
     <Property Name="CurrentDestinationTrack" Id="{f44717ff-7baf-0aa6-3174-9f719de28f4d}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentDestinationTrack : DINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentDestinationTrack : DINT]]></Declaration>
       <Get Name="Get" Id="{8c28783f-5955-0092-0fca-8afe86f48bde}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -136,7 +137,8 @@ CurrentObjective		:= LocalVars.CurrentDestObjective;]]></ST>
       </Get>
     </Property>
     <Property Name="CurrentTrack" Id="{57746913-d241-0290-0366-208479410de1}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentTrack : POINTER TO Track]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentTrack : POINTER TO Track]]></Declaration>
       <Get Name="Get" Id="{845db4a8-12f5-01df-23b2-2ce5c8663c6a}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -860,7 +862,8 @@ IsSyncedToMover		:= LocalVars.fbGearInPosMoverCA[0].InSync OR LocalVars.fbGearIn
       </Get>
     </Property>
     <Property Name="IsTrackReady" Id="{cd5c6866-73e3-00ad-2292-5fe936355763}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY IsTrackReady : BOOL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsTrackReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{1b14d83a-1ec1-0d2f-1616-ce7f9ce5cce5}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -894,7 +897,8 @@ LogUserEvent	:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Property Name="MasterMover" Id="{809c0b0b-ecf0-4af1-b9a6-f6c1668f1e51}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY MasterMover : Reference To Mover]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY MasterMover : Reference To Mover]]></Declaration>
       <Get Name="Get" Id="{cf9c37de-0f5d-4ab8-bb6c-0c7a9a276e2e}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -911,7 +915,8 @@ END_IF]]></ST>
       </Get>
     </Property>
     <Property Name="MoverIndex" Id="{5f0db44a-da6c-04c8-0f32-7b0868675ffd}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY MoverIndex : UDINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY MoverIndex : UDINT]]></Declaration>
       <Get Name="Get" Id="{e4c3fd72-ffe3-080a-0721-acc48b48f2eb}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -1238,7 +1243,8 @@ MoveVelocity		:= THIS^;
       </Implementation>
     </Method>
     <Property Name="NextMover" Id="{852f964d-8625-0223-189c-c4fa1a4b313d}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY NextMover : Reference To Mover]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY NextMover : Reference To Mover]]></Declaration>
       <Get Name="Get" Id="{af159a86-85bb-082d-3056-88b1545f1281}">
         <Declaration><![CDATA[VAR
 	i						: UINT;
@@ -1269,7 +1275,8 @@ END_FOR]]></ST>
       </Get>
     </Property>
     <Property Name="Payload" Id="{5caf95a6-ad6c-448d-8947-8c8c07ab0a26}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Payload : USINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Payload : USINT]]></Declaration>
       <Get Name="Get" Id="{8a73f5fd-2b02-4094-9725-10c35f9f9334}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -1292,7 +1299,8 @@ LocalVars.Payload	:= Payload;]]></ST>
       </Set>
     </Property>
     <Property Name="PreviousMover" Id="{831a5835-1520-04bd-1df4-b0219fd1d25b}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY PreviousMover : REFERENCE TO Mover]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY PreviousMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{a5a30b40-f29c-03c3-3ba4-ac79951c1881}">
         <Declaration><![CDATA[VAR
 	
