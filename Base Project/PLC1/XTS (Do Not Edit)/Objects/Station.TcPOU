@@ -55,19 +55,19 @@ END_VAR]]></Declaration>
           <ST><![CDATA[// default to unassigned
 CurrentMover REF= 0;
 
-FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
+FOR i := 1 TO SIZEOF(internalRegisteredMovers) / SIZEOF(internalRegisteredMovers[1]) DO
 
     // In order to deal with the rollover, we need to evaluate distance between congruence classes
     // e.g. On a 4m track, if the Station is at 0.34mm and the Mover is at 3999.8mm, then this is considered 'in position'	
 
-    IF internalTrackedMovers[i] <> 0 THEN
-		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
+    IF internalRegisteredMovers[i] <> 0 THEN
+		moverTrackId := internalRegisteredMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrack.Id) THEN
 
-			difference := ABS(internalTrackedMovers[i]^.TrackInfo.TrackPosition - Position);
+			difference := ABS(internalRegisteredMovers[i]^.TrackInfo.TrackPosition - Position);
 
-			IF MIN(difference, internalTrack.Length - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
-				CurrentMover                    REF= internalTrackedMovers[i]^;
+			IF MIN(difference, internalTrack.Length - difference) < 1.0 AND NOT internalRegisteredMovers[i]^.Busy THEN
+				CurrentMover                    REF= internalRegisteredMovers[i]^;
 				CurrentMover.SourceInstancePath := THIS^.InstancePath;
 			END_IF
 		END_IF
@@ -106,13 +106,13 @@ END_VAR]]></Declaration>
         <ST><![CDATA[FOR i := 1 TO Param.MAX_MOVERS DO
 
     // This mover is no longer destined for any station
-    IF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.CurrentMoveType <> MOVETYPE_STATION THEN
-        internalTrackedMovers[i] := 0;
-		internalTrackedMoverCount := internalTrackedMoverCount - 1;
+    IF internalRegisteredMovers[i] <> 0 AND_THEN internalRegisteredMovers[i]^.CurrentMoveType <> MOVETYPE_STATION THEN
+        internalRegisteredMovers[i] := 0;
+		internalRegisteredMoverCount := internalRegisteredMoverCount - 1;
         // This mover is no longer destined for this specific station. Comparing instance path seems to be the best way to do this comparison?
-    ELSIF internalTrackedMovers[i] <> 0 AND_THEN internalTrackedMovers[i]^.CurrentObjective <> InstancePath THEN
-        internalTrackedMovers[i] := 0;
-		internalTrackedMoverCount := internalTrackedMoverCount - 1;
+    ELSIF internalRegisteredMovers[i] <> 0 AND_THEN internalRegisteredMovers[i]^.CurrentObjective <> InstancePath THEN
+        internalRegisteredMovers[i] := 0;
+		internalRegisteredMoverCount := internalRegisteredMoverCount - 1;
     END_IF
 
 END_FOR
@@ -240,18 +240,18 @@ END_VAR]]></Declaration>
           <ST><![CDATA[// default to false
 MoverInPosition := FALSE;
 
-FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
+FOR i := 1 TO SIZEOF(internalRegisteredMovers) / SIZEOF(internalRegisteredMovers[1]) DO
 
     // In order to deal with the rollover, we need to evaluate distance between congruence classes
     // e.g. On a 4m track, if the Station is at 0.34 mm and the Mover is at 3999.8mm, then this is considered 'in position' 
 
     // todo: make in-position tolerance adjustable. add condition that mover is stopped?
-    IF internalTrackedMovers[i] <> 0  AND_THEN internalTrackedMovers[i]^.CurrentTrack <> 0 THEN
-		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
+    IF internalRegisteredMovers[i] <> 0  AND_THEN internalRegisteredMovers[i]^.CurrentTrack <> 0 THEN
+		moverTrackId := internalRegisteredMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrack.Id) THEN
-			difference := ABS(Position - internalTrackedMovers[i]^.TrackInfo.TrackPosition);
+			difference := ABS(Position - internalRegisteredMovers[i]^.TrackInfo.TrackPosition);
 
-			IF MIN(difference, internalTrack.Length - difference) < 1.0 AND NOT internalTrackedMovers[i]^.Busy THEN
+			IF MIN(difference, internalTrack.Length - difference) < 1.0 AND NOT internalRegisteredMovers[i]^.Busy THEN
 				MoverInPosition := TRUE;
 			END_IF
 		END_IF;

@@ -10,9 +10,9 @@ VAR_INPUT
 END_VAR
 VAR
 
-    internalTrackedMoverCount 	: USINT;
+    internalRegisteredMoverCount 	: USINT;
    
-    internalTrackedMovers 		: ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover;
+    internalRegisteredMovers 		: ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover;
 
 	{attribute 'hide'}
     ErrorMover 					: ErrorMover;
@@ -43,6 +43,36 @@ END_IF]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Property Name="RegisteredMoverCount" Id="{610e1915-c97a-4bca-998c-120d922f3eee}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY RegisteredMoverCount : USINT]]></Declaration>
+      <Get Name="Get" Id="{7832ece5-c334-41ff-a04f-4af0717e7184}">
+        <Declaration><![CDATA[VAR
+    i : INT;
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[RegisteredMoverCount := 0;
+
+FOR i := 1 TO Param.MAX_MOVERS DO
+
+    IF internalRegisteredMovers[i] <> 0 THEN
+        RegisteredMoverCount := RegisteredMoverCount + 1;
+    END_IF
+
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="RegisteredMovers" Id="{f2e27676-d8a8-4b3f-968b-790753e7621e}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY RegisteredMovers : ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
+      <Get Name="Get" Id="{2692defb-0744-4a89-a02c-657d915f8a30}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[RegisteredMovers := internalRegisteredMovers;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="RegisterMover" Id="{8354cf16-6187-4fe4-976a-42e2fe3b8399}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD RegisterMover : BOOL
 VAR_INPUT
@@ -64,15 +94,15 @@ END_VAR]]></Declaration>
 IF __ISVALIDREF(NewMover) THEN // validate reference
 
     duplicateFound            := FALSE; // default to false, counterexample below
-    internalTrackedMoverCount := 0;     // reset to zero, incremented below
+    internalRegisteredMoverCount := 0;     // reset to zero, incremented below
 
-    FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[i]) DO
-        IF internalTrackedMovers[i] <> 0 THEN
-            IF ADR(NewMover) = internalTrackedMovers[i] THEN
+    FOR i := 1 TO SIZEOF(internalRegisteredMovers) / SIZEOF(internalRegisteredMovers[i]) DO
+        IF internalRegisteredMovers[i] <> 0 THEN
+            IF ADR(NewMover) = internalRegisteredMovers[i] THEN
                 duplicateFound := TRUE; // this mover already tracked
             END_IF
 
-            internalTrackedMoverCount := internalTrackedMoverCount + 1;
+            internalRegisteredMoverCount := internalRegisteredMoverCount + 1;
         ELSE
 			// track the first empty index
 			IF (emptyIDX = 0) THEN
@@ -82,8 +112,8 @@ IF __ISVALIDREF(NewMover) THEN // validate reference
     END_FOR
 
     IF duplicateFound = FALSE THEN
-        internalTrackedMovers[emptyIDX] := ADR(NewMover); // new mover goes into open array element
-        internalTrackedMoverCount       := internalTrackedMoverCount + 1;
+        internalRegisteredMovers[emptyIDX] := ADR(NewMover); // new mover goes into open array element
+        internalRegisteredMoverCount       := internalRegisteredMoverCount + 1;
     END_IF
 
 ELSE
@@ -107,7 +137,7 @@ END_VAR]]></Declaration>
 	Adds an entire MoverList to the Tracked Movers of the objective.
 *)
 
-arrTrackedMovers := NewMoverList.TrackedMovers;
+arrTrackedMovers := NewMoverList.RegisteredMovers;
 
 // IF __ISVALIDREF( NewMoverList ) THEN
 IF NewMoverList <> 0 THEN
@@ -119,36 +149,6 @@ IF NewMoverList <> 0 THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Property Name="TrackedMoverCount" Id="{610e1915-c97a-4bca-998c-120d922f3eee}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY TrackedMoverCount : USINT]]></Declaration>
-      <Get Name="Get" Id="{7832ece5-c334-41ff-a04f-4af0717e7184}">
-        <Declaration><![CDATA[VAR
-    i : INT;
-END_VAR]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[TrackedMoverCount := 0;
-
-FOR i := 1 TO Param.MAX_MOVERS DO
-
-    IF internalTrackedMovers[i] <> 0 THEN
-        TrackedMoverCount := TrackedMoverCount + 1;
-    END_IF
-
-END_FOR]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="TrackedMovers" Id="{f2e27676-d8a8-4b3f-968b-790753e7621e}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
-      <Get Name="Get" Id="{2692defb-0744-4a89-a02c-657d915f8a30}">
-        <Declaration><![CDATA[VAR
-END_VAR]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[TrackedMovers := internalTrackedMovers;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Method Name="UnregisterAll" Id="{8fb61f33-6bbe-4b93-92b5-f08c59b94375}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD UnregisterAll : BOOL
 VAR_INPUT
@@ -158,7 +158,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Blow out the tracked mover array
-memset(ADR(internalTrackedMovers), 0, SIZEOF(internalTrackedMovers));]]></ST>
+memset(ADR(internalRegisteredMovers), 0, SIZEOF(internalRegisteredMovers));]]></ST>
       </Implementation>
     </Method>
     <Method Name="UnregisterCurrent" Id="{f5252866-1ebe-4ec3-aeab-827236ab79ab}" FolderPath="Methods\">
@@ -186,16 +186,16 @@ END_VAR]]></Declaration>
 //	IF RemovingMover <> 0 THEN			// validate pointer
 IF __ISVALIDREF(RemovingMover) THEN
 
-    internalTrackedMoverCount := 0;
+    internalRegisteredMoverCount := 0;
 
-    FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
-        IF internalTrackedMovers[i] <> 0 THEN // validate pointer
+    FOR i := 1 TO SIZEOF(internalRegisteredMovers) / SIZEOF(internalRegisteredMovers[1]) DO
+        IF internalRegisteredMovers[i] <> 0 THEN // validate pointer
 
-            internalTrackedMoverCount := internalTrackedMoverCount + 1;
+            internalRegisteredMoverCount := internalRegisteredMoverCount + 1;
 
-            IF ADR(RemovingMover) = internalTrackedMovers[i] THEN
-                internalTrackedMovers[i]  := 0; // remove the pointer
-                internalTrackedMoverCount := internalTrackedMoverCount - 1;
+            IF ADR(RemovingMover) = internalRegisteredMovers[i] THEN
+                internalRegisteredMovers[i]  := 0; // remove the pointer
+                internalRegisteredMoverCount := internalRegisteredMoverCount - 1;
             END_IF
 
         END_IF

@@ -24,7 +24,7 @@ PROPERTY CurrentMoverCount : USINT]]></Declaration>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[CurrentMoverCount := THIS^.CurrentMoverList.TrackedMoverCount;]]></ST>
+          <ST><![CDATA[CurrentMoverCount := THIS^.CurrentMoverList.RegisteredMoverCount;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -38,23 +38,23 @@ END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[internalMoverList.UnregisterAll();
 
-FOR i := 1 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
-    IF internalTrackedMovers[i] <> 0 AND_THEN (internalTrackedMovers[i]^.IsTrackReady AND internalTrackedMovers[i]^.CurrentTrack <> 0) THEN
-		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
+FOR i := 1 TO SIZEOF(RegisteredMovers) / SIZEOF(internalRegisteredMovers[1]) DO
+    IF internalRegisteredMovers[i] <> 0 AND_THEN (internalRegisteredMovers[i]^.IsTrackReady AND internalRegisteredMovers[i]^.CurrentTrack <> 0) THEN
+		moverTrackId := internalRegisteredMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrack.Id) THEN
 			IF internalStartPosition < internalEndPosition
-				   AND internalTrackedMovers[i]^.TrackInfo.TrackPosition > internalStartPosition
-				   AND internalTrackedMovers[i]^.TrackInfo.TrackPosition < internalEndPosition THEN
+				   AND internalRegisteredMovers[i]^.TrackInfo.TrackPosition > internalStartPosition
+				   AND internalRegisteredMovers[i]^.TrackInfo.TrackPosition < internalEndPosition THEN
 				// Zone does NOT contain the rollover point, and DOES contain the mover
 	
-				internalMoverList.RegisterMover(internalTrackedMovers[i]^);
+				internalMoverList.RegisterMover(internalRegisteredMovers[i]^);
 	
 			ELSIF internalStartPosition > internalEndPosition
-					  AND (internalTrackedMovers[i]^.TrackInfo.TrackPosition > internalStartPosition
-					  OR internalTrackedMovers[i]^.TrackInfo.TrackPosition < internalEndPosition) THEN
+					  AND (internalRegisteredMovers[i]^.TrackInfo.TrackPosition > internalStartPosition
+					  OR internalRegisteredMovers[i]^.TrackInfo.TrackPosition < internalEndPosition) THEN
 				// Zone DOES contain the rollover point, and DOES contain the mover
 	
-				internalMoverList.RegisterMover(internalTrackedMovers[i]^);
+				internalMoverList.RegisterMover(internalRegisteredMovers[i]^);
 	
 			ELSE
 				// Either the zone doesn't contain this mover,

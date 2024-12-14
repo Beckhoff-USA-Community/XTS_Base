@@ -72,8 +72,8 @@ END_VAR]]></Declaration>
         <ST><![CDATA[currentIsRegistered		:= FALSE;
 
 FOR i := 1 TO Param.MAX_MOVERS DO
-    IF internalTrackedMovers[i] <> 0 AND_THEN (internalTrackedMovers[i]^.IsTrackReady AND internalTrackedMovers[i]^.CurrentTrack <> 0) THEN
-		moverTrackId := internalTrackedMovers[i]^.CurrentTrack^.Id;
+    IF internalRegisteredMovers[i] <> 0 AND_THEN (internalRegisteredMovers[i]^.IsTrackReady AND internalRegisteredMovers[i]^.CurrentTrack <> 0) THEN
+		moverTrackId := internalRegisteredMovers[i]^.CurrentTrack^.Id;
 		IF (moverTrackId = internalTrack.Id) THEN
 			
 			// last position is invalid on first scan, set it to the current position to avoid a false trigger on the first scan
@@ -83,7 +83,7 @@ FOR i := 1 TO Param.MAX_MOVERS DO
 			END_IF
 		
 			// Determine if a position rollover occured in the last cycle
-			modTrackPosition := MODABS( internalTrackedMovers[i]^.TrackInfo.TrackPosition, internalTrack.Length);
+			modTrackPosition := MODABS( internalRegisteredMovers[i]^.TrackInfo.TrackPosition, internalTrack.Length);
 			positionDifference := moverLastPos[i] - modTrackPosition;			
 			rolloverOccured := ABS( positionDifference ) > ( internalTrack.Length / 2 );
 			
@@ -101,21 +101,21 @@ FOR i := 1 TO Param.MAX_MOVERS DO
 				
 				// Position trigger event detected in the positive direction
 				internalMoverPassedPosition		:= TRUE;
-				internalCurrentMover			:= internalTrackedMovers[i];
+				internalCurrentMover			:= internalRegisteredMovers[i];
 				
 			ELSIF TriggerDirection = MC_Negative_Direction AND moverLastPos[i] > internalPosition AND
 				modTrackPosition <= internalPosition THEN
 				
 				// Position trigger event detecte in the negative direction
 				internalMoverPassedPosition		:= TRUE;
-				internalCurrentMover			:= internalTrackedMovers[i];
+				internalCurrentMover			:= internalRegisteredMovers[i];
 				
 			END_IF
 			
 			
 			
 			// Ensure that the CurrentMover is still registered with the PositionTrigger
-			IF internalCurrentMover <> 0 AND internalTrackedMovers[i] = internalCurrentMover THEN
+			IF internalCurrentMover <> 0 AND internalRegisteredMovers[i] = internalCurrentMover THEN
 				currentIsRegistered		:= TRUE;
 			END_IF
 	

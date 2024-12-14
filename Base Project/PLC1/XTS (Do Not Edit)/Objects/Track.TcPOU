@@ -27,7 +27,7 @@ END_VAR]]></Declaration>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[CurrentMoverCount := TrackedMoverCount;]]></ST>
+          <ST><![CDATA[CurrentMoverCount := RegisteredMoverCount;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -181,9 +181,9 @@ SUPER^.RegisterMover(NewMover);
 // this saves us the time of generating it on every call to CurrentMoverCount
 internalMoverList.UnregisterAll();
 
-FOR i := 1 TO SIZEOF(internalTrackedMovers) / SIZEOF(internalTrackedMovers[1]) DO
-    IF internalTrackedMovers[i] <> 0 THEN
-		internalMoverList.RegisterMover(internalTrackedMovers[i]^);
+FOR i := 1 TO SIZEOF(internalRegisteredMovers) / SIZEOF(internalRegisteredMovers[1]) DO
+    IF internalRegisteredMovers[i] <> 0 THEN
+		internalMoverList.RegisterMover(internalRegisteredMovers[i]^);
 	END_IF
 END_FOR;]]></ST>
       </Implementation>
@@ -219,9 +219,9 @@ SUPER^.UnregisterMover(RemovingMover);
 // this saves us the time of generating it on every call to CurrentMoverCount
 internalMoverList.UnregisterAll();
 
-FOR i := 0 TO SIZEOF(TrackedMovers) / SIZEOF(internalTrackedMovers[1]) - 1 DO
-    IF internalTrackedMovers[i] <> 0 THEN
-		internalMoverList.RegisterMover(internalTrackedMovers[i]^);
+FOR i := 0 TO SIZEOF(RegisteredMovers) / SIZEOF(internalRegisteredMovers[1]) - 1 DO
+    IF internalRegisteredMovers[i] <> 0 THEN
+		internalMoverList.RegisterMover(internalRegisteredMovers[i]^);
 	END_IF
 END_FOR;]]></ST>
       </Implementation>

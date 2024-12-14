@@ -136,6 +136,19 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
+    <Property Name="RegisteredMoverCount" Id="{368f6c76-4224-03b5-39ed-4f46132302d9}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY RegisteredMoverCount : USINT]]></Declaration>
+      <Get Name="Get" Id="{a4e1bb20-cd42-038c-1a1e-a8f5b0110892}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="RegisteredMovers" Id="{c1d0d30a-4686-4f53-a96b-53d64c99ec16}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY RegisteredMovers : ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
+      <Get Name="Get" Id="{d3d3bfad-1918-438f-8ad5-aa73cc840431}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="SetAllAcceleration" Id="{455895b5-97e6-495e-9cb5-6646f55e97b6}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAllAcceleration : iMoverList
 VAR_INPUT
@@ -190,19 +203,6 @@ VAR_INPUT
 
 END_VAR]]></Declaration>
     </Method>
-    <Property Name="TrackedMoverCount" Id="{368f6c76-4224-03b5-39ed-4f46132302d9}" FolderPath="Properties\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY TrackedMoverCount : USINT]]></Declaration>
-      <Get Name="Get" Id="{a4e1bb20-cd42-038c-1a1e-a8f5b0110892}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="TrackedMovers" Id="{c1d0d30a-4686-4f53-a96b-53d64c99ec16}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TrackedMovers : ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
-      <Get Name="Get" Id="{d3d3bfad-1918-438f-8ad5-aa73cc840431}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
     <Method Name="UnregisterAll" Id="{77dd6571-5452-49cc-817d-10e46daccff7}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD UnregisterAll : BOOL
 VAR_INPUT
