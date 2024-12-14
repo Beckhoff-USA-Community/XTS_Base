@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="MAIN" Id="{e5121501-3133-07a7-12bf-96dcd5d9e348}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
@@ -25,6 +25,8 @@ VAR
 	mcDirectionPositive		: Tc2_MC2.MC_Direction;
 	Trig0MoverIndex			: UDINT;
 	Trig0MoverPosLag		: LREAL;
+	
+	zoneReadout				: UDINT;			
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -136,6 +138,7 @@ CASE State OF
 END_CASE
 
 XTS.CyclicLogic();
+zoneReadout := XTS.Zone[0].CurrentMoverCount;
 ]]></ST>
     </Implementation>
     <Action Name="Initializing" Id="{0bad743d-cb82-0efe-1988-42b77153463d}">
