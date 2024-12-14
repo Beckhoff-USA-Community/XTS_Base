@@ -562,17 +562,22 @@ CASE internalM1DetectState OF
 		IF internalM1DetectFlag THEN
 			// clear previous error flag
 			internalMover1Error		:= FALSE;
-			internalM1DetectState	:= 1;
+			internalM1DetectState	:= 10;
+		END_IF
+		
+	10:	// wait for envrionment
+		IF EnvironmentIsReady AND_THEN NOT THIS^.Mover1DetectionComplete THEN
+ 			internalM1DetectState 	:= 20;
 		END_IF
 
-	1:	// Trigger mover redetection
+	20:	// Trigger mover redetection
 		fbXtsEnvironment.XpuTcIo(1).TriggerRedetection();
- 		internalM1DetectState 		:= 2;
+ 		internalM1DetectState 		:= 30;
 
-	2:	// Monitor mover redection status
+	30:	// Monitor mover redection status
 		XPUDetectionState			:= fbXtsEnvironment.XpuTcIo(1).GetDetectionState();
 		IF XPUDetectionState = DetectionStateEnum.Succeeded THEN
-			internalM1DetectState 	:= 5;
+			internalM1DetectState 	:= 40;
 		ELSIF XPUDetectionState > DetectionStateEnum.Succeeded THEN
 			internalM1DetectState	:= 900;
 		END_IF
@@ -586,12 +591,7 @@ CASE internalM1DetectState OF
 								FailedNoTracksIncluded:=6,
 								FailedTooManyActiveMovers:=7) 	*)
 
-	5:	// wait for envrionment
-		IF EnvironmentIsReady AND_THEN NOT THIS^.Mover1DetectionComplete THEN
- 			internalM1DetectState 	:= 10;
-		END_IF
-
-	10:	// check for mover 1 mode
+	40:	// check for mover 1 mode
 		eMoverIdDetectionMode := XPU.GetMoverIdDetectionMode();
 		IF (eMoverIdDetectionMode = MoverIdDetectionMode.Mover1 OR eMoverIdDetectionMode = MoverIdDetectionMode.MultipleMover1) THEN
 			// mover 1 detection sequence
