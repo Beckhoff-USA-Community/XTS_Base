@@ -1266,7 +1266,7 @@ FOR i := 1 TO Param.MAX_MOVERS DO
 		END_IF
 	
 		IF currentDifference < minimumDifference THEN
-			NextMover				:= Mediator.MoverArray[i]^;
+			NextMover				REF= Mediator.MoverArray[i]^;
 			minimumDifference		:= currentDifference;
 		END_IF
 	END_IF	
@@ -1324,7 +1324,7 @@ FOR i := 1 TO Param.MAX_MOVERS DO
 		END_IF
 		
 		IF currentDifference < minimumDifference THEN
-			PreviousMover			:= Mediator.MoverArray[i]^;
+			PreviousMover			REF= Mediator.MoverArray[i]^;
 			minimumDifference		:= currentDifference;
 		END_IF
 	END_IF

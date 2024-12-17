@@ -100,11 +100,11 @@ CASE State OF
 		IF MainCommands.Stop THEN
 			MainCommands.Start		:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
-            State         	:= MS_STOPPING;
+            State         	:= MS_STOPPED;
         ELSIF NOT MainCommands.Enable THEN
             XTS.Enable		:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
-            State          			:= MS_STOPPING;
+            State          			:= MS_STOPPED;
 		ELSIF RecoveryComplete THEN
 			// recovery sequence is complete, move on to run state
 			State					:= MS_RUNNING;
