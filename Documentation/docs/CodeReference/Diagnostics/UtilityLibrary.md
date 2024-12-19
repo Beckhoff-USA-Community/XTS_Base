@@ -11,7 +11,7 @@ Things like module temperatures, coil currents, and segment BTNs can all be read
 
 Specific library documentation for Tc3_XTS_Utility can be found on Infosys in the link below.
 
-[Infosys Tc3 XTS Utility Documentation](https://infosys.beckhoff.com/english.php?content=../content/1033/tc3_xts_utility/index.html&id=1453293700768984828)
+[Infosys Tc3 XTS Utility Documentation](https://infosys.beckhoff.com/content/1033/xts_software/10350715275.html)
 
 ## Base Project Use
 
