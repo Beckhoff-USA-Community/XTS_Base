@@ -89,6 +89,9 @@ CASE State OF
 			XTS.Enable				:= FALSE;
 			State					:= MS_STOPPED;
 		ELSIF MainCommands.Start THEN
+			// reset the recovery complete flag
+			RecoveryComplete		:= FALSE;
+			// move to next state
 			State					:= MS_ONESHOT_RECOVER;
 		END_IF
 		
