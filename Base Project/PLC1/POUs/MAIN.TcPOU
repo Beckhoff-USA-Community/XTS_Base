@@ -62,7 +62,11 @@ CASE State OF
 
 	// off (idle) state, waiting for enable command
 	MS_OFF:
+		// wait for enable command
 		IF MainCommands.Enable THEN
+			// initialize stations, positions and triggers
+			Initializing();
+			// enable the XTS
 			XTS.Enable				:= TRUE;
 			State					:= MS_RESTARTING;
 		END_IF
@@ -70,11 +74,11 @@ CASE State OF
 	MS_RESTARTING:
 		// restart the system by enabling the XTS and waiting for it to complete
 		IF NOT MainCommands.Enable THEN
+			// disable triggered, pass to xts and stop the movers
 			XTS.Enable				:= FALSE;
 			State					:= MS_STOPPED;
 		ELSIF XTS.State = XTS_ENABLED THEN
-			// initialize stations, positions and triggers
-			Initializing();
+			// enable complete move to enabled
 			State		:= MS_ENABLED;
 		END_IF
 
@@ -98,10 +102,12 @@ CASE State OF
 		Recovering();
 		// test for errors, commands or recovery complete
 		IF MainCommands.Stop THEN
+			// respond to stop command
 			MainCommands.Start		:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
             State         	:= MS_STOPPED;
         ELSIF NOT MainCommands.Enable THEN
+			// respond to loss of enable
             XTS.Enable		:= FALSE;
 			XTS.System.CompleteMoverList.HaltAll();
             State          			:= MS_STOPPED;
