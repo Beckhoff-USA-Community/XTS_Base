@@ -52,6 +52,7 @@ VAR
 	internalEnvironment				: I_TcIoXtsEnvironment;
 	internalXPU						: I_TcIoXtsProcessingUnit;
 	internalInfoServer				: I_TcIoXtsInfoServer;
+	internalInfoServerCount			: UINT;
 	
 	// ========= internal function blocks =========
 	fbGroupStatus			: MC_GroupReadStatus;
@@ -478,7 +479,7 @@ CASE nEnvironmentState OF
 	0:	// ----------------------------------------- Enable Init Items
 	
 		// Enable init Info Server if needed
-		stXtsEnvironmentConfiguration.bEnableInitInfoServer		:= TRUE;
+		stXtsEnvironmentConfiguration.bEnableInitInfoServer		:= Param.AUTO_POPULATE_STATIONS;
 		
 		// Enable init CA Group if needed
 		stXtsEnvironmentConfiguration.bEnableInitCaGroup		:= TRUE;
@@ -505,12 +506,17 @@ CASE nEnvironmentState OF
 		// Check IsInitialized property
 		IF fbXtsEnvironment.P_IsInitialized THEN
 			// assign to vars
-			internalEnvironment := fbXtsEnvironment;
-			internalXPU			:= fbXtsEnvironment.XpuTcIo(1);
-			internalInfoServer	:= fbXtsEnvironment.InfoServerTcIo(1);
-
-			// next step
-			nEnvironmentState	:= 3;
+			internalEnvironment 	:= fbXtsEnvironment;
+			internalXPU				:= fbXtsEnvironment.XpuTcIo(1);
+			internalInfoServerCount := fbXtsEnvironment.P_InfoServerCount;
+			// info server may not be present in hand-built XTS configurations
+			IF (internalInfoServerCount > 0) THEN
+				internalInfoServer	:= fbXtsEnvironment.InfoServerTcIo(1);
+				nEnvironmentState := 3;
+			ELSE
+				// skip info server intializiation
+				nEnvironmentState := 6;
+			END_IF;
 		END_IF
 
 	3:	// ------------------------------------------ Get OTCID
@@ -851,7 +857,8 @@ END_VAR
       </Get>
     </Property>
     <Property Name="EnvironmentIsReady" Id="{45272fae-93d1-0503-0b16-fd82b7738745}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY EnvironmentIsReady : BOOL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY EnvironmentIsReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{c1e17dfb-61a0-0ba8-0903-93fde5311796}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -866,7 +873,7 @@ EnvironmentIsReady := nEnvironmentState >= 3;]]></ST>
     <Property Name="GroupEnabled" Id="{dca70979-fee3-0f39-3528-000ca64a8f22}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY GroupEnabled : bool]]></Declaration>
       <Get Name="Get" Id="{a4a17b6e-a2a8-0398-0745-96cf710d270e}">
-        <Declaration><![CDATA[
+        <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 VAR
 END_VAR
 ]]></Declaration>
@@ -878,7 +885,8 @@ END_VAR
     <Property Name="GroupError" Id="{3ac97d16-5fe4-0a9a-3305-6d88385b660b}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY GroupError : bool]]></Declaration>
       <Get Name="Get" Id="{faa6b223-287a-0e59-1c37-f312dffb5ec6}">
-        <Declaration><![CDATA[VAR
+        <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
@@ -899,7 +907,8 @@ END_VAR
       </Get>
     </Property>
     <Property Name="InfoServerIsReady" Id="{4e305043-af78-0914-0db5-c677c55227ed}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY InfoServerIsReady : BOOL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY InfoServerIsReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{8b9f3051-e0e9-0ebe-0aa7-9041fdaa0bf8}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -923,7 +932,8 @@ END_VAR
     <Property Name="Mover1DetectionComplete" Id="{b3d53d33-3d35-07f8-35ed-d0dbe454a97c}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Mover1DetectionComplete : BOOL]]></Declaration>
       <Get Name="Get" Id="{e92705b4-cdc3-0cc7-25dc-0275953572ce}">
-        <Declaration><![CDATA[VAR
+        <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
@@ -935,7 +945,8 @@ END_VAR
     <Property Name="Mover1DetectionError" Id="{75004eac-41b5-0213-3156-b53daed26144}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Mover1DetectionError : bool]]></Declaration>
       <Get Name="Get" Id="{e224f7d4-69bc-07c0-2d34-8a91c1a73da1}">
-        <Declaration><![CDATA[VAR
+        <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
