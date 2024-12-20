@@ -524,7 +524,7 @@ CASE nEnvironmentState OF
 		IF internalEnvironment.GetInfoServerOids(TRUE) THEN
 			internalEnvironment.GetInfoServerOids(FALSE);
 			internalInfoServerOTCID := internalEnvironment.P_InfoServerOids[1];
-			nEnvironmentState := 6;
+			nEnvironmentState := 4;
 		END_IF;
 		
 	4:	// ------------------------------------------- Init info server
