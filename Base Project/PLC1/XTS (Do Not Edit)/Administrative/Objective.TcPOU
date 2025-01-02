@@ -130,7 +130,7 @@ VAR
     i                : ULINT;
     duplicateFound   : BOOL;
     emptyIDX         : USINT;
-    arrTrackedMovers : ARRAY[0..(Param.MAX_MOVERS - 1)] OF POINTER TO Mover;
+    arrTrackedMovers : ARRAY[1..(Param.MAX_MOVERS)] OF POINTER TO Mover;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[(*
@@ -141,7 +141,7 @@ arrTrackedMovers := NewMoverList.RegisteredMovers;
 
 // IF __ISVALIDREF( NewMoverList ) THEN
 IF NewMoverList <> 0 THEN
-    FOR i := 1 TO SIZEOF(arrTrackedMovers) / SIZEOF(arrTrackedMovers[0]) DO
+    FOR i := 1 TO SIZEOF(arrTrackedMovers) / SIZEOF(arrTrackedMovers[1]) DO
 
         THIS^.RegisterMover(arrTrackedMovers[i]^);
 
