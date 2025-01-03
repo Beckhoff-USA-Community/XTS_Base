@@ -673,12 +673,14 @@ CASE internalEnableGroupState OF
 		END_IF
 		
 		IF fbGroupStatus.Error THEN
+			fbGroupReset.Execute		:= FALSE;
 			ErrorID						:= fbGroupStatus.ErrorId;
 			ErrorOrigin					:= CONCAT( internalInstancePath, '.fbGroupStatus' );
 			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupStatus,0 );
 			MsgCreate.ipArguments.Clear().AddString(THIS^.internalInstancePath).AddUDINT(THIS^.ErrorID);
 			internalEnableGroupState	:= 900;
 		ELSIF fbGroupReset.Error THEN
+			fbGroupReset.Execute		:= FALSE;
 			ErrorID						:= fbGroupReset.ErrorId;
 			ErrorOrigin					:= CONCAT( internalInstancePath, '.fbGroupReset' );
 			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupReset,0 );
@@ -696,6 +698,7 @@ CASE internalEnableGroupState OF
 			internalEnableGroupFlag 	:= FALSE;
 			internalEnableGroupState	:= 100;
 		ELSIF fbGroupEnable.Error THEN
+			fbGroupEnable.Execute		:= FALSE;
 			ErrorID						:= fbGroupEnable.ErrorId;
 			ErrorOrigin					:= CONCAT( internalInstancePath, '.fbGroupEnable' );
 			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupEnable,0 );

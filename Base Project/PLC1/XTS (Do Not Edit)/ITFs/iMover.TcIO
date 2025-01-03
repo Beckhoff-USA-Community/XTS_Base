@@ -19,7 +19,8 @@ PROPERTY CurrentDestinationPosition : LREAL]]></Declaration>
       </Get>
     </Property>
     <Property Name="CurrentDestinationTrack" Id="{0cd493a5-70c3-0b26-10e2-afc4686688d0}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentDestinationTrack : DINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentDestinationTrack : DINT]]></Declaration>
       <Get Name="Get" Id="{00d9b1b4-eea1-0aa1-077f-9311696a0d3e}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
@@ -39,7 +40,8 @@ PROPERTY CurrentObjective : String]]></Declaration>
       </Get>
     </Property>
     <Property Name="CurrentTrack" Id="{6df508fb-5bd5-0e4f-32b6-ad8f8b706833}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentTrack : POINTER TO Track]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentTrack : POINTER TO Track]]></Declaration>
       <Get Name="Get" Id="{a9690824-dbea-0ac9-0859-6bf4b97c3449}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
@@ -84,7 +86,8 @@ PROPERTY IsCollisionAvoidanceActive : BOOL]]></Declaration>
       </Get>
     </Property>
     <Property Name="IsTrackReady" Id="{a749704e-a727-05fa-1be8-d11fd5732682}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY IsTrackReady : BOOL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsTrackReady : BOOL]]></Declaration>
       <Get Name="Get" Id="{3d58532e-56d6-0a5a-0811-67af41cc16bc}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
@@ -100,7 +103,8 @@ END_VAR
 ]]></Declaration>
     </Method>
     <Property Name="MoverIndex" Id="{30bd3b07-1e07-05cd-1854-8bb6e4b79051}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY MoverIndex : UDINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY MoverIndex : UDINT]]></Declaration>
       <Get Name="Get" Id="{0eeb762f-30db-0fd6-2116-b05e28e22627}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
@@ -130,7 +134,8 @@ END_VAR
 ]]></Declaration>
     </Method>
     <Property Name="Payload" Id="{8debfc3a-ede6-452a-8f81-b4825ce39b3b}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Payload : USINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Payload : USINT]]></Declaration>
       <Get Name="Get" Id="{80534c46-bb57-4e05-bca0-e1e88d880aac}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
