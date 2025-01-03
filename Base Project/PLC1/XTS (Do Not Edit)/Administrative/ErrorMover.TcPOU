@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="ErrorMover" Id="{bd3df610-8473-440e-a9dc-a09f811846e0}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK ErrorMover EXTENDS Mover IMPLEMENTS iMover]]></Declaration>
@@ -18,6 +18,20 @@ END_VAR
           <ST><![CDATA[
 
 ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The CurrentDestinationPosition Get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="CurrentDestinationTrack" Id="{92fa0932-14b5-0428-1c32-c2b134e27069}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentDestinationTrack : DINT]]></Declaration>
+      <Get Name="Get" Id="{3216d338-3ce4-08bd-1f22-fd1aaa853a9d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+
+ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The CurrentDestinationTrack Get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -51,7 +65,8 @@ ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The CurrentObjective Get method has been calle
       </Get>
     </Property>
     <Property Name="CurrentTrack" Id="{9bc4654e-1097-0e57-303b-26deb5d985c1}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY CurrentTrack : POINTER TO track]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY CurrentTrack : POINTER TO Track]]></Declaration>
       <Get Name="Get" Id="{00e132d6-ae6d-07ef-39af-0aace549cb59}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -191,7 +206,8 @@ ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The MasterMover Get method has been called on 
       </Get>
     </Property>
     <Property Name="MoverIndex" Id="{855551ba-8be2-046f-3ddd-8805d3d988e9}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY MoverIndex : UDINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY MoverIndex : UDINT]]></Declaration>
       <Get Name="Get" Id="{c2ac2c7c-d49a-07e2-3922-383d37cd0ddd}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -268,7 +284,8 @@ END_IF
       </Implementation>
     </Method>
     <Property Name="Payload" Id="{24ebdcd3-9649-41f7-9f65-e4f7f86ef316}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Payload : USINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Payload : USINT]]></Declaration>
       <Get Name="Get" Id="{28f7f04b-9925-4df5-91ef-030257222faa}">
         <Declaration><![CDATA[VAR
 END_VAR

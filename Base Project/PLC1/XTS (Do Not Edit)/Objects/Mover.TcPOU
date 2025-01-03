@@ -195,6 +195,7 @@ CASE LocalVars.State OF
 			LocalVars.fbAddToGroup.Execute			:= FALSE;
 			LocalVars.fbRemoveFromGroup.Execute		:= FALSE;
 			LocalVars.fbReset.Execute					:= FALSE;
+			LocalVars.fbActivateTrack.Execute		:= FALSE;
 		
 			LocalVars.Enable		:= FALSE;
 			LocalVars.State		:= MV_RESET;
@@ -235,6 +236,9 @@ CASE LocalVars.State OF
 		
 		// on mover 1 detection error disable the mover and report the error
 		IF (Mediator.Mover1DetectionError) THEN
+			// make sure the timer is reset
+			LocalVars.fbDelayM1Timer( IN := FALSE );
+			// log the error and transition to the error state
 			ErrorOrigin				:= CONCAT( Mediator.InstancePath, '.Mover1DetectionError' );
 			LocalVars.State := MV_ERROR;
 		END_IF
@@ -564,7 +568,7 @@ IF (runCyclicTrack) THEN
 	CASE LocalVars.TrackState OF
 		// wait for command
 		TrackState.WAIT_FOR_COMMAND:
-			IF (LocalVars.ActivateTrackFlag AND LocalVars.ActivatingTrack^.isInitialized) THEN
+			IF (LocalVars.ActivateTrackFlag AND LocalVars.ActivatingTrack <> 0 AND_THEN LocalVars.ActivatingTrack^.isInitialized) THEN
 				// unregister mover from current track (logical tracking)
 				IF (LocalVars.Track <> 0) THEN
 					LocalVars.Track^.UnregisterMover(THIS^);
@@ -632,7 +636,7 @@ IF (runCyclicTrack) THEN
 	END_CASE
 	
 	// read back track information
-	IF (LocalVars.TrackIsReady) THEN
+	IF (LocalVars.TrackIsReady AND LocalVars.Track <> 0) THEN
 		// track info should be stable, call the block
 		LocalVars.fbReadTrackPositions.Enable := TRUE;
 		// copy data when ready

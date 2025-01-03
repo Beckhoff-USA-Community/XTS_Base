@@ -55,19 +55,32 @@ END_VAR
 	
 		// XTS is idle. Motive power is disabled.	
 		IF Enable THEN
+			Registering();			// Add all objectives & movers to the system-level Mediator object
 			State						:= XTS_INITIALIZING;
 		END_IF
 
 	XTS_INITIALIZING: // --------------------------------------
 	
-		Registering();			// Add all objectives & movers to the system-level Mediator object
 		//Initializing();			// Set basic application parameters for the objects
 		System.CompleteMoverList.ApplyAllParameterSet( InitialParameterSet );
 
 		System.CompleteMoverList.EnableAll();
-		System.CompleteMoverList.ActivateAllTrack( Track[1] );
 		
-		IF System.CompleteMoverList.IsAllTrackReady AND System.CompleteMoverList.IsAllMoversReady
+		IF System.CompleteMoverList.IsAllMoversReady
+		 AND system.AllMotorModulesReady AND system.GroupEnabled THEN
+			System.ResetStatistics();
+			State	:= XTS_ACTIVATE_TRACKS;
+		END_IF
+		
+		IF NOT Enable THEN
+			Enable	:= FALSE;
+			System.CompleteMoverList.DisableAll();
+			State			:= XTS_DISABLING;
+		END_IF
+		
+	XTS_ACTIVATE_TRACKS:	// -------------------------------------------
+		System.CompleteMoverList.ActivateAllTrack( Track[1] );
+		IF System.CompleteMoverList.IsAllTrackReady
 		 AND system.AllMotorModulesReady AND system.GroupEnabled THEN
 			System.ResetStatistics();
 			State	:= XTS_ENABLED;
