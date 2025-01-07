@@ -436,6 +436,7 @@ VAR_INST
 	StopPositions	: ARRAY [1..TcIoXtsEnvironmentParameterList.MaxXtsStopPositionsPerStation] OF LREAL := [0.0];
 	i				: UDINT;
 	j				: UDINT;
+	workingStation	: UDINT;
 	
 	XPUDetectionState	: DetectionStateEnum;
 END_VAR]]></Declaration>
@@ -781,9 +782,19 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 		40:
 			// calculate minimum number of stations that can be set up
 			nUsableStations := MIN(nInfoServerStations, Param.NUM_STATIONS);
+			workingStation := 0;
 			FOR i := 1 TO nUsableStations DO
+				workingStation := workingStation + 1;
+				// in case a sparse Station array is used, only detect stations that have a position value <> 0
+				WHILE (workingStation < Param.NUM_STATIONS AND_THEN (StationArray[workingStation] = 0 OR_ELSE StationArray[workingStation]^.Position = 0)) DO
+					workingStation := workingStation + 1;
+				END_WHILE
+				// check for valid working station, and exit this for loop iteration if we're outside it
+				IF workingStation >= Param.NUM_STATIONS THEN
+					EXIT;
+				END_IF
 				// get XTS_Base Station pointer
-				xtsStationPointer := StationArray[i];
+				xtsStationPointer := StationArray[workingStation];
 				// test for valid pointer (station has been through the Mediator.AddStation method)
 				IF (xtsStationPointer <> 0) THEN
 					// dereference the pointer

@@ -15,7 +15,7 @@ Visualization of the XTS system without actual hardware or on an HMI in producti
 
 All three visualization tools allow for marking stations to aid in following process flow during simulation, debugging and production. 
 
-By default this code will automatically use the first 10 stations defined and their `.Position` value to place markers. Stations are identified by a number that matches their index in the `MAIN.Station` array.
+By default this code will automatically use the first 10 stations and their `.Position` value to place markers. Stations are identified by a number that matches their index in the `MAIN.Station` array. However if a station's position value is 0.0 (and likely unused) it will be skipped by the station marker routine.
 
 ![XTS Visualization with stations marked](../Images/GettingStarted/Visualization-StationMarkers.png)
 ![Station definitions in code](../Images/GettingStarted/Visualization-StationCode.png)
