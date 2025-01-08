@@ -92,6 +92,8 @@ VAR
 	emptyCount			: UINT;
 	lastMoverDist		: LREAL;
 	
+	moverInPosition		: BOOL;
+	
 END_VAR
 VAR_INST
 	
@@ -130,9 +132,12 @@ FOR i := 1 TO Param.MAX_MOVERS DO
 
 END_FOR
 
+// mover in position is called upon multiple times in this cyclic routine
+// to avoid re-calculating it on each call it is stored locally here to improve station scan time
+moverInPosition := THIS^.MoverInPosition;
 
 // Log occupied and empty times when movers arrive & depart
-IF THIS^.MoverInPosition = FALSE AND internalLastMoverInPosition THEN
+IF moverInPosition = FALSE AND internalLastMoverInPosition THEN
 	// skip statistics on reset flag
 	IF (internalStationOccupiedReset) THEN
 		// reset flag
@@ -148,7 +153,7 @@ IF THIS^.MoverInPosition = FALSE AND internalLastMoverInPosition THEN
 		// reset alphaema to global value for subsequent movers
 		alphaEMAOccupied := Param.ALPHA_EMA;
 	END_IF
-ELSIF THIS^.MoverInPosition AND internalLastMoverInPosition = FALSE THEN
+ELSIF moverInPosition AND internalLastMoverInPosition = FALSE THEN
 	// skip statistics on reset flag
 	IF (InternalStationEmptyReset) THEN
 		// reset flag
@@ -164,8 +169,8 @@ ELSIF THIS^.MoverInPosition AND internalLastMoverInPosition = FALSE THEN
 		alphaEMAEmpty := Param.ALPHA_EMA;
 	END_IF
 END_IF
-internalLastMoverInPosition		:= THIS^.MoverInPosition;
-IF (THIS^.MoverInPosition) THEN
+internalLastMoverInPosition		:= moverInPosition;
+IF (moverInPosition) THEN
 	internalLastMover				REF= THIS^.CurrentMover;
 END_IF
 
@@ -201,7 +206,7 @@ END_IF
 
 // Run occupied & empty timers
 // except when in reset condition and waiting for the first mover to hit this station
-IF THIS^.MoverInPosition THEN
+IF moverInPosition THEN
 	internalStationOccupiedTimer( IN := NOT internalStationOccupiedReset, PT := T#40D, ET => Statistics.TimeOccupied );
 	internalStationEmptyTimer( IN := FALSE );
 ELSE
