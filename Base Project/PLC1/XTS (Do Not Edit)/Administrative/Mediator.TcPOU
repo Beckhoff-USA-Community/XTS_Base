@@ -20,6 +20,7 @@ VAR_OUTPUT
 	Error			: BOOL;			// error is currently active
 	ErrorID			: UDINT;		// errorID of the active error
 	ErrorOrigin		: STRING;		// error source, in case of errored internal function block
+	NumMovers		: USINT;		// number of movers in system
 END_VAR
 VAR
 	{attribute 'instance-path'}
@@ -34,6 +35,10 @@ VAR
 	internalEnableGroupState		: INT;
 	internalEnabled					: BOOL;
 	internalMover1Error				: BOOL;
+	
+	// implements memoization of Mediator.AllMotorModulesReady
+	// so it is only computed once per scan when needed
+	internalMotorModuleStatus		:  MotorModuleStatus_typ;
 
 	bHighDriveReady			: BOOL;
 	bControlVoltageReady	: BOOL;
@@ -60,6 +65,9 @@ VAR
 	fbGroupReset			: MC_GroupReset;
 	fbGroupStop				: MC_GroupStop;
 
+END_VAR
+VAR CONSTANT
+	ADD_TO_GROUP_SIZE		: UDINT := 30;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -357,7 +365,8 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <Property Name="AllMotorModulesReady" Id="{e4a76f20-75da-0820-2f6d-be0ad375c645}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY AllMotorModulesReady : Bool]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY AllMotorModulesReady : Bool]]></Declaration>
       <Get Name="Get" Id="{f8eb48d2-a530-04d2-2b29-7da0e49d088b}">
         <Declaration><![CDATA[VAR
 	I				: UDINT;
@@ -366,25 +375,36 @@ END_IF]]></ST>
 	DriveStatusStorage: UINT;
 END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
-IF fbXtsEnvironment.P_IsInitialized THEN
-// Get number of parts. 
-	nParts:= fbXtsEnvironment.XpuTcIo(1).GetPartCount();
-	IF nParts <> 0 THEN
-// Get number of modules per part and check their state
-		bHighDriveReady:= TRUE;
-		FOR I := 1 TO nParts DO 
-			nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).GetModuleCount();
-			FOR J := 1 TO nModulesInPart DO
-				DriveStatusStorage:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue();
-				IF NOT (DriveStatusStorage = 4135) AND NOT (fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation) THEN
-					bHighDriveReady:= FALSE;
-				END_IF 
+          <ST><![CDATA[// this is caculcation and ADS intensive so the result is memozied once per scan
+
+// only run the sum if the calc bit has not been set for this scan
+IF (NOT internalMotorModuleStatus.calcComplete) THEN
+	// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
+	IF fbXtsEnvironment.P_IsInitialized THEN
+	// Get number of parts. 
+		nParts:= fbXtsEnvironment.XpuTcIo(1).GetPartCount();
+		IF nParts <> 0 THEN
+			// Get number of modules per part and check their state
+			bHighDriveReady:= TRUE;
+			FOR I := 1 TO nParts DO 
+				nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).GetModuleCount();
+				FOR J := 1 TO nModulesInPart DO
+					DriveStatusStorage:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue();
+					IF NOT (DriveStatusStorage = 4135) AND NOT (fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation) THEN
+						bHighDriveReady:= FALSE;
+					END_IF 
+				END_FOR
 			END_FOR
-		END_FOR
+		END_IF
 	END_IF
-END_IF
-AllMotorModulesReady:= bHighDriveReady;]]></ST>
+
+	// memoize the result
+	internalMotorModuleStatus.calcResult := bHighDriveReady;
+	internalMotorModuleStatus.calcComplete := TRUE;
+END_IF;
+
+// return the result
+AllMotorModulesReady:= internalMotorModuleStatus.calcResult;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -411,6 +431,7 @@ CompleteMoverList	:= internalMoverList;]]></ST>
     <Method Name="Cyclic" Id="{f2264867-ad86-0c96-3c42-ade0fe3bf9e2}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Cyclic : BOOL
 VAR_INPUT
+	NUM_MOVERS			: USINT;
 END_VAR
 
 VAR
@@ -442,6 +463,12 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// this method contains multiple state machines denoted by the headers below
+
+// update output data
+NumMovers := NUM_MOVERS;
+
+// clear memoized values for recalculation
+internalMotorModuleStatus.calcComplete := FALSE;
 
 // Handle all project cyclic calls
 
@@ -694,7 +721,7 @@ CASE internalEnableGroupState OF
 		
 		fbGroupEnable.Execute			:= TRUE;
 		
-		IF fbGroupEnable.Done THEN
+		IF fbGroupEnable.Done AND GROUP_REF.NcToPlc.CA.Common.GroupStatus.State = mcGroupStateStandby THEN
 			fbGroupEnable.Execute		:= FALSE;
 			internalEnableGroupFlag 	:= FALSE;
 			internalEnableGroupState	:= 100;
@@ -884,8 +911,39 @@ EnvironmentIsReady := nEnvironmentState >= 3;]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Property Name="GroupAddLimit" Id="{65a16f3c-a017-0638-2d93-2d84b50013fb}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY GroupAddLimit : UDINT]]></Declaration>
+      <Get Name="Get" Id="{7d2e7f70-ceaa-0c78-163f-9558b7d4e0a1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[// when adding movers to gropus, a smaller subset of movers should be added, not all at once
+// this returns the highest mover number that can currently be added to the group
+// based on the size of the add_to_group constant
+
+// with a size limit of 30 this will return 30, then 60, 90 etc (30 at a time, with 1-based mover array)
+// deliberate integer math is used to truncate the quotent of the group step check
+GroupAddLimit := (REAL_TO_UDINT(UDINT_TO_REAL(GROUP_REF.NcToPlc.CA.Common.GroupAxesCount)/UDINT_TO_REAL(ADD_TO_GROUP_SIZE))+1)*ADD_TO_GROUP_SIZE;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="GroupAxesCount" Id="{dec55c77-f258-0789-1555-26b4067cbe34}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY GroupAxesCount : UDINT]]></Declaration>
+      <Get Name="Get" Id="{543f3341-ee3d-0bd4-30a4-c2f38c04ed3d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[GroupAxesCount := GROUP_REF.NcToPlc.CA.Common.GroupAxesCount;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="GroupEnabled" Id="{dca70979-fee3-0f39-3528-000ca64a8f22}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY GroupEnabled : bool]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY GroupEnabled : bool]]></Declaration>
       <Get Name="Get" Id="{a4a17b6e-a2a8-0398-0745-96cf710d270e}">
         <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 VAR
@@ -897,7 +955,8 @@ END_VAR
       </Get>
     </Property>
     <Property Name="GroupError" Id="{3ac97d16-5fe4-0a9a-3305-6d88385b660b}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY GroupError : bool]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY GroupError : bool]]></Declaration>
       <Get Name="Get" Id="{faa6b223-287a-0e59-1c37-f312dffb5ec6}">
         <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 VAR
@@ -933,7 +992,8 @@ END_VAR
       </Get>
     </Property>
     <Property Name="InstancePath" Id="{bb75667d-d680-0397-38c7-96136879329d}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY InstancePath : string]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY InstancePath : string]]></Declaration>
       <Get Name="Get" Id="{b9a804e4-bca0-0f1c-39b3-bb2c5353dcf1}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -944,7 +1004,8 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Mover1DetectionComplete" Id="{b3d53d33-3d35-07f8-35ed-d0dbe454a97c}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Mover1DetectionComplete : BOOL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Mover1DetectionComplete : BOOL]]></Declaration>
       <Get Name="Get" Id="{e92705b4-cdc3-0cc7-25dc-0275953572ce}">
         <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 VAR
@@ -957,7 +1018,8 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Mover1DetectionError" Id="{75004eac-41b5-0213-3156-b53daed26144}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Mover1DetectionError : bool]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Mover1DetectionError : bool]]></Declaration>
       <Get Name="Get" Id="{e224f7d4-69bc-07c0-2d34-8a91c1a73da1}">
         <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 VAR

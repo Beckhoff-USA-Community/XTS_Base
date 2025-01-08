@@ -72,8 +72,6 @@ STRUCT
 	lastCallValidateTrack : LREAL;
 	lastCallSetGap		: LREAL;
 	lastCallActivateTrack : LREAL;
-	
-	TestVar: BOOL;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

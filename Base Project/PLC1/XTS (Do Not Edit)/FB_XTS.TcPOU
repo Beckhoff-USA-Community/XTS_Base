@@ -117,7 +117,8 @@ END_VAR
 
 END_CASE
 
-System.Cyclic();
+// call system cyclically
+System.Cyclic(NUM_MOVERS := NUM_MOVERS);
 
 // update global data
 FOR i := 1 TO NUM_MOVERS DO
