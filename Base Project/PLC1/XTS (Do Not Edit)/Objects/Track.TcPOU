@@ -170,7 +170,6 @@ VAR_INPUT
     NewMover : REFERENCE TO Mover;
 END_VAR
 VAR
-	i : ULINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -179,13 +178,24 @@ SUPER^.RegisterMover(NewMover);
 
 // update the internal MoverList
 // this saves us the time of generating it on every call to CurrentMoverCount
-internalMoverList.UnregisterAll();
+internalMoverList.RegisterMover(NewMover);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RegisterMoverList" Id="{50a686be-8194-0951-00fc-f5665eae242b}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD RegisterMoverList : BOOL
+VAR_INPUT
+	NewMoverList	: iMoverList;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// call the parent function
+SUPER^.RegisterMoverList(NewMoverList);
 
-FOR i := 1 TO SIZEOF(internalRegisteredMovers) / SIZEOF(internalRegisteredMovers[1]) DO
-    IF internalRegisteredMovers[i] <> 0 THEN
-		internalMoverList.RegisterMover(internalRegisteredMovers[i]^);
-	END_IF
-END_FOR;]]></ST>
+// update the internal MoverList
+// this saves us the time of generating it on every call to CurrentMoverCount
+internalMoverList.RegisterMoverList(NewMoverList);
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="UnregisterAll" Id="{331df7c2-5517-0c9f-2789-611ea232bb66}" FolderPath="Methods\">
@@ -208,7 +218,6 @@ VAR_INPUT
     RemovingMover : REFERENCE TO Mover;
 END_VAR
 VAR
-	i : ULINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -217,13 +226,7 @@ SUPER^.UnregisterMover(RemovingMover);
 
 // update the internal MoverList
 // this saves us the time of generating it on every call to CurrentMoverCount
-internalMoverList.UnregisterAll();
-
-FOR i := 0 TO SIZEOF(RegisteredMovers) / SIZEOF(internalRegisteredMovers[1]) - 1 DO
-    IF internalRegisteredMovers[i] <> 0 THEN
-		internalMoverList.RegisterMover(internalRegisteredMovers[i]^);
-	END_IF
-END_FOR;]]></ST>
+internalMoverList.UnregisterMover(RemovingMover);]]></ST>
       </Implementation>
     </Method>
   </POU>
