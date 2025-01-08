@@ -38,7 +38,7 @@ VAR
 
     // ========= Helper, State, & Index Variables =========
     i                	: UINT; 	// index variable; gets reused in various FOR loops
-
+	RegisteringState	: UDINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -55,6 +55,13 @@ END_VAR
 	
 		// XTS is idle. Motive power is disabled.	
 		IF Enable THEN
+			State						:= XTS_REGISTERING;
+			RegisteringState			:= 0;
+		END_IF
+		
+	XTS_REGISTERING:
+		Registering();			// Add all objectives & movers to the system-level Mediator object
+		IF RegisteringState = 100 THEN
 			Registering();			// Add all objectives & movers to the system-level Mediator object
 			State						:= XTS_INITIALIZING;
 		END_IF
@@ -131,40 +138,60 @@ NumMovers := NUM_MOVERS;]]></ST>
     </Method>
     <Action Name="Registering" Id="{41624cf4-8fb9-0501-1651-f19186cb236b}">
       <Implementation>
-        <ST><![CDATA[// Add all Movers to the Mediator
-FOR i := 1 TO NUM_MOVERS DO
-	System.AddMover( Mover[i] );
-END_FOR
+        <ST><![CDATA[// registering is handled as a mini state machine
+// when mover or station counts get to roughly 100 the time to complete all the registering tasks
+// can exceede 1-2ms causing PLC cycle overruns that are unnecessary and may complicate debugging
 
-// Add all Mover Lists to the Mediator
-FOR i := 0 TO Param.NUM_MOVERLISTS - 1 DO
-	System.AddMoverList( MoverList[i] );
-END_FOR
+CASE RegisteringState OF 
 
-// Add all PositionTriggers to the Mediator
-FOR i := 0 TO Param.NUM_POSITIONTRIGGERS - 1 DO
-	System.AddPositionTrigger( PositionTrigger[i] );
-	PositionTrigger[i].SetTrack(Track[1]);
-END_FOR
+	0:
+		// Add all Movers to the Mediator
+		FOR i := 1 TO NUM_MOVERS DO
+			System.AddMover( Mover[i] );
+		END_FOR
+		RegisteringState := 1;
+		
+	1:
+		// Add all Mover Lists to the Mediator
+		FOR i := 0 TO Param.NUM_MOVERLISTS - 1 DO
+			System.AddMoverList( MoverList[i] );
+		END_FOR
+		RegisteringState := 2;
+		
+	2:
+		// Add all PositionTriggers to the Mediator
+		FOR i := 0 TO Param.NUM_POSITIONTRIGGERS - 1 DO
+			System.AddPositionTrigger( PositionTrigger[i] );
+			PositionTrigger[i].SetTrack(Track[1]);
+		END_FOR
+		RegisteringState := 3;
+		
+	3:
+		// Add all Stations to the Mediator
+		FOR i := 0 TO Param.NUM_STATIONS - 1 DO
+			System.AddStation( Station[i] );
+			Station[i].SetTrack(Track[1]);
+		END_FOR
+		RegisteringState := 4;
+		
+	4:
+		// Add all Tracks to the Mediator
+		// note track zero is a special case, so the loop is one larger than the rest of the initalization loops
+		FOR i := 0 TO Param.NUM_TRACKS DO
+			Track[i].Id := UINT_TO_INT(i);
+			System.AddTrack( Track[i] );
+		END_FOR
+		RegisteringState := 5;
+		
+	5:
+		// Add all Zones to the Mediator
+		FOR i := 0 TO Param.NUM_ZONES - 1 DO
+			System.AddZone( Zone[i] );
+			Zone[i].SetTrack(Track[1]);
+		END_FOR
+		RegisteringState := 100;
 
-// Add all Stations to the Mediator
-FOR i := 0 TO Param.NUM_STATIONS - 1 DO
-	System.AddStation( Station[i] );
-	Station[i].SetTrack(Track[1]);
-END_FOR
-
-// Add all Tracks to the Mediator
-// note track zero is a special case, so the loop is one larger than the rest of the initalization loops
-FOR i := 0 TO Param.NUM_TRACKS DO
-	Track[i].Id := UINT_TO_INT(i);
-	System.AddTrack( Track[i] );
-END_FOR
-
-// Add all Zones to the Mediator
-FOR i := 0 TO Param.NUM_ZONES - 1 DO
-	System.AddZone( Zone[i] );
-	Zone[i].SetTrack(Track[1]);
-END_FOR]]></ST>
+END_CASE;]]></ST>
       </Implementation>
     </Action>
   </POU>
