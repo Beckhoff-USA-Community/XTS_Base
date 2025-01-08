@@ -67,7 +67,7 @@ END_VAR
 		System.CompleteMoverList.EnableAll();
 		
 		IF System.CompleteMoverList.IsAllMoversReady
-		 AND system.AllMotorModulesReady AND system.GroupEnabled THEN
+		 AND System.AllMotorModulesReady AND system.GroupEnabled THEN
 			System.ResetStatistics();
 			State	:= XTS_ACTIVATE_TRACKS;
 		END_IF
