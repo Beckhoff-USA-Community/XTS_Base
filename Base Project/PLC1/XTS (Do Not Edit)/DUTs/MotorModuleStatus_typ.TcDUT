@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <DUT Name="MotorModuleStatus_typ" Id="{81082df1-914c-070d-2ae8-1ed531b2762a}">
+    <Declaration><![CDATA[TYPE MotorModuleStatus_typ :
+STRUCT
+	calcComplete	: BOOL;	// calculation of motor module status complete for this scan
+	calcResult		: BOOL;	// result of calculation for this scan
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -275,21 +275,26 @@ CASE LocalVars.State OF
 		Error	:= FALSE;
 		ErrorID	:= 0;
 		
-		LocalVars.fbAddToGroup.Execute			:= TRUE;
+		// add to group is done in batches controlled by the mediator
+		LocalVars.fbAddToGroup.Execute			:= LocalVars.MoverIndex <= Mediator.GroupAddLimit;
 		LocalVars.fbAddToGroup.IdentInGroup		:= UDINT_TO_IDENTINGROUP( AxisReference.NcToPlc.AxisId - 1 );
 		
-		IF LocalVars.fbAddToGroup.Done THEN
+		// wait for done and secondary check of number of movers (fb may report done before NC is done with high mover counts)
+		IF LocalVars.fbAddToGroup.Done AND Mediator.GroupAxesCount = Mediator.NumMovers THEN
+			// all axes added to group, move to next state
 			InGroup						:= TRUE;
 			IdentInGroup				:= AxisReference.NcToPlc.AxisId - 1;
 			LocalVars.fbAddToGroup.Execute		:= FALSE;
-			
-			Mediator.EnableGroup();
 			LocalVars.State				:= MV_ENABLEGROUP;
 		ELSIF LocalVars.fbAddToGroup.Error THEN
+			// error with add to group fb
+			LocalVars.fbAddToGroup.Execute		:= FALSE;
 			ErrorID						:= LocalVars.fbAddToGroup.ErrorId;
 			ErrorOrigin					:= CONCAT( InstancePath, '.fbAddToGroup' );
 			LocalVars.State				:= MV_ERROR;
 		ELSIF AxisReference.Status.Error THEN
+			// error reported by the axis
+			LocalVars.fbAddToGroup.Execute		:= FALSE;
 			ErrorID					:= AxisReference.Status.ErrorID;
 			ErrorOrigin				:= Concat(InstancePath, ': General NC Error during add to group');
 			LocalVars.State			:= MV_ERROR;
@@ -297,7 +302,6 @@ CASE LocalVars.State OF
 		
 	MV_ENABLEGROUP:	// ----------------------------------------------- have mediator enable group
 		Mediator.EnableGroup();
-		LocalVars.TestVar:= Mediator.AllMotorModulesReady;
 		IF Mediator.GroupEnabled AND Mediator.AllMotorModulesReady THEN
 			LocalVars.State := MV_RUN;
 		ELSIF Mediator.Error THEN
