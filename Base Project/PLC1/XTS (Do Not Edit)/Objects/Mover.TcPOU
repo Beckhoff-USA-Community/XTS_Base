@@ -1324,7 +1324,7 @@ END_VAR
 minimumDifference		:= 1E300;
 FOR i := 1 TO Param.MAX_MOVERS DO
 	IF Mediator.MoverArray[i] <> 0 AND_THEN Mediator.MoverArray[i] <> THIS THEN		// pointer validity
-		currentDifference			:= THIS^.AxisReference.NcToPlc.SetPos - Mediator.MoverArray[i]^.AxisReference.NcToPlc.SetAcc;
+		currentDifference			:= THIS^.AxisReference.NcToPlc.SetPos - Mediator.MoverArray[i]^.AxisReference.NcToPlc.SetPos;
 		
 		// remain within the same lap
 		IF currentDifference < 0 THEN
