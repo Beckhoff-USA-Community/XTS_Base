@@ -32,6 +32,9 @@
     <Compile Include="DUTs\MachineState_enum.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MoverPayload_typ.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <DUT Name="MoverPayload_typ" Id="{cfa909d6-6a19-0dcb-00c9-7d8dc1cd393d}">
+    <Declaration><![CDATA[TYPE MoverPayload_typ :
+STRUCT
+	// data related to the in-process part on the mover
+	// can be modifited to suit the application
+	RecipeId		: DINT;
+	FailureReason	: DINT;
+	serialNumber	: STRING;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
