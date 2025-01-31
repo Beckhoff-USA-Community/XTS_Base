@@ -225,7 +225,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[// message for debugging as this function is typically called when acting on a position trigger
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-IF ( newCallTime - lastCallMuteCurrent ) > 1 THEN
+IF ( newCallTime - lastCallMuteCurrent ) > 1 AND internalCurrentMover <> 0 THEN
 	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.PositionTriggerMuteCurrent,0 );
 	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDint(internalCurrentMover^.IdentInGroup);
 	MsgCreate.Send(0);
