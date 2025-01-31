@@ -24,7 +24,7 @@ STRUCT
 	Gap						: LREAL;	// Gap distance to master mover during sync
 	
 	// Configurable Payload description	
-	Payload			: USINT;	// E.g. 0: No Product, 1: Product Loaded, 2: Product Reject. Can be modified for application
+	Payload			: MoverPayload_typ;	// data related to the in-process part on the mover such as RecipeID or SerialNumber, MoverPayload_typ can be modified per application
 	
 	// Track management
 	Track				: POINTER TO Track;	// Internal current track

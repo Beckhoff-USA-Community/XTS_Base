@@ -564,14 +564,35 @@ It is also possible to alter motion paramaters with mover methods such as `.SetV
 
 > Data associated with the product on the mover.
 
-The code makes use of a DINT but this property is intended to be used to track in-process data for the product on the mover. It's recommended to create a DUT that includes members such as process step, recipe number, in-process measurements and others.
-
-This data travels with the mover and when a mover arrives at a station it can be queried or modified based on the station's process.
+The code uses a structure with some example data that may be relevant to an in-process part on the mover. The structure is located in the PLC Project > DUTs > MoverPayload_typ.
 
 ```javascript
-// EXAMPLE ONLY, queries a customized payload data type for a recipe index
+TYPE MoverPayload_typ :
+STRUCT
+	// data related to the in-process part on the mover
+	// can be modifited to suit the application
+	RecipeId		: DINT;
+	FailureReason	: DINT;
+	SerialNumber	: STRING;
+END_STRUCT
+END_TYPE
+```
+
+This data travels with the mover and when a mover arrives at a station it can be queried or modified based on the station's process. This structure can be modified as needed to suit the application.
+
+Note that because .Payload is a property that returns a structure an intermediate variable must be used for access as shown in the examples below.
+
+```javascript
+// query the recipe ID and react accordingly
+VAR
+	MoverPayload : MoverPayload_typ;
+END_VAR
+
 IF (Station[1].MoverInPosition) THEN
-	IF Station[1].CurrentMover.Payload.RecipeType = 1 THEN
+	// get the payload
+	MoverPayload := Station[1].CurrentMover.Payload;
+	// query the payload
+	IF MoverPayload.RecipeID = 1 THEN
 		// add recipe 1 specific code here
 	ELSE
 		// add code specific to other recipes here
@@ -580,10 +601,17 @@ END_IF;
 ```
 
 ```javascript
-// EXAMPLE ONLY, stores data to a customized payload data type from a measurement device
-IF (MeasurementComplete) THEN
-	// store data
-	Station[1].CurrentMover.Payload.MeasuredValue := MeasuredValue;
+// Store a serial number for the part on the mover from a scanned barcode
+VAR
+	MoverPayload : MoverPayload_typ;
+END_VAR
+
+IF (ScanComplete) THEN
+	// get the payload
+	MoverPayload := Station[1].CurrentMover.Payload;
+	// store data to the payload, then the mover
+	MoverPayload.SerialNumber := ScannedBarcode;
+	Station[1].CurrentMover.Payload := MoverPayload;
 	// send mover to next station
 	Station[1].CurrentMover.MoveToStation(Station[2]);
 END_IF;
