@@ -4,6 +4,7 @@
     <Declaration><![CDATA[FUNCTION_BLOCK PositionTrigger EXTENDS Objective
 
 VAR
+	internalEnabled			: BOOL;
     internalPosition    	 : LREAL;
     internalTriggerDirection 	 : Tc2_MC2.MC_Direction;
     internalMoverPassedPosition : BOOL;
@@ -69,7 +70,19 @@ VAR_INST
 
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[currentIsRegistered		:= FALSE;
+        <ST><![CDATA[// with a high mover count (>100) and a high position trigger count (>100) it can take a significant amount of test all movers at all triggers as shown below
+// a common use case with position triggers is to match the size of the position trigger array to the station array for clarity and matching indicies
+// however not every station needs a matching position trigger thus many position triggers don't require a call to cyclic
+// By setting an enabled flag, only position triggers that have been assigned a position will be processed allowing for a sparse array
+// without a performance penalty
+// enabling is transparent to the user and accomplshed by setting .Position which already happens as part of the initializing process
+
+IF (NOT internalEnabled) THEN
+	RETURN;
+END_IF
+
+
+currentIsRegistered		:= FALSE;
 
 FOR i := 1 TO Param.MAX_MOVERS DO
     IF internalRegisteredMovers[i] <> 0 AND_THEN (internalRegisteredMovers[i]^.IsTrackReady AND internalRegisteredMovers[i]^.CurrentTrack <> 0) THEN
@@ -238,7 +251,8 @@ END_VAR]]></Declaration>
 END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[// todo maybe do a limits check here?
-internalPosition := Position;]]></ST>
+internalPosition := Position;
+internalEnabled := true;]]></ST>
         </Implementation>
       </Set>
     </Property>

@@ -29,6 +29,7 @@ VAR
 	internalInstancePath		: STRING;	// instance naming, for diagnostics purposes
 
 	internalMoverList				: MoverList;
+	internalMoverListRecalc			: BOOL;
 	internalM1DetectFlag			: BOOL;
 	internalM1DetectState			: INT;
 	internalEnableGroupFlag			: BOOL;
@@ -130,7 +131,10 @@ IF __ISVALIDREF( Mover ) THEN
 		END_FOR
 		
 	END_IF
-END_IF]]></ST>
+END_IF
+
+// set the flag to recalculate the internal mover list
+internalMoverListRecalc := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="AddMoverList" Id="{fa372345-a99c-01d2-2d94-cc2fd6bab53d}" FolderPath="Methods\">
@@ -173,7 +177,10 @@ IF __ISVALIDREF( MoverList ) THEN
 	IF duplicateFound = FALSE THEN
 		THIS^.MoverListArray[emptyIDX]		:= ADR( MoverList );
 	END_IF
-END_IF]]></ST>
+END_IF
+
+// set the flag to recalculate the internal mover list
+internalMoverListRecalc := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="AddPositionTrigger" Id="{37697d0e-c381-0846-3d01-3d7f2d276ad1}" FolderPath="Methods\">
@@ -416,13 +423,8 @@ AllMotorModulesReady:= internalMotorModuleStatus.calcResult;]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[internalMoverList.UnregisterAll();
-
-FOR i := 1 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[1] ) DO
-	IF MoverArray[i] <> 0 THEN
-		internalMoverList.RegisterMover( MoverArray[i]^ );
-	END_IF
-END_FOR
+          <ST><![CDATA[// the mover list is populated in cyclic when needed
+// flags in the methods .AddMover and .AddMoverList trigger the recalculation
 
 CompleteMoverList	:= internalMoverList;]]></ST>
         </Implementation>
@@ -469,6 +471,21 @@ NumMovers := NUM_MOVERS;
 
 // clear memoized values for recalculation
 internalMotorModuleStatus.calcComplete := FALSE;
+
+// regenerate the internal mover list when necessary
+IF (internalMoverListRecalc) THEN
+	// this is returned by the property CompleteMoverList, and does not need to be calculated on every call to the property
+	// reset flag
+	internalMoverListRecalc := FALSE;
+	// clear the list
+	internalMoverList.UnregisterAll();
+	// re-populate the list
+	FOR i := 1 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[1] ) DO
+		IF MoverArray[i] <> 0 THEN
+			internalMoverList.RegisterMover( MoverArray[i]^ );
+		END_IF
+	END_FOR
+END_IF
 
 // Handle all project cyclic calls
 

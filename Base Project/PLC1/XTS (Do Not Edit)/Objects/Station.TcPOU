@@ -5,6 +5,7 @@
 VAR
 
     {attribute 'hide'}
+	internalEnabled					: BOOL;
     internalPosition 				: LREAL;
 	internalTrack 					: REFERENCE TO Track; 
 	internalGroupSize				: DINT := 1;	// used for calculating blocked statistics for multi-up stations
@@ -91,6 +92,8 @@ VAR
 	emptyCount			: UINT;
 	lastMoverDist		: LREAL;
 	
+	moverInPosition		: BOOL;
+	
 END_VAR
 VAR_INST
 	
@@ -103,7 +106,19 @@ VAR_INST
 	
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[FOR i := 1 TO Param.MAX_MOVERS DO
+        <ST><![CDATA[// with a high mover count (>100) and a high station count (>100) it can take a significant amount of test all movers at all stations as shown below
+// a common use case with stations, especially with mixed and matched station groupings is to number stations by 10s
+// thus the station array would be 1..100, but only use some of the stations reflecting different 2-up, 4-up and other arrangements
+// in this scenario these stations may actually be used in the array 10, 11, 20, 21, 22, 23, 30, 31...
+// By setting an enabled flag, only stations that have been assigned a position will be processed allowing for a sparse station array
+// without a performance penalty
+// enabling is transparent to the user and accomplished by setting .Position which already happens as part of the initializing process
+
+IF (NOT internalEnabled) THEN
+	RETURN;
+END_IF
+
+FOR i := 1 TO Param.MAX_MOVERS DO
 
     // This mover is no longer destined for any station
     IF internalRegisteredMovers[i] <> 0 AND_THEN internalRegisteredMovers[i]^.CurrentMoveType <> MOVETYPE_STATION THEN
@@ -117,9 +132,12 @@ END_VAR]]></Declaration>
 
 END_FOR
 
+// mover in position is called upon multiple times in this cyclic routine
+// to avoid re-calculating it on each call it is stored locally here to improve station scan time
+moverInPosition := THIS^.MoverInPosition;
 
 // Log occupied and empty times when movers arrive & depart
-IF THIS^.MoverInPosition = FALSE AND internalLastMoverInPosition THEN
+IF moverInPosition = FALSE AND internalLastMoverInPosition THEN
 	// skip statistics on reset flag
 	IF (internalStationOccupiedReset) THEN
 		// reset flag
@@ -135,7 +153,7 @@ IF THIS^.MoverInPosition = FALSE AND internalLastMoverInPosition THEN
 		// reset alphaema to global value for subsequent movers
 		alphaEMAOccupied := Param.ALPHA_EMA;
 	END_IF
-ELSIF THIS^.MoverInPosition AND internalLastMoverInPosition = FALSE THEN
+ELSIF moverInPosition AND internalLastMoverInPosition = FALSE THEN
 	// skip statistics on reset flag
 	IF (InternalStationEmptyReset) THEN
 		// reset flag
@@ -151,8 +169,8 @@ ELSIF THIS^.MoverInPosition AND internalLastMoverInPosition = FALSE THEN
 		alphaEMAEmpty := Param.ALPHA_EMA;
 	END_IF
 END_IF
-internalLastMoverInPosition		:= THIS^.MoverInPosition;
-IF (THIS^.MoverInPosition) THEN
+internalLastMoverInPosition		:= moverInPosition;
+IF (moverInPosition) THEN
 	internalLastMover				REF= THIS^.CurrentMover;
 END_IF
 
@@ -188,7 +206,7 @@ END_IF
 
 // Run occupied & empty timers
 // except when in reset condition and waiting for the first mover to hit this station
-IF THIS^.MoverInPosition THEN
+IF moverInPosition THEN
 	internalStationOccupiedTimer( IN := NOT internalStationOccupiedReset, PT := T#40D, ET => Statistics.TimeOccupied );
 	internalStationEmptyTimer( IN := FALSE );
 ELSE
@@ -275,7 +293,8 @@ END_VAR]]></Declaration>
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[internalPosition := Position;]]></ST>
+          <ST><![CDATA[internalPosition := Position;
+internalEnabled := true;]]></ST>
         </Implementation>
       </Set>
     </Property>
