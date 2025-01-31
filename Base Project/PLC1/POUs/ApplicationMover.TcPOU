@@ -10,7 +10,7 @@ END_VAR
 VAR
 	cnt: UDINT;
 	_PositionLag: LREAL;
-	fbMC_CalcDynamicsByRampTime: MC_CalcDynamicsByRampTime;
+	fbMC_CalcDynamicsByRampTime: MC_CalcDynamicsByRampTime := (Velocity := 1, RampTime := 1, Stiffness := 0.5);
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -34,17 +34,9 @@ SUPER^.Cyclic(GroupReference);
 cnt:= cnt + 1;
 _PositionLag:= THIS^.AxisReference.NcToPlc.PosDiff;
 
-
-
 // Latch Errors
-IF fbMC_CalcDynamicsByRampTime.Error THEN
-	ErrorID						:= fbMC_CalcDynamicsByRampTime.ErrorID;
-	ErrorOrigin					:= CONCAT( InstancePath, '.fbMC_CalcDynamicsByRampTime' );
-	//LocalVars.State				:= MV_ERROR;
-END_IF
 
 // Call Fbs Cyclically
-fbMC_CalcDynamicsByRampTime();
 ]]></ST>
       </Implementation>
     </Method>
@@ -81,8 +73,14 @@ MotionParameters.Jerk				:= fbMC_CalcDynamicsByRampTime.Jerk;
 MotionParameters.Gap				:= Gap;
 MotionParameters.Direction			:= Tc3_Mc3Definitions.MC_Direction.mcDirectionPositive;
 
-SUPER^.MotionParameters:= MotionParameters;
-SUPER^.MoveToStation(DestinationStation);]]></ST>
+IF NOT fbMC_CalcDynamicsByRampTime.Error THEN
+	SUPER^.MotionParameters:= MotionParameters;
+	SUPER^.MoveToStation(DestinationStation);
+ELSE
+	ErrorId		:= fbMC_CalcDynamicsByRampTime.ErrorID;
+	ErrorOrigin	:= CONCAT( InstancePath, 'MoveToStationByRampTime' );
+END_IF
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="PositionLag" Id="{2f9b4da0-9f46-0501-2862-3b56ba7816bb}">
@@ -98,5 +96,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <LineIds Name="ApplicationMover">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="ApplicationMover.Cyclic">
+      <LineId Id="1" Count="14" />
+    </LineIds>
+    <LineIds Name="ApplicationMover.MoveToStationByRampTime">
+      <LineId Id="1" Count="27" />
+    </LineIds>
+    <LineIds Name="ApplicationMover.PositionLag.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
   </POU>
 </TcPlcObject>
