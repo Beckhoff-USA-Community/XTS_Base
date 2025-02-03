@@ -22,13 +22,10 @@
     <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
     <VirtualLibrary>false</VirtualLibrary>
     <Company>XTS_Base Github</Company>
-    <Title>XTS_BaseLib</Title>
-    <ProjectVersion>1.0.0</ProjectVersion>
+    <Title>XTS_Base</Title>
+    <ProjectVersion>2.0.0</ProjectVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\MachineCmd_typ.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DUTs\MachineState_enum.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -39,6 +36,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GVLs\GVL.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="GVLs\MainCommands.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
