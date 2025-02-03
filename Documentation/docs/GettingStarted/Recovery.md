@@ -2,13 +2,18 @@
 # Recovery 
 The process of starting up an XTS system and powering on the movers is handled by this code in a basic manner. After all movers are powered on they will move to a fixed starting location and then being a pre-defined motion sequence from the beginning.
 
-While this method of starting over after a cold-start situation is simple, it is only provided as a starting point for the overall recovery method that may need to be implemented for the desired process. There is no way for this example code to handle all possible recovery scenarios that include things like loss of product on parts, movers that have changed position while the machine was powered off, can or should product be re-processed, can product be sent to the last known completed process, etc.
+While this method of starting over after a cold-start situation is simple, it is only provided as a starting point for the overall recovery method that may need to be implemented for the desired process. There is no way for this example code to handle all possible recovery scenarios which may include:
+
+- Like loss of product on movers
+- Movers that have changed position while the machine was powered off
+- Can or should product be re-processed
+- Can product be sent to the last known completed process
 
 The solution to these recovery scenarios is highly dependent on the specification of the process and product being produced on the XTS system. Two states in the main state machine have been provided as an example of where this type of recovery process could be implemented: `MS_ONESHOT_RECOVER` and `MS_RECOVERING`.
 
-`MS_ONESHOT_RECOVER` is called once immediately after issuing the start command. Common tasks in this section include sending all movers to a specified location or locations based on the current zone they reside in, or analyzing process data stored in non-volatile memory and sending movers to this location.
+`MS_ONESHOT_RECOVER` is called once immediately after issuing the start command. Common tasks in this section include sending all movers to a specified location or locations based on the current zone they reside in, or analyzing process data stored in non-volatile memory and sending movers to an appropriate location.
 
-`MS_RECOVERING` is called cyclically after `MS_ONESHOT_RECOVER` and transitions to `MS_RUN` after the if statement at the bottom of the sequence is satisfied. A common task in this state is to wait for all movers to come to a standstill.
+`MS_RECOVERING` is called cyclically after `MS_ONESHOT_RECOVER` and continues to run until the `RecoveryComplete` bit has been set within the routine. A common task in this state is to wait for all movers to come to a standstill.
 
 It may also be necessary to extend the recovery portion of the state machine with additional steps. A common scenario with additional steps may include using the oneshot state to send robots and other tooling to clear positions, the first recovering state to wait for all tooling to be clear and an additional recovering_2 state to start the mover motion.
 
