@@ -74,8 +74,8 @@ Then launch the XTS Configurator and follow the prompts to configure your system
 
 >The configurator occasionally conflicts with existing settings in the project. To avoid this, it can help to delete the following prior to running the XTS Configurator:
 
-> - XtsProcessingUnit
-- All Mover Axis Object
+- XtsProcessingUnit
+- All Mover Axis Objects
 - Existing XTS_Task
 - Any hardware in the IO section.
 
@@ -89,9 +89,9 @@ Inside *MOTION > Objects > Collision Avoidance (CA Group)*, set the **Rail Lengt
 
 ![CollisionAvoidanceLength](../Images/CALength.png)
 
-Next, open the GVL file within PLC and modify these constants to match your system.
+Next, open the MAIN Pout file within PLC and modify the number of movers in the XTS declaration `FB_XTS<6>` by changing the value in the brackets.
 
-![GlobalVariables](../Images/GlobalVars.png)
+![NumberOfMovers](../Images/GettingStarted/NumberOfMovers.png)
 
 Next, check that each of your Axis objects are properly linked to a corresponding Mover object.
 
