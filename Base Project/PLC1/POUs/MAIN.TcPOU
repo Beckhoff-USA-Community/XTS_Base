@@ -5,24 +5,16 @@
 VAR	
 	// declare XTS with <number of movers>
 	XTS				: FB_XTS<6>;
-	MainCommands	: MachineCmd_typ;
 	// Machine
 	State			: MachineState_enum;
 
-	Init			: BOOL;
 	// ========= Example Application Variables =========
 
     nextStation 			: USINT := 4;
                     	
-    lowVelocity    			: LREAL := 200;  	// mm/s
-    mediumVelocity 			: LREAL := 800;  	// mm/s
-    highVelocity   			: LREAL := 1200; 	// mm/s
-	
 	StationTimer 			: ARRAY[0..Param.NUM_STATIONS] OF TON; // timer blocks, for station dwells
-	InitialParameterSet		: MotionParameters_typ;
 	RecoveryComplete		: BOOL;
 	
-	mcDirectionPositive		: Tc2_MC2.MC_Direction;
 	Trig0MoverIndex			: UDINT;
 	Trig0MoverPosLag		: LREAL;
 END_VAR
@@ -185,11 +177,9 @@ XTS.InitialParameterSet.Jerk			:= 100_000;		// mm/s3
 XTS.InitialParameterSet.Gap				:= 85;			// mm
 XTS.InitialParameterSet.Direction		:= Tc3_Mc3Definitions.MC_Direction.mcDirectionPositive;
 
-LowVelocity		:= 300;
-MediumVelocity	:= 800;
-HighVelocity	:= 1200;
-
-Init	:= TRUE;]]></ST>
+MainCommands.lowVelocity	:= 300;
+MainCommands.mediumVelocity	:= 800;
+MainCommands.highVelocity	:= 1200;]]></ST>
       </Implementation>
     </Action>
     <Action Name="Recovering" Id="{4b8b03ac-750a-0276-1b31-6724bd5608d0}">
@@ -209,7 +199,7 @@ END_IF]]></ST>
 // other commands such as resetting counters and timers should also be carried out here
 
 // send all movers to station 0
-XTS.System.CompleteMoverList.SetAllVelocity(mediumVelocity).MoveAllToStation( XTS.Station[0] );
+XTS.System.CompleteMoverList.SetAllVelocity(MainCommands.mediumVelocity).MoveAllToStation( XTS.Station[0] );
 XTS.System.ResetStatistics();
 
 // Reinit nextStation
@@ -270,7 +260,7 @@ nextStation := 4;]]></ST>
 		
         // Position Trigger 0 Logic
         IF XTS.PositionTrigger[0].MoverPassedPosition THEN
-            XTS.PositionTrigger[0].CurrentMover.SetVelocity(lowVelocity);
+            XTS.PositionTrigger[0].CurrentMover.SetVelocity(MainCommands.lowVelocity);
 			
 			// To Call ApplicationMover addon Method/Properties/Variables, you must call Mover[] array index directly
 			// Get MoverIndex for later use with ApplicationMover addons
@@ -286,14 +276,14 @@ nextStation := 4;]]></ST>
         // Position Trigger 1 Logic
         IF XTS.PositionTrigger[1].MoverPassedPosition THEN
 			XTS.PositionTrigger[1].CurrentMover.SetAcceleration(5E2);
-            XTS.PositionTrigger[1].CurrentMover.SetVelocity(highVelocity);
+            XTS.PositionTrigger[1].CurrentMover.SetVelocity(MainCommands.highVelocity);
             XTS.PositionTrigger[1].MuteCurrent();
         END_IF
 
 		// Position Trigger 2 Logic
         IF XTS.PositionTrigger[2].MoverPassedPosition THEN
 			XTS.PositionTrigger[2].CurrentMover.SetAcceleration(1E4);
-            XTS.PositionTrigger[2].CurrentMover.SetVelocity(lowVelocity);
+            XTS.PositionTrigger[2].CurrentMover.SetVelocity(MainCommands.lowVelocity);
             XTS.PositionTrigger[2].CurrentMover.MoveToStation(XTS.Station[0]);
             XTS.PositionTrigger[2].MuteCurrent();
         END_IF]]></ST>

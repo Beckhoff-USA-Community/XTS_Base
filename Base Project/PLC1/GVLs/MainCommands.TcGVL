@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+  <GVL Name="MainCommands" Id="{f7a2a55d-55db-0322-355c-621ba34c0cca}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	Enable		: BOOL;
+	Start		: BOOL;
+	Stop		: BOOL;
+	
+    lowVelocity    			: LREAL := 200;  	// mm/s
+    mediumVelocity 			: LREAL := 800;  	// mm/s
+    highVelocity   			: LREAL := 1200; 	// mm/s
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
