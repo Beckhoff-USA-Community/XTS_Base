@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="MAIN" Id="{e5121501-3133-07a7-12bf-96dcd5d9e348}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
@@ -154,21 +154,17 @@ XTS.Station[2].Position 		:= 1200;
 XTS.Station[3].Position 		:= 1300;
 XTS.Station[4].Position 		:= 1400;
 
+// speed changes in corners
 XTS.PositionTrigger[0].Position := 1500;
 XTS.PositionTrigger[1].Position := 2000;
 XTS.PositionTrigger[2].Position := 3500;
 
-XTS.Zone[0].StartPosition		:= 3750;
-XTS.Zone[0].EndPosition   		:= 750;
+// recover trigger near station 0
+XTS.PositionTrigger[3].Position := XTS.Station[0].Position + 2.0;
 
-XTS.Zone[1].StartPosition 		:= 750;
-XTS.Zone[1].EndPosition   		:= 1750;
-
-XTS.Zone[2].StartPosition 		:= 1750;
-XTS.Zone[2].EndPosition   		:= 2750;
-
-XTS.Zone[3].StartPosition		:= 2750;
-XTS.Zone[3].EndPosition   		:= 3750;
+// window around station 0 for startup
+XTS.Zone[0].StartPosition		:= XTS.Station[0].Position - 1.0;
+XTS.Zone[0].EndPosition   		:= XTS.Station[0].Position + 1.0;
 
 XTS.InitialParameterSet.Velocity		:= 1000;		// mm/s
 XTS.InitialParameterSet.Acceleration	:= 10_000;		// mm/s2
@@ -189,6 +185,12 @@ MainCommands.highVelocity	:= 1200;]]></ST>
 // wait for all movers to reach the standstill state and one mover at station 0
 IF (XTS.System.CompleteMoverList.IsAllMoversHalted AND XTS.Station[0].MoverInPosition) THEN
 	RecoveryComplete := TRUE;
+END_IF
+
+// position trigger leaving station 0 for recovery
+IF XTS.PositionTrigger[3].MoverPassedPosition THEN
+	XTS.PositionTrigger[3].CurrentMover.SetVelocity(MainCommands.mediumVelocity).MoveToStation(XTS.Station[0]);
+	XTS.PositionTrigger[3].MuteCurrent();
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -200,6 +202,10 @@ END_IF]]></ST>
 
 // send all movers to station 0
 XTS.System.CompleteMoverList.SetAllVelocity(MainCommands.mediumVelocity).MoveAllToStation( XTS.Station[0] );
+//movers near station 0 (zone 0) need to first move away from the station
+XTS.Zone[0].CurrentMoverList.MoveAllVelocity(MainCommands.lowVelocity);
+XTS.PositionTrigger[3].MuteCurrent();
+// Restart statistics
 XTS.System.ResetStatistics();
 
 // Reinit nextStation
