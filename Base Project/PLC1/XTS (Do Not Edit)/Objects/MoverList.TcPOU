@@ -274,39 +274,39 @@ WHILE allsorted = FALSE DO
 			// Calculate directional distances at i & j
 			IF Direction = MC_Positive_Direction THEN
 				// Calculate for i
-				IF SortBuffer[i] <> 0 AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
+				IF ( SortBuffer[i] <> 0 AND i <= moverCount ) AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
 					directionalDistance_i		:= Position - SortBuffer[i]^.TrackInfo.TrackPosition;
-				ELSIF SortBuffer[i] <> 0 AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition > Position THEN
+				ELSIF ( SortBuffer[i] <> 0 AND i <= moverCount ) AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition > Position THEN
 					directionalDistance_i		:= Position + ( SortBuffer[i]^.CurrentTrack^.Length - SortBuffer[i]^.TrackInfo.TrackPosition );
 				END_IF;	
 				// Calculate for j
-				IF SortBuffer[j] <> 0 AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
+				IF ( SortBuffer[j] <> 0 AND j <= moverCount ) AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
 					directionalDistance_j		:= Position - SortBuffer[j]^.TrackInfo.TrackPosition;
-				ELSIF SortBuffer[j] <> 0 AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition > Position THEN
+				ELSIF ( SortBuffer[j] <> 0 AND j <= moverCount ) AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition > Position THEN
 					directionalDistance_j		:= Position + ( SortBuffer[j]^.CurrentTrack^.Length - SortBuffer[j]^.TrackInfo.TrackPosition );					 
 				END_IF
 				
 			ELSIF Direction = MC_Negative_Direction THEN
 				
 				// Calculate for i
-				IF SortBuffer[i] <> 0 AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
+				IF  ( SortBuffer[i] <> 0 AND i <= moverCount ) AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
 					directionalDistance_i		:= SortBuffer[i]^.TrackInfo.TrackPosition + ( SortBuffer[i]^.CurrentTrack^.Length - Position );
-				ELSIF SortBuffer[i] <> 0 AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition > Position THEN
+				ELSIF  ( SortBuffer[i] <> 0 AND i <= moverCount ) AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition > Position THEN
 					directionalDistance_i		:= SortBuffer[i]^.TrackInfo.TrackPosition - Position;
 				END_IF
 				// Calculate for j
-				IF  j < SIZEOF(SortBuffer)/SIZEOF(SortBuffer[1]) AND_THEN SortBuffer[j] <> 0 AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
+				IF ( SortBuffer[j] <> 0 AND j <= moverCount ) AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
 					directionalDistance_j		:= SortBuffer[j]^.TrackInfo.TrackPosition + ( SortBuffer[j]^.CurrentTrack^.Length - Position );
-				ELSIF SortBuffer[j] <> 0 AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition > Position THEN
+				ELSIF ( SortBuffer[j] <> 0 AND j <= moverCount ) AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition > Position THEN
 					directionalDistance_j		:= SortBuffer[j]^.TrackInfo.TrackPosition - Position;
 				END_IF
 				
 			ELSE
 				// closest in any direction, typically for linear, non-modulo tracks
-				IF SortBuffer[i] <> 0 THEN
+				IF ( SortBuffer[i] <> 0 AND i <= moverCount ) THEN
 					directionalDistance_i		:= ABS(SortBuffer[i]^.TrackInfo.TrackPosition - Position);
 				END_IF
-				IF SortBuffer[j] <> 0 THEN
+				IF ( SortBuffer[j] <> 0 AND j <= moverCount ) THEN
 					directionalDistance_j		:= ABS(SortBuffer[j]^.TrackInfo.TrackPosition - Position);
 				END_IF
 				
