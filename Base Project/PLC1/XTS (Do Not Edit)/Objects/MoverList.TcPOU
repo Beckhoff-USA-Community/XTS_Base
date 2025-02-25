@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="MoverList" Id="{6a6492c3-5dac-4c49-8708-8eab34cf4a1d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK MoverList EXTENDS Objective IMPLEMENTS iMoverList
 VAR_INPUT
@@ -160,10 +160,10 @@ END_FOR;
 FilterDestinationStation := THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetMoverByLocation" Id="{5ac43cd5-f85a-06c2-1468-37f2b5bf2a62}" FolderPath="Methods\">
+    <Method Name="GetMoverByLocation" Id="{2ed381fa-32e4-0a91-0551-8d2b2515ae32}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD GetMoverByLocation : REFERENCE TO Mover
 VAR_INPUT
-	Index			: USINT;				// 0 is find the first closest mover, 1 is find the second closest mover, 2 is find the third, etc. etc. etc.
+	Index			: USINT;				// 1 is find the first closest mover, 2 is find the second closest mover, 3 is find the third, etc. etc. etc.
 	Position		: LREAL;				// fixed track position from which to search for movers by proximity
 	Direction		: Tc2_MC2.MC_Direction;	// Positive = find the most positive mover whose position is less than the Input. Negative = find the most negative mover whose position is greater than the Input.		
 END_VAR
@@ -171,17 +171,23 @@ END_VAR
 VAR
 	sortState			: USINT;
 
-	SortedBuffer		: ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover;	// Initially empty array of movers, sorted in order
-	HoldingBuffer		: ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover;	// Holding buffer for sorting operations
+	StartBuffer			: ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover;	// Initial unsorted array of movers
+	HoldingBuffer		: ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover;	// Holding buffer for sorting operations
+	SortBuffer			: ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover;	// Fully sorted output buffer
 	
-	place				: UDINT;	// placement index
-	level				: UDINT;	// level tracker
-	element				: UDINT;	// index tracker
+	n					: UDINT;	// index var for loops
+	location			: UDINT := 1;	// index for placing in Start Buffer without gaps
+	moverCount			: UDINT;	// number of movers present in the array
+	
+	place				: UDINT	:= 1;	// placement index
+	level				: UDINT := 1;	// level tracker
+	element				: UDINT := 1;	// index tracker
 	
 	allsorted			: BOOL;		// status bit, array has been successfully sorted
 	elementsorted		: BOOL;		// status bit, element has been successfully sorted
 	
-	size				: UDINT;	// size of the sortation merge elements at this level
+	nom_size			: UDINT;	// nominal size of elements at this level
+	act_size			: UDINT;		// actual size of this sortation element. possibly smaller at the end of the array
 	low					: UDINT;	// starting point for index i within this element
 	middle				: UDINT;	// starting point for index j within this element
 	high				: UDINT;	// end of the sortation merge element at this level, element
@@ -193,148 +199,174 @@ VAR
 	directionalDistance_j		: LREAL;
 	
 	cycles				: UDINT;
-	
+
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Method is implemented using a Mergesort, for improved performance on systems with high mover counts.
 
-memcpy(ADR(SortedBuffer),ADR(internalRegisteredMovers),SIZEOF(internalRegisteredMovers));
+// memcpy( ADR( StartBuffer ), ADR( internalRegisteredMovers ), SIZEOF( internalRegisteredMovers ));
 
 WHILE allsorted = FALSE DO
 	
-	cycles		:= cycles + 1;		// simple counter, for evaluating performance
-
+	cycles	:= cycles + 1;
+	
 	CASE sortState OF
-		0: // ------------------------- Calculate sort parameters for the current merge element		
+		0:	// ---------------------- Count the number of registered movers & populate StartBuffer without gaps
 		
-			size			:= LREAL_TO_UDINT(EXPT(2,level+1));
-			low				:= element * size;
-			high			:= low + size - 1;
-			middle			:= low + LREAL_TO_UDINT(FLOOR(size / 2));
+			FOR n := 1 TO ( SIZEOF( internalRegisteredMovers ) / SIZEOF( internalRegisteredMovers[1] ) ) DO
+				IF internalRegisteredMovers[n] <> 0 THEN
+					moverCount		:= moverCount + 1;
+					memcpy( ADR( StartBuffer[location] ), ADR( internalRegisteredMovers[n] ), SIZEOF( internalRegisteredMovers[n] ));
+					location		:= location + 1;
+				END_IF
+			END_FOR
 			
-			i				:= low;
-			j				:= middle;
+			memcpy( ADR( SortBuffer ), ADR( StartBuffer ), SIZEOF( StartBuffer ));
 			
-			sortState		:= 1;
+			sortState		:= 1;		
 		
-		1: // ------------------------- Check if the level is completely sorted/merged
+		1:	// ---------------------- Calculate sortation parameters for the current merge element
 		
-			IF element = 0 AND EXPT(2,level) > SIZEOF(SortedBuffer) / SIZEOF(SortedBuffer[0]) THEN
-				// the last level has been merged, everything is sorted
+			nom_size			:= LREAL_TO_UDINT(EXPT( 2, level ));
+			
+			low					:= ( element - 1 ) * nom_size + 1;
+			middle				:= MIN(( low + LREAL_TO_UDINT( FLOOR( nom_size / 2 ))), moverCount );
+			high				:= MIN(( low + nom_size - 1), moverCount );
+			
+			act_size			:= high - low + 1;
+			
+			i					:= low;
+			j					:= middle;
+			
+			sortState			:= 2;
+			
+		2:	// ---------------------- Check if the level is completely sorted/merged 
+		
+			// if nom_size from last level was larger than the number of movers, we are fully sorted
+			IF element = 1 AND LREAL_TO_UDINT(EXPT(2,level-1)) > moverCount THEN
 				allsorted		:= TRUE;
-			ELSIF low > SIZEOF(SortedBuffer) / SIZEOF(SortedBuffer[0]) - 1 THEN
-				// the elements in this level have been merged, increment to the next
-				memset(ADR(HoldingBuffer),0,SIZEOF(HoldingBuffer));
+			// if low is greater than moverCount, we've completed a merge level. increment
+			ELSIF low >  moverCount THEN
+				memset( ADR( HoldingBuffer ), 0, SIZEOF( HoldingBuffer ));
 				level			:= level + 1;
-				element			:= 0;
-				place			:= 0;
-				sortState		:= 0;
+				element			:= 1;
+				place			:= 1;
+				sortState		:= 1;			
+			// i and j are both sortable- move on to direct comparisons			
 			ELSE
-				// this level is still being merged, continue the process
-				sortState		:= 2;
-			END_IF
+				sortState		:= 3;	
+			END_IF			
 			
-		2: // ------------------------- Check if the elements at the indices are sortable or if we're beyond the array
+		3:	// ---------------------- Check if the elements at the indices are sortable or if we're beyond the array
 		
-			IF ( i >= middle OR i > SIZEOF(SortedBuffer)/SIZEOF(SortedBuffer[0])-1 ) AND
-				( j > high OR j > SIZEOF(SortedBuffer)/SIZEOF(SortedBuffer[0])-1 ) THEN
+			IF ( i >= middle OR i > moverCount ) AND ( j > high OR j > moverCount ) THEN
 				// i and j have both reached the end of the merge element
-				// copy the results from the holding buffer into sorted
-				// and increment the element to the next for merging
-				memcpy(ADR(SortedBuffer[low]),ADR(HoldingBuffer[low]),size*SIZEOF(SortedBuffer[0]));
+				memcpy( ADR( SortBuffer[low] ), ADR( HoldingBuffer[low] ), act_size * SIZEOF( HoldingBuffer[1] )); 
 				element			:= element + 1;
-				sortState		:= 0;
+				sortState		:= 1;
 			ELSE
-				// i and j are both sortable. move on to direct comparisons
-				sortState		:= 3;				
+				sortState		:= 4;
 			END_IF
 			
-		3: // ------------------------- Merge elements at indices i & j
-		
+		4:	// ---------------------- Merge elements at indices i & j
+
 			// Calculate directional distances at i & j
 			IF Direction = MC_Positive_Direction THEN
 				// Calculate for i
-				IF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
-					directionalDistance_i		:= Position - SortedBuffer[i]^.TrackInfo.TrackPosition;
-				ELSIF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition > Position THEN
-					directionalDistance_i		:= Position + ( SortedBuffer[i]^.CurrentTrack^.Length - SortedBuffer[i]^.TrackInfo.TrackPosition );
+				IF ( SortBuffer[i] <> 0 AND i <= moverCount ) AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
+					directionalDistance_i		:= Position - SortBuffer[i]^.TrackInfo.TrackPosition;
+				ELSIF ( SortBuffer[i] <> 0 AND i <= moverCount ) AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition > Position THEN
+					directionalDistance_i		:= Position + ( SortBuffer[i]^.CurrentTrack^.Length - SortBuffer[i]^.TrackInfo.TrackPosition );
 				END_IF;	
 				// Calculate for j
-				IF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
-					directionalDistance_j		:= Position - SortedBuffer[j]^.TrackInfo.TrackPosition;
-				ELSIF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition > Position THEN
-					directionalDistance_j		:= Position + ( SortedBuffer[i]^.CurrentTrack^.Length - SortedBuffer[j]^.TrackInfo.TrackPosition );					 
+				IF ( SortBuffer[j] <> 0 AND j <= moverCount ) AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
+					directionalDistance_j		:= Position - SortBuffer[j]^.TrackInfo.TrackPosition;
+				ELSIF ( SortBuffer[j] <> 0 AND j <= moverCount ) AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition > Position THEN
+					directionalDistance_j		:= Position + ( SortBuffer[j]^.CurrentTrack^.Length - SortBuffer[j]^.TrackInfo.TrackPosition );					 
 				END_IF
 				
 			ELSIF Direction = MC_Negative_Direction THEN
 				
 				// Calculate for i
-				IF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
-					directionalDistance_i		:= SortedBuffer[i]^.TrackInfo.TrackPosition + ( SortedBuffer[i]^.CurrentTrack^.Length - Position );
-				ELSIF SortedBuffer[i] <> 0 AND_THEN SortedBuffer[i]^.TrackInfo.TrackPosition > Position THEN
-					directionalDistance_i		:= SortedBuffer[i]^.TrackInfo.TrackPosition - Position;
+				IF  ( SortBuffer[i] <> 0 AND i <= moverCount ) AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition <= Position THEN
+					directionalDistance_i		:= SortBuffer[i]^.TrackInfo.TrackPosition + ( SortBuffer[i]^.CurrentTrack^.Length - Position );
+				ELSIF  ( SortBuffer[i] <> 0 AND i <= moverCount ) AND_THEN SortBuffer[i]^.TrackInfo.TrackPosition > Position THEN
+					directionalDistance_i		:= SortBuffer[i]^.TrackInfo.TrackPosition - Position;
 				END_IF
 				// Calculate for j
-				IF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
-					directionalDistance_j		:= SortedBuffer[j]^.TrackInfo.TrackPosition + ( SortedBuffer[i]^.CurrentTrack^.Length - Position );
-				ELSIF SortedBuffer[j] <> 0 AND_THEN SortedBuffer[j]^.TrackInfo.TrackPosition > Position THEN
-					directionalDistance_j		:= SortedBuffer[j]^.TrackInfo.TrackPosition - Position;
+				IF ( SortBuffer[j] <> 0 AND j <= moverCount ) AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition <= Position THEN
+					directionalDistance_j		:= SortBuffer[j]^.TrackInfo.TrackPosition + ( SortBuffer[j]^.CurrentTrack^.Length - Position );
+				ELSIF ( SortBuffer[j] <> 0 AND j <= moverCount ) AND_THEN SortBuffer[j]^.TrackInfo.TrackPosition > Position THEN
+					directionalDistance_j		:= SortBuffer[j]^.TrackInfo.TrackPosition - Position;
 				END_IF
 				
 			ELSE
 				// closest in any direction, typically for linear, non-modulo tracks
-				IF SortedBuffer[i] <> 0 THEN
-					directionalDistance_i		:= ABS(SortedBuffer[i]^.TrackInfo.TrackPosition - Position);
+				IF ( SortBuffer[i] <> 0 AND i <= moverCount ) THEN
+					directionalDistance_i		:= ABS(SortBuffer[i]^.TrackInfo.TrackPosition - Position);
 				END_IF
-				IF SortedBuffer[j] <> 0 THEN
-					directionalDistance_j		:= ABS(SortedBuffer[j]^.TrackInfo.TrackPosition - Position);
+				IF ( SortBuffer[j] <> 0 AND j <= moverCount ) THEN
+					directionalDistance_j		:= ABS(SortBuffer[j]^.TrackInfo.TrackPosition - Position);
 				END_IF
 				
 			END_IF
-		
+			
 			// If j alone is beyond a sortable range, grab i
-			IF j > high OR j > SIZEOF(SortedBuffer)/SIZEOF(SortedBuffer[0])-1 THEN
-				HoldingBuffer[place]		:= SortedBuffer[i];
+			IF j > high OR j > moverCount THEN
+				HoldingBuffer[place]		:= SortBuffer[i];
 				place						:= place + 1;
 				i							:= i + 1;
 			// If i is beyond a sortable range, grab j
-			ELSIF i >= middle THEN
-				HoldingBuffer[place]		:= SortedBuffer[j];
+			ELSIF i >= middle OR i > moverCount THEN
+				HoldingBuffer[place]		:= SortBuffer[j];
 				place						:= place + 1;
 				j							:= j + 1;
-			ELSIF SortedBuffer[i] = 0 THEN
-				HoldingBuffer[place]		:= SortedBuffer[j];
-				place						:= place + 1;
-				j							:= j + 1;
-			ELSIF SortedBuffer[j] = 0 THEN
-				HoldingBuffer[place]		:= SortedBuffer[i];
-				place						:= place + 1;
-				i							:= i + 1;
 			ELSIF directionalDistance_i <= directionalDistance_j THEN
-				HoldingBuffer[place]		:= SortedBuffer[i];
+				HoldingBuffer[place]		:= SortBuffer[i];
 				place						:= place + 1;
 				i							:= i + 1;
 			ELSIF directionalDistance_j < directionalDistance_i THEN
-				HoldingBuffer[place]		:= SortedBuffer[j];
+				HoldingBuffer[place]		:= SortBuffer[j];
 				place						:= place + 1;
-				j							:= j + 1; 
+				j							:= j + 1;					
 			END_IF
 			
-			sortState		:= 2;
-	END_CASE;	
+			sortState		:= 3;
+			
+	END_CASE
 END_WHILE
 
-IF Index < 0 OR Index >= THIS^.RegisteredMoverCount THEN
+IF Index < 1 OR Index > THIS^.RegisteredMoverCount THEN
 	GetMoverByLocation REF= 0;
 ELSE
-	GetMoverByLocation REF= SortedBuffer[Index]^;
+	GetMoverByLocation REF= SortBuffer[Index]^;
 END_IF
 
 IF __ISVALIDREF(GetMoverByLocation) = FALSE THEN
 	ErrorMover.SourceInstancePath		:= THIS^.InstancePath;
 	GetMoverByLocation					REF= ErrorMover;
 END_IF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -779,5 +811,111 @@ END_FOR
 SetAllVelocity := THIS^;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="MoverList">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.ActivateAllTrack">
+      <LineId Id="3" Count="9" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.ApplyAllParameterSet">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.Contains">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.DisableAll">
+      <LineId Id="3" Count="11" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.EnableAll">
+      <LineId Id="3" Count="11" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.FilterDestinationStation">
+      <LineId Id="3" Count="25" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.GetMoverByLocation">
+      <LineId Id="1" Count="169" />
+    </LineIds>
+    <LineIds Name="MoverList.HaltAll">
+      <LineId Id="3" Count="11" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.IsAllMoversDisabled.Get">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.IsAllMoversHalted.Get">
+      <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.IsAllMoversReady.Get">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.IsAllTrackReady.Get">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.LogicalComplement">
+      <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.LogicalDifference">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.LogicalIntersect">
+      <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.LogicalUnion">
+      <LineId Id="3" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.MoveAllToPosition">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.MoveAllToStation">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.MoveAllVelocity">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllAcceleration">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllDeceleration">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllDirection">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllGap">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllGapMode">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllJerk">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MoverList.SetAllVelocity">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
