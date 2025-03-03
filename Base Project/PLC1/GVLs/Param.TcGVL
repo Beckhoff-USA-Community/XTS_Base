@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <GVL Name="Param" Id="{673621fc-c806-000b-08ea-fd34161e1bd8}" ParameterList="True">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
@@ -13,6 +13,7 @@ VAR_GLOBAL CONSTANT
 	NUM_ZONES				: USINT := 10;	// Zones
 	
 	NUM_TRACKS				: USINT	:= 1;	// Tracks (Typically 1)
+	DEFAULT_TRACK			: USINT := 1;	// Default track for movers, stations, zones and position triggers
 
 	PART_ARRAY_SIZE			: UDINT := 100;
 	AUTO_POPULATE_STATIONS  : BOOL := TRUE; // use the Station[x] array to label stations on the visualization. Turn off if manually entering stations in the configurator.

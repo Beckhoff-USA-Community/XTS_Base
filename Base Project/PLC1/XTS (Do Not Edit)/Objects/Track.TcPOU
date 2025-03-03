@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="Track" Id="{1d568bee-17b0-45d9-8c81-c6842c2a11d5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Track EXTENDS Objective IMPLEMENTS iTrack
 VAR_INPUT
@@ -50,7 +50,8 @@ VAR_INST
 	nState : TrackCyclicState;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF internalIdIsSet AND NOT internalOTCIDIsSet THEN
+        <ST><![CDATA[
+IF internalIdIsSet AND NOT internalOTCIDIsSet THEN
 	CASE nState OF
 		TrackCyclicState.WAIT_FOR_ENV:	// wait for environment
 			IF Mediator.EnvironmentIsReady THEN
@@ -59,7 +60,9 @@ END_VAR]]></Declaration>
 		
 		TrackCyclicState.CHECK_ZERO_CASE: // check for zero special case
 			IF (internalId = 0) THEN
-				// zero does not require initialization
+				// borrow the pre-calculated track lenght from track 1
+				internalLength := Mediator.XPU.TrackTcIo(1).GetLength();
+				// zero does not require other initialization
 				nState := TrackCyclicState.SET_INITIALIZED;
 			ELSE
 				nState := TrackCyclicState.CHECK_TRACK_COUNT;
@@ -229,5 +232,60 @@ SUPER^.UnregisterMover(RemovingMover);
 internalMoverList.UnregisterMover(RemovingMover);]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="Track">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.CurrentMoverCount.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.CurrentMoverList.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.Cyclic">
+      <LineId Id="41" Count="0" />
+      <LineId Id="3" Count="8" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="12" Count="28" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.Id.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.Id.Set">
+      <LineId Id="3" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.isInitialized.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.Length.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.Length.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.OTCID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.OTCID.Set">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.RegisterMover">
+      <LineId Id="3" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.RegisterMoverList">
+      <LineId Id="3" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.UnregisterAll">
+      <LineId Id="3" Count="4" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Track.UnregisterMover">
+      <LineId Id="3" Count="4" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
