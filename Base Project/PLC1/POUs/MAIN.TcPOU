@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="MAIN" Id="{e5121501-3133-07a7-12bf-96dcd5d9e348}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR	
@@ -147,7 +147,10 @@ XTS.CyclicLogic();
     </Implementation>
     <Action Name="Initializing" Id="{0bad743d-cb82-0efe-1988-42b77153463d}">
       <Implementation>
-        <ST><![CDATA[// XTS Object Init
+        <ST><![CDATA[//XPU ID, only needed if > 1 XPU on a single PC
+XTS.System.XpuId := 1;
+
+// XTS Object Init
 XTS.Station[0].Position 		:= 5;
 XTS.Station[1].Position 		:= 750;
 XTS.Station[2].Position 		:= 1200;
@@ -295,5 +298,28 @@ nextStation := 4;]]></ST>
         END_IF]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="MAIN">
+      <LineId Id="3" Count="122" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Initializing">
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="2" Count="27" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.Recovering">
+      <LineId Id="2" Count="10" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.RecoverOneshot">
+      <LineId Id="2" Count="12" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.StationLogic">
+      <LineId Id="2" Count="77" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mediator
@@ -14,7 +14,6 @@ VAR_INPUT
 	TrackArray				: ARRAY [0..Param.NUM_TRACKS] OF POINTER TO Track;	// track 0 is a special absolute case, this makes the array 1 larger than normal	
 
 	GROUP_REF				: AXES_GROUP_REF;
-	
 END_VAR
 VAR_OUTPUT
 	Error			: BOOL;			// error is currently active
@@ -36,6 +35,7 @@ VAR
 	internalEnableGroupState		: INT;
 	internalEnabled					: BOOL;
 	internalMover1Error				: BOOL;
+	internalXpuId					: UINT;
 	
 	// implements memoization of Mediator.AllMotorModulesReady
 	// so it is only computed once per scan when needed
@@ -389,15 +389,15 @@ IF (NOT internalMotorModuleStatus.calcComplete) THEN
 	// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
 	IF fbXtsEnvironment.P_IsInitialized THEN
 	// Get number of parts. 
-		nParts:= fbXtsEnvironment.XpuTcIo(1).GetPartCount();
+		nParts:= fbXtsEnvironment.XpuTcIo(internalXpuId).GetPartCount();
 		IF nParts <> 0 THEN
 			// Get number of modules per part and check their state
 			bHighDriveReady:= TRUE;
 			FOR I := 1 TO nParts DO 
-				nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).GetModuleCount();
+				nModulesInPart:= fbXtsEnvironment.XpuTcIo(internalXpuId).PartTcIo(UDINT_TO_UINT(I)).GetModuleCount();
 				FOR J := 1 TO nModulesInPart DO
-					DriveStatusStorage:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue();
-					IF NOT (DriveStatusStorage = 4135) AND NOT (fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation) THEN
+					DriveStatusStorage:= fbXtsEnvironment.XpuTcIo(internalXpuId).PartTcIo(UDINT_TO_UINT(I)).ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue();
+					IF NOT (DriveStatusStorage = 4135) AND NOT (fbXtsEnvironment.XpuTcIo(internalXpuId).GetOperationMode() = OperationMode.Simulation) THEN
 						bHighDriveReady:= FALSE;
 					END_IF 
 				END_FOR
@@ -552,7 +552,7 @@ CASE nEnvironmentState OF
 		IF fbXtsEnvironment.P_IsInitialized THEN
 			// assign to vars
 			internalEnvironment 	:= fbXtsEnvironment;
-			internalXPU				:= fbXtsEnvironment.XpuTcIo(1);
+			internalXPU				:= fbXtsEnvironment.XpuTcIo(internalXpuId);
 			internalInfoServerCount := fbXtsEnvironment.P_InfoServerCount;
 			// info server may not be present in hand-built XTS configurations
 			IF (internalInfoServerCount > 0) THEN
@@ -622,11 +622,11 @@ CASE internalM1DetectState OF
 		END_IF
 
 	20:	// Trigger mover redetection
-		fbXtsEnvironment.XpuTcIo(1).TriggerRedetection();
+		fbXtsEnvironment.XpuTcIo(internalXpuId).TriggerRedetection();
  		internalM1DetectState 		:= 30;
 
 	30:	// Monitor mover redection status
-		XPUDetectionState			:= fbXtsEnvironment.XpuTcIo(1).GetDetectionState();
+		XPUDetectionState			:= fbXtsEnvironment.XpuTcIo(internalXpuId).GetDetectionState();
 		IF XPUDetectionState = DetectionStateEnum.Succeeded THEN
 			internalM1DetectState 	:= 40;
 		ELSIF XPUDetectionState > DetectionStateEnum.Succeeded THEN
@@ -1075,5 +1075,121 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="XpuId" Id="{2b38a185-0dec-472d-8414-fe7d86a25037}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY XpuId : UINT]]></Declaration>
+      <Get Name="Get" Id="{4af0d6fb-e238-4079-ac7a-cc572f4a4465}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[XpuId := internalXpuID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{60bd8b09-fe19-4fa0-a7e8-a973172f7321}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[internalXpuID := XpuId;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="Mediator">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddMover">
+      <LineId Id="3" Count="44" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddMoverList">
+      <LineId Id="3" Count="27" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddPositionTrigger">
+      <LineId Id="3" Count="32" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddStation">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddTrack">
+      <LineId Id="3" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AddZone">
+      <LineId Id="3" Count="32" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.AllMotorModulesReady.Get">
+      <LineId Id="32" Count="28" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.CompleteMoverList.Get">
+      <LineId Id="3" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Cyclic">
+      <LineId Id="417" Count="413" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.DetectMover1">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.EnableGroup">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Environment.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.EnvironmentIsReady.Get">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupAddLimit.Get">
+      <LineId Id="3" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupAxesCount.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupEnabled.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.GroupError.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InfoServer.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InfoServerIsReady.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.InstancePath.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Mover1DetectionComplete.Get">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.Mover1DetectionError.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.ResetStatistics">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.XPU.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.XpuId.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mediator.XpuId.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

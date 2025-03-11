@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="MAIN_LD" Id="{45308ac2-de42-005a-317f-c689cffde7e8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN_LD
 VAR	
@@ -2455,7 +2455,10 @@ END_VAR
     </Implementation>
     <Action Name="Initializing" Id="{d329280d-73f8-0090-2396-12181e53a72d}">
       <Implementation>
-        <ST><![CDATA[// XTS Object Init
+        <ST><![CDATA[//XPU ID, only needed if > 1 XPU on a single PC
+XTS.System.XpuId := 1;
+
+// XTS Object Init
 XTS.Station[0].Position 		:= 5;
 XTS.Station[1].Position 		:= 750;
 XTS.Station[2].Position 		:= 1200;
@@ -6324,5 +6327,12 @@ MainCommands.highVelocity	:= 1200;]]></ST>
         </NWL>
       </Implementation>
     </Action>
+    <LineIds Name="MAIN_LD.Initializing">
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="2" Count="31" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
