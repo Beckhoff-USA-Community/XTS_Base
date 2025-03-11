@@ -842,7 +842,8 @@ END_VAR
       </Get>
     </Property>
     <Property Name="IsErrorMover" Id="{a8369f91-5a27-4242-b41b-14b591fb7d8c}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY IsErrorMover : BOOL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsErrorMover : BOOL]]></Declaration>
       <Get Name="Get" Id="{d06d5039-cf68-42aa-9d67-5d9fa7db312d}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -1998,6 +1999,9 @@ LocalVars.lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.IsCollisionAvoidanceActive.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Mover.IsErrorMover.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.IsSyncedToAxis.Get">

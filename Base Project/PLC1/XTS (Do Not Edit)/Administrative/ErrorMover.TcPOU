@@ -179,7 +179,8 @@ LocalVars.lastCallHalt	:= newCallTime;]]></ST>
       </Implementation>
     </Method>
     <Property Name="IsErrorMover" Id="{c0d69c3d-4672-4718-8e35-34bca05bc8a3}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY IsErrorMover : BOOL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsErrorMover : BOOL]]></Declaration>
       <Get Name="Get" Id="{4bc3189e-0292-4768-9bc2-ce685794fdc2}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -554,6 +555,9 @@ END_IF
     </LineIds>
     <LineIds Name="ErrorMover.Halt">
       <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ErrorMover.IsErrorMover.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="ErrorMover.IsSyncedToMover.Get">
