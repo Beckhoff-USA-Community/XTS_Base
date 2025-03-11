@@ -841,6 +841,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="IsErrorMover" Id="{a8369f91-5a27-4242-b41b-14b591fb7d8c}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsErrorMover : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d06d5039-cf68-42aa-9d67-5d9fa7db312d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsErrorMover := FALSE;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="IsSyncedToAxis" Id="{f2757d0f-8cc6-01d8-3ce1-c233354ecef8}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY IsSyncedToAxis : BOOL]]></Declaration>
