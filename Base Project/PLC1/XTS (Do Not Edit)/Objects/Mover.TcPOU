@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
@@ -157,7 +157,7 @@ VAR
 	runCyclicTrack		: BOOL;
 END_VAR
 VAR_INST
-	MsgCreate			: FB_TcMessage;	
+	MsgCreate			: FB_TcMessage;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// this method contains multiple state machines denoted by the headers below
@@ -308,8 +308,7 @@ CASE LocalVars.State OF
 			Error			:= TRUE;
 			ErrorID			:= Mediator.ErrorID;
 			ErrorOrigin		:= Concat(InstancePath, ': Mediator.EnableGroup');
-			LocalVars.State	:= MV_ERROR;
-			LocalVars.State := MV_RUN;
+			LocalVars.State	:= MV_ERROR;;
 		END_IF
 			
 	MV_RUN: // ------------------------------------------------------- mover enabled, ready

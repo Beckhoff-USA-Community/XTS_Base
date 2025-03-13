@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="FB_XTS" Id="{87c35dfd-521b-066c-1ce4-3f633fe319d2}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_XTS
@@ -48,6 +48,7 @@ END_VAR
       <Declaration><![CDATA[METHOD CyclicLogic
 VAR_INPUT
 END_VAR
+
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[CASE State OF
@@ -115,11 +116,13 @@ END_VAR
 	XTS_DISABLING: // -------------------------------------------
 	
 		IF System.CompleteMoverList.IsAllMoversDisabled THEN
+			System.DisableGroup();
 			State			:= XTS_DISABLED;
 		END_IF
 		
 	XTS_ERROR: // ---------------------------------------------
 	XTS_DEBUG: // ---------------------------------------------	
+
 	
 
 END_CASE
