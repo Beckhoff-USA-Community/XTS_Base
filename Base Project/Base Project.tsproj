@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.13">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.14">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C929B002-BF94-48A2-937B-5D20DED8EF3B}">OperationMode</Name>
@@ -3922,9 +3922,9 @@ External Setpoint Generation:
 	</ImageDatas>
 	<Project ProjectGUID="{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
-			<Settings MaxCpus="20" NonWinCpus="1" RouterMemory="1073741824" MaxStackSize="256" PCoreAffinity="4095" ECoreAffinity="1044480">
-				<Cpu CpuId="18" BaseTime="2500"/>
-				<Cpu CpuId="19" BaseTime="2500"/>
+			<Settings MaxCpus="4" NonWinCpus="2" RouterMemory="1073741824" MaxStackSize="256" PCoreAffinity="4095" ECoreAffinity="1044480">
+				<Cpu CpuId="2"/>
+				<Cpu CpuId="3" BaseTime="2500"/>
 				<IoIdleTask Priority="10"/>
 			</Settings>
 			<Licenses>
@@ -3940,7 +3940,7 @@ External Setpoint Generation:
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
-				<Task Id="4" Priority="1" CycleTime="2500" AmsPort="351" Affinity="#x00080000" ExceedWarning="1" AdtTasks="true">
+				<Task Id="4" Priority="1" CycleTime="2500" AmsPort="351" Affinity="#x00000008" ExceedWarning="1" AdtTasks="true">
 					<Name>XTS Task 1</Name>
 				</Task>
 			</Tasks>
@@ -32098,7 +32098,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="PLC1" PrjFilePath="PLC1\PLC1.plcproj" TmcFilePath="PLC1\PLC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{A03D76A2-4D70-0EDE-D670-625559EA3B98}" TmcPath="PLC1\PLC1.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{AC333FD6-F6E5-EF48-70CF-25C3A4B89953}" TmcPath="PLC1\PLC1.tmc">
 					<Name>PLC1 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
