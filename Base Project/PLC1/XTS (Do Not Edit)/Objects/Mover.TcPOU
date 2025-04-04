@@ -1650,9 +1650,6 @@ ELSE
 		
 		LocalVars.fbGearInPosAxisCA[0].Execute			:= TRUE;
 		
-		LocalVars.fbGearInPosAxisCA[0].RatioNumerator		:= 1;
-		LocalVars.fbGearInPosAxisCA[0].RatioDenumerator	:= 1;
-		
 		LocalVars.fbGearInPosAxisCA[0].MasterSyncPosition	:= MasterSyncPos;	// This needs to be nonmodulo
 		LocalVars.fbGearInPosAxisCA[0].SlaveSyncPosition	:= SlaveSyncPos;
 		
@@ -1683,9 +1680,6 @@ ELSE
 	ELSIF LocalVars.fbGearInPosAxisCA[1].Busy = FALSE THEN
 		
 		LocalVars.fbGearInPosAxisCA[1].Execute			:= TRUE;
-		
-		LocalVars.fbGearInPosAxisCA[1].RatioNumerator		:= 1;
-		LocalVars.fbGearInPosAxisCA[1].RatioDenumerator	:= 1;
 		
 		LocalVars.fbGearInPosAxisCA[1].MasterSyncPosition	:= MasterSyncPos;	// This needs to be nonmodulo
 		LocalVars.fbGearInPosAxisCA[1].SlaveSyncPosition	:= SlaveSyncPos;
@@ -1772,9 +1766,6 @@ ELSE	// let 'er rip
 		
 		LocalVars.fbGearInPosMoverCA[0].Execute				:= TRUE;
 		LocalVars.fbGearInPosMoverCA[1].Execute				:= FALSE;
-			
-		LocalVars.fbGearInPosMoverCA[0].RatioNumerator			:= 1;
-		LocalVars.fbGearInPosMoverCA[0].RatioDenumerator		:= 1;
 		
 		LocalVars.fbGearInPosMoverCA[0].MasterSyncPosition				:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos;
 		
@@ -1816,9 +1807,6 @@ ELSE	// let 'er rip
 		
 		LocalVars.fbGearInPosMoverCA[1].Execute				:= TRUE;
 		LocalVars.fbGearInPosMoverCA[0].Execute				:= FALSE;
-			
-		LocalVars.fbGearInPosMoverCA[1].RatioNumerator			:= 1;
-		LocalVars.fbGearInPosMoverCA[1].RatioDenumerator		:= 1;
 		
 		LocalVars.fbGearInPosMoverCA[1].MasterSyncPosition				:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos;
 		
@@ -2081,11 +2069,17 @@ LocalVars.lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SyncToAxis">
-      <LineId Id="3" Count="106" />
+      <LineId Id="3" Count="17" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="29" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="50" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SyncToMover">
-      <LineId Id="3" Count="128" />
+      <LineId Id="3" Count="16" />
+      <LineId Id="23" Count="39" />
+      <LineId Id="66" Count="65" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.UnregisterFromAll">
