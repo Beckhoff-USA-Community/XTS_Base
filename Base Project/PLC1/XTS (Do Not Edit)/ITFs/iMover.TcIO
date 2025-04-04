@@ -85,6 +85,13 @@ PROPERTY IsCollisionAvoidanceActive : BOOL]]></Declaration>
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Property Name="IsErrorMover" Id="{2ffa25d5-dd35-40eb-812c-ef56bfae806b}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsErrorMover : Bool]]></Declaration>
+      <Get Name="Get" Id="{4fc84c17-ed4f-4a3f-b922-5fa8a15b80eb}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="IsTrackReady" Id="{a749704e-a727-05fa-1be8-d11fd5732682}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY IsTrackReady : BOOL]]></Declaration>

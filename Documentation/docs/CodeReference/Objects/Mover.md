@@ -500,6 +500,22 @@ currentTrackId := Mover[1].CurrentTrack^.Id
 IF Mover[1].IsCollisionAvoidanceActive THEN
 	// additional commands
 END_IF;
+```
+
+### .IsErrorMover
+
+*BOOL*
+
+> Returns TRUE if the current Mover reference is an Error Mover. An Error mover is automatically returned when an invalid command is given to an interface capable of returning a Mover. See [Diagnostics / ErrorMovers](../Diagnostics/ErrorMovers.md) for more information.  
+
+```javascript
+//Returns an ErrorMover as the GetMover function works on an 1 based Index
+
+MoverReference REF= Zone[0].GetMover(0,MC_Direction.MC_Positive_Direction);
+IF NOT MoverReference.IsErrorMover THEN
+	// Will not execute as the MoverReference is an error mover.
+END_IF;
+```
 
 ### .IsSyncedToAxis
 
