@@ -13,7 +13,7 @@ Here are a few quick tips to assist in developing with this project:
 
 - When reconfiguring the project for new hardware, be sure to delete elements of a previous configuration. More info on this is included in the First Steps section.
 
-- When configuring new hardware, be sure that *Is Closed* and *Is Included in Detection* options are set correctly.
+- When configuring new hardware, be sure that *Is Closed* and *Is Included in Detection* options are set correctly for tracks and parts.
 
 - When programming recovery scenarios, be sure to unregister movers from objectives where necessary.
 
@@ -31,14 +31,6 @@ More generally, here are some recommendations regarding the architecture of your
 
 Depending on the machine layout and the mounting needs of the motor modules the default direction of the track positions (clockwise for face-up motor modules) may not be desired. It is possible to invert the track's direction by changing the following settings.
 
-For each Mover axis in the NC set `Enc > Parameter > Encoder Evaluation > Invert Encoder Counting Direction` to `TRUE`.
-
-![Invert Encoder Direction](../Images/GettingStarted/InvertDirectionEncoder.png)
-
-For each Mover axis in the NC set `Drive > Parameter > Output Settings > Invert Motor Polarity` to `TRUE`.
-
-![Invert Drive Direction](../Images/GettingStarted/InvertDirectionDrive.png)
-
 For each Track set in the XTS Processing Unit set `Parameter > General > Polarity` to `Negative`.
 
 ![Invert Track Direction](../Images/GettingStarted/InvertDirectionTrack.png)
@@ -47,4 +39,4 @@ There are some additional considerations to be aware of when inverting the track
 
 ## Next and previous movers
 
-When looking for the next and previous movers on a system, for example when working with 2-up stations, movers that have been referenced directly such as Mover[i] and Mover[i+1] may no longer be in the expected order. Functions such as [`Mover.NextMover()`](../CodeReference/Objects/Mover.md#nextmover), [`Mover.PreviousMover()`](../CodeReference/Objects/Mover.md#previousmover) or [`Zone.CurrentMoverList.GetMoverByLocation()`](../CodeReference/Objects/MoverList.md#getmoverbylocation) are the recommended methods will correctly handle an inverted track direction.
+When looking for the next and previous movers on a system, for example when working with 2-up stations, movers that have been referenced directly such as Mover[i] and Mover[i+1] may no longer be in the expected order. Functions such as [`Mover.NextMover()`](../CodeReference/Objects/Mover.md#nextmover), [`Mover.PreviousMover()`](../CodeReference/Objects/Mover.md#previousmover) or [`Zone.CurrentMoverList.GetMoverByLocation()`](../CodeReference/Objects/MoverList.md#getmoverbylocation) are the recommended methods. These methods will also handle an inverted track direction correctly.
