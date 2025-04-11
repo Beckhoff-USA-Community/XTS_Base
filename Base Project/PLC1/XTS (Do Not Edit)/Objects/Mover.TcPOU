@@ -840,6 +840,18 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="IsErrorMover" Id="{a8369f91-5a27-4242-b41b-14b591fb7d8c}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY IsErrorMover : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d06d5039-cf68-42aa-9d67-5d9fa7db312d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsErrorMover := FALSE;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="IsSyncedToAxis" Id="{f2757d0f-8cc6-01d8-3ce1-c233354ecef8}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY IsSyncedToAxis : BOOL]]></Declaration>
@@ -1649,9 +1661,6 @@ ELSE
 		
 		LocalVars.fbGearInPosAxisCA[0].Execute			:= TRUE;
 		
-		LocalVars.fbGearInPosAxisCA[0].RatioNumerator		:= 1;
-		LocalVars.fbGearInPosAxisCA[0].RatioDenumerator	:= 1;
-		
 		LocalVars.fbGearInPosAxisCA[0].MasterSyncPosition	:= MasterSyncPos;	// This needs to be nonmodulo
 		LocalVars.fbGearInPosAxisCA[0].SlaveSyncPosition	:= SlaveSyncPos;
 		
@@ -1682,9 +1691,6 @@ ELSE
 	ELSIF LocalVars.fbGearInPosAxisCA[1].Busy = FALSE THEN
 		
 		LocalVars.fbGearInPosAxisCA[1].Execute			:= TRUE;
-		
-		LocalVars.fbGearInPosAxisCA[1].RatioNumerator		:= 1;
-		LocalVars.fbGearInPosAxisCA[1].RatioDenumerator	:= 1;
 		
 		LocalVars.fbGearInPosAxisCA[1].MasterSyncPosition	:= MasterSyncPos;	// This needs to be nonmodulo
 		LocalVars.fbGearInPosAxisCA[1].SlaveSyncPosition	:= SlaveSyncPos;
@@ -1771,9 +1777,6 @@ ELSE	// let 'er rip
 		
 		LocalVars.fbGearInPosMoverCA[0].Execute				:= TRUE;
 		LocalVars.fbGearInPosMoverCA[1].Execute				:= FALSE;
-			
-		LocalVars.fbGearInPosMoverCA[0].RatioNumerator			:= 1;
-		LocalVars.fbGearInPosMoverCA[0].RatioDenumerator		:= 1;
 		
 		LocalVars.fbGearInPosMoverCA[0].MasterSyncPosition				:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos;
 		
@@ -1815,9 +1818,6 @@ ELSE	// let 'er rip
 		
 		LocalVars.fbGearInPosMoverCA[1].Execute				:= TRUE;
 		LocalVars.fbGearInPosMoverCA[0].Execute				:= FALSE;
-			
-		LocalVars.fbGearInPosMoverCA[1].RatioNumerator			:= 1;
-		LocalVars.fbGearInPosMoverCA[1].RatioDenumerator		:= 1;
 		
 		LocalVars.fbGearInPosMoverCA[1].MasterSyncPosition				:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos;
 		
@@ -1988,6 +1988,9 @@ LocalVars.lastCallValidateTrack		:= newCallTime;]]></ST>
     <LineIds Name="Mover.IsCollisionAvoidanceActive.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="Mover.IsErrorMover.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
     <LineIds Name="Mover.IsSyncedToAxis.Get">
       <LineId Id="3" Count="1" />
       <LineId Id="2" Count="0" />
@@ -2080,11 +2083,17 @@ LocalVars.lastCallValidateTrack		:= newCallTime;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SyncToAxis">
-      <LineId Id="3" Count="106" />
+      <LineId Id="3" Count="17" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="29" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="50" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.SyncToMover">
-      <LineId Id="3" Count="128" />
+      <LineId Id="3" Count="16" />
+      <LineId Id="23" Count="39" />
+      <LineId Id="66" Count="65" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="Mover.UnregisterFromAll">
