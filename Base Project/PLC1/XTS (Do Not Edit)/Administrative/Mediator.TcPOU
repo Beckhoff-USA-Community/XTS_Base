@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mediator
@@ -738,7 +738,7 @@ CASE internalEnableGroupState OF
 		
 		fbGroupEnable.Execute			:= TRUE;
 		
-		IF fbGroupEnable.Done AND GROUP_REF.NcToPlc.CA.Common.GroupStatus.State = mcGroupStateStandby THEN
+		IF fbGroupEnable.Done AND GROUP_REF.NcToPlc.CA.Common.GroupStatus.State = mcGroupStateStandby AND fbGroupStatus.GroupErrorStop = FALSE THEN
 			fbGroupEnable.Execute		:= FALSE;
 			internalEnableGroupFlag 	:= FALSE;
 			internalEnableGroupState	:= 100;
@@ -771,7 +771,7 @@ END_CASE
 internalEnableGroupFlag := FALSE;
 
 // catch error flag and reset custom status bit
-IF (fbGroupStatus.GroupErrorStop AND internalEnableGroupState <> 10) THEN
+IF (fbGroupStatus.GroupErrorStop AND internalEnableGroupState = 0 AND internalEnabled) THEN
 	Error := TRUE;
 	internalEnabled := FALSE;
 END_IF
@@ -890,6 +890,17 @@ END_VAR
         <ST><![CDATA[// calling enable group only sets a group reset flag that is handled in Cyclic Group Reset
 // this effectively sums up requests from all movers into a single sequence that will handle the reset
 internalM1DetectFlag := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DisableGroup" Id="{2c20cfe4-2326-0db3-0e15-8e6727fd803f}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD DisableGroup : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// reset the internal group enable flag so the enable sequence in mediator.cyclic is re-armed
+internalEnabled := FALSE;
+Error := FALSE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="EnableGroup" Id="{a75c02a5-1ca0-0df7-3f91-6bd402a249c4}" FolderPath="Methods\">

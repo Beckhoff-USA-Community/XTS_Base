@@ -128,16 +128,18 @@ CASE State OF
 
 	MS_STOPPED:
 		// movers are stopped, but XTS is still enabled
-		// wait for restart or disable
-		IF NOT MainCommands.Enable THEN
+		// wait for restart, disable or error disable
+		IF XTS.State <> XTS_ENABLED AND MainCommands.Enable THEN
+			State					:= MS_ERROR;
+		ELSIF NOT MainCommands.Enable THEN
 			XTS.Enable 				:= FALSE;
-		END_IF
-		IF XTS.State = XTS_DISABLED THEN
-			State					:= MS_OFF;
 		ELSIF  MainCommands.Start THEN
 			MainCommands.Stop		:= FALSE;
 			State					:= MS_ONESHOT_RECOVER;
 		END_IF
+		IF XTS.State = XTS_DISABLED THEN
+			State					:= MS_OFF;
+		END_IF;
 	
 END_CASE
 
