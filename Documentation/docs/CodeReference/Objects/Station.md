@@ -17,7 +17,7 @@ Station[1].Position		:= 250;
 Station[2].Position		:= 500;
 Station[3].Position		:= 750;
 ```
-Stations must also be added to the Mediator object. By default, this is handled in the MAIN.Initialize ACTION.
+Stations must also be added to the Mediator object. By default, this is handled automatically.
 
 ```javascript
 // Example implementation
@@ -34,14 +34,14 @@ Mover[2].MoveToStation( Station[3] );
 Station[3].RegisterMover( Mover[2] );		// unnecessary
 ```
 
-Stations also automatically *unregister* movers that have been redirected with another move command, even if that command's destination is the same as the Station.
+Stations also automatically *unregister* movers that have been redirected with another move command, even if that command's destination is the same location as the Station.
 
 ```javascript
 Mover[2].MoveToStation( Station[3] );
 Mover[2].MoveToPosition( Station[3].Position );
 ```
 
-Here, the Station will not report *MoverInPosition*.
+Here, the Station will not report *MoverInPosition* when it arrives because the original command is interrupted by one where the *CurrentMoveType* is not `MOVETYPE_STATION`.
 
 
 ## Methods
@@ -175,6 +175,6 @@ FOR i := 0 TO Station[0].TrackedMoverCount-1 DO
 	targetMover^.MoveToStation( Station[1] );
 END_FOR
 ```
-# Station Labeling In Viewing Tools
+### Station Labeling In Viewing Tools
 
 See [Visualization](../../GettingStarted/Visualization.md)

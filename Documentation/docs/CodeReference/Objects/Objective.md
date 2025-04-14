@@ -1,6 +1,6 @@
 # Objectives
 
-*Objective* is an umbrella term used by the project, that includes the following objects:
+*Objective* is an ABSTRACT base class used by the project, whose child objects include the following:
 
 - [Stations](Station.md)
 - [Zones](Zone.md)

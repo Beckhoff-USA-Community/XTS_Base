@@ -3,7 +3,7 @@
 
 > The Mover List object provides a way to group Movers together and issue commands to every Mover in the list. Alternatively, commands can be sent to individual movers within the list based on their geographic proximity to a track position.
 
-Many of the methods and properties below are are based on corresponding methods available and documented in the [Mover](./Mover.md) object.
+Many of the methods and properties below are group commands based on corresponding methods available and documented in the singular [Mover](./Mover.md) object.
 
 ## Setup & Execution
 
@@ -114,7 +114,7 @@ Filtering a mover list by station can be helpful when workings with several move
 
 > Returns a reference to a singular mover from the Mover List, based on it's geographic location relative to a fixed track position.
 
-**Index** specifies the number of movers that should lie between the selection and the Position input. Therefore Index = 0 would be the closest mover to the input position (in a given direction), Index = 1 would be the second closest, Index = 2 would be the third closest, etc.
+**Index** specifies the number of movers that should lie between the selection and the Position input. Therefore Index = 1 would be the closest mover to the input position (in a given direction), Index = 2 would be the second closest, Index = 3 would be the third closest, etc.
 
 **Position** specifies the target around which mover proximity should be considered.
 
@@ -125,13 +125,13 @@ Filtering a mover list by station can be helpful when workings with several move
 // Which is the first closest mover to position 900
 // And which has a position less than 900
 // Then sends it to a station
-MoverListA.GetMoverByLocation( 0, 900, MC_Positive_Direction ).MoveToStation( Station[3] );
+MoverListA.GetMoverByLocation( 1, 900, MC_Positive_Direction ).MoveToStation( Station[3] );
 
 // Select a mover in the MoverList
 // Which is the third closest mover to position 2000
 // And which has a position greater than 3000
 // Then sets its acceleration
-MoverListA.GetMoverByLocation( 2, 3000, MC_Negative_Direction ).SetAcceleration( 1E4 );
+MoverListA.GetMoverByLocation( 3, 3000, MC_Negative_Direction ).SetAcceleration( 1E4 );
 
 ```
 ### Halt All
@@ -140,11 +140,11 @@ MoverListA.GetMoverByLocation( 2, 3000, MC_Negative_Direction ).SetAcceleration(
 
 > Calls the Halt() method for all movers in the list.
 
-### LogicalCompliment
+### LogicalComplement
 
-*LogicalCompliment()*
+*LogicalComplement()*
 
-> Returns the logical compliment of the current MoverList. Thus the returned list will list all movers not in the current MoverList.
+> Returns the logical complement of the current MoverList. Thus the returned list will list all movers not in the current MoverList.
 
 ```javascript
 // System contains: M1, M2, M3, M4, M5
@@ -235,6 +235,9 @@ MoverListA.MoveAllVelocity( 300 );
 MoverListA.SetAllAcceleration( 1E3 );
 ```
 
+!!! note
+	This method causes new motion commands to be issued for the dynamics to take effect immediately- potentially triggering a large number of motion commands to execute on the same scan. See the individual Mover command and consider the ramifications for your application.
+
 
 ### SetAllDeceleration
 
@@ -245,6 +248,9 @@ MoverListA.SetAllAcceleration( 1E3 );
 ```javascript
 MoverListA.SetAllDeceleration( 15000 );
 ```
+
+!!! note
+	This method causes new motion commands to be issued for the dynamics to take effect immediately- potentially triggering a large number of motion commands to execute on the same scan. See the individual Mover command and consider the ramifications for your application.
 
 
 ### SetAllDirection
@@ -257,6 +263,8 @@ MoverListA.SetAllDeceleration( 15000 );
 MoverListA.SetAllDirection( mcDirectionPositive );
 ```
 
+!!! note
+	This method causes new motion commands to be issued for the dynamics to take effect immediately- potentially triggering a large number of motion commands to execute on the same scan. See the individual Mover command and consider the ramifications for your application.
 
 ### SetAllGap
 
@@ -268,6 +276,9 @@ MoverListA.SetAllDirection( mcDirectionPositive );
 MoverListA.Gap( 65.0 );
 ```
 
+!!! note
+	This method causes new motion commands to be issued for the dynamics to take effect immediately- potentially triggering a large number of motion commands to execute on the same scan. See the individual Mover command and consider the ramifications for your application.
+
 ### SetAllGapMode
 
 *SetAllGapMode( Mode : Tc3_Mc3Definitions.MC_GAP_CONTROL_MODE )*
@@ -275,8 +286,11 @@ MoverListA.Gap( 65.0 );
 > Sets the gap mode for every mover in the list
 
 ```javascript
-MoverListA.Gap( 65.0 );
+MoverListA.SetAllGapMode( mcGapControlModeStandard );
 ```
+
+!!! note
+	This method causes new motion commands to be issued for the dynamics to take effect immediately- potentially triggering a large number of motion commands to execute on the same scan. See the individual Mover command and consider the ramifications for your application.
 
 ### SetAllJerk
 
@@ -287,6 +301,9 @@ MoverListA.Gap( 65.0 );
 ```javascipt
 MoverListA.SetAllJerk( 1e5 );
 ```
+
+!!! note
+	This method causes new motion commands to be issued for the dynamics to take effect immediately- potentially triggering a large number of motion commands to execute on the same scan. See the individual Mover command and consider the ramifications for your application.
 
 
 ### SetAllVelocity
@@ -299,6 +316,8 @@ MoverListA.SetAllJerk( 1e5 );
 MoverListA.SetAllVelocity( 2000 );
 ```
 
+!!! note
+	This method causes new motion commands to be issued for the dynamics to take effect immediately- potentially triggering a large number of motion commands to execute on the same scan. See the individual Mover command and consider the ramifications for your application.
 
 ### UnregisterAll
 

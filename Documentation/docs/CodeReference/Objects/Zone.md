@@ -1,7 +1,7 @@
 
 # Zone Object
 
-> The Zone object provides a method for grabbing all Movers within a specified geographic area on the track. A Zone is defined by a Start Position and an End Position, and returns every mover between these points. Zones are especially useful for programming recovery scenarios. When using track management, zones make use of TrackId and only return movers that are both within the zones defined geographic area and have a matching TrackId.
+> The Zone object provides a way to select all Movers within a specified geographic area on the track. A Zone is defined by a Start Position and an End Position, and returns every mover between these points. Zones are especially useful for programming recovery scenarios. When using track management, zones make use of TrackId and only return movers that are both within the zones defined geographic area and have a matching TrackId.
 
 
 ## Setup & Execution
@@ -20,7 +20,7 @@ ZoneRightSide.StartPosition	:= 2000;
 ZoneRightSide.EndPosition	:= 4000;
 ```
 
-Zones must also be added to the Mediator object. By default, this is handled in the MAIN.Initialize ACTION.
+Zones must also be added to the Mediator object. By default, this is handled automatically.
 
 ```javascript
 // Example implementation
@@ -40,11 +40,11 @@ Mediator.AddZone( ZoneRightSide );
 ```javascript
 // Selects the mover closest to the Zone's End Position
 // Then issues a motion command
-ZoneLeftSide.GetMover( 0, MC_Positive_Direction ).MoveToPosition( 2000 );
+ZoneLeftSide.GetMover( 1, MC_Positive_Direction ).MoveToPosition( 2000 );
 
 // Selects the fourth-closest mover to the Zone's Start Position
 // Then sets its velocity
-ZoneRightSide.GetMover( 3, MC_Negative_Direction ).SetVelocity( 1200 );
+ZoneRightSide.GetMover( 4, MC_Negative_Direction ).SetVelocity( 1200 );
 ```
 
 ### Set track
@@ -115,11 +115,17 @@ Zone.CurrentMoverList.GetMoverByLocation(0,Zone.EndPosition,MC_Positive_Directio
 
 ## Properties provided by MoverList
 
-The following properties are available from a Zone object, but are provided by the underlying [MoverList](MoverList.md) and [Objective](Objective.md).
+Some properties provided by the [MoverList](MoverList.md) and [Objective](Objective.md) have similar syntax but different meanings.
 
-> !!! IMPORTANT These properties return all movers registered with the zone (not just movers currently in the zone) and are not typically used with Zones. The related Zone properties are noted below:
+```javascript
+// returns the number of movers currently registered with the Zone
+Zone.TrackedMoverCount;
 
-- TrackedMoverCount - use Zone.CurrentMoverCount for the number of movers inside the zone at this instant.
-- TrackedMovers - use Zone.CurrentMoverList for the list of movers inside the zone at this instant.
+// returns the number of movers physically within the zone
+Zone.CurrentMoverList.TrackedMoverCount;
+Zone.CurrentMoverCount;
+```
+
+Take care when using these properties.
 
 

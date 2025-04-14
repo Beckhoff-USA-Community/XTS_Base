@@ -12,7 +12,7 @@ Many of the motion related commands are chainable as noted below. This allows a 
 
 ```javascript
 // chained motion command that sets velocity, acceleration and a destination in one line
-Mover[1].SetVelcotiy(1000).SetAcceleration(10e3).MoveToStation(Station[2]);
+Mover[1].SetVelocity(1000).SetAcceleration(1e3).MoveToStation(Station[2]);
 ```
 
 ## Setup & Execution
@@ -23,17 +23,12 @@ It is recommended, but not required, to declare Movers as an array.
 Mover			: ARRAY [1..GVL.NUM_MOVERS] OF Mover;
 ```
 
-Movers must also be added to the Mediator object. By default, this is handled already in the MAIN.Initialize ACTION.
+Movers must also be added to the Mediator object. By default, this is handled automatically.
 
 ```javascript
 // Example implementation
 Mediator.AddMover( Mover[1] );
 ```
-
-
-!!! note
-
-    Prior to 1.4.0, it was necessary to cyclically call two methods: *Mover.Cyclic()* and *Mover.CyclicTrack()*. This process is now handled implicitly by the Mediator object, along with all other Objective cyclic calls.
 
 
 ## Methods
@@ -44,8 +39,9 @@ Mediator.AddMover( Mover[1] );
 
 > Updates the mover's logical track.
 
-This method is used with track management to change the track that the mover is assigned to. Two conditions should be considered when changing tracks.
-- A mover will stop immediately when ActivateTrack is called. It's recommended to only change tracks when the mover is in a stopped position.
+This method is used with track management to change the track that the mover is assigned to. Two conditions should be considered when changing tracks:
+
+- A mover will stop immediately when ActivateTrack is called. It's recommended to only change tracks when the mover is in standstill
 - A mover's position can change when calling ActivateTrack. This will happen if the zero point for the current track and new track are different.
 
 A track change takes several PLC and NC scans. Issuing a motion command while this change is in progress will cause the mover to throw an error. To check if the track change is complete monitor the `Mover.IsTrackReady` property.
@@ -201,13 +197,13 @@ To determine what type of movement ReissueCommand() will repeat, see Mover prope
 ```javascript
 // Issue a primary command
 IF xInitialCommand THEN
-	Mover[1].SetVelocity( 500 );
+	Mover[1].MotionParameters.Velocity	:= 500;	// mm/s
 	Mover[1].MoveToPosition( 1000 );
 	xInitialCommand		:= FALSE;
 
 // Reissue the primary command, but with a new velocity parameter
 ELSIF xUpdateCommand THEN
-	Mover[1].SetVelocity( 750 );
+	Mover[1].MotionParemeters.Velocity	:= 750; // mm/s
 	Mover[1].ReissueCommand();
 	xUpdateCommand		:= FALSE;
 END_IF
@@ -223,11 +219,6 @@ END_IF
 
 The mover's error properties will be cleared, and if and Axis error continues to exist after the reset, the error properties will continue to reflect this.
 
-```javascript
-// mover has an error
-IF Mover[1].Error THEN
-	Mover[1]
-```
 
 ### SetAcceleration
 
@@ -244,6 +235,9 @@ IF xCommandHighAccel THEN
 END_IF
 ```
 
+!!! note "Notice"
+	This method implicitly calls .ReissueCommand() in the background in order for the updated dynamics to take effect immediately. If this is not the intent, consider modifying the *Mover[x].MotionParameters* property instead.
+
 
 ### SetDeceleration
 
@@ -259,7 +253,8 @@ IF xCommandLowDecel THEN
 	xCommandLowDecel	:= FALSE;
 END_IF
 ```
-
+!!! note "Notice"
+	This method implicitly calls .ReissueCommand() in the background in order for the updated dynamics to take effect immediately. If this is not the intent, consider modifying the *Mover[x].MotionParameters* property instead.
 
 ### SetDirection
 
@@ -269,8 +264,8 @@ END_IF
 
 > Updates the Mover's internal Motion Parameter for Direction and immediately reissues any currently executing motion blocks so that the parameter update takes effect immediately
 
-!!! Caution
-	This method should only be used with care, and an understanding that a mover enroute can immediately reverse course and execute a motion command in the opposite direction when this method is called.
+!!! warning "Caution"
+	This method implicitly calls .ReissueCommand() in the background in order for the updated dynamics to take effect immediately. If this is not the intent, consider modifying the *Mover[x].MotionParameters* property instead. This method should only be used with care, and an understanding that a mover enroute can immediately reverse course and execute a motion command in the opposite direction when this method is called.
 
 ```javascript
 // For supported directions, see Infosys
@@ -288,7 +283,7 @@ END_IF
 
 > Sets the collision avoidance gap for the specified mover in mm. This takes effect immediately.
 
-!!! Caution
+!!! warning "Caution"
 	This method can cause unexpected motion. If setting a larger gap for a mover that currently has movers within the new gap distance (on either side of the mover). Each affected mover will immediately attempt to adjust for the new gap which may result in movers moving forwards or backwards.
 
 When increasing the gap between movers it's recommended to do this one mover at a time only when the space in front of the mover is clear for at least the new gap distance. This can be accomplished with either a PositionTrigger or Zone.
@@ -334,10 +329,12 @@ Mover[1].SetGapMode( mcGapControlModeStandard );
 
 ```javascript
 IF xUpdateJerk THEN
-	Mover[1].UpdateJerk( 1e5 );
+	Mover[1].SetJerk( 1e5 );
 	xUpdateJerk		:= FALSE;
 END_IF
 ```
+!!! note "Notice"
+	This method implicitly calls .ReissueCommand() in the background in order for the updated dynamics to take effect immediately. If this is not the intent, consider modifying the *Mover[x].MotionParameters* property instead.
 
 
 ### SetVelocity
@@ -354,6 +351,9 @@ IF xCommandSlowMode THEN
 	xCommandSlowMode 	:= FALSE;
 END_IF
 ```
+!!! note "Notice"
+	This method implicitly calls .ReissueCommand() in the background in order for the updated dynamics to take effect immediately. If this is not the intent, consider modifying the *Mover[x].MotionParameters* property instead.
+
 
 ### SyncToAxis
 
@@ -555,7 +555,7 @@ It is recommended that all evaluations are nested inside IF checks for .IsSynced
 > Defines a structure containing the dynamics settings for the Mover. Any new motion commands issued will utilize these values.
 
 !!! Note
-	Despite listing this value as a Property here in the documentation, MotionParameters are actually defined as a regular Input to the Mover object. This allows component access to the members of the STRUCT, which is not possible for Properties.*
+	Despite listing this value as a Property here in the documentation, MotionParameters are actually defined as a regular Input to the Mover object. This allows component access to the members of the STRUCT, which is not possible for Properties.
 
 ```javascript
 STRUCT
@@ -569,7 +569,9 @@ STRUCT
 END_STRUCT
 ```
 
-It is also possible to alter motion paramaters with mover methods such as `.SetVelocity()` or `.SetAcceleration()` and others.
+Modifying a mover's Motion Parameters will not affect the current dynamics of a mover enroute. Updated dynamics properties will only take effect when the next motion command is issued.
+
+It is also possible to alter motion paramaters with mover methods such as `.SetVelocity()`, `.SetAcceleration()` and others. These methods implicitly call .ReissueCommand() and therefore take effect immediately.
 
 ### .NextMover
 
@@ -642,7 +644,7 @@ END_IF;
 > Returns information provided by MC_ReadTrackPositions for use with track management.
 
 !!! Note
-	Despite listing this value as a Property here in the documentation, TrackInfo is actually defined as a regular Output from the Mover object. This allows component access to the members of the STRUCT, which is not possible for Properties.*
+	Despite listing this value as a Property here in the documentation, TrackInfo is actually defined as a regular Output from the Mover object. This allows component access to the members of the STRUCT, which is not possible for Properties.
 
 | Member | Type | Description |
 |---|---|---|
@@ -652,12 +654,3 @@ END_IF;
 | PartPosition | LREAL | Position of the mover measured from the zero point of the part the mover is physically on|
 
 
-## Extra Examples
-
-Below are simple examples of different operations utilizing the Mover object:
-
-```javascript
-// Mover: ARRAY [1..GVL.NUM_MOVERS] OF Mover
-Mover[1].SetVelocity( 2500 );
-Mover[1].MoveToPosition( 1200 );
-```
