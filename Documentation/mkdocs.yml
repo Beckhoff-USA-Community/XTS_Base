@@ -33,15 +33,17 @@ markdown_extensions:
 nav:
     - Home: index.md
     - Getting Started:
-            - Introduction:     GettingStarted/Introduction.md
-            - First Steps:      GettingStarted/GettingStarted.md
-            - Quick Tips:       GettingStarted/QuickTips.md
-            - Recovery:         GettingStarted/Recovery.md
-            - Visualization:    GettingStarted/Visualization.md
+            - 1. Introduction:              GettingStarted/1_Introduction.md
+            - 2. First Steps:               GettingStarted/2_FirstSteps.md
+            - 3. Design Approach:           GettingStarted/3_DesignApproach.md
+            - 4. Project Tour:           GettingStarted/4_ProjectTour.md
+            - 5. System Recovery:           GettingStarted/5_SystemRecovery.md
+            - 6. Visualization:             GettingStarted/6_Visualization.md
+            - 7. Tips & Recommendations:    GettingStarted/7_TipsRecommendations.md
     - Code Reference:
         - Overview:             CodeReference/Overview.md
         - Objects:
-            - Mediator:             CodeReference/Objects/Mediator.md
+            - System:             CodeReference/Objects/Mediator.md
             - Mover:                CodeReference/Objects/Mover.md
             - Mover List:           CodeReference/Objects/MoverList.md
             - Objective:            CodeReference/Objects/Objective.md
