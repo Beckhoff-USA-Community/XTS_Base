@@ -91,6 +91,8 @@ IF Station[1].MoverInPosition THEN
     IF myTimer[1].Q THEN
         Station[1].CurrentMover.MoveToStation( Station[2] );
     END_IF;
+ELSE
+	myTimer[1]( IN := FALSE );
 END_IF;
 
 IF Station[2].MoverInPosition THEN
@@ -98,6 +100,8 @@ IF Station[2].MoverInPosition THEN
     IF myTimer[2].Q THEN
         Station[2].CurrentMover.MoveToStation( Station[1] );
     END_IF;
+ELSE
+	myTimer[2]( IN := FALSE );
 END_IF;
 ```
 

@@ -11,7 +11,7 @@ Visualization of the XTS system without actual hardware or on an HMI in producti
 
 ## Labeling Stations
 
-All three visualization tools allow for labeling stations to aid in following process flow during simulation, debugging, and production. 
+All three visualization tools allow for labeling stations to aid in following process flow during simulation, debugging, and production. The Station Name feature may need to be turned on in the settings window for any of these tools to get a display like the one shown below.
 
 By default this code will automatically use the first 10 stations and their `.Position` value to place markers. Stations are identified by a number that matches their index in the `MAIN.Station` array. However if a station's position value is 0.0 (and likely unused) it will be skipped by the station marker routine.
 
