@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="FB_XTS" Id="{87c35dfd-521b-066c-1ce4-3f633fe319d2}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_XTS
 VAR_GENERIC CONSTANT
@@ -48,14 +48,27 @@ END_VAR
       <Declaration><![CDATA[METHOD CyclicLogic
 VAR_INPUT
 END_VAR
-
+VAR_INST
+	initialized : bool;
+END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[CASE State OF
+        <ST><![CDATA[IF NOT initialized THEN
+	// set initialized flag
+	initialized := TRUE;
+	
+	// note track zero is a special case, so the loop is one larger than the rest of the initalization loops
+	FOR i := 0 TO Param.NUM_TRACKS DO
+		Track[i].Id := UINT_TO_INT(i);
+		System.AddTrack( Track[i] );
+	END_FOR
+END_IF
+
+CASE State OF
 	XTS_DISABLED: // ------------------------------------------
 	
 		// XTS is idle. Motive power is disabled.	
-		IF Enable THEN
+		IF System.EnvironmentIsReady AND Enable THEN
 			State						:= XTS_REGISTERING;
 			RegisteringState			:= 0;
 		END_IF
@@ -179,11 +192,7 @@ CASE RegisteringState OF
 		
 	4:
 		// Add all Tracks to the Mediator
-		// note track zero is a special case, so the loop is one larger than the rest of the initalization loops
-		FOR i := 0 TO Param.NUM_TRACKS DO
-			Track[i].Id := UINT_TO_INT(i);
-			System.AddTrack( Track[i] );
-		END_FOR
+		// now handled automatically at first-scan by .Cyclic()
 		RegisteringState := 5;
 		
 	5:
@@ -197,16 +206,5 @@ CASE RegisteringState OF
 END_CASE;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_XTS">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_XTS.CyclicLogic">
-      <LineId Id="3" Count="82" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_XTS.Registering">
-      <LineId Id="2" Count="52" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
