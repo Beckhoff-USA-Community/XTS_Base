@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="MAIN" Id="{e5121501-3133-07a7-12bf-96dcd5d9e348}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR	
@@ -155,6 +155,13 @@ XTS.Station[1].Position 		:= 750;
 XTS.Station[2].Position 		:= 1200;
 XTS.Station[3].Position 		:= 1300;
 XTS.Station[4].Position 		:= 1400;
+
+// station names
+XTS.Station[0].Description		:= 'Load Top';
+XTS.Station[1].Description		:= 'Load Bottom';
+XTS.Station[2].Description		:= 'Weld A';
+XTS.Station[3].Description		:= 'Weld B';
+XTS.Station[4].Description		:= 'Weld C';
 
 // speed changes in corners
 XTS.PositionTrigger[0].Position := 1500;
