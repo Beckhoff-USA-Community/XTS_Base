@@ -453,8 +453,7 @@ VAR_INST
 	nUsableStations			: UDINT;
 	StationTcIo		: I_TcIoXtsInfoServerInfoStation;
 	nStationPartNum	: UDINT;
-	xtsStationPointer : POINTER TO Station;
-	xtsStation		: Station;
+	pXtsStation		: POINTER TO Station;
 	PartObjectIds	: ARRAY [1..TcIoXtsEnvironmentParameterList.MaxXtsPartsPerXpu] OF OTCID;
 	StopPositions	: ARRAY [1..TcIoXtsEnvironmentParameterList.MaxXtsStopPositionsPerStation] OF LREAL := [0.0];
 	i				: UDINT;
@@ -838,17 +837,15 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 					EXIT;
 				END_IF
 				// get XTS_Base Station pointer
-				xtsStationPointer := StationArray[workingStation];
+				pXtsStation := StationArray[workingStation];
 				// test for valid pointer (station has been through the Mediator.AddStation method)
-				IF (xtsStationPointer <> 0) THEN
-					// dereference the pointer
-					xtsStation := xtsStationPointer^;
+				IF (pXtsStation <> 0) THEN
 					// make sure the position is not zero (hides stations that probably aren't used)
-						IF (xtsStation.Position <> 0.0) THEN
+						IF (pXtsStation^.Position <> 0.0) THEN
 						// calculate part number
 						nStationPartNum := 0;
 						FOR j := 1 TO nPartsInTrack1 DO
-							IF (PartStartEnd[j][0] <= xtsStation.Position AND xtsStation.Position < PartStartEnd[j][1]) THEN
+							IF (PartStartEnd[j][0] <= pXtsStation^.Position AND pXtsStation^.Position < PartStartEnd[j][1]) THEN
 								nStationPartNum := j;
 							END_IF
 						END_FOR
@@ -859,19 +856,19 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 							// test for valid station
 							IF (stationTcIO <> 0) THEN
 								// write station tc io object back to XTS.Station for later use
-								xtsStationPointer^.StationTcIo := StationTcIO;
+								pXtsStation^.StationTcIo := StationTcIO;
 								// try not to overwrite data that may have been entered in the configurator by testing for a start position of 0 (from the configurator), or 10 and 200 (defaults from adding object by hand)
 								IF (StationTcIO.GetStartPositionOnPart() = 0.0 OR (StationTcIO.GetStartPositionOnPart() = 10.0 AND StationTcIO.GetEndPositionOnPart() = 200.0)) THEN
 									// assign data
 									StationTcIO.SetStationId(i);
 									PartObjectIds[1] := TrackPartInfo[nStationPartNum].nObjectId;
 									stationTcIO.SetPartObjectIds(PartObjectIds);
-									StationTcIO.SetStartPositionOnPart(xtsSTation.Position - PartStartEnd[nStationPartNum][0]);
-									StationTcIO.SetEndPositionOnPart(xtsSTation.Position - PartStartEnd[nStationPartNum][0]);
+									StationTcIO.SetStartPositionOnPart(pXtsStation^.Position - PartStartEnd[nStationPartNum][0]);
+									StationTcIO.SetEndPositionOnPart(pXtsStation^.Position - PartStartEnd[nStationPartNum][0]);
 									StationTcIo.SetStopPositions(StopPositions);
 									StationTcIo.SetStationColor(16#FFEF0000);	// Beckhoff red
 									StationTcIO.SetIsEnabled(TRUE);	// v4.x "dims" the color of disabled stations
-									StationTcIO.SetDescription(xtsStation.Description);
+									StationTcIO.SetDescription(pXtsStation^.Description);
 								END_IF;
 							END_IF;
 						END_IF;
