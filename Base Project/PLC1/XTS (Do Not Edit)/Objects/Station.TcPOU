@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="Station" Id="{92e40052-9fe7-43db-83b2-957f02760d97}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Station EXTENDS Objective
 VAR
@@ -14,11 +14,15 @@ VAR
 	internalStationEmptyTimer		: TON;
 	internalStationBlockedTimer		: TON;
 	internalBlocked					: BOOL;	// station is blocked from receiving movers because laving mover has not moved > mover gap
+	internalDescription				: STRING;
 	
 	// statistics reset tracking
 	internalStationOccupiedReset	: BOOL;
 	internalStationEmptyReset		: BOOL;
 	internalStationBlockedReset		: BOOL;
+END_VAR
+VAR_INPUT
+	StationTcIO						: I_TcIoXtsInfoServerInfoStation;
 END_VAR
 VAR_OUTPUT
 	
@@ -31,7 +35,8 @@ END_VAR]]></Declaration>
     <Folder Name="Methods" Id="{7e00525e-961b-408c-827a-9ab2f3b8b786}" />
     <Folder Name="Properties" Id="{694a54d8-c3b3-4b97-92b5-1613c421a73a}" />
     <Property Name="Blocked" Id="{b0572d8f-0a71-067b-1e92-23a98ea08d5c}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Blocked : BOOL]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Blocked : BOOL]]></Declaration>
       <Get Name="Get" Id="{7c75b094-5d90-0904-1cdc-2e6d00f1e253}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -225,8 +230,34 @@ IF Statistics.AverageTimeEmpty <> T#0S THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Description" Id="{6b20396a-2672-0cba-316c-6683e1fec1db}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Description : STRING]]></Declaration>
+      <Get Name="Get" Id="{4ed3564a-bbb9-087b-23b2-cafdae018763}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Description := internalDescription;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{40b6d85d-c21c-04d8-3865-2e7fdadd625c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[internalDescription := Description;
+
+// if the station has been assigned tcio by the mediator startup sequence, update the description there too
+IF StationTcIo <> 0 THEN
+	StationTcIo.SetDescription(internalDescription);
+END_IF;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="GroupSize" Id="{184a153e-6a7b-05e2-13d5-315d1216dac9}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY GroupSize : DINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY GroupSize : DINT]]></Declaration>
       <Get Name="Get" Id="{466c6c03-9042-0e4c-3339-07ffcef23f93}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -339,7 +370,8 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="TrackId" Id="{dd27eb4c-c068-0d87-1f18-811d55fc3099}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TrackId : DINT]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TrackId : DINT]]></Declaration>
       <Get Name="Get" Id="{be7a013c-37ba-0a27-340c-88598ee84d38}">
         <Declaration><![CDATA[VAR
 END_VAR

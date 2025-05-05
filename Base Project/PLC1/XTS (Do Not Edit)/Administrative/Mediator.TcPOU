@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mediator
@@ -858,6 +858,8 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 							StationTcIO := internalInfoServer.InfoStationTcIo(UDINT_TO_UINT(i));
 							// test for valid station
 							IF (stationTcIO <> 0) THEN
+								// write station tc io object back to XTS.Station for later use
+								xtsStationPointer^.StationTcIo := StationTcIO;
 								// try not to overwrite data that may have been entered in the configurator by testing for a start position of 0 (from the configurator), or 10 and 200 (defaults from adding object by hand)
 								IF (StationTcIO.GetStartPositionOnPart() = 0.0 OR (StationTcIO.GetStartPositionOnPart() = 10.0 AND StationTcIO.GetEndPositionOnPart() = 200.0)) THEN
 									// assign data
@@ -868,7 +870,8 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 									StationTcIO.SetEndPositionOnPart(xtsSTation.Position - PartStartEnd[nStationPartNum][0]);
 									StationTcIo.SetStopPositions(StopPositions);
 									StationTcIo.SetStationColor(16#FFEF0000);	// Beckhoff red
-									StationTcIO.SetIsEnabled(true);	// v4.x "dims" the color of disabled stations
+									StationTcIO.SetIsEnabled(TRUE);	// v4.x "dims" the color of disabled stations
+									StationTcIO.SetDescription(xtsStation.Description);
 								END_IF;
 							END_IF;
 						END_IF;
