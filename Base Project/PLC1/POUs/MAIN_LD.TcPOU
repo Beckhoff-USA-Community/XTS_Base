@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="MAIN_LD" Id="{45308ac2-de42-005a-317f-c689cffde7e8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN_LD
 VAR	
@@ -1761,37 +1761,15 @@ END_VAR
             "Eno": true
           },
           {
-            "$type": "ParallelClosed",
-            "Branches": [
-              {
-                "$type": "Sequence",
-                "Elements": [
-                  {
-                    "$type": "Contact",
-                    "Operand": {
-                      "$type": "Operand",
-                      "Expression": "MainCommands.Enable",
-                      "Modifier": {
-                        "$type": "Modifier",
-                        "Negation": true
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "$type": "Sequence",
-                "Elements": [
-                  {
-                    "$type": "Contact",
-                    "Operand": {
-                      "$type": "Operand",
-                      "Expression": "MainCommands.Stop"
-                    }
-                  }
-                ]
+            "$type": "Contact",
+            "Operand": {
+              "$type": "Operand",
+              "Expression": "MainCommands.Enable",
+              "Modifier": {
+                "$type": "Modifier",
+                "Negation": true
               }
-            ]
+            }
           },
           {
             "$type": "Block",
@@ -1922,6 +1900,13 @@ END_VAR
             "Operand": {
               "$type": "Operand",
               "Expression": "STATE_RUNNING"
+            }
+          },
+          {
+            "$type": "Contact",
+            "Operand": {
+              "$type": "Operand",
+              "Expression": "MainCommands.Enable"
             }
           },
           {
@@ -2242,162 +2227,90 @@ END_VAR
             }
           },
           {
-            "$type": "ParallelOpen",
-            "Branches": [
+            "$type": "Contact",
+            "Operand": {
+              "$type": "Operand",
+              "Expression": "MainCommands.Start"
+            }
+          },
+          {
+            "$type": "Contact",
+            "Operand": {
+              "$type": "Operand",
+              "Expression": "MainCommands.Enable"
+            }
+          },
+          {
+            "$type": "Block",
+            "BlockType": "MOVE",
+            "Instance": {
+              "$type": "Operand"
+            },
+            "Inputs": [
               {
-                "$type": "Sequence",
-                "Elements": [
-                  {
-                    "$type": "Contact",
-                    "Operand": {
-                      "$type": "Operand",
-                      "Expression": "MainCommands.Start"
-                    }
-                  },
-                  {
-                    "$type": "Coil",
-                    "Operand": {
-                      "$type": "Operand",
-                      "Expression": "XTS.Enable",
-                      "Modifier": {
-                        "$type": "Modifier",
-                        "Storage": 2
-                      }
-                    }
-                  }
-                ]
+                "$type": "Input",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "EN"
+                },
+                "Sequence": {
+                  "$type": "Sequence"
+                }
               },
               {
-                "$type": "Sequence",
-                "Elements": [
-                  {
-                    "$type": "Block",
-                    "BlockType": "EQ",
-                    "Instance": {
-                      "$type": "Operand"
-                    },
-                    "Inputs": [
-                      {
-                        "$type": "Input",
-                        "Pin": {
-                          "$type": "Pin",
-                          "Name": "EN"
-                        },
-                        "Sequence": {
-                          "$type": "Sequence"
-                        }
-                      },
-                      {
-                        "$type": "Input",
-                        "Pin": {
-                          "$type": "Pin"
-                        },
-                        "Sequence": {
-                          "$type": "Sequence",
-                          "Elements": [
-                            {
-                              "$type": "InVariable",
-                              "Operand": {
-                                "$type": "Operand",
-                                "Expression": "XTS.State"
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "$type": "Input",
-                        "Pin": {
-                          "$type": "Pin"
-                        },
-                        "Sequence": {
-                          "$type": "Sequence",
-                          "Elements": [
-                            {
-                              "$type": "InVariable",
-                              "Operand": {
-                                "$type": "Operand",
-                                "Expression": "XTS_DISABLED"
-                              }
-                            }
-                          ]
-                        }
+                "$type": "Input",
+                "Pin": {
+                  "$type": "Pin"
+                },
+                "Sequence": {
+                  "$type": "Sequence",
+                  "Elements": [
+                    {
+                      "$type": "InVariable",
+                      "Operand": {
+                        "$type": "Operand",
+                        "Expression": "MachineState_enum.MS_ONESHOT_RECOVER"
                       }
-                    ],
-                    "Outputs": [
-                      {
-                        "$type": "Output",
-                        "Pin": {
-                          "$type": "Pin"
-                        }
-                      }
-                    ],
-                    "En": true
-                  },
-                  {
-                    "$type": "Block",
-                    "BlockType": "MOVE",
-                    "Instance": {
-                      "$type": "Operand"
-                    },
-                    "Inputs": [
-                      {
-                        "$type": "Input",
-                        "Pin": {
-                          "$type": "Pin",
-                          "Name": "EN"
-                        },
-                        "Sequence": {
-                          "$type": "Sequence"
-                        }
-                      },
-                      {
-                        "$type": "Input",
-                        "Pin": {
-                          "$type": "Pin"
-                        },
-                        "Sequence": {
-                          "$type": "Sequence",
-                          "Elements": [
-                            {
-                              "$type": "InVariable",
-                              "Operand": {
-                                "$type": "Operand",
-                                "Expression": "MachineState_enum.MS_OFF"
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    ],
-                    "Outputs": [
-                      {
-                        "$type": "Output",
-                        "Pin": {
-                          "$type": "Pin",
-                          "Name": "ENO"
-                        }
-                      },
-                      {
-                        "$type": "Output",
-                        "Pin": {
-                          "$type": "Pin"
-                        },
-                        "OutVariable": {
-                          "$type": "OutVariable",
-                          "Operand": {
-                            "$type": "Operand",
-                            "Expression": "State"
-                          }
-                        }
-                      }
-                    ],
-                    "En": true,
-                    "Eno": true
-                  }
-                ]
+                    }
+                  ]
+                }
               }
-            ]
+            ],
+            "Outputs": [
+              {
+                "$type": "Output",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "ENO"
+                }
+              },
+              {
+                "$type": "Output",
+                "Pin": {
+                  "$type": "Pin"
+                },
+                "OutVariable": {
+                  "$type": "OutVariable",
+                  "Operand": {
+                    "$type": "Operand",
+                    "Expression": "State"
+                  }
+                }
+              }
+            ],
+            "En": true,
+            "Eno": true
+          },
+          {
+            "$type": "Coil",
+            "Operand": {
+              "$type": "Operand",
+              "Expression": "MainCommands.Stop",
+              "Modifier": {
+                "$type": "Modifier",
+                "Storage": 2
+              }
+            }
           }
         ]
       }
@@ -2462,21 +2375,24 @@ XTS.Station[2].Position 		:= 1200;
 XTS.Station[3].Position 		:= 1300;
 XTS.Station[4].Position 		:= 1400;
 
+// station names
+XTS.Station[0].Description		:= 'Load Top';
+XTS.Station[1].Description		:= 'Load Bottom';
+XTS.Station[2].Description		:= 'Weld A';
+XTS.Station[3].Description		:= 'Weld B';
+XTS.Station[4].Description		:= 'Weld C';
+
+// speed changes in corners
 XTS.PositionTrigger[0].Position := 1500;
 XTS.PositionTrigger[1].Position := 2000;
 XTS.PositionTrigger[2].Position := 3500;
 
-XTS.Zone[0].StartPosition		:= 3750;
-XTS.Zone[0].EndPosition   		:= 750;
+// recover trigger near station 0
+XTS.PositionTrigger[3].Position := XTS.Station[0].Position + 2.0;
 
-XTS.Zone[1].StartPosition 		:= 750;
-XTS.Zone[1].EndPosition   		:= 1750;
-
-XTS.Zone[2].StartPosition 		:= 1750;
-XTS.Zone[2].EndPosition   		:= 2750;
-
-XTS.Zone[3].StartPosition		:= 2750;
-XTS.Zone[3].EndPosition   		:= 3750;
+// window around station 0 for startup
+XTS.Zone[0].StartPosition		:= XTS.Station[0].Position - 1.0;
+XTS.Zone[0].EndPosition   		:= XTS.Station[0].Position + 1.0;
 
 XTS.InitialParameterSet.Velocity		:= 1000;		// mm/s
 XTS.InitialParameterSet.Acceleration	:= 10_000;		// mm/s2
@@ -2527,6 +2443,206 @@ MainCommands.highVelocity	:= 1200;]]></ST>
               "$type": "Operand",
               "Expression": "RecoveryComplete"
             }
+          }
+        ]
+      }
+    },
+    {
+      "$type": "Network",
+      "Id": "ytB5FGQF",
+      "Title": "position trigger leaving station 0 for recovery",
+      "Sequence": {
+        "$type": "Sequence",
+        "Elements": [
+          {
+            "$type": "Contact",
+            "Operand": {
+              "$type": "Operand",
+              "Expression": "XTS.PositionTrigger[3].MoverPassedPosition"
+            }
+          },
+          {
+            "$type": "Block",
+            "BlockType": "XTS.PositionTrigger[3].CurrentMover.SetVelocity",
+            "Instance": {
+              "$type": "Operand"
+            },
+            "Inputs": [
+              {
+                "$type": "Input",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "EN"
+                },
+                "Sequence": {
+                  "$type": "Sequence"
+                }
+              },
+              {
+                "$type": "Input",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "Velocity"
+                },
+                "Sequence": {
+                  "$type": "Sequence",
+                  "Elements": [
+                    {
+                      "$type": "InVariable",
+                      "Operand": {
+                        "$type": "Operand",
+                        "Expression": "MainCommands.mediumVelocity"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "Outputs": [
+              {
+                "$type": "Output",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "ENO"
+                }
+              },
+              {
+                "$type": "Output",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "SetVelocity"
+                },
+                "OutVariable": {
+                  "$type": "OutVariable",
+                  "Operand": {
+                    "$type": "Operand"
+                  }
+                }
+              }
+            ],
+            "En": true,
+            "Eno": true
+          },
+          {
+            "$type": "Block",
+            "BlockType": "XTS.PositionTrigger[3].CurrentMover.MoveToStation",
+            "Instance": {
+              "$type": "Operand"
+            },
+            "Inputs": [
+              {
+                "$type": "Input",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "EN"
+                },
+                "Sequence": {
+                  "$type": "Sequence"
+                }
+              },
+              {
+                "$type": "Input",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "DestinationStation"
+                },
+                "Sequence": {
+                  "$type": "Sequence",
+                  "Elements": [
+                    {
+                      "$type": "InVariable",
+                      "Operand": {
+                        "$type": "Operand",
+                        "Expression": "XTS.Station[0]"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "Outputs": [
+              {
+                "$type": "Output",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "ENO"
+                }
+              },
+              {
+                "$type": "Output",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "MoveToStation"
+                },
+                "OutVariable": {
+                  "$type": "OutVariable",
+                  "Operand": {
+                    "$type": "Operand"
+                  }
+                }
+              }
+            ],
+            "En": true,
+            "Eno": true
+          }
+        ]
+      }
+    },
+    {
+      "$type": "Network",
+      "Id": "Q24S8c2G",
+      "Sequence": {
+        "$type": "Sequence",
+        "Elements": [
+          {
+            "$type": "Contact",
+            "Operand": {
+              "$type": "Operand",
+              "Expression": "XTS.PositionTrigger[3].MoverPassedPosition"
+            }
+          },
+          {
+            "$type": "Block",
+            "BlockType": "XTS.PositionTrigger[3].MuteCurrent",
+            "Instance": {
+              "$type": "Operand"
+            },
+            "Inputs": [
+              {
+                "$type": "Input",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "EN"
+                },
+                "Sequence": {
+                  "$type": "Sequence"
+                }
+              }
+            ],
+            "Outputs": [
+              {
+                "$type": "Output",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "ENO"
+                }
+              },
+              {
+                "$type": "Output",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "MuteCurrent"
+                },
+                "OutVariable": {
+                  "$type": "OutVariable",
+                  "Operand": {
+                    "$type": "Operand"
+                  }
+                }
+              }
+            ],
+            "En": true,
+            "Eno": true
           }
         ]
       }
@@ -2680,6 +2796,134 @@ MainCommands.highVelocity	:= 1200;]]></ST>
                 "Pin": {
                   "$type": "Pin",
                   "Name": "MoveAllToStation"
+                },
+                "OutVariable": {
+                  "$type": "OutVariable",
+                  "Operand": {
+                    "$type": "Operand"
+                  }
+                }
+              }
+            ],
+            "En": true,
+            "Eno": true
+          }
+        ]
+      }
+    },
+    {
+      "$type": "Network",
+      "Id": "3I1wgMK7",
+      "Title": "movers near station 0 (zone 0) need to first move away from the station",
+      "Sequence": {
+        "$type": "Sequence",
+        "Elements": [
+          {
+            "$type": "ParallelOpen",
+            "Branches": [
+              {
+                "$type": "Sequence"
+              },
+              {
+                "$type": "Sequence",
+                "Elements": [
+                  {
+                    "$type": "Block",
+                    "BlockType": "XTS.PositionTrigger[3].MuteCurrent",
+                    "Instance": {
+                      "$type": "Operand"
+                    },
+                    "Inputs": [
+                      {
+                        "$type": "Input",
+                        "Pin": {
+                          "$type": "Pin",
+                          "Name": "EN"
+                        },
+                        "Sequence": {
+                          "$type": "Sequence"
+                        }
+                      }
+                    ],
+                    "Outputs": [
+                      {
+                        "$type": "Output",
+                        "Pin": {
+                          "$type": "Pin",
+                          "Name": "ENO"
+                        }
+                      },
+                      {
+                        "$type": "Output",
+                        "Pin": {
+                          "$type": "Pin",
+                          "Name": "MuteCurrent"
+                        },
+                        "OutVariable": {
+                          "$type": "OutVariable",
+                          "Operand": {
+                            "$type": "Operand"
+                          }
+                        }
+                      }
+                    ],
+                    "En": true,
+                    "Eno": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "$type": "Block",
+            "BlockType": "XTS.Zone[0].CurrentMoverList.MoveAllVelocity",
+            "Instance": {
+              "$type": "Operand"
+            },
+            "Inputs": [
+              {
+                "$type": "Input",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "EN"
+                },
+                "Sequence": {
+                  "$type": "Sequence"
+                }
+              },
+              {
+                "$type": "Input",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "Velocity"
+                },
+                "Sequence": {
+                  "$type": "Sequence",
+                  "Elements": [
+                    {
+                      "$type": "InVariable",
+                      "Operand": {
+                        "$type": "Operand",
+                        "Expression": "MainCommands.lowVelocity"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "Outputs": [
+              {
+                "$type": "Output",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "ENO"
+                }
+              },
+              {
+                "$type": "Output",
+                "Pin": {
+                  "$type": "Pin",
+                  "Name": "MoveAllVelocity"
                 },
                 "OutVariable": {
                   "$type": "OutVariable",
