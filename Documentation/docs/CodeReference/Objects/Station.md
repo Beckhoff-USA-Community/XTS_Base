@@ -17,7 +17,7 @@ Station[1].Position		:= 250;
 Station[2].Position		:= 500;
 Station[3].Position		:= 750;
 ```
-Stations must also be added to the Mediator object. By default, this is handled in the MAIN.Initialize ACTION.
+Stations must also be added to the Mediator object. By default, this is handled automatically.
 
 ```javascript
 // Example implementation
@@ -34,14 +34,14 @@ Mover[2].MoveToStation( Station[3] );
 Station[3].RegisterMover( Mover[2] );		// unnecessary
 ```
 
-Stations also automatically *unregister* movers that have been redirected with another move command, even if that command's destination is the same as the Station.
+Stations also automatically *unregister* movers that have been redirected with another move command, even if that command's destination is the same location as the Station.
 
 ```javascript
 Mover[2].MoveToStation( Station[3] );
 Mover[2].MoveToPosition( Station[3].Position );
 ```
 
-Here, the Station will not report *MoverInPosition*.
+Here, the Station will not report *MoverInPosition* when it arrives because the original command is interrupted by one where the *CurrentMoveType* is not `MOVETYPE_STATION`.
 
 
 ## Methods
@@ -90,6 +90,14 @@ When no mover is present in the Station, .CurrentMover is an invalid reference. 
 
 It is recommended that all evaluations are nested inside IF checks for [.MoverInPosition](#moverinposition).
 
+### .Description
+
+*STRING*
+
+> A text description of the station that is passed to the visualization tools. It's also visible within within the TwinCAT debugging tools for easier identification of stations.
+
+This value can be changed at runtime and will update on the visualization. This offers the opportunity to put dynamic data on the XTS visualization such as a station part count.
+
 ### .GroupSize
 
 *DINT*
@@ -114,7 +122,6 @@ This value is only used to help calculate throughput `.Statistics` on the mover 
 
 !!! Note
 	This property is part of [Objective](./Objective.md#trackedmovercount) but is frequently used with stations and can be accessed as part of the Station object.
-
 
 ### .Position
 
@@ -146,11 +153,21 @@ This value is also used to place a marker on the visualization tools representin
 | ThrottledThreshold		| LREAL |  A high throttled threshold (Blocked to Empty ratio) indicates a potential bottleneck station	|
 | ProcessedMoverCount		| UDINT |  Total number of movers processed by this station |
 
-#### .Track
+### .Track
 
 *REFERENCE TO Track*
 
 > Track that the station is assigned to when using track management. See the [Track](Track.md) object.
+
+### .TrackId
+
+*DINT*
+
+> The numeric id of the track that this station is assigned to.
+
+This value is read-only. Use the method `.SetTrack()` to set the station's assigned track.
+
+
 
 
 ## Extra Examples
@@ -175,6 +192,6 @@ FOR i := 0 TO Station[0].TrackedMoverCount-1 DO
 	targetMover^.MoveToStation( Station[1] );
 END_FOR
 ```
-# Station Labeling In Viewing Tools
+### Station Labeling In Viewing Tools
 
 See [Visualization](../../GettingStarted/Visualization.md)
