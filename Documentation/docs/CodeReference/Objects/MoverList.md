@@ -35,7 +35,7 @@ Mediator.AddMoverList( MoverListA );
 
 The [`Track`](./Track.md) and [`Zone`](./Zone.md) objects keep internal mover lists that can be accessed with the `.CurrentMoverList` property. And many of the methods below return mover lists.
 
-Additionally a mover list is extended from [`Objective`](./Objective.md) which provides two additional and very helpful properties `.TrackedMoverCount` and `.TrackedMovers`.
+Additionally a mover list is extended from [`Objective`](./Objective.md) which provides two additional and very helpful properties `.RegisteredMoverCount` and `.RegisteredMovers`.
 
 The combination of these functionalities can allow for powerful and concise handling of movers throughout the system. Some examples follow.
 
@@ -45,7 +45,7 @@ Track[2].CurrentMoverList.FilterDestinationStation(Station[3]).MoveAllToStation(
 ```
 ```javascript
 // count the number of movers in Zone 2 and Zone 3
-MoverCount := Zone[2].CurrentMoverList.LogicalIntersect(Zone[3].CurrentMoverList).TrackedMoverCount;
+MoverCount := Zone[2].CurrentMoverList.LogicalIntersect(Zone[3].CurrentMoverList).RegisteredMoverCount;
 ```
 
 ## Methods
@@ -331,6 +331,44 @@ MoverListA.UnregisterAll();
 
 ## Properties
 
+### .AllMovers
+
+*ARRAY [1..Param.MAX_MOVERS] OF POINTER TO Mover*
+
+> Returns an unordered list of pointers to all movers currently in the list.
+
+!!! Note
+	If you need to find a specific mover within the list, such as the leading mover see [.GetMoverByLocation](#getmoverbylocation)
+
+This property is intended to allow you to run arbitrary code on a set of movers beyond what is currently provided by methods like MoveAllToStation(). This will return an array with pointers to movers in the list starting at index 1 and ending at index MoverList.RegisteredMoverCount. This is slightly different than .RegisteredMovers as that property may return a sparse array.
+
+The example below gets a count of movers in a zone that are marked as rejects by the [Payload](Mover.md#payload) data.
+
+```javascript
+// DECLARATIONS
+
+ZoneMovers   : ARRAY [1..Param.MAX_MOVERS] OF POINTER TO Mover;
+	MoverPayload : MoverPayload_typ;
+	FailureCount : DINT;
+	i            :DINT;
+
+// CODE
+
+// start a counter
+FailureCount := 0;
+
+// get pointers to all the movers in the zone
+ZoneMovers := XTS.Zone[1].CurrentMoverList.AllMovers;
+
+// examine all the movers in the zone
+FOR i := 1 TO XTS.Zone[1].CurrentMoverCount DO	
+	MoverPayload := ZoneMovers[1]^.Payload;
+	IF MoverPayload.FailureReason > 0 THEN
+		FailureCount := FailureCount + 1;
+	END_IF
+END_FOR
+```
+
 ### .IsAllMoversDisabled
 
 *BOOL*
@@ -400,20 +438,21 @@ MoverListA.UnregisterAll();
 
 > Queries all movers registered with the mover list for their IsTrackReady property and returns true when all movers have this property set true.
 
-Note: This routine intentionally returns false if no movers are on the track. This is to handle the several scan delay between activating a track and the mover reporting the track is active. In a typical use case .ActivateAllTrack and .IsAllTrackReady are called back to back. Without this exception code folling .IsAllTrackReady would falsely assume the track switch is complete if the track was empty causing mover motion commands to throw errors.
+!!! Note
+	This routine intentionally returns false if no movers are on the track. This is to handle the several scan delay between activating a track and the mover reporting the track is active. In a typical use case .ActivateAllTrack and .IsAllTrackReady are called back to back. Without this exception code folling .IsAllTrackReady would falsely assume the track switch is complete if the track was empty causing mover motion commands to throw errors.
 
 See ActivateAllTrack() for an example.
 
-### .TrackedMoverCount
+### .RegisteredMoverCount
 
 *USINT*
 
 !!! Note
-	This property is part of [Objective](./Objective.md#trackedmovercount) but is frequently used with mover lists and can be accessed as part of the MoverList object.
+	This property is part of [Objective](./Objective.md#registeredmovercount) but is frequently used with mover lists and can be accessed as part of the MoverList object.
 
-### .TrackedMovers
+### .RegisteredMovers
 
 *ARRAY OF POINTER TO Mover*
 
 !!! Note
-	This property is part of [Objective](./Objective.md#trackedmovers) but is frequently used with mover lists and can be accessed as part of the mover list.
+	This property is part of [Objective](./Objective.md#registeredmovers) but is frequently used with mover lists and can be accessed as part of the mover list.

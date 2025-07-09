@@ -119,10 +119,10 @@ Some properties provided by the [MoverList](MoverList.md) and [Objective](Object
 
 ```javascript
 // returns the number of movers currently registered with the Zone
-Zone.TrackedMoverCount;
+Zone.RegisteredMoverCount;
 
 // returns the number of movers physically within the zone
-Zone.CurrentMoverList.TrackedMoverCount;
+Zone.CurrentMoverList.RegisteredMoverCount;
 Zone.CurrentMoverCount;
 ```
 

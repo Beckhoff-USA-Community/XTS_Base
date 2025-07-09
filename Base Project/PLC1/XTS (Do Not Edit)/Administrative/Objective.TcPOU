@@ -64,7 +64,7 @@ END_FOR]]></ST>
       </Get>
     </Property>
     <Property Name="RegisteredMovers" Id="{f2e27676-d8a8-4b3f-968b-790753e7621e}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY RegisteredMovers : ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
+      <Declaration><![CDATA[PROPERTY RegisteredMovers : ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover]]></Declaration>
       <Get Name="Get" Id="{2692defb-0744-4a89-a02c-657d915f8a30}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>

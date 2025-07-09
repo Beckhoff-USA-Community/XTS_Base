@@ -118,12 +118,12 @@ Station[3].CurrentMover.SetVelocity( 2000 );	// is equivalent to...
 Mover[4].SetVelocity( 2000 );	// so long as the the Mover is parked as above
 ```
 
-### TrackedMoverCount
+### RegisteredMoverCount
 *USINT*
 > Returns the number of movers being tracked by this objective.
 
-### TrackedMovers
+### RegisteredMovers
 *ARRAY OF POINTER TO Mover*
 >Returns an array of pointers to all the movers tracked by this object.
 
-Note that this returns a pointer. To access properties or methods of a mover the pointer must be dereferenced with the `^` (caret) operator such as `Objective.TrackedMovers[0]^.TrackInfo.TrackPosition`.
+Note that this returns a pointer. To access properties or methods of a mover the pointer must be dereferenced with the `^` (caret) operator such as `Objective.RegisteredMovers[0]^.TrackInfo.TrackPosition`.
