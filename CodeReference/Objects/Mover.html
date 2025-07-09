@@ -1,0 +1,2700 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../GettingStarted/7_TipsRecommendations.html">
+      
+      
+        <link rel="next" href="MoverList.html">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Mover - XTS Base Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arial:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Arial";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mover-object" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../index.html" title="XTS Base Documentation" class="md-header__button md-logo" aria-label="XTS Base Documentation" data-md-component="logo">
+      
+  <img src="../../Images/XTS.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            XTS Base Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Mover
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Beckhoff-USA-Community/XTS_Base" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    XTS Base Project GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../GettingStarted/1_Introduction.html" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="Mover.html" class="md-tabs__link">
+          
+  
+  
+  Code Reference
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Examples/StationRouting.html" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../index.html" title="XTS Base Documentation" class="md-nav__button md-logo" aria-label="XTS Base Documentation" data-md-component="logo">
+      
+  <img src="../../Images/XTS.svg" alt="logo">
+
+    </a>
+    XTS Base Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Beckhoff-USA-Community/XTS_Base" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    XTS Base Project GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GettingStarted/1_Introduction.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    1. Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GettingStarted/2_FirstSteps.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2. First Steps
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GettingStarted/3_DesignApproach.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    3. Design Approach
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GettingStarted/4_ProjectTour.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    4. Project Tour
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GettingStarted/5_SystemRecovery.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    5. System Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GettingStarted/6_Visualization.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    6. Visualization
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GettingStarted/7_TipsRecommendations.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    7. Tips & Recommendations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Code Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Code Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Objects
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            Objects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Mover
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="Mover.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mover
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup &amp; Execution
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#activatetrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      ActivateTrack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cyclic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cyclic
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groupstop" class="md-nav__link">
+    <span class="md-ellipsis">
+      GroupStop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#halt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Halt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loguserevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      LogUserEvent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#movetoposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      MoveToPosition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#movetostation" class="md-nav__link">
+    <span class="md-ellipsis">
+      MoveToStation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#movevelocity" class="md-nav__link">
+    <span class="md-ellipsis">
+      MoveVelocity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reissuecommand" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReissueCommand
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reset" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setacceleration" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetAcceleration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setdeceleration" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetDeceleration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setdirection" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetDirection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setgap" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetGap
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setgapmode" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetGapMode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setjerk" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetJerk
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setvelocity" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetVelocity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synctoaxis" class="md-nav__link">
+    <span class="md-ellipsis">
+      SyncToAxis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synctomover" class="md-nav__link">
+    <span class="md-ellipsis">
+      SyncToMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unregisterfromall" class="md-nav__link">
+    <span class="md-ellipsis">
+      UnregisterFromAll
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validatetrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      ValidateTrack
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#currentdestinationposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      .CurrentDestinationPosition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#currentdestinationtrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      .CurrentDestinationTrack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#currentmovetype" class="md-nav__link">
+    <span class="md-ellipsis">
+      .CurrentMoveType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#currentobjective" class="md-nav__link">
+    <span class="md-ellipsis">
+      .CurrentObjective
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#currenttrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      .CurrentTrack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iscollisionavoidanceactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      .IsCollisionAvoidanceActive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iserrormover" class="md-nav__link">
+    <span class="md-ellipsis">
+      .IsErrorMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issyncedtoaxis" class="md-nav__link">
+    <span class="md-ellipsis">
+      .IsSyncedToAxis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issyncedtomover" class="md-nav__link">
+    <span class="md-ellipsis">
+      .IsSyncedToMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#istrackready" class="md-nav__link">
+    <span class="md-ellipsis">
+      .IsTrackReady
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mastermover" class="md-nav__link">
+    <span class="md-ellipsis">
+      .MasterMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#moverindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      .MoverIndex
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#motionparameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      .MotionParameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nextmover" class="md-nav__link">
+    <span class="md-ellipsis">
+      .NextMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payload" class="md-nav__link">
+    <span class="md-ellipsis">
+      .Payload
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#previousmover" class="md-nav__link">
+    <span class="md-ellipsis">
+      .PreviousMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trackinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      .TrackInfo
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="MoverList.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mover List
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Objective.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Objective
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="PositionTrigger.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Position Trigger
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Station.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Station
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Track.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Track
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Zone.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zone
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Mediator.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Diagnostics
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Diagnostics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Diagnostics/Basics.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Diagnostics/ErrorMovers.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ErrorMovers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Diagnostics/EventLogger.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Event Logger
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Diagnostics/MoverData.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mover Data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Diagnostics/UtilityLibrary.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Utility Library
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Examples/StationRouting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Station to Station
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup &amp; Execution
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#activatetrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      ActivateTrack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cyclic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cyclic
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groupstop" class="md-nav__link">
+    <span class="md-ellipsis">
+      GroupStop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#halt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Halt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loguserevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      LogUserEvent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#movetoposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      MoveToPosition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#movetostation" class="md-nav__link">
+    <span class="md-ellipsis">
+      MoveToStation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#movevelocity" class="md-nav__link">
+    <span class="md-ellipsis">
+      MoveVelocity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reissuecommand" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReissueCommand
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reset" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setacceleration" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetAcceleration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setdeceleration" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetDeceleration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setdirection" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetDirection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setgap" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetGap
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setgapmode" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetGapMode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setjerk" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetJerk
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setvelocity" class="md-nav__link">
+    <span class="md-ellipsis">
+      SetVelocity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synctoaxis" class="md-nav__link">
+    <span class="md-ellipsis">
+      SyncToAxis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synctomover" class="md-nav__link">
+    <span class="md-ellipsis">
+      SyncToMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unregisterfromall" class="md-nav__link">
+    <span class="md-ellipsis">
+      UnregisterFromAll
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validatetrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      ValidateTrack
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#currentdestinationposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      .CurrentDestinationPosition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#currentdestinationtrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      .CurrentDestinationTrack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#currentmovetype" class="md-nav__link">
+    <span class="md-ellipsis">
+      .CurrentMoveType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#currentobjective" class="md-nav__link">
+    <span class="md-ellipsis">
+      .CurrentObjective
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#currenttrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      .CurrentTrack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iscollisionavoidanceactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      .IsCollisionAvoidanceActive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iserrormover" class="md-nav__link">
+    <span class="md-ellipsis">
+      .IsErrorMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issyncedtoaxis" class="md-nav__link">
+    <span class="md-ellipsis">
+      .IsSyncedToAxis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issyncedtomover" class="md-nav__link">
+    <span class="md-ellipsis">
+      .IsSyncedToMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#istrackready" class="md-nav__link">
+    <span class="md-ellipsis">
+      .IsTrackReady
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mastermover" class="md-nav__link">
+    <span class="md-ellipsis">
+      .MasterMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#moverindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      .MoverIndex
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#motionparameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      .MotionParameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nextmover" class="md-nav__link">
+    <span class="md-ellipsis">
+      .NextMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payload" class="md-nav__link">
+    <span class="md-ellipsis">
+      .Payload
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#previousmover" class="md-nav__link">
+    <span class="md-ellipsis">
+      .PreviousMover
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trackinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      .TrackInfo
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="mover-object">Mover Object</h1>
+<blockquote>
+<p>The Mover function block is the heart of the solution. It contains essential functionality, including:</p>
+<ul>
+<li>Basic administrative commands like enabling &amp; disabling</li>
+<li>Easily commanding movements to absolute positions or stations</li>
+<li>Reading out current move status information like position, velocity, etc.</li>
+<li>Updating motion parameters during operation</li>
+</ul>
+</blockquote>
+<p>Many of the motion related commands are chainable as noted below. This allows a concise set of motion commands to be written on one line.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// chained motion command that sets velocity, acceleration and a destination in one line</span>
+<span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SetVelocity</span><span class="p">(</span><span class="mf">1000</span><span class="p">).</span><span class="nx">SetAcceleration</span><span class="p">(</span><span class="mf">1e3</span><span class="p">).</span><span class="nx">MoveToStation</span><span class="p">(</span><span class="nx">Station</span><span class="p">[</span><span class="mf">2</span><span class="p">]);</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="setup-execution">Setup &amp; Execution</h2>
+<p>It is recommended, but not required, to declare Movers as an array.
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Instance declaration</span>
+<span class="nx">Mover</span><span class="w">           </span><span class="o">:</span><span class="w"> </span><span class="nx">ARRAY</span><span class="w"> </span><span class="p">[</span><span class="mf">1.</span><span class="p">.</span><span class="nx">GVL</span><span class="p">.</span><span class="nx">NUM_MOVERS</span><span class="p">]</span><span class="w"> </span><span class="nx">OF</span><span class="w"> </span><span class="nx">Mover</span><span class="p">;</span>
+</code></pre></div></td></tr></table></div></p>
+<p>Movers must also be added to the Mediator object. By default, this is handled automatically.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Example implementation</span>
+<span class="nx">Mediator</span><span class="p">.</span><span class="nx">AddMover</span><span class="p">(</span><span class="w"> </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="methods">Methods</h2>
+<h3 id="activatetrack">ActivateTrack</h3>
+<p><em>ActivateTrack( DesiredTrack : Track )</em></p>
+<blockquote>
+<p>Updates the mover's logical track.</p>
+</blockquote>
+<p>This method is used with track management to change the track that the mover is assigned to. Two conditions should be considered when changing tracks:</p>
+<ul>
+<li>A mover will stop immediately when ActivateTrack is called. It's recommended to only change tracks when the mover is in standstill</li>
+<li>A mover's position can change when calling ActivateTrack. This will happen if the zero point for the current track and new track are different.</li>
+</ul>
+<p>A track change takes several PLC and NC scans. Issuing a motion command while this change is in progress will cause the mover to throw an error. To check if the track change is complete monitor the <code>Mover.IsTrackReady</code> property.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// state machine</span>
+<span class="mf">100</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">ActivateTrack</span><span class="p">(</span><span class="nx">Track1</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">IF</span><span class="w"> </span><span class="p">(</span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">IsTrackReady</span><span class="p">)</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">        </span><span class="nx">iState</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mf">200</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">END_IF</span><span class="p">;</span>
+<span class="mf">200</span><span class="o">:</span>
+<span class="w">    </span><span class="c1">// mover is ready for additional commands</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="cyclic">Cyclic</h3>
+<p><em>Cyclic()</em></p>
+<blockquote>
+<p>Handles background tasks for the mover such as populating status bits and handling completion of tasks that take more than 1 scan.</p>
+</blockquote>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Cyclic must be called every cycle. By default this is handled automatically by the <a href="Mediator.html">Mediator</a>.</p>
+</div>
+<h3 id="disable">Disable</h3>
+<p><em>Disable()</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Disables the mover. Holding Torque will be lost. Method will automatically remove the mover from its Collision Avoidance group.</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">Disable</span><span class="p">();</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="enable">Enable</h3>
+<p><em>Enable()</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Carries out steps to prepare the Mover for motion commands.</p>
+</blockquote>
+<ol>
+<li>An internal MC_Reset function block is called to reset any errors that may exist on the Axis object.</li>
+<li>The mover, via the <a href="Mediator.html">Mediator</a>, will read M1 Detection Settings configured in the XtsProcessingUnit. If M1 Detection is configured, it will activate this process to find Mover 1. If this is not configured, this step is skipped.</li>
+<li>An internal MC_Power function block is called to energize the axis object.</li>
+<li>The mover will automatically add itself to a Collision Avoidance group, and if necessary will also automatically enable this group.</li>
+<li>The mover will set its <code>Ready</code> output True.</li>
+</ol>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">Enable</span><span class="p">();</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="groupstop">GroupStop</h3>
+<p><em>GroupStop()</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Immediately stops all enabled movers on the system with the deceleration parameters of the mover on which the method was called.</p>
+</blockquote>
+<p>Since the method acts upon the collision avoidance group, all enabled movers on the system are immediately stopped and any active movements are cancelled. New motion commands to each mover are ignored until the Stop has completed.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xStopAllMovers</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">GroupStop</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">xStopAllMovers</span><span class="w">      </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="halt">Halt</h3>
+<p><em>Halt()</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Immediately stops the commanded mover with the deceleration parameters stored in the Mover object</p>
+</blockquote>
+<p>Halt does not alter the mover's internal axis state, so new movements can be executed at any point to send the mover onwards.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xStopSingleMover</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">Halt</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">xStopSingleMover</span><span class="w">    </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="loguserevent">LogUserEvent</h3>
+<p><em>LogUserEvent( Text1 : STRING, Text2 : STRING, Text3 : STRING )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Submits custom log events to the Event Logger which can be viewed in TwinCAT</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">PositionTrigger</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">MoverPassedPosition</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">PositionTrigger</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">CurrentMover</span><span class="p">.</span><span class="nx">LogUserEvent</span><span class="p">(</span><span class="s1">&#39;Mover Passed PT#1&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+<span class="nx">END_IF</span><span class="p">;</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="movetoposition">MoveToPosition</h3>
+<p><em>MoveToPosition( Destination : LREAL )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Executes an Absolute Move (with Collision Avoidance) to the target location.</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xMoveCommand</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">MoveToPosition</span><span class="p">(</span><span class="w"> </span><span class="mf">1200</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">xMoveCommand</span><span class="w">    </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="movetostation">MoveToStation</h3>
+<p><em>MoveToStation( Destination : Station )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Executes an Absolute Move (with Collision Avoidance) to the location of the target Station, and implicitly calls that Station's <a href="../Objectives/Station#registermover">RegisterMover</a> method.</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xMoveToHome</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">MoveToStation</span><span class="p">(</span><span class="w"> </span><span class="nx">Station</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">xMoveToHome</span><span class="w">     </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="movevelocity">MoveVelocity</h3>
+<p><em>MoveVelocity( DesiredVelocity : LREAL )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Executes a Velocity movement (with Collision Avoidance) at the specified Velocity. This command also implicitly updates the Mover's internal Velocity Motion Parameter.</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xMoveVelocity</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">MoveVelocity</span><span class="p">(</span><span class="w"> </span><span class="mf">2000</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">xMoveVelocity</span><span class="w">   </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="reissuecommand">ReissueCommand</h3>
+<p><em>ReissueCommand()</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Executes the latest command that was issued to the mover, e.g. a MoveToPosition command. The move is executed with the <em>current</em> internal Motion Parameters of the Mover, so the dynamics of the mover may not exactly match what was initially commanded. However, in cases of MoveToPosition or MoveToStation, the destination will be the same.</p>
+</blockquote>
+<p>To determine what type of movement ReissueCommand() will repeat, see Mover properties <code>CurrentMoveType</code>, <code>CurrentObjective</code>, and <code>CurrentDestinationPosition</code>.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Issue a primary command</span>
+<span class="nx">IF</span><span class="w"> </span><span class="nx">xInitialCommand</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">MotionParameters</span><span class="p">.</span><span class="nx">Velocity</span><span class="w">  </span><span class="o">:=</span><span class="w"> </span><span class="mf">500</span><span class="p">;</span><span class="w"> </span><span class="c1">// mm/s</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">MoveToPosition</span><span class="p">(</span><span class="w"> </span><span class="mf">1000</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">xInitialCommand</span><span class="w">     </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+
+<span class="c1">// Reissue the primary command, but with a new velocity parameter</span>
+<span class="nx">ELSIF</span><span class="w"> </span><span class="nx">xUpdateCommand</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">MotionParemeters</span><span class="p">.</span><span class="nx">Velocity</span><span class="w">  </span><span class="o">:=</span><span class="w"> </span><span class="mf">750</span><span class="p">;</span><span class="w"> </span><span class="c1">// mm/s</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">ReissueCommand</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">xUpdateCommand</span><span class="w">      </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="reset">Reset</h3>
+<p><em>Reset()</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Calls a reset on the underlying axis immediately. The state machine unaffected and will, for example, keep the mover in the enabled state if .Reset() is called while is in the enable state.</p>
+</blockquote>
+<p>The mover's error properties will be cleared, and if and Axis error continues to exist after the reset, the error properties will continue to reflect this.</p>
+<h3 id="setacceleration">SetAcceleration</h3>
+<p><em>SetAcceleration( DesiredAccel : LREAL )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Updates the Mover's internal Motion Parameter for Acceleration (mm/s²) and immediately reissues any currently executing motion blocks so that the parameter update takes effect immediately</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xCommandHighAccel</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SetAcceleration</span><span class="p">(</span><span class="w"> </span><span class="mf">2e4</span><span class="w"> </span><span class="p">);</span><span class="w">    </span><span class="c1">// mm/s²</span>
+<span class="w">    </span><span class="nx">xCommandHighAccel</span><span class="w">       </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Notice</p>
+<p>This method implicitly calls .ReissueCommand() in the background in order for the updated dynamics to take effect immediately. If this is not the intent, consider modifying the <em>Mover[x].MotionParameters</em> property instead.</p>
+</div>
+<h3 id="setdeceleration">SetDeceleration</h3>
+<p><em>SetDeceleration( DesiredDecel : LREAL )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Updates the Mover's internal Motion Parameter for Deceleration (mm/s²) and immediately reissues any currently executing motion blocks so that the parameter update takes effect immediately</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xCommandLowDecel</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SetDeceleration</span><span class="p">(</span><span class="w"> </span><span class="mf">1e3</span><span class="w"> </span><span class="p">);</span><span class="w">    </span><span class="c1">// mm/s²</span>
+<span class="w">    </span><span class="nx">xCommandLowDecel</span><span class="w">    </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Notice</p>
+<p>This method implicitly calls .ReissueCommand() in the background in order for the updated dynamics to take effect immediately. If this is not the intent, consider modifying the <em>Mover[x].MotionParameters</em> property instead.</p>
+</div>
+<h3 id="setdirection">SetDirection</h3>
+<p><em>SetDirection( Direction : <a href="https://infosys.beckhoff.com/english.php?content=../content/1033/tf5410_tc3_collision_avoidance/8996812427.html&amp;id=">Tc3_Mc3Definitions.MC_Direction</a> );</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Updates the Mover's internal Motion Parameter for Direction and immediately reissues any currently executing motion blocks so that the parameter update takes effect immediately</p>
+</blockquote>
+<div class="admonition warning">
+<p class="admonition-title">Caution</p>
+<p>This method implicitly calls .ReissueCommand() in the background in order for the updated dynamics to take effect immediately. If this is not the intent, consider modifying the <em>Mover[x].MotionParameters</em> property instead. This method should only be used with care, and an understanding that a mover enroute can immediately reverse course and execute a motion command in the opposite direction when this method is called.</p>
+</div>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// For supported directions, see Infosys</span>
+
+<span class="nx">IF</span><span class="w"> </span><span class="nx">xReverseDirection</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SetDirection</span><span class="p">(</span><span class="w"> </span><span class="nx">mcDirectionPositive</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">xReverseDirection</span><span class="w">   </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="setgap">SetGap</h3>
+<p><em>SetGap( Gap : LREAL )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Sets the collision avoidance gap for the specified mover in mm. This takes effect immediately.</p>
+</blockquote>
+<div class="admonition warning">
+<p class="admonition-title">Caution</p>
+<p>This method can cause unexpected motion. If setting a larger gap for a mover that currently has movers within the new gap distance (on either side of the mover). Each affected mover will immediately attempt to adjust for the new gap which may result in movers moving forwards or backwards.</p>
+</div>
+<p>When increasing the gap between movers it's recommended to do this one mover at a time only when the space in front of the mover is clear for at least the new gap distance. This can be accomplished with either a PositionTrigger or Zone.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SetGap</span><span class="p">(</span><span class="w"> </span><span class="mf">65.0</span><span class="w"> </span><span class="p">);</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="setgapmode">SetGapMode</h3>
+<p><em>SetGapMode( Mode : <a href="https://infosys.beckhoff.com/english.php?content=../content/1033/tf5410_tc3_collision_avoidance/2783316363.html&amp;id=">Tc3_Mc3Definitions.MC_GAP_CONTROL_MODE</a> )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Sets the collision avoidance gap control mode for the specified mover. This takes effect immediately.</p>
+</blockquote>
+<p>Default defers to the mode set in the NC's Collision Avoidance object.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For modes other than Standard the NC's Collision Avoidance object must be set to <code>mcGapCtrlDirectionPositive</code>. This paramater can only be set in configuration and not during runtime.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mcGapControlModeGroupDefault</td>
+<td>This value indicates that the GapControlMode set in the group parameters should be used for this motion command.</td>
+</tr>
+<tr>
+<td>mcGapControlModeStandard</td>
+<td>"Caterpillar" The axes fan out characteristically during the acceleration phase, such that a collision during the motion command is prevented.</td>
+</tr>
+<tr>
+<td>mcGapControlModeFast</td>
+<td>"Lock-step" All Axes move at the same time and with the full dynamics.</td>
+</tr>
+<tr>
+<td>mcGapControlModeNone</td>
+<td>This value indicates that the Gap Control is not active in the command. After the command, the Standby Gap Control takes effect again with the mode, which is set in the group and the gap size of the last valid command.</td>
+</tr>
+</tbody>
+</table>
+<p>Additional documentation of gap control mode is available on <a href="https://infosys.beckhoff.com/content/1033/tf5410_tc3_collision_avoidance/1539510027.html?id=7324917585245879036">Infosys</a> which includes graphs comparing the options.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SetGapMode</span><span class="p">(</span><span class="w"> </span><span class="nx">mcGapControlModeStandard</span><span class="w"> </span><span class="p">);</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="setjerk">SetJerk</h3>
+<p><em>SetJerk( Jerk : LREAL )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Updates the Mover's internal Motion Parameter for Jerk [mm/s3] and immediately reissues any currently executing motion blocks so that the parameter update takes effect immediately</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xUpdateJerk</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SetJerk</span><span class="p">(</span><span class="w"> </span><span class="mf">1e5</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">xUpdateJerk</span><span class="w">     </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Notice</p>
+<p>This method implicitly calls .ReissueCommand() in the background in order for the updated dynamics to take effect immediately. If this is not the intent, consider modifying the <em>Mover[x].MotionParameters</em> property instead.</p>
+</div>
+<h3 id="setvelocity">SetVelocity</h3>
+<p><em>SetVelocity( DesiredVelocity : LREAL )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Updates the Mover's internal Motion Parameter for Velocity [mm/s] and immediately reissues any currently executing motion blocks so that the parameter update takes effect immediately</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xCommandSlowMode</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SetVelocity</span><span class="p">(</span><span class="w"> </span><span class="mf">500</span><span class="w"> </span><span class="p">);</span><span class="w">    </span><span class="c1">// mm/s</span>
+<span class="w">    </span><span class="nx">xCommandSlowMode</span><span class="w">    </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="nx">END_IF</span>
+</code></pre></div></td></tr></table></div>
+<div class="admonition note">
+<p class="admonition-title">Notice</p>
+<p>This method implicitly calls .ReissueCommand() in the background in order for the updated dynamics to take effect immediately. If this is not the intent, consider modifying the <em>Mover[x].MotionParameters</em> property instead.</p>
+</div>
+<h3 id="synctoaxis">SyncToAxis</h3>
+<p><em>SyncToAxis( MasterAxis : AXIS_REFERENCE, MasterSyncPos : LREAL, SlaveSyncPos : LREAL, SyncStrategy : MC_SYNC_STRATEGY )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Pairs the current mover with an external axis (real or virtual) with specified Master &amp; Slave Sync Positions. The current mover will synchronize according to the parameter SyncStrategy and a 1:1 gear ratio.
+The synchronization can be ended by executing a call on the slave for any other motion command, e.g. <code>MoveToPosition</code> or <code>Halt</code>.</p>
+</blockquote>
+<p><strong>MasterAxis</strong> is a reference to the NC axis object that the mover should synchronize with, real or virtual.</p>
+<p><strong>MasterSyncPos</strong> is the position of the Master at which point the mover will be <em>InSync</em> and will have the correct gear ratio (1:1).</p>
+<p><strong>SlaveSyncPos</strong> is the position of the mover at which point it is <em>InSync</em></p>
+<p><strong>SyncStrategy</strong> defines the type of calculation used to blend the movements and establish the synchronization. Simply put, the mover should synchronize <em>immediately &amp; aggressively</em>, <em>as late as possible and aggressively</em>, or <em>as gently as possible</em>.</p>
+<blockquote>
+<p>For more information on these inputs, see InfoSys documentation for the underlying <a href="https://infosys.beckhoff.com/english.php?content=../content/1033/tf5410_tc3_collision_avoidance/1534969995.html&amp;id=">MC_GearInPosCA</a> Function Block</p>
+<p>See also:
+<a href="Mover.html#issyncedtoaxis">Mover.IsSyncedToAxis</a></p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xCmdSyncToAxis</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">xCmdSyncToAxis</span><span class="w">  </span><span class="o">:=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">MasterSyncPos</span><span class="w">   </span><span class="o">:=</span><span class="w"> </span><span class="nx">ConveyorAxis</span><span class="p">.</span><span class="nx">NcToPlc</span><span class="p">.</span><span class="nx">ActPos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">400</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SyncToAxis</span><span class="p">(</span><span class="w"> </span><span class="nx">ConveyorAxis</span><span class="p">,</span><span class="w"> </span><span class="nx">MasterSyncPos</span><span class="p">,</span><span class="w"> </span><span class="mf">1500</span><span class="p">,</span><span class="w"> </span><span class="nx">mcSyncStrategyEarly</span><span class="w"> </span><span class="p">);</span>
+<span class="nx">END_IF</span><span class="p">;</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="synctomover">SyncToMover</h3>
+<p><em>SyncToMover( MasterMover : Mover, Gap : LREAL )</em></p>
+<p><em>Chainable</em></p>
+<blockquote>
+<p>Pairs the current mover with a desired mover at a specified gap distance. The current mover will immediately move (with CA) to a specified distance from the Master Mover and then mimic all motion from the master. The synchronization can be ended by executing a call on the slave for any other motion command, e.g. <code>MoveToPosition</code> or <code>Halt</code>.</p>
+</blockquote>
+<p><strong>Gap</strong> specifies a center-to-center following distance between master and slave movers. This gap cannot be achieved if it is below the minimum collision avoidance distance established in the CA group. Positive Gap values will result in a following position <em>behind</em> the master and negative values will result in a slave that <em>precedes</em> the master.</p>
+<p>Additional calls to this method can be used to update the gap between paired movers.</p>
+<blockquote>
+<p>See also:
+<a href="Mover.html#issyncedtomover">Mover.IsSyncedToMover</a> and <a href="Mover.html#mastermover">Mover.MasterMover</a></p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xCmdSyncToLeader</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SyncToMover</span><span class="p">(</span><span class="w"> </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="mf">100</span><span class="w"> </span><span class="p">);</span><span class="w">  </span><span class="c1">// move 100mm away from Mover 1</span>
+
+<span class="w">    </span><span class="nx">IF</span><span class="w"> </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">IsSyncedToMover</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">        </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">2</span><span class="p">].</span><span class="nx">MoveToPosition</span><span class="p">(</span><span class="w"> </span><span class="mf">2000</span><span class="w"> </span><span class="p">);</span><span class="w">    </span><span class="c1">// Master moves to 2000 and Mover 0 will follow</span>
+<span class="w">    </span><span class="nx">END_IF</span><span class="p">;</span>
+<span class="nx">END_IF</span><span class="p">;</span>
+</code></pre></div></td></tr></table></div>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">xBuildTrain</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">4</span><span class="p">].</span><span class="nx">SyncToMover</span><span class="p">(</span><span class="w"> </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">4</span><span class="p">],</span><span class="w"> </span><span class="mf">100</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">3</span><span class="p">].</span><span class="nx">SyncToMover</span><span class="p">(</span><span class="w"> </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">4</span><span class="p">],</span><span class="w"> </span><span class="mf">200</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">2</span><span class="p">].</span><span class="nx">SyncToMover</span><span class="p">(</span><span class="w"> </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">4</span><span class="p">],</span><span class="w"> </span><span class="mf">300</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">SyncToMover</span><span class="p">(</span><span class="w"> </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">4</span><span class="p">],</span><span class="w"> </span><span class="mf">400</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">IF</span><span class="w"> </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">IsSyncedToMover</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">        </span><span class="c1">// Commands Mover 4 to move ahead at 300 mm/s</span>
+<span class="w">        </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">MasterMover</span><span class="p">.</span><span class="nx">MoveVelocity</span><span class="p">(</span><span class="w"> </span><span class="mf">300</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">END_IF</span><span class="p">;</span>
+<span class="nx">END_IF</span><span class="p">;</span><span class="w">     </span>
+</code></pre></div></td></tr></table></div>
+<h3 id="unregisterfromall">UnregisterFromAll</h3>
+<p><em>UnregisterFromAll()</em></p>
+<blockquote>
+<p>Unregisters a mover from all Mover Lists, Position Triggers, Station and Zones.</p>
+</blockquote>
+<h3 id="validatetrack">ValidateTrack</h3>
+<p><em>ValidateTrack()</em></p>
+<blockquote>
+<p>Confirms that a valid track is selected and returns true. Otherwise logs an error and returns false to be handled by higher-level code.</p>
+</blockquote>
+<p>This method is typically used internally by other motion methods of movers to log an error message when a command is issued to a mover who is not on a valid track. The property .IsTrackReady is intended for use in user code.</p>
+<h2 id="properties">Properties</h2>
+<h3 id="currentdestinationposition">.CurrentDestinationPosition</h3>
+<p><em>LREAL</em></p>
+<blockquote>
+<p>Provides the current destination position for the last movement command issued to the Mover. For Station commands, this will be the Position of the Station. For Velocity commands with no real destination position, the value is set to +/-1E300.</p>
+</blockquote>
+<h3 id="currentdestinationtrack">.CurrentDestinationTrack</h3>
+<p><em>DINT</em></p>
+<blockquote>
+<p>Provides the current destination track for the last movement command issued to the Mover. When track management is used, it should be queried along with the property .CurrentDestinationPosition to validate destinations.</p>
+</blockquote>
+<h3 id="currentmovetype">.CurrentMoveType</h3>
+<p><em>MoverCommandType_enum</em></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code>MOVETYPE_NONE           // this mover was just enabled and has no movement history
+MOVETYPE_POSITION       // this mover was most recently issued a MoveToPosition command
+MOVETYPE_STATION        // this mover was most recently issued a MoveToStation command
+MOVETYPE_VELOCITY       // this mover was most recently issued a MoveVelocity command
+</code></pre></div></td></tr></table></div>
+<blockquote>
+<p>Provides the current (last executed) type of movement command issued to the Mover</p>
+</blockquote>
+<h3 id="currentobjective">.CurrentObjective</h3>
+<p><em>STRING</em></p>
+<blockquote>
+<p>Provides the current Objective destination for the Mover. Right now this is only valid when the Mover is destined for a Station objective, and provides a string name for that station.</p>
+</blockquote>
+<h3 id="currenttrack">.CurrentTrack</h3>
+<p><em>POINTER TO Track</em></p>
+<blockquote>
+<p>Returns a pointer to the track that this mover is currently assigned to.</p>
+</blockquote>
+<p>Use the ^ operator to dereference the pointer and query track properties</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">currentTrackId</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">CurrentTrack</span><span class="o">^</span><span class="p">.</span><span class="nx">Id</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="iscollisionavoidanceactive">.IsCollisionAvoidanceActive</h3>
+<p><em>BOOL</em></p>
+<blockquote>
+<p>Returns true if collision avoidance is affecting the desired motion profile of this mover</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">IF</span><span class="w"> </span><span class="nx">Mover</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">IsCollisionAvoidanceActive</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="c1">// additional commands</span>
+<span class="nx">END_IF</span><span class="p">;</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="iserrormover">.IsErrorMover</h3>
+<p><em>BOOL</em></p>
+<blockquote>
+<p>Returns TRUE if the current Mover reference is an Error Mover. An Error mover is automatically returned when an invalid command is given to an interface capable of returning a Mover. See <a href="../Diagnostics/ErrorMovers.html">Diagnostics / ErrorMovers</a> for more information.  </p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">//Returns an ErrorMover as the GetMover function works on an 1 based Index</span>
+
+<span class="nx">MoverReference</span><span class="w"> </span><span class="nx">REF</span><span class="o">=</span><span class="w"> </span><span class="nx">Zone</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">GetMover</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="nx">MC_Direction</span><span class="p">.</span><span class="nx">MC_Positive_Direction</span><span class="p">);</span>
+<span class="nx">IF</span><span class="w"> </span><span class="nx">NOT</span><span class="w"> </span><span class="nx">MoverReference</span><span class="p">.</span><span class="nx">IsErrorMover</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="c1">// Will not execute as the MoverReference is an error mover.</span>
+<span class="nx">END_IF</span><span class="p">;</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="issyncedtoaxis">.IsSyncedToAxis</h3>
+<p><em>BOOL</em></p>
+<blockquote>
+<p>Returns true if the mover is slaved to an external axis and has successfully reached the following position specified by the Master &amp; Slave Sync Positions</p>
+</blockquote>
+<h3 id="issyncedtomover">.IsSyncedToMover</h3>
+<p><em>BOOL</em></p>
+<blockquote>
+<p>Returns true if the mover is slaved to another mover and has successfully reached the following position specified by the Gap.</p>
+</blockquote>
+<h3 id="istrackready">.IsTrackReady</h3>
+<p><em>BOOL</em></p>
+<blockquote>
+<p>Returns true when the ActivateTrack() method has completed successfully. When using track management motion commands should not be issued unless this value is true or the mover will throw an error.</p>
+</blockquote>
+<p>When using track management it can take several PLC scans for the .ActivateTrack method to complete. It is advised to wait for this to return after issuing an .ActivateTrack() command to avoid motion errors.</p>
+<h3 id="mastermover">.MasterMover</h3>
+<p><em>REFERENCE To Mover</em></p>
+<blockquote>
+<p>Reference variable that refers to the Mover this Mover is currently slaved to</p>
+</blockquote>
+<p>When this mover is not slaved to another mover, .MasterMover is an invalid reference. There is therefore an ErrorMover object which will return information on what action was requested by the object while .MasterMover was invalid. This will show up in TwinCAT's Event Logs. See <a href="../Diagnostics/ErrorMovers.html">Diagnostics / ErrorMovers</a> for more information.  </p>
+<p>It is recommended that all evaluations are nested inside IF checks for .IsSyncedToMover OR by calling __ISVALIDREF</p>
+<h3 id="moverindex">.MoverIndex</h3>
+<p><em>UDINT</em></p>
+<blockquote>
+<p>Unique, sequential mover identification number. The index matches the index of the array XTS.Mover[]</p>
+</blockquote>
+<p>The mover index is assigned at startup after the mover 1 search is complete. The order of movers is determined by the Mover 1 search properties configured in the XTS TcCOM object. When Mover 1 is present .MoverIndex will be persistent between cold-starts of the system. If Mover 1 is not used, .MoverIndex will not be persistent between cold-starts of the system.</p>
+<h3 id="motionparameters">.MotionParameters</h3>
+<p><em>MotionParameters_typ</em></p>
+<blockquote>
+<p>Defines a structure containing the dynamics settings for the Mover. Any new motion commands issued will utilize these values.</p>
+</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Despite listing this value as a Property here in the documentation, MotionParameters are actually defined as a regular Input to the Mover object. This allows component access to the members of the STRUCT, which is not possible for Properties.</p>
+</div>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">STRUCT</span>
+<span class="w">    </span><span class="nx">Jerk</span><span class="w">         </span><span class="o">:</span><span class="w"> </span><span class="nx">LREAL</span><span class="p">;</span><span class="w">                           </span><span class="c1">// mm/s³</span>
+<span class="w">    </span><span class="nx">Acceleration</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">LREAL</span><span class="p">;</span><span class="w">                           </span><span class="c1">// mm/s²</span>
+<span class="w">    </span><span class="nx">Deceleration</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">LREAL</span><span class="p">;</span><span class="w">                           </span><span class="c1">// mm/s²</span>
+<span class="w">    </span><span class="nx">Velocity</span><span class="w">     </span><span class="o">:</span><span class="w"> </span><span class="nx">LREAL</span><span class="p">;</span><span class="w">                           </span><span class="c1">// mm/s</span>
+<span class="w">    </span><span class="nx">Direction</span><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="nx">Tc3_Mc3Definitions</span><span class="p">.</span><span class="nx">MC_Direction</span><span class="p">;</span><span class="w"> </span><span class="c1">// MC_Direction</span>
+<span class="w">    </span><span class="nx">Gap</span><span class="w">          </span><span class="o">:</span><span class="w"> </span><span class="nx">LREAL</span><span class="p">;</span><span class="w">                           </span><span class="c1">// mm</span>
+<span class="w">    </span><span class="nx">GapMode</span><span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="nx">MC_GAP_CONTROL_MODE</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">MC_GAP_CONTROL_MODE</span><span class="p">.</span><span class="nx">mcGapControlModeGroupDefault</span><span class="p">;</span><span class="w"> </span><span class="c1">// default to mode defined in collision avoidance object</span>
+<span class="nx">END_STRUCT</span>
+</code></pre></div></td></tr></table></div>
+<p>Modifying a mover's Motion Parameters will not affect the current dynamics of a mover enroute. Updated dynamics properties will only take effect when the next motion command is issued.</p>
+<p>It is also possible to alter motion paramaters with mover methods such as <code>.SetVelocity()</code>, <code>.SetAcceleration()</code> and others. These methods implicitly call .ReissueCommand() and therefore take effect immediately.</p>
+<h3 id="nextmover">.NextMover</h3>
+<blockquote>
+<p>Returns the next mover in line with respect to this mover. Specifically, it returns the closest mover with a greater Position value than the current mover, regardless of actual direction of travel.</p>
+</blockquote>
+<h3 id="payload">.Payload</h3>
+<blockquote>
+<p>Data associated with the product on the mover.</p>
+</blockquote>
+<p>The code uses a structure with some example data that may be relevant to an in-process part on the mover. The structure is located in the PLC Project &gt; DUTs &gt; MoverPayload_typ.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nx">TYPE</span><span class="w"> </span><span class="nx">MoverPayload_typ</span><span class="w"> </span><span class="o">:</span>
+<span class="nx">STRUCT</span>
+<span class="w">    </span><span class="c1">// data related to the in-process part on the mover</span>
+<span class="w">    </span><span class="c1">// can be modifited to suit the application</span>
+<span class="w">    </span><span class="nx">RecipeId</span><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="nx">DINT</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">FailureReason</span><span class="w">   </span><span class="o">:</span><span class="w"> </span><span class="nx">DINT</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">SerialNumber</span><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="nx">STRING</span><span class="p">;</span>
+<span class="nx">END_STRUCT</span>
+<span class="nx">END_TYPE</span>
+</code></pre></div></td></tr></table></div>
+<p>This data travels with the mover and when a mover arrives at a station it can be queried or modified based on the station's process. This structure can be modified as needed to suit the application.</p>
+<p>Note that because .Payload is a property that returns a structure an intermediate variable must be used for access as shown in the examples below.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// query the recipe ID and react accordingly</span>
+<span class="nx">VAR</span>
+<span class="w">    </span><span class="nx">MoverPayload</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">MoverPayload_typ</span><span class="p">;</span>
+<span class="nx">END_VAR</span>
+
+<span class="nx">IF</span><span class="w"> </span><span class="p">(</span><span class="nx">Station</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">MoverInPosition</span><span class="p">)</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="c1">// get the payload</span>
+<span class="w">    </span><span class="nx">MoverPayload</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">Station</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">CurrentMover</span><span class="p">.</span><span class="nx">Payload</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// query the payload</span>
+<span class="w">    </span><span class="nx">IF</span><span class="w"> </span><span class="nx">MoverPayload</span><span class="p">.</span><span class="nx">RecipeID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">        </span><span class="c1">// add recipe 1 specific code here</span>
+<span class="w">    </span><span class="nx">ELSE</span>
+<span class="w">        </span><span class="c1">// add code specific to other recipes here</span>
+<span class="w">    </span><span class="nx">END_IF</span><span class="p">;</span>
+<span class="nx">END_IF</span><span class="p">;</span>
+</code></pre></div></td></tr></table></div>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// Store a serial number for the part on the mover from a scanned barcode</span>
+<span class="nx">VAR</span>
+<span class="w">    </span><span class="nx">MoverPayload</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">MoverPayload_typ</span><span class="p">;</span>
+<span class="nx">END_VAR</span>
+
+<span class="nx">IF</span><span class="w"> </span><span class="p">(</span><span class="nx">ScanComplete</span><span class="p">)</span><span class="w"> </span><span class="nx">THEN</span>
+<span class="w">    </span><span class="c1">// get the payload</span>
+<span class="w">    </span><span class="nx">MoverPayload</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">Station</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">CurrentMover</span><span class="p">.</span><span class="nx">Payload</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// store data to the payload, then the mover</span>
+<span class="w">    </span><span class="nx">MoverPayload</span><span class="p">.</span><span class="nx">SerialNumber</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">ScannedBarcode</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">Station</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">CurrentMover</span><span class="p">.</span><span class="nx">Payload</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">MoverPayload</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// send mover to next station</span>
+<span class="w">    </span><span class="nx">Station</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">CurrentMover</span><span class="p">.</span><span class="nx">MoveToStation</span><span class="p">(</span><span class="nx">Station</span><span class="p">[</span><span class="mf">2</span><span class="p">]);</span>
+<span class="nx">END_IF</span><span class="p">;</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="previousmover">.PreviousMover</h3>
+<blockquote>
+<p>Returns the previous mover in line with respect to this mover. Specifically, it returns the closest mover with a lesser Position value than the current mover, regardless of actual direction of travel.</p>
+</blockquote>
+<h3 id="trackinfo">.TrackInfo</h3>
+<blockquote>
+<p>Returns information provided by MC_ReadTrackPositions for use with track management.</p>
+</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Despite listing this value as a Property here in the documentation, TrackInfo is actually defined as a regular Output from the Mover object. This allows component access to the members of the STRUCT, which is not possible for Properties.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TrackId</td>
+<td>OTCID</td>
+<td>The hardware ID of the track the mover is assigned to</td>
+</tr>
+<tr>
+<td>PartId</td>
+<td>OTCID</td>
+<td>The hardware ID of the part the mover is physically present on</td>
+</tr>
+<tr>
+<td>TrackPosition</td>
+<td>LREAL</td>
+<td>Position of the mover measured from the zero point of the track. This may differ from Mover.AxisReference.NcToPLC.ActPos in certain track configurations</td>
+</tr>
+<tr>
+<td>PartPosition</td>
+<td>LREAL</td>
+<td>Position of the mover measured from the zero point of the part the mover is physically on</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

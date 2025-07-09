@@ -1,0 +1,22 @@
+
+
+:root {
+	--md-primary-fg-color:				#ef0000;
+	--md-primary-fg-color--light:		#ef0000;
+	--md-primary-fg-color--dark:		#990000;
+
+	--md-primary-bg-color:				#ffffff;
+	--md-default-bg-color:				#ffffff;
+
+	--md-accent-fg-color:				#aeb3b8;
+}
+
+:root h2 {
+	padding-top: 4em;
+	border-top: 1px solid lightgray;
+}
+
+:root h3 {
+	padding-top: 2em;
+	border-top: 1px solid lightgray;
+}
