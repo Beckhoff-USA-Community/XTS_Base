@@ -41,13 +41,6 @@ VAR
 	// so it is only computed once per scan when needed
 	internalMotorModuleStatus		:  MotorModuleStatus_typ;
 
-	bHighDriveReady			: BOOL;
-	bControlVoltageReady	: BOOL;
-	nParts					: UDINT;
-	nModulesInPart			: UDINT;
-	ControlVoltageStorage	: REAL;
-	bMoverRedectionRequired	: BOOL;
-	
 	// ========= XTS Utility Diagnostics =========
 	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
 	fbXtsEnvironmentVisu			: FB_XtsEnvironmentVisu;
@@ -377,9 +370,9 @@ PROPERTY AllMotorModulesReady : Bool]]></Declaration>
       <Get Name="Get" Id="{f8eb48d2-a530-04d2-2b29-7da0e49d088b}">
         <Declaration><![CDATA[VAR
 	I				: UDINT;
-	J				: UDINT;
-	
-	DriveStatusStorage: UINT;
+	nParts			: UDINT;
+	bHighDriveReady	: BOOL;
+	PartTcIo		: I_TcIoXtsXpuPart;
 END_VAR]]></Declaration>
         <Implementation>
           <ST><![CDATA[// this is caculcation and ADS intensive so the result is memozied once per scan
@@ -394,13 +387,9 @@ IF (NOT internalMotorModuleStatus.calcComplete) THEN
 			// Get number of modules per part and check their state
 			bHighDriveReady:= TRUE;
 			FOR I := 1 TO nParts DO 
-				nModulesInPart:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).GetModuleCount();
-				FOR J := 1 TO nModulesInPart DO
-					DriveStatusStorage:= fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I)).ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue();
-					IF NOT (DriveStatusStorage = 4135) AND NOT (fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation) THEN
-						bHighDriveReady:= FALSE;
-					END_IF 
-				END_FOR
+				PartTcIo := fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I));
+				// and the previous result with the result for this part
+				bHighDriveReady := bHighDriveReady AND PartMotorModulesReady(PartTcIo);
 			END_FOR
 		END_IF
 	END_IF
@@ -1058,6 +1047,40 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="PartMotorModulesReady" Id="{b8e95bc3-b41f-0254-06ff-2216e86cf91e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PartMotorModulesReady : BOOL
+VAR_INPUT
+	PartTcIo		: I_TcIoXtsXpuPart;
+END_VAR
+VAR
+	J					: UDINT;
+	DriveStatusStorage	: UINT;
+	nModulesInPart		: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// start with ready, to be overwritten below
+PartMotorModulesReady := TRUE;
+// protect against no part provided
+IF (PartTcIo = 0) THEN
+	// this part can't be ready
+	PartMotorModulesReady := FALSE;
+	RETURN;
+END_IF
+// get number of modules
+nModulesInPart:= PartTcIo.GetModuleCount();
+
+// query each module
+FOR J := 1 TO nModulesInPart DO
+	// get the status
+	DriveStatusStorage:= PartTcIo.ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue();
+	// check for proper status, or simulation
+	IF NOT (DriveStatusStorage = 4135) AND NOT (fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation) THEN
+		PartMotorModulesReady := FALSE;
+	END_IF 
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ResetStatistics" Id="{03455d1c-c490-0e78-3526-b69b05e0917b}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ResetStatistics : BOOL
 VAR

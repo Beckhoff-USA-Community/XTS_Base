@@ -28,6 +28,29 @@ Update the count of each object according to the needs of the system in this lis
 
 > Required to be called once per scan. The Mediator will then call all necessary .Cyclic() methods for the objects that are registered to it.
 
+### PartMotorModulesReady
+*PartMotorModulesReady( PartTcIo : I_TcIoXtsXpuPart )*
+
+> Returns true if all motor modules on the part are ready.
+
+Ready consists of 24V and 48V being present, and the motor module has completed its internal power up sequence after receiving 48V.
+
+This method is used internally during enable and is not needed in most use cases. It is provided for the infrequent application where a portion of the XTS track has 48V power removed, often in relation to a nearby guard door being opened. This kind of application has significant safety considerations that need to be studied via a risk assessment, which is outside the scope of this documentation.
+
+```javascript
+// declaration
+PartToTest : I_TcIoXtsXpuPart;
+
+// code
+// get a part from the XTS environment
+PartToTest := XTS.System.Environment.XpuTcIo(1).PartTcIo(1)
+// act on the state of the part's ready status
+if (XTS.System.PartMotorModulesReady(PartToTest)) THEN
+	// Alert operator system is ready
+END_IF
+```
+
+
 ### ResetStatistics
 *ResetStatistics()*
 
