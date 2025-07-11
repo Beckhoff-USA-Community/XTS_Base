@@ -68,7 +68,7 @@ CASE State OF
 	XTS_DISABLED: // ------------------------------------------
 	
 		// XTS is idle. Motive power is disabled.	
-		IF System.EnvironmentIsReady AND Enable THEN
+		IF System.EnvironmentIsReady AND System.AllMotorModules48vReady AND Enable THEN
 			State						:= XTS_REGISTERING;
 			RegisteringState			:= 0;
 		END_IF
@@ -88,7 +88,7 @@ CASE State OF
 		System.CompleteMoverList.EnableAll();
 		
 		IF System.CompleteMoverList.IsAllMoversReady
-		 AND System.AllMotorModulesReady AND system.GroupEnabled THEN
+		 AND System.AllMotorModulesEnabled AND system.GroupEnabled THEN
 			System.ResetStatistics();
 			State	:= XTS_ACTIVATE_TRACKS;
 		END_IF
@@ -102,7 +102,7 @@ CASE State OF
 	XTS_ACTIVATE_TRACKS:	// -------------------------------------------
 		System.CompleteMoverList.ActivateAllTrack( Track[Param.DEFAULT_TRACK] );
 		IF System.CompleteMoverList.IsAllTrackReady
-		 AND system.AllMotorModulesReady AND system.GroupEnabled THEN
+		 AND system.AllMotorModulesEnabled AND system.GroupEnabled THEN
 			System.ResetStatistics();
 			State	:= XTS_ENABLED;
 		END_IF

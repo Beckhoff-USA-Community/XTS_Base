@@ -39,7 +39,8 @@ VAR
 	
 	// implements memoization of Mediator.AllMotorModulesReady
 	// so it is only computed once per scan when needed
-	internalMotorModuleStatus		:  MotorModuleStatus_typ;
+	internalMotorModuleEnabled		:  MotorModuleStatus_typ;
+	internalMotorModule48v			:  MotorModuleStatus_typ;
 
 	// ========= XTS Utility Diagnostics =========
 	fbXtsEnvironment				: FB_TcIoXtsEnvironment;
@@ -364,9 +365,49 @@ IF __ISVALIDREF( Zone ) THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Property Name="AllMotorModulesReady" Id="{e4a76f20-75da-0820-2f6d-be0ad375c645}" FolderPath="Properties\">
+    <Property Name="AllMotorModules48vReady" Id="{2499191c-7efc-00ea-283b-811d27cdd608}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY AllMotorModulesReady : Bool]]></Declaration>
+PROPERTY AllMotorModules48vReady : Bool]]></Declaration>
+      <Get Name="Get" Id="{f41a50ed-5c36-04fd-1f3c-454c5cf177f1}">
+        <Declaration><![CDATA[VAR
+	I				: UDINT;
+	nParts			: UDINT;
+	b48vReady	: BOOL;
+	PartTcIo		: I_TcIoXtsXpuPart;
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[// this is calculation and ADS intensive so the result is memozied once per scan
+
+// only run the sum if the calc bit has not been set for this scan
+IF (NOT internalMotorModule48v.calcComplete) THEN
+	// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
+	IF fbXtsEnvironment.P_IsInitialized THEN
+	// Get number of parts. 
+		nParts:= fbXtsEnvironment.XpuTcIo(1).GetPartCount();
+		IF nParts <> 0 THEN
+			// Get number of modules per part and check their state
+			b48vReady:= TRUE;
+			FOR I := 1 TO nParts DO 
+				PartTcIo := fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I));
+				// and the previous result with the result for this part
+				b48vReady := b48vReady AND PartMotorModules48vReady(PartTcIo);
+			END_FOR
+		END_IF
+	END_IF
+
+	// memoize the result
+	internalMotorModule48v.calcResult := b48vReady;
+	internalMotorModule48v.calcComplete := TRUE;
+END_IF;
+
+// return the result
+AllMotorModules48vReady:= internalMotorModule48v.calcResult;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="AllMotorModulesEnabled" Id="{e4a76f20-75da-0820-2f6d-be0ad375c645}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY AllMotorModulesEnabled : Bool]]></Declaration>
       <Get Name="Get" Id="{f8eb48d2-a530-04d2-2b29-7da0e49d088b}">
         <Declaration><![CDATA[VAR
 	I				: UDINT;
@@ -375,10 +416,10 @@ PROPERTY AllMotorModulesReady : Bool]]></Declaration>
 	PartTcIo		: I_TcIoXtsXpuPart;
 END_VAR]]></Declaration>
         <Implementation>
-          <ST><![CDATA[// this is caculcation and ADS intensive so the result is memozied once per scan
+          <ST><![CDATA[// this is calculation and ADS intensive so the result is memozied once per scan
 
 // only run the sum if the calc bit has not been set for this scan
-IF (NOT internalMotorModuleStatus.calcComplete) THEN
+IF (NOT internalMotorModuleEnabled.calcComplete) THEN
 	// Monitor DriveStatus to disallow motion commands before high drive has been achieved.
 	IF fbXtsEnvironment.P_IsInitialized THEN
 	// Get number of parts. 
@@ -389,18 +430,18 @@ IF (NOT internalMotorModuleStatus.calcComplete) THEN
 			FOR I := 1 TO nParts DO 
 				PartTcIo := fbXtsEnvironment.XpuTcIo(1).PartTcIo(UDINT_TO_UINT(I));
 				// and the previous result with the result for this part
-				bHighDriveReady := bHighDriveReady AND PartMotorModulesReady(PartTcIo);
+				bHighDriveReady := bHighDriveReady AND PartMotorModulesEnabled(PartTcIo);
 			END_FOR
 		END_IF
 	END_IF
 
 	// memoize the result
-	internalMotorModuleStatus.calcResult := bHighDriveReady;
-	internalMotorModuleStatus.calcComplete := TRUE;
+	internalMotorModuleEnabled.calcResult := bHighDriveReady;
+	internalMotorModuleEnabled.calcComplete := TRUE;
 END_IF;
 
 // return the result
-AllMotorModulesReady:= internalMotorModuleStatus.calcResult;]]></ST>
+AllMotorModulesEnabled:= internalMotorModuleEnabled.calcResult;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -458,7 +499,8 @@ END_VAR]]></Declaration>
 NumMovers := NUM_MOVERS;
 
 // clear memoized values for recalculation
-internalMotorModuleStatus.calcComplete := FALSE;
+internalMotorModuleEnabled.calcComplete := FALSE;
+internalMotorModule48v.calcComplete := FALSE;
 
 // regenerate the internal mover list when necessary
 IF (internalMoverListRecalc) THEN
@@ -1047,8 +1089,39 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="PartMotorModulesReady" Id="{b8e95bc3-b41f-0254-06ff-2216e86cf91e}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD PartMotorModulesReady : BOOL
+    <Method Name="PartMotorModules48vReady" Id="{98a45699-b0a3-05f3-058d-be5a14452817}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PartMotorModules48vReady : BOOL
+VAR_INPUT
+	PartTcIo		: I_TcIoXtsXpuPart;
+END_VAR
+VAR
+	J					: UDINT;
+	nModulesInPart		: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// start with ready, to be overwritten below
+PartMotorModules48vReady := TRUE;
+// protect against no part provided
+IF (PartTcIo = 0) THEN
+	// this part can't be ready
+	PartMotorModules48vReady := FALSE;
+	RETURN;
+END_IF
+// get number of modules
+nModulesInPart:= PartTcIo.GetModuleCount();
+
+// query each module
+FOR J := 1 TO nModulesInPart DO
+	// check for proper status, or simulation
+	IF NOT (PartTcIo.ModuleTcIo(UDINT_TO_UINT(J)).GetIsDcLinkVoltageReady()) AND NOT (fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation) THEN
+		PartMotorModules48vReady := FALSE;
+	END_IF 
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PartMotorModulesEnabled" Id="{b8e95bc3-b41f-0254-06ff-2216e86cf91e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PartMotorModulesEnabled : BOOL
 VAR_INPUT
 	PartTcIo		: I_TcIoXtsXpuPart;
 END_VAR
@@ -1060,11 +1133,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// start with ready, to be overwritten below
-PartMotorModulesReady := TRUE;
+PartMotorModulesEnabled := TRUE;
 // protect against no part provided
 IF (PartTcIo = 0) THEN
 	// this part can't be ready
-	PartMotorModulesReady := FALSE;
+	PartMotorModulesEnabled := FALSE;
 	RETURN;
 END_IF
 // get number of modules
@@ -1076,7 +1149,7 @@ FOR J := 1 TO nModulesInPart DO
 	DriveStatusStorage:= PartTcIo.ModuleTcIo(UDINT_TO_UINT(J)).GetDriveStatusValue();
 	// check for proper status, or simulation
 	IF NOT (DriveStatusStorage = 4135) AND NOT (fbXtsEnvironment.XpuTcIo(1).GetOperationMode() = OperationMode.Simulation) THEN
-		PartMotorModulesReady := FALSE;
+		PartMotorModulesEnabled := FALSE;
 	END_IF 
 END_FOR]]></ST>
       </Implementation>
