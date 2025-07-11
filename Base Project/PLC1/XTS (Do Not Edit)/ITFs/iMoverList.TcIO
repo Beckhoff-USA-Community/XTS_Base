@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <Itf Name="iMoverList" Id="{9cc4a2ad-2506-4bdd-acf3-bfbfde25ab77}">
     <Declaration><![CDATA[INTERFACE iMoverList]]></Declaration>
     <Folder Name="Methods" Id="{82f0078e-13af-0a56-283e-d65bfe6ce910}" />
@@ -11,6 +11,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Property Name="AllMovers" Id="{be48ab02-79be-00ac-2ca6-bb8facc1b4d2}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY AllMovers : ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover]]></Declaration>
+      <Get Name="Get" Id="{1281ff43-49c6-0687-31c6-de81b293e37f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="ApplyAllParameterSet" Id="{8abb1724-b9e6-083f-29e1-ca26a1ec4420}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ApplyAllParameterSet : iMoverList
 VAR_INPUT
@@ -146,7 +152,7 @@ PROPERTY RegisteredMoverCount : USINT]]></Declaration>
       </Get>
     </Property>
     <Property Name="RegisteredMovers" Id="{c1d0d30a-4686-4f53-a96b-53d64c99ec16}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY RegisteredMovers : ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
+      <Declaration><![CDATA[PROPERTY RegisteredMovers : ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover]]></Declaration>
       <Get Name="Get" Id="{d3d3bfad-1918-438f-8ad5-aa73cc840431}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>

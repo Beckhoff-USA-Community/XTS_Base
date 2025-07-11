@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="MoverList" Id="{6a6492c3-5dac-4c49-8708-8eab34cf4a1d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK MoverList EXTENDS Objective IMPLEMENTS iMoverList
 VAR_INPUT
@@ -36,6 +36,31 @@ FOR i := 1 TO SIZEOF(internalRegisteredMovers) / SIZEOF(internalRegisteredMovers
 END_FOR]]></ST>
       </Implementation>
     </Method>
+    <Property Name="AllMovers" Id="{52a1695b-1d8f-0ef9-3cd3-1395c39cd0c3}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY AllMovers : ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover]]></Declaration>
+      <Get Name="Get" Id="{ef34fbdc-dfde-05ba-0251-c668ef47ba93}">
+        <Declaration><![CDATA[VAR
+	i: ULINT;
+	destIndex : ulint;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[// returns a front-end-loaded array of pointers to movers in the current mover list
+// set up the destination index
+destIndex := 1;
+
+// test all the movers
+FOR i := 1 TO Param.MAX_MOVERS DO
+	// if there's a mover add it to the return value
+	IF (internalRegisteredMovers[i] <> 0) THEN
+		AllMovers[destIndex] := internalRegisteredMovers[i];
+		// increment the destination index
+		destIndex := destIndex + 1;
+	END_IF;
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="ApplyAllParameterSet" Id="{ee27996d-bc19-0617-3aa0-2b2a5832f4d1}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ApplyAllParameterSet : iMoverList
 VAR_INPUT
@@ -811,111 +836,5 @@ END_FOR
 SetAllVelocity := THIS^;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="MoverList">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.ActivateAllTrack">
-      <LineId Id="3" Count="9" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.ApplyAllParameterSet">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.Contains">
-      <LineId Id="3" Count="6" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.DisableAll">
-      <LineId Id="3" Count="11" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.EnableAll">
-      <LineId Id="3" Count="11" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.FilterDestinationStation">
-      <LineId Id="3" Count="25" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.GetMoverByLocation">
-      <LineId Id="1" Count="169" />
-    </LineIds>
-    <LineIds Name="MoverList.HaltAll">
-      <LineId Id="3" Count="11" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.IsAllMoversDisabled.Get">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.IsAllMoversHalted.Get">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.IsAllMoversReady.Get">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.IsAllTrackReady.Get">
-      <LineId Id="3" Count="24" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.LogicalComplement">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.LogicalDifference">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.LogicalIntersect">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.LogicalUnion">
-      <LineId Id="3" Count="3" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.MoveAllToPosition">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.MoveAllToStation">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.MoveAllVelocity">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.SetAllAcceleration">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.SetAllDeceleration">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.SetAllDirection">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.SetAllGap">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.SetAllGapMode">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.SetAllJerk">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="MoverList.SetAllVelocity">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

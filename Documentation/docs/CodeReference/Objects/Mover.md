@@ -548,6 +548,14 @@ When this mover is not slaved to another mover, .MasterMover is an invalid refer
 
 It is recommended that all evaluations are nested inside IF checks for .IsSyncedToMover OR by calling __ISVALIDREF
 
+### .MoverIndex
+
+*UDINT*
+
+> Unique, sequential mover identification number. The index matches the index of the array XTS.Mover[]
+
+The mover index is assigned at startup after the mover 1 search is complete. The order of movers is determined by the Mover 1 search properties configured in the XTS TcCOM object. When Mover 1 is present .MoverIndex will be persistent between cold-starts of the system. If Mover 1 is not used, .MoverIndex will not be persistent between cold-starts of the system.
+
 ### .MotionParameters
 
 *MotionParameters_typ*

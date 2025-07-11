@@ -114,14 +114,14 @@ This value is only used to help calculate throughput `.Statistics` on the mover 
 > Status boolean indicating that a mover is currently docked with the Station
 
 
-### .TrackedMoverCount
+### .RegisteredMoverCount
 
 *USINT*
 
 > Simply reports the number of Movers that are currently registered with the Station. Because Stations automatically deregister movers that are not currently destined for this Station, this value also represents the current number of incoming movers.
 
 !!! Note
-	This property is part of [Objective](./Objective.md#trackedmovercount) but is frequently used with stations and can be accessed as part of the Station object.
+	This property is part of [Objective](./Objective.md#registeredmovercount) but is frequently used with stations and can be accessed as part of the Station object.
 
 ### .Position
 
@@ -187,8 +187,8 @@ END_IF
 
 ```javascript
 // Immediately redirect all incoming shuttles to Station 1 instead of Station 0
-FOR i := 0 TO Station[0].TrackedMoverCount-1 DO
-	targetMover := Station[0].TrackedMovers[i];
+FOR i := 0 TO Station[0].RegisteredMoverCount-1 DO
+	targetMover := Station[0].RegisteredMovers[i];
 	targetMover^.MoveToStation( Station[1] );
 END_FOR
 ```

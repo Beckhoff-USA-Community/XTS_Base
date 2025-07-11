@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="Objective" Id="{72371872-54aa-4f25-a82d-ba585015a7c5}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK ABSTRACT Objective
@@ -64,7 +64,7 @@ END_FOR]]></ST>
       </Get>
     </Property>
     <Property Name="RegisteredMovers" Id="{f2e27676-d8a8-4b3f-968b-790753e7621e}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY RegisteredMovers : ARRAY[0..Param.MAX_MOVERS - 1] OF POINTER TO Mover]]></Declaration>
+      <Declaration><![CDATA[PROPERTY RegisteredMovers : ARRAY[1..Param.MAX_MOVERS] OF POINTER TO Mover]]></Declaration>
       <Get Name="Get" Id="{2692defb-0744-4a89-a02c-657d915f8a30}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
@@ -158,7 +158,9 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Blow out the tracked mover array
-memset(ADR(internalRegisteredMovers), 0, SIZEOF(internalRegisteredMovers));]]></ST>
+memset(ADR(internalRegisteredMovers), 0, SIZEOF(internalRegisteredMovers));
+// then clean up the internal count
+internalRegisteredMoverCount := 0;]]></ST>
       </Implementation>
     </Method>
     <Method Name="UnregisterCurrent" Id="{f5252866-1ebe-4ec3-aeab-827236ab79ab}" FolderPath="Methods\">
