@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="ErrorMover" Id="{bd3df610-8473-440e-a9dc-a09f811846e0}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK ErrorMover EXTENDS Mover IMPLEMENTS iMover]]></Declaration>
     <Implementation>
@@ -295,6 +295,18 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="OTCID" Id="{7076fb32-4921-0c53-1a02-7c855955986e}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY OTCID : OTCID]]></Declaration>
+      <Get Name="Get" Id="{547c854c-7044-09b5-36ed-da3cf10bc040}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ADSLOGSTR( ADSLOG_MSGTYPE_ERROR, 'The OTCID get method has been called on an invalid Mover reference returned by %s.',THIS^.SourceInstancePath);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Payload" Id="{24ebdcd3-9649-41f7-9f65-e4f7f86ef316}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Payload : MoverPayload_typ]]></Declaration>
       <Get Name="Get" Id="{28f7f04b-9925-4df5-91ef-030257222faa}">
@@ -514,119 +526,5 @@ END_IF
 	]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="ErrorMover">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.CurrentDestinationPosition.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.CurrentDestinationTrack.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.CurrentMoveType.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.CurrentObjective.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.CurrentTrack.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Cyclic">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Disable">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Enable">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.GroupStop">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Halt">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.IsErrorMover.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.IsSyncedToMover.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.MasterMover.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.MoverIndex.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.MoveToPosition">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.MoveToStation">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.MoveVelocity">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Payload.Get">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Payload.Set">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.ReissueCommand">
-      <LineId Id="3" Count="8" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.Reset">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SetAcceleration">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SetDeceleration">
-      <LineId Id="3" Count="6" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SetDirection">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SetJerk">
-      <LineId Id="3" Count="6" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SetVelocity">
-      <LineId Id="3" Count="6" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SyncToAxis">
-      <LineId Id="3" Count="10" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="ErrorMover.SyncToMover">
-      <LineId Id="3" Count="7" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
