@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <DUT Name="InternalMoverVars_typ" Id="{a861371d-e4e6-0e14-0d10-1372a7987892}">
     <Declaration><![CDATA[TYPE InternalMoverVars_typ :
 STRUCT
@@ -52,6 +52,9 @@ STRUCT
 	
 	fbDelayM1Timer			: TON;
 	
+	// otcid identification
+	OTCID : OTCID;
+
 	// vars to store system time of most recent method calls, for filtering event logger
 	
 	lastCallCyclic		: LREAL;
