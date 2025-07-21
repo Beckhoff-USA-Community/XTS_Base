@@ -129,7 +129,7 @@ This value is only used to help calculate throughput `.Statistics` on the mover 
 
 > Current placement of the Station along the track
 
-This value is also used to place a marker on the visualization tools representing the station. See [Visualization](../../GettingStarted/Visualization.md).
+This value is also used to place a marker on the visualization tools representing the station. See [Visualization](../../GettingStarted/6_Visualization.md).
 
 
 ### .Statistics
@@ -194,4 +194,4 @@ END_FOR
 ```
 ### Station Labeling In Viewing Tools
 
-See [Visualization](../../GettingStarted/Visualization.md)
+See [Visualization](../../GettingStarted/6_Visualization.md)
