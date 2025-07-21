@@ -162,7 +162,7 @@ END_IF
 
 *Chainable*
 
-> Executes an Absolute Move (with Collision Avoidance) to the location of the target Station, and implicitly calls that Station's [RegisterMover](../Objectives/Station#registermover) method.
+> Executes an Absolute Move (with Collision Avoidance) to the location of the target Station, and implicitly calls that Station's [RegisterMover](Objective.md#registermover) method.
 
 ```javascript
 IF xMoveToHome THEN

@@ -302,7 +302,7 @@ CASE LocalVars.State OF
 		
 	MV_ENABLEGROUP:	// ----------------------------------------------- have mediator enable group
 		Mediator.EnableGroup();
-		IF Mediator.GroupEnabled AND Mediator.AllMotorModulesReady THEN
+		IF Mediator.GroupEnabled AND Mediator.AllMotorModulesEnabled THEN
 			LocalVars.State := MV_RUN;
 		ELSIF Mediator.Error THEN
 			Error			:= TRUE;
