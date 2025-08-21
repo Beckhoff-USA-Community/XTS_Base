@@ -394,7 +394,10 @@ END_FOR
 
 *BOOL*
 
-> Queries all movers registered with the mover list for their `.Moving` property and returns true if all movers are not moving
+> Queries all movers registered with the mover list for their `.Moving` property and returns true if all movers are not moving.
+
+!!! Caution
+	Movers who can not reach their destination because of the gap and collision avoidance settings and are effectively queued will be considered halted for the property. If you need to confirm no commands are acting on the mover see `.IsNoMoverBusy`.
 
 ```javascript
 	// state machine
@@ -442,6 +445,17 @@ END_FOR
 	This routine intentionally returns false if no movers are on the track. This is to handle the several scan delay between activating a track and the mover reporting the track is active. In a typical use case .ActivateAllTrack and .IsAllTrackReady are called back to back. Without this exception code folling .IsAllTrackReady would falsely assume the track switch is complete if the track was empty causing mover motion commands to throw errors.
 
 See ActivateAllTrack() for an example.
+
+## .IsNoMoverBusy
+
+*BOOL*
+
+> Returns true if all movers in the zone are not `.Busy`.
+
+This property can be used when it's necessary to confirm that all movers in a zone have reached their destination position. It's frequently used during recovery steps where movers are commanded back to their previous location after a safety event, and then before normal processing can continue waiting for this property will confirm all movers have reached a location and have stopped.
+
+!!! Note
+	This uses the Mover's `.Busy` flag. Busy will remain true if a mover is stopped, but unable to reach the destination station or position set by it's previous command. If you're only looking to see if all movers are stoppped see `.IsAllMoversHalted`.
 
 ### .RegisteredMoverCount
 

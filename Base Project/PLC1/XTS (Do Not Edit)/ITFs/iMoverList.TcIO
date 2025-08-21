@@ -86,6 +86,12 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Property Name="IsNoMoverBusy" Id="{f24c9a7e-ffc6-082f-2b9d-4dcd1b412a35}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsNoMoverBusy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{45949a74-3680-006f-2c9d-4e6bf855c7f0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="LogicalComplement" Id="{99897a70-e30e-0da3-0186-cef07523538c}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD LogicalComplement : MoverList
 VAR_INPUT

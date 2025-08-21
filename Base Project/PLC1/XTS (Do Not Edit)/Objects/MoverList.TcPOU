@@ -524,6 +524,26 @@ IsAllTrackReady := allReady; // return result]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Property Name="IsNoMoverBusy" Id="{cece049b-4403-0dbb-1591-1117ce3abf4b}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY IsNoMoverBusy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{31873de7-e1fb-04a5-1fa5-4b95bfc590a7}">
+        <Declaration><![CDATA[VAR
+		i: ULINT;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsNoMoverBusy		:= TRUE;		// ...default
+
+FOR i := 1 TO SIZEOF( internalRegisteredMovers ) / SIZEOF( internalRegisteredMovers[1] ) DO
+	// check for valid mover
+	IF internalRegisteredMovers[i] <> 0 AND_THEN internalRegisteredMovers[i]^.Busy = TRUE THEN
+		IsNoMoverBusy		:= FALSE;
+	END_IF;
+
+END_FOR]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="LogicalComplement" Id="{d6bb64e7-1c08-0ac2-2a32-42be336ae034}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD LogicalComplement : MoverList
 VAR_INPUT
