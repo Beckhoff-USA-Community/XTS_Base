@@ -96,7 +96,7 @@ CASE State OF
 		IF NOT Enable THEN
 			Enable	:= FALSE;
 			System.CompleteMoverList.DisableAll();
-			State			:= XTS_DISABLING;
+			State			:= XTS_DISABLING_TRACK;
 		END_IF
 		
 	XTS_ACTIVATE_TRACKS:	// -------------------------------------------
@@ -110,7 +110,7 @@ CASE State OF
 		IF NOT Enable THEN
 			Enable	:= FALSE;
 			System.CompleteMoverList.DisableAll();
-			State			:= XTS_DISABLING;
+			State			:= XTS_DISABLING_TRACK;
 		END_IF
 	
 	XTS_ENABLED:	// -------------------------------------------
@@ -123,10 +123,10 @@ CASE State OF
 	XTS_STOPPING:
 		IF System.CompleteMoverList.IsAllMoversHalted THEN
 // 			System.CompleteMoverList.DisableAll();
-			State			:= XTS_TRACK_FIXING;
+			State			:= XTS_DISABLING_TRACK;
 		END_IF
 		
-    XTS_TRACK_FIXING:
+    XTS_DISABLING_TRACK:
         System.CompleteMoverList.ActivateAllTrack(Track[0]);
         IF System.CompleteMoverList.IsAllTrackReady THEN
             System.CompleteMoverList.DisableAll();
