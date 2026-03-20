@@ -1,0 +1,11 @@
+	<svg width="100%" height="100%" viewBox="0 0 3 3" xmlns="http://www.w3.org/2000/svg">
+
+		<path stroke="#FFFFFF" fill="none" stroke-width="0.6" d="M1,1 L2,1 C2.75,1 2.75,2 2,2 L1,2 C0.25,2 0.25,1 1,1"/>
+		<path stroke="#FF0000" fill="none" stroke-width="0.2" d="M1,1 L2,1 C2.75,1 2.75,2 2,2 L1,2 C0.25,2 0.25,1 1,1"/>
+
+		<circle r="0.3" fill="#FF0000" stroke="#FFFFFF" stroke-width="0.2" cx="2" cy="1"></circle>
+		<circle r="0.3" fill="#FF0000" stroke="#FFFFFF" stroke-width="0.2" cx="500" cy="900"></circle>
+		<circle r="0.3" fill="#FF0000" stroke="#FFFFFF" stroke-width="0.2" cx="1500" cy="500"></circle>
+		<circle r="0.3" fill="#FF0000" stroke="#FFFFFF" stroke-width="0.2" cx="1500" cy="900"></circle>
+
+	</svg>
