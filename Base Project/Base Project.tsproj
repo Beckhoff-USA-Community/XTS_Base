@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.20">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.21">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C929B002-BF94-48A2-937B-5D20DED8EF3B}">OperationMode</Name>
@@ -3997,6 +3997,14 @@
 				<Text><![CDATA[mcGroupStateSuspended]]></Text>
 				<Enum>8</Enum>
 			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateFollowingMCS]]></Text>
+				<Enum>9</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateFollowingACS]]></Text>
+				<Enum>10</Enum>
+			</EnumInfo>
 		</DataType>
 		<DataType>
 			<Name GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Name>
@@ -4039,7 +4047,9 @@ and will return to Group State Standby when the situation permits.
 5 = ErrorStop	(mcGroupStateErrorStop),
 6 = Homing	(mcGroupStateHoming),
 7 = NotReady	(mcGroupStateNotReady),
-8 = Suspended	(mcGroupStateSuspended)]]></Comment>
+8 = Suspended	(mcGroupStateSuspended),
+9 = FollowingMCS	(mcGroupStateFollowingMCS),
+10 = FollowingACS	(mcGroupStateFollowingACS)]]></Comment>
 				<BitSize>16</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
@@ -5262,7 +5272,7 @@ External Setpoint Generation:
 		<ImageData Id="1015">424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000009393930093939300939393009393930093939300939393009393930093939300939393009393930093939300939393009393930093939300939393009393930093939300d5d4d400d2d0d000cfcdcd00cbc9c900c8c6c600c5c3c300c2bfbf00bebcbc00bbb8b800b8b5b500b4b2b200b1aeae00aeabab00aaa7a7009393930093939300d9d7d700d5d4d400d2d0d000cfcdcd00cbc9c900c8c6c600c5c3c300c2bfbf00bebcbc00bbb8b800b8b5b500b4b2b200b1aeae00aeabab009393930093939300dcdbdb00d9d7d700d5d4d400d2d0d000cfcdcd00cccaca00c8c6c600c5c3c300c2bfbf0084838300918f8f00b8b5b500b4b2b200b1aeae009393930093939300dfdede00dcdbdb00d9d7d700d5d4d4006189e9000852fd006289e500c8c6c600c5c3c300aba9a9005050500071707000b6b3b300b4b2b2009393930093939300e3e1e1008f8f8f004040400040404000034df800004dff00044cf40040404000404040004040400040404000404040007e7d7d00b8b5b5009393930093939300e6e5e500e3e1e100dfdede00dcdbdb00678eec000b54fd00688ee800cfcdcd00cbc9c900b0aeae005151510074727200bcbaba00bbb8b8009393930093939300e9e8e800e6e5e500e3e1e100dfdede00d7d7d9004d73ca00d1d2d400d2d0d000cfcdcd008b8a8a009a989800c5c3c300c2bfbf00bebcbc009393930093939300edecec00e9e8e800e6e5e500e3e1e100436dcd00004dff00436ccc00d5d4d400d2d0d000cfcdcd00cbc9c900c8c6c600c5c3c300c2bfbf009393930093939300f0efef00edecec00e9e8e8007c94cd000d50ec00004dff000e50ea00708ac700d5d4d400d2d0d000cfcdcd00cbc9c900c8c6c600c5c3c3009393930093939300eeeded00f0efef00edecec00597cce00a6b3d400004dff00a1aecf005578ca00d9d7d700d5d4d400d2d0d000cfcdcd00cccaca00c8c6c6009393930093939300ecebeb00eeeded00f0efef00edecec00e9e8e800004dff00e3e1e100dfdede00dcdbdb00d9d7d700d5d4d400d2d0d000cfcdcd00cbc9c9009393930093939300ebe9e900ecebeb00eeeded00f0efef00edecec00004dff00e6e5e500e3e1e100dfdede00dcdbdb00d9d7d700d5d4d400d2d0d000cfcdcd009393930093939300e9e7e700ebe9e900ecebeb00eeeded00f0efef00004dff00e9e8e800e6e5e500e3e1e100dfdede00dcdbdb00d9d7d700d5d4d400d2d0d0009393930093939300e7e5e500e9e7e700ebe9e900ecebeb00eeeded00f0efef00edecec00e9e8e800e6e5e500e3e1e100dfdede00dcdbdb00d9d7d700d5d4d4009393930093939300939393009393930093939300939393009393930093939300939393009393930093939300939393009393930093939300939393009393930093939300</ImageData>
 		<ImageData Id="1016">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000130b0000130b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff8e8582b1a9a5ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc3bebbaea9a659565355524f5755525a58555e5b5862605d6764616d6a6772706d817f7cff00ffff00ffff00ffff00ff7e7875e1dddca1a09e7673707b7875817f7c817f7d85838084827f84817e827e7c52504d777472ff00ffff00ffff00ff4845428b89886a686b7c78769693909a979599959398969497969395918f73706e5e5b595e5b58acaaa7ff00ffff00ff45423f53504d94908dff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff7e7a7764625f989693ff00ffff00ff474441534f4ca5a19eff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff9793915f5c59989592ff00ffff00ff524e4b4d4a484f4d4aff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff565451625f5caaa8a5ff00ffff00ffff00ff464442504e4b55535054524f5653505755525755525655515554515a58555b5956726f6cff00ffff00ffff00ffff00ffff00ff5653504443404946434a48454c49474e4b484e4b49504e4b514e4b757370ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}" TargetNetId="199.4.42.250.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
+	<Project ProjectGUID="{E3FDD453-7143-4CBE-AF2D-E7E762464CFC}" TargetNetId="10.200.166.141.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
 			<Settings MaxCpus="8" NonWinCpus="4" RouterMemory="1073741824" MaxStackSize="256">
 				<Cpu CpuId="6" BaseTime="2500"/>
@@ -39732,7 +39742,7 @@ External Setpoint Generation:
 		</System>
 		<Motion>
 			<NC>
-				<SafTask Priority="8" CycleTime="20000" AmsPort="501" Affinity="#x00000080" IoAtBegin="true" SafTaskInfo="256">
+				<SafTask Priority="8" CycleTime="20000" AmsPort="501" Affinity="#x00000080" IoAtBegin="true" AmsNetId="10.200.166.137.1.1" SafTaskInfo="256">
 					<Name>NC SAF</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -40033,7 +40043,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="PLC1" PrjFilePath="PLC1\PLC1.plcproj" TmcFilePath="PLC1\PLC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{0C1BD277-D8F4-7136-ED7C-D73DE8479701}" TmcPath="PLC1\PLC1.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{50E81325-C29F-8BEF-8016-B9B16553B55E}" TmcPath="PLC1\PLC1.tmc">
 					<Name>PLC1 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">

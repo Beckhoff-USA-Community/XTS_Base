@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_XTS" Id="{87c35dfd-521b-066c-1ce4-3f633fe319d2}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_XTS
 VAR_GENERIC CONSTANT
@@ -159,7 +159,6 @@ CASE State OF
 		
 	XTS_STOPPING:
 		IF System.CompleteMoverList.IsAllMoversHalted THEN
-			System.CompleteMoverList.DisableAll();
 			State			:= XTS_DISABLING_TRACK;
 		END_IF
 		
