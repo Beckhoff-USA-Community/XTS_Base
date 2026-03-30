@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="TcEventLogger" Id="{1ff4e259-fd60-473f-a78b-483e05fc0583}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK TcEventLogger IMPLEMENTS iTraceLogger
+VAR
+	MessagesThisScan : DINT;
+	Message			 : FB_TcMessage;
+	Source			 : FB_TcSourceInfo;
+	CurrentCycle	 : UDINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{284e8ff0-bd65-4676-ad33-c61c35c16bce}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+
+//The return value is not evaluated. For a specific influence, you can also declare the
+
+//methods explicitly and provide additional code there with the standard initialization
+
+//code. You can evaluate the return value.
+METHOD FB_Init : BOOL
+VAR_INPUT
+	bInitRetains   : BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+	bInCopyCode	   : BOOL; // TRUE: the instance will be copied to the copy code afterward (online change)   
+	TracePublisher : iTracePublisher;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Param.ENABLE_TC_EVENT_LOGGER THEN
+	TracePublisher.Subscribe(THIS^);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogMessage" Id="{7eead8af-16f3-4553-8976-37ee622b0a1d}">
+      <Declaration><![CDATA[METHOD LogMessage
+VAR_INPUT
+	Key		  : T_MaxString;
+	Value	  : T_MaxString;
+	SourceId  : UDINT := 0;
+	TimeStamp : ULINT := 0;
+	MessageId : UDINT := 1;
+	Severity  : USINT := 1;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleCount <> CurrentCycle THEN
+	CurrentCycle	 := TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleCount;
+	MessagesThisScan := 0;
+END_IF
+
+IF MessagesThisScan < TO_DINT(TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleTime / 2000) THEN
+	Source.sName := Key;
+	Source.nId	 := SourceId;
+	Message.Create(eventClass	:= TC_EVENT_CLASSES.Trace,
+				   nEventId		:= MessageId,
+				   eSeverity	:= USINT_To_TcEventSeverity(Severity),
+				   ipSourceInfo := Source);
+
+	Message.ipArguments.Clear().AddString(Value);
+	Message.Send(TimeStamp);
+	Message.Release();
+	Source.Clear();
+	MessagesThisScan := MessagesThisScan + 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

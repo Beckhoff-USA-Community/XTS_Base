@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <GVL Name="GVL_Trace" Id="{a08d82f5-c40f-43ad-8071-187f0f8bb6e7}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	Trace		  : Trace<10> := (TraceLevel := Param.TRACE_LEVEL);
+	TcEventLogger : TcEventLogger(Trace);
+	AdsLogger	  : AdsLogger(Trace);
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

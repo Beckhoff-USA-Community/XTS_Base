@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="iTraceArgument" Id="{61b1e66b-4c6d-0789-1082-50edb71ae090}">
+    <Declaration><![CDATA[INTERFACE iTraceArgument EXTENDS iBase]]></Declaration>
+  </Itf>
+</TcPlcObject>

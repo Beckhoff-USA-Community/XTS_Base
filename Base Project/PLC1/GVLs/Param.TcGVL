@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="Param" Id="{673621fc-c806-000b-08ea-fd34161e1bd8}" ParameterList="True">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
@@ -24,6 +24,12 @@ VAR_GLOBAL CONSTANT
 	
 	// statistics weighted average
 	ALPHA_EMA				: LREAL := 0.1;
+    
+    // Tracing
+    TRACE_LOGGERS            : UDINT := 2;       // Amount of Trace Loggers in the system
+    ENABLE_TC_EVENT_LOGGER   : BOOL	 := FALSE;   // Send all trace messages to Tc Event logger
+	ENABLE_ADS_LOGGER	     : BOOL	 := TRUE;    // Send all trace messages to ADS logger
+	TRACE_LEVEL			     : TcEventSeverityExt := TcEventSeverityExt.Warning; // Lowest severity level of traces sent to logger
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

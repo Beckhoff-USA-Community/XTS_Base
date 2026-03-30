@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="iContainTraceArgument" Id="{1e6cdb11-1e0e-0439-0cb0-9fbc821de5d0}">
+    <Declaration><![CDATA[INTERFACE iContainTraceArgument EXTENDS iBase]]></Declaration>
+    <Property Name="Arguments" Id="{b2c6d343-6151-0f57-1d9e-02097bc270d1}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Arguments : iTraceArgument]]></Declaration>
+      <Get Name="Get" Id="{837180dc-4ddb-0457-1c2a-d13856d5b2f1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

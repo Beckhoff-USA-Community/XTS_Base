@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="TcEventSeverityExt" Id="{034a2f54-77a8-4290-937a-2f415f361568}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE TcEventSeverityExt : (
+		Verbose	 := 0,
+		Info	 := 1,
+		Warning	 := 2,
+		Error	 := 3,
+		Critical := 4,
+		Off		 := 5
+	);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>
