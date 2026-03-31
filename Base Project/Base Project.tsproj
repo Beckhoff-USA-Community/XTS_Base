@@ -39737,7 +39737,6 @@ External Setpoint Generation:
 				</Module>
 			</Modules>
 			<TypeSystem>
-				<AdditionalTmcFile Name="XTS_Base_Messages" File="XTS_Base_Messages.tmc"/>
 				<AdditionalTmcFile Name="Trace" File="Trace.tmc"/>
 			</TypeSystem>
 		</System>
@@ -40044,7 +40043,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="PLC1" PrjFilePath="PLC1\PLC1.plcproj" TmcFilePath="PLC1\PLC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{E9DBE330-2B1B-503F-D27C-A7FB563FAADD}" TmcPath="PLC1\PLC1.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{A2CFA0F3-22E4-F734-384A-D64E40CB1628}" TmcPath="PLC1\PLC1.tmc">
 					<Name>PLC1 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="Mediator" Id="{164d51b4-07ec-0e46-0eb0-392af39d7d3a}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mediator
@@ -494,67 +494,62 @@ CompleteMoverList	:= internalMoverList;]]></ST>
     <Method Name="Cyclic" Id="{f2264867-ad86-0c96-3c42-ade0fe3bf9e2}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Cyclic : BOOL
 VAR_INPUT
-	NUM_MOVERS			: USINT;
+	NUM_MOVERS : USINT;
 END_VAR
 
 VAR
-	eMoverIdDetectionMode : MoverIdDetectionMode;
+	eMoverIdDetectionMode  : MoverIdDetectionMode;
 	eMoverIdDetectionState : MoverIdDetectionStateEnum;
 END_VAR
 
 VAR_INST
-	MsgCreate		: FB_TcMessage;
-	
 	// station info state machine support
-	nInfoServerState : INT;
-	PartStartEnd : ARRAY [1..Param.PART_ARRAY_SIZE] OF ARRAY [0..1] OF LREAL;
-	nPartsInTrack1	: UDINT;
-	TrackPartInfo	: ARRAY[1..TcIoXtsEnvironmentParameterList.MaxPartsPerTrack] OF ST_PartInfoItems;
-	PartInfo 		: St_PartInfoItems;
-	nInfoServerStations		: UDINT;
-	nUsableStations			: UDINT;
-	StationTcIo		: I_TcIoXtsInfoServerInfoStation;
-	nStationPartNum	: UDINT;
-	pXtsStation		: POINTER TO Station;
-	PartObjectIds	: ARRAY [1..TcIoXtsEnvironmentParameterList.MaxXtsPartsPerXpu] OF OTCID;
-	StopPositions	: ARRAY [1..TcIoXtsEnvironmentParameterList.MaxXtsStopPositionsPerStation] OF LREAL := [0.0];
-	i				: UDINT;
-	j				: UDINT;
-	workingStation	: UDINT;
-	
+	nInfoServerState	: INT;
+	PartStartEnd		: ARRAY[1..Param.PART_ARRAY_SIZE] OF ARRAY[0..1] OF LREAL;
+	nPartsInTrack1		: UDINT;
+	TrackPartInfo		: ARRAY[1..TcIoXtsEnvironmentParameterList.MaxPartsPerTrack] OF ST_PartInfoItems;
+	PartInfo			: St_PartInfoItems;
+	nInfoServerStations : UDINT;
+	nUsableStations		: UDINT;
+	StationTcIo			: I_TcIoXtsInfoServerInfoStation;
+	nStationPartNum		: UDINT;
+	pXtsStation			: POINTER TO Station;
+	PartObjectIds		: ARRAY[1..TcIoXtsEnvironmentParameterList.MaxXtsPartsPerXpu] OF OTCID;
+	StopPositions		: ARRAY[1..TcIoXtsEnvironmentParameterList.MaxXtsStopPositionsPerStation] OF LREAL := [0.0];
+	i					: UDINT;
+	j					: UDINT;
+	workingStation		: UDINT;
 	XPUDetectionState	: DetectionStateEnum;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// this method contains multiple state machines denoted by the headers below
-
 // update output data
 NumMovers := NUM_MOVERS;
 
 // clear memoized values for recalculation
 internalMotorModuleEnabled.calcComplete := FALSE;
-internalMotorModule48v.calcComplete := FALSE;
-
+internalMotorModule48v.calcComplete		:= FALSE;
 // regenerate the internal mover list when necessary
 IF (internalMoverListRecalc) THEN
 	// this is returned by the property CompleteMoverList, and does not need to be calculated on every call to the property
 	// reset flag
 	internalMoverListRecalc := FALSE;
+
 	// clear the list
 	internalMoverList.UnregisterAll();
 	// re-populate the list
-	FOR i := 1 TO SIZEOF( MoverArray ) / SIZEOF( MoverArray[1] ) DO
+	FOR i := 1 TO SIZEOF(MoverArray) / SIZEOF(MoverArray[1]) DO
 		IF MoverArray[i] <> 0 THEN
-			internalMoverList.RegisterMover( MoverArray[i]^ );
+			internalMoverList.RegisterMover(MoverArray[i]^);
 		END_IF
 	END_FOR
 END_IF
 
 // Handle all project cyclic calls
-
 FOR i := 1 TO Param.MAX_MOVERS DO
 	IF MoverArray[i] <> 0 THEN
 		// handle cyclic calls
-		MoverArray[i]^.Cyclic( GROUP_REF );			// could make this ca group addition clener
+		MoverArray[i]^.Cyclic(GROUP_REF); // could make this ca group addition clener
 		MoverArray[i]^.AxisReference.ReadStatus();
 		MoverArray[i]^.MoverIndex := i;
 	END_IF
@@ -579,118 +574,115 @@ FOR i := 0 TO Param.NUM_TRACKS DO
 END_FOR
 
 // *************************************************************************
-// environment state machine
-// *************************************************************************
 
+// environment state machine
+
+// *************************************************************************
 CASE nEnvironmentState OF
-	0:	// ----------------------------------------- Enable Init Items
-	
+	0: // ----------------------------------------- Enable Init Items
+
 		// the procedure for initializing the XTS environment has changed
+
 		// this step previously held configuration values for the environment
+
 		// it is left as a placeholder for consistency with additional steps below
-		
 		// Next step
-		nEnvironmentState	:= 1;
-		
-	1:	// ------------------------------------------ Init Environment
-		
+		nEnvironmentState := 1;
+
+	1: // ------------------------------------------ Init Environment
 		// Start init
 		IF fbXtsEnvironment.Init(TRUE) THEN
 			// stop init
 			fbXtsEnvironment.Init(FALSE);
-			
+
 			// next step
-			nEnvironmentState	:= 2;
+			nEnvironmentState := 2;
 		END_IF
-		
-	2:	// ------------------------------------------ Check for success
-	
+
+	2: // ------------------------------------------ Check for success
 		// Check IsInitialized property
 		IF fbXtsEnvironment.P_IsInitialized THEN
 			// assign to vars
-			internalEnvironment 	:= fbXtsEnvironment;
+			internalEnvironment		:= fbXtsEnvironment;
 			internalXPU				:= fbXtsEnvironment.XpuTcIo(1);
 			internalInfoServerCount := fbXtsEnvironment.P_InfoServerCount;
 			// info server may not be present in hand-built XTS configurations
 			IF (internalInfoServerCount > 0) THEN
-				internalInfoServer	:= fbXtsEnvironment.InfoServerTcIo(1);
-				nEnvironmentState := 3;
+				internalInfoServer := fbXtsEnvironment.InfoServerTcIo(1);
+				nEnvironmentState  := 3;
 			ELSE
 				// skip info server intializiation
 				nEnvironmentState := 6;
 			END_IF;
 		END_IF
 
-	3:	// ------------------------------------------ Get OTCID
-	
+	3: // ------------------------------------------ Get OTCID
 		IF internalEnvironment.GetInfoServerOids(TRUE) THEN
 			internalEnvironment.GetInfoServerOids(FALSE);
 			internalInfoServerOTCID := internalEnvironment.P_InfoServerOids[1];
-			nEnvironmentState := 4;
+			nEnvironmentState		:= 4;
 		END_IF;
-		
-	4:	// ------------------------------------------- Init info server
-		
+
+	4: // ------------------------------------------- Init info server
 		// Start init
 		IF internalInfoServer.Init(TRUE, internalInfoServerOTCID) THEN
 			// stop init
 			internalInfoServer.Init(FALSE, internalInfoServerOTCID);
-			
+
 			// next step
-			nEnvironmentState	:= 5;
+			nEnvironmentState := 5;
 		END_IF
-	5:	// ------------------------------------------ Check for success
-	
+
+	5: // ------------------------------------------ Check for success
 		// Check IsInitialized property
 		IF internalInfoServer.P_IsInitialized THEN
 			// next step
-			nEnvironmentState	:= 6;
+			nEnvironmentState := 6;
 		END_IF
-		
-	6:	// ------------------------------------------- Init Visu
-	
-		fbXtsEnvironmentVisu( ipTcIoXtsEnvironment := fbXtsEnvironment );
-		
-		// next step
-		nEnvironmentState	:= 7;
-		
-	7:	// ------------------------------------------- Init done
 
+	6: // ------------------------------------------- Init Visu
+		fbXtsEnvironmentVisu(ipTcIoXtsEnvironment := fbXtsEnvironment);
+
+		// next step
+		nEnvironmentState := 7;
+
+	7: // ------------------------------------------- Init done
 		fbXtsEnvironmentVisu.Cycle();
-		
 END_CASE
 
 // *************************************************************************
+
 // mover 1 detection state machine
+
 // *************************************************************************
 
 // monitor for the group reset flag and act on it
-CASE internalM1DetectState OF 
-	0:	// wait for flag
+CASE internalM1DetectState OF
+	0: // wait for flag
 		IF internalM1DetectFlag THEN
 			// clear previous error flag
-			internalMover1Error		:= FALSE;
-			internalM1DetectState	:= 10;
+			internalMover1Error	  := FALSE;
+			internalM1DetectState := 10;
 		END_IF
-		
-	10:	// wait for envrionment
+
+	10: // wait for envrionment
 		IF EnvironmentIsReady AND_THEN NOT THIS^.Mover1DetectionComplete THEN
- 			internalM1DetectState 	:= 20;
+			internalM1DetectState := 20;
 		END_IF
 
-	20:	// Trigger mover redetection
+	20: // Trigger mover redetection
 		fbXtsEnvironment.XpuTcIo(1).TriggerRedetection();
- 		internalM1DetectState 		:= 30;
+		internalM1DetectState := 30;
 
-	30:	// Monitor mover redection status
-		XPUDetectionState			:= fbXtsEnvironment.XpuTcIo(1).GetDetectionState();
+	30: // Monitor mover redection status
+		XPUDetectionState := fbXtsEnvironment.XpuTcIo(1).GetDetectionState();
 		IF XPUDetectionState = DetectionStateEnum.Succeeded THEN
-			internalM1DetectState 	:= 40;
+			internalM1DetectState := 40;
 		ELSIF XPUDetectionState > DetectionStateEnum.Succeeded THEN
-			internalM1DetectState	:= 900;
+			internalM1DetectState := 900;
 		END_IF
 
-		(*	DetectionStateEnum: NotStarted:=0, 
+	(*	DetectionStateEnum: NotStarted:=0, 
 								Running:=1,
 								Succeeded:=2,
 								FailedDueToEnabledMovers:=3,
@@ -698,8 +690,7 @@ CASE internalM1DetectState OF
 								FailedNotEnoughMovers:=5,
 								FailedNoTracksIncluded:=6,
 								FailedTooManyActiveMovers:=7) 	*)
-
-	40:	// check for mover 1 mode
+	40: // check for mover 1 mode
 		eMoverIdDetectionMode := XPU.GetMoverIdDetectionMode();
 		IF (eMoverIdDetectionMode = MoverIdDetectionMode.Mover1 OR eMoverIdDetectionMode = MoverIdDetectionMode.MultipleMover1) THEN
 			// mover 1 detection sequence
@@ -708,15 +699,16 @@ CASE internalM1DetectState OF
 			// no detection required
 			internalM1DetectState := 200;
 		END_IF
-		
+
 	100: // check if mover 1 id is avtive
 		eMoverIdDetectionState := XPU.GetMoverIdDetectionState();
 		IF (eMoverIdDetectionState <> MoverIdDetectionStateEnum.Valid) THEN
 			// start the detection
 			XPU.TriggerMoverIdDetection();
 		END_IF;
+
 		internalM1DetectState := 110;
-		
+
 	110: // wait for group detection results
 		eMoverIdDetectionState := XPU.GetMoverIdDetectionState();
 		IF eMoverIdDetectionState = MoverIdDetectionStateEnum.Error THEN
@@ -726,182 +718,173 @@ CASE internalM1DetectState OF
 			// detection complete
 			internalM1DetectState := 200;
 		END_IF;
-				
-	
+
 	200: // set flags and clean up
 		// flag is read directly from XPU in Mover1DetectionComplete property
 		internalM1DetectState := 0;
-	
+
 	900:
 		// error state
 		// set error flag for movers to respond
 		internalMover1Error := TRUE;
+
 		// send message
-		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.Mover1Detection,0 );
-		MsgCreate.ipArguments.Clear();
-		MsgCreate.Send(0);
+		Trace.Error('Mover detection', 'Mover 1 detection Error!');
+
 		// return to idle
 		internalM1DetectState := 0;
-		
-		
 END_CASE
 
 // reset flag always
 internalM1DetectFlag := FALSE;
 
 // *************************************************************************
+
 // group enable state machine
+
 // *************************************************************************
 
 // get group status for property
 fbGroupStatus.Enable := TRUE;
-fbGroupStatus( AxesGroup := GROUP_REF );
-
+fbGroupStatus(AxesGroup := GROUP_REF);
 CASE internalEnableGroupState OF
-	0:	// wait for flag 
+	0: // wait for flag 
 		IF internalEnableGroupFlag AND NOT internalEnabled THEN
 			internalEnableGroupState := 10;
-			Error := FALSE;
+			Error					 := FALSE;
 		END_IF;
 
 	10: // ------------------------------------------------------- check the status of the group
-	
 		IF fbGroupStatus.Valid AND fbGroupStatus.GroupErrorStop THEN
-			fbGroupReset.Execute		:= TRUE;
+			fbGroupReset.Execute := TRUE;
 		ELSIF fbGroupStatus.Valid AND fbGroupStatus.GroupDisabled THEN
-			fbGroupReset.Execute		:= FALSE;
-			internalEnableGroupState	:= 20;
-		ELSIF fbGroupStatus.Valid AND ( fbGroupStatus.GroupStandby OR fbGroupStatus.GroupMoving ) THEN
-			fbGroupReset.Execute		:= FALSE;
-			internalEnableGroupState	:= 100;
+			fbGroupReset.Execute	 := FALSE;
+			internalEnableGroupState := 20;
+		ELSIF fbGroupStatus.Valid AND (fbGroupStatus.GroupStandby OR fbGroupStatus.GroupMoving) THEN
+			fbGroupReset.Execute	 := FALSE;
+			internalEnableGroupState := 100;
 		END_IF
-		
+
 		IF fbGroupStatus.Error THEN
-			fbGroupReset.Execute		:= FALSE;
-			ErrorID						:= fbGroupStatus.ErrorId;
-			ErrorOrigin					:= CONCAT( internalInstancePath, '.fbGroupStatus' );
-			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupStatus,0 );
-			MsgCreate.ipArguments.Clear().AddString(THIS^.internalInstancePath).AddUDINT(THIS^.ErrorID);
-			internalEnableGroupState	:= 900;
+			fbGroupReset.Execute := FALSE;
+			ErrorID				 := fbGroupStatus.ErrorId;
+			ErrorOrigin			 := CONCAT(internalInstancePath, '.fbGroupStatus');
+			Trace.Error(THIS^.internalInstancePath, ConcatEx('.fbGroupStatus Error ', TO_STRING(THIS^.ErrorID)));
+			internalEnableGroupState := 900;
 		ELSIF fbGroupReset.Error THEN
-			fbGroupReset.Execute		:= FALSE;
-			ErrorID						:= fbGroupReset.ErrorId;
-			ErrorOrigin					:= CONCAT( internalInstancePath, '.fbGroupReset' );
-			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupReset,0 );
-			MsgCreate.ipArguments.Clear().AddString(THIS^.internalInstancePath).AddUDINT(THIS^.ErrorID);
-			internalEnableGroupState	:= 900;
+			fbGroupReset.Execute := FALSE;
+			ErrorID				 := fbGroupReset.ErrorId;
+			ErrorOrigin			 := CONCAT(internalInstancePath, '.fbGroupReset');
+			Trace.Error(THIS^.internalInstancePath, ConcatEx('.fbGroupReset Error ', TO_STRING(THIS^.ErrorID)));
+			internalEnableGroupState := 900;
 		END_IF
-		
-	
+
 	20: // ------------------------------------------------------- enable the group
-		
-		fbGroupEnable.Execute			:= TRUE;
-		
+		fbGroupEnable.Execute := TRUE;
 		IF fbGroupEnable.Done AND GROUP_REF.NcToPlc.CA.Common.GroupStatus.State = mcGroupStateStandby AND fbGroupStatus.GroupErrorStop = FALSE THEN
-			fbGroupEnable.Execute		:= FALSE;
-			internalEnableGroupFlag 	:= FALSE;
-			internalEnableGroupState	:= 100;
+			fbGroupEnable.Execute	 := FALSE;
+			internalEnableGroupFlag	 := FALSE;
+			internalEnableGroupState := 100;
 		ELSIF fbGroupEnable.Error THEN
-			fbGroupEnable.Execute		:= FALSE;
-			ErrorID						:= fbGroupEnable.ErrorId;
-			ErrorOrigin					:= CONCAT( internalInstancePath, '.fbGroupEnable' );
-			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.fbGroupEnable,0 );
-			MsgCreate.ipArguments.Clear().AddString(THIS^.internalInstancePath).AddUDINT(THIS^.ErrorID);
-			MsgCreate.Send(0);
-			internalEnableGroupState	:= 900;
+			fbGroupEnable.Execute := FALSE;
+			ErrorID				  := fbGroupEnable.ErrorId;
+			ErrorOrigin			  := CONCAT(internalInstancePath, '.fbGroupEnable');
+			Trace.Error(THIS^.internalInstancePath, ConcatEx('.fbGroupEnable Error ', TO_STRING(THIS^.ErrorID)));
+			internalEnableGroupState := 900;
 		END_IF
-		
+
 	100: // clean up flags and rewind
-		internalEnabled 				:= TRUE;
-		internalEnableGroupState 		:= 0;
-		
+		internalEnabled			 := TRUE;
+		internalEnableGroupState := 0;
+
 	900: // error
-		Error 							:= TRUE;
-		internalEnabled 				:= FALSE;
+		Error			:= TRUE;
+		internalEnabled := FALSE;
 		IF NOT internalEnableGroupFlag THEN
-			Error						:= FALSE;
-			ErrorID						:= 0;
-			ErrorOrigin					:= '';
-			internalEnableGroupState	:= 0;
+			Error					 := FALSE;
+			ErrorID					 := 0;
+			ErrorOrigin				 := '';
+			internalEnableGroupState := 0;
 		END_IF
-		
 END_CASE
 
 internalEnableGroupFlag := FALSE;
-
 // catch error flag and reset custom status bit
 IF (fbGroupStatus.GroupErrorStop AND internalEnableGroupState = 0 AND internalEnabled) THEN
-	Error := TRUE;
+	Error			:= TRUE;
 	internalEnabled := FALSE;
 END_IF
 
 // cyclic calls
-fbGroupEnable( AxesGroup := GROUP_REF );
-fbGroupReset( AxesGroup := GROUP_REF );
-fbGroupStop( AxesGroup := GROUP_REF );
-
+fbGroupEnable(AxesGroup := GROUP_REF);
+fbGroupReset(AxesGroup := GROUP_REF);
+fbGroupStop(AxesGroup := GROUP_REF);
 // always clear the triggering flag
+
 //internalEnableGroupFlag := FALSE;
 
 // *************************************************************************
+
 // station info state machine
+
 // *************************************************************************
 
 // populate TcCom XTS station objects with positions and part numbers from code for easier visibility in simulation
 
 // check for environment
 IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS THEN
-	
 	CASE nInfoServerState OF
-		
-	// get number of parts via track 1 and store start/end positions in 
+		// get number of parts via track 1 and store start/end positions in 
 		0:
 			// check for defined track in first position
 			IF (internalXPU.P_TrackCount >= 1) THEN
 				nInfoServerState := 10;
 			END_IF
-			
+
 		10:
 			// get info about array of parts
-			nPartsInTrack1 := internalXPU.TrackTcIo(1).GetPartCount();
+			nPartsInTrack1	 := internalXPU.TrackTcIo(1).GetPartCount();
 			nInfoServerState := 20;
-			
+
 		20:
 			// get info for each part start and end position (or max size of array)
 			TrackPartInfo := internalXPU.TrackTcIo(1).GetPartInfoItems();
 			FOR i := 1 TO MIN(nPartsInTrack1, Param.PART_ARRAY_SIZE) DO
-				PartInfo := TrackPartInfo[i];
+				PartInfo		   := TrackPartInfo[i];
 				PartStartEnd[i][0] := PartInfo.fOffset;
 				PartStartEnd[i][1] := PartInfo.fLength + PartInfo.fOffset;
 			END_FOR
+
 			nInfoServerState := 30;
 
 		30:
 			// get number of stations
-			nInfoServerStations := internalInfoServer.GetInfoStationCount() ;
+			nInfoServerStations := internalInfoServer.GetInfoStationCount();
 			nInfoServerStations := internalINfoServer.P_InfoStationCount;
-			nInfoServerState := 40;
-			
+			nInfoServerState	:= 40;
+
 		40:
 			// calculate minimum number of stations that can be set up
 			nUsableStations := MIN(nInfoServerStations, Param.MAX_STATIONS);
-			workingStation := 0;
+			workingStation	:= 0;
 			FOR i := 1 TO nUsableStations DO
 				workingStation := workingStation + 1;
 				// in case a sparse Station array is used, only detect stations that have a position value <> 0
 				WHILE (workingStation < Param.MAX_STATIONS AND_THEN (StationArray[workingStation] = 0 OR_ELSE StationArray[workingStation]^.Position = 0)) DO
 					workingStation := workingStation + 1;
 				END_WHILE
+
 				// check for valid working station, and exit this for loop iteration if we're outside it
 				IF workingStation >= Param.MAX_STATIONS THEN
 					EXIT;
 				END_IF
+
 				// get XTS_Base Station pointer
 				pXtsStation := StationArray[workingStation];
 				// test for valid pointer (station has been through the Mediator.AddStation method)
 				IF (pXtsStation <> 0) THEN
 					// make sure the position is not zero (hides stations that probably aren't used)
-						IF (pXtsStation^.Position <> 0.0) THEN
+					IF (pXtsStation^.Position <> 0.0) THEN
 						// calculate part number
 						nStationPartNum := 0;
 						FOR j := 1 TO nPartsInTrack1 DO
@@ -909,9 +892,10 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 								nStationPartNum := j;
 							END_IF
 						END_FOR
+
 						// test for found part number
 						IF (nStationPartNum > 0) THEN
-						// get station
+							// get station
 							StationTcIO := internalInfoServer.InfoStationTcIo(UDINT_TO_UINT(i));
 							// test for valid station
 							IF (stationTcIO <> 0) THEN
@@ -926,8 +910,8 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 									StationTcIO.SetStartPositionOnPart(pXtsStation^.Position - PartStartEnd[nStationPartNum][0]);
 									StationTcIO.SetEndPositionOnPart(pXtsStation^.Position - PartStartEnd[nStationPartNum][0]);
 									StationTcIo.SetStopPositions(StopPositions);
-									StationTcIo.SetStationColor(16#FFEF0000);	// Beckhoff red
-									StationTcIO.SetIsEnabled(TRUE);	// v4.x "dims" the color of disabled stations
+									StationTcIo.SetStationColor(16#FFEF0000); // Beckhoff red
+									StationTcIO.SetIsEnabled(TRUE);			  // v4.x "dims" the color of disabled stations
 									StationTcIO.SetDescription(pXtsStation^.Description);
 								END_IF;
 							END_IF;
@@ -935,6 +919,7 @@ IF THIS^.InfoServerIsReady AND internalEnabled AND Param.AUTO_POPULATE_STATIONS 
 					END_IF;
 				END_IF;
 			END_FOR
+
 			// transition to non-existent state. This routine only runs one time at the first enable signal.
 			nInfoServerState := 50;
 	END_CASE
