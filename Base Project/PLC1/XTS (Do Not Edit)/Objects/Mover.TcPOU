@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
@@ -713,31 +713,16 @@ Disable		:= THIS^;
     </Method>
     <Method Name="Enable" Id="{77bc5ebc-ace3-48eb-8e85-e45bc80ac98b}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Enable : iMover
-VAR_INPUT
-END_VAR
-VAR
-END_VAR
-VAR_INST
-	MsgCreate	: FB_TcMessage;	
-END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-IF LocalVars.State = MV_IDLE THEN
-
+        <ST><![CDATA[IF LocalVars.State = MV_IDLE THEN
 	// Sets an internal flag to advance the state machine
-	LocalVars.Enable		:= TRUE;
-	
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverEnable,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
-	MsgCreate.Send(0);
-
+	LocalVars.Enable := TRUE;
+	Trace.Verbose(THIS^.InstancePath, ConcatEx('Enable command issued. Source: ', THIS^.SourceInstancePath));
 END_IF;
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-Enable := THIS^;
-]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+Enable					 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="GroupStop" Id="{19a65925-9b39-4de9-ab16-7733d66c5fd4}" FolderPath="Methods\">

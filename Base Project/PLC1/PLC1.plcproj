@@ -144,13 +144,16 @@
     <Compile Include="XTS %28Do Not Edit%29\Objects\Zone.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\ConcatEx.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS %28Do Not Edit%29\Trace\DUT\TcEventSeverityExt.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS %28Do Not Edit%29\Trace\GVL_Trace.TcGVL">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XTS %28Do Not Edit%29\Trace\Interface\I_Trace.TcIO">
+    <Compile Include="XTS %28Do Not Edit%29\Trace\Interface\iTrace.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS %28Do Not Edit%29\Trace\Trace.TcPOU">

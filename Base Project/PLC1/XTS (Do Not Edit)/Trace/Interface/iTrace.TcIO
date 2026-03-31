@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <Itf Name="I_Trace" Id="{aa4dce86-2718-4485-96d9-33a29ceb0de2}">
-    <Declaration><![CDATA[INTERFACE I_Trace
+  <Itf Name="iTrace" Id="{aa4dce86-2718-4485-96d9-33a29ceb0de2}">
+    <Declaration><![CDATA[INTERFACE iTrace
 ]]></Declaration>
     <Method Name="Critical" Id="{5cea81a7-afc0-4ea7-965c-6164c1884d09}">
       <Declaration><![CDATA[METHOD Critical

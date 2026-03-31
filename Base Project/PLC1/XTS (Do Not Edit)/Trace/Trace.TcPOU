@@ -4,7 +4,7 @@
     <Declaration><![CDATA[FUNCTION_BLOCK Trace
 VAR_GENERIC CONSTANT
 	MaxCount : UDINT := 10;
-END_VAR IMPLEMENTS iTracePublisher, I_Trace
+END_VAR IMPLEMENTS iTracePublisher, iTrace
 VAR
 	Loggers : ARRAY[0..MaxCount] OF iTraceLogger;
 	_TraceLevel : TcEventSeverityExt := TcEventSeverityExt.Warning;

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="ConcatEx" Id="{2e1c7ef2-eb36-033c-0c4a-c06e9e3fdcec}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION ConcatEx : T_MaxString
+VAR_INPUT
+	String1 : T_MaxString;
+	String2 : T_MaxString := '';
+	String3 : T_MaxString := '';
+	String4 : T_MaxString := '';
+	String5 : T_MaxString := '';
+	String6 : T_MaxString := '';
+END_VAR
+
+VAR
+	ReturnString : T_MaxString;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ReturnString := String1;
+IF String2 <> '' THEN
+	ReturnString := CONCAT(ReturnString, String2);
+END_IF
+
+IF String3 <> '' THEN
+	ReturnString := CONCAT(ReturnString, String3);
+END_IF
+
+IF String4 <> '' THEN
+	ReturnString := CONCAT(ReturnString, String4);
+END_IF
+
+IF String5 <> '' THEN
+	ReturnString := CONCAT(ReturnString, String5);
+END_IF
+
+IF String6 <> '' THEN
+	ReturnString := CONCAT(ReturnString, String6);
+END_IF
+
+ConcatEx := ReturnString;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

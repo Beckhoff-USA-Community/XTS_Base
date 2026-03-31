@@ -48,13 +48,13 @@ END_IF
 IF MessagesThisScan < TO_DINT(TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleTime / 2000) THEN
 	CASE Severity OF
 		0, 1:
-			ADSLOGSTR(ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_HINT, Concat(Value, ': %s'), Key);
+			ADSLOGSTR(ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_HINT, Key, Concat(Value, ': %s'));
 
 		2:
-			ADSLOGSTR(ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_WARN, Concat(Value, ': %s'), Key);
+			ADSLOGSTR(ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_WARN, Key, Concat(Value, ': %s'));
 
 		3, 4:
-			ADSLOGSTR(ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_ERROR, Concat(Value, ': %s'), Key);
+			ADSLOGSTR(ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_ERROR, Key, Concat(Value, ': %s'));
 	END_CASE
 
 	MessagesThisScan := MessagesThisScan + 1;

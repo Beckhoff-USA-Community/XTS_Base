@@ -27,9 +27,9 @@ VAR_GLOBAL CONSTANT
     
     // Tracing
     TRACE_LOGGERS            : UDINT := 2;       // Amount of Trace Loggers in the system
-    ENABLE_TC_EVENT_LOGGER   : BOOL	 := FALSE;   // Send all trace messages to Tc Event logger
-	ENABLE_ADS_LOGGER	     : BOOL	 := TRUE;    // Send all trace messages to ADS logger
-	TRACE_LEVEL			     : TcEventSeverityExt := TcEventSeverityExt.Warning; // Lowest severity level of traces sent to logger
+    ENABLE_TC_EVENT_LOGGER   : BOOL	 := TRUE;    // Send all trace messages to Tc Event logger
+	ENABLE_ADS_LOGGER	     : BOOL	 := FALSE;   // Send all trace messages to ADS logger
+	TRACE_LEVEL			     : TcEventSeverityExt := TcEventSeverityExt.Verbose; // Lowest severity level of traces sent to logger
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
