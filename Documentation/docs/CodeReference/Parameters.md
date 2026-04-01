@@ -31,3 +31,17 @@ The `MAX_` parameters define the absolute maximum number of any of these objects
 ## MAX_ Parameters Example
 
 An example of declaring additional objects that consume space under the `MAX_` parameter limits is available in [Custom Objects](../Examples/CustomObjects.md)
+
+## Trace Parameters
+
+These parameters configure the tracing and logging system. They can be found alongside the other parameters in `GVL\Param`.
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `TRACE_LEVEL` | `TcEventSeverityExt` | `Verbose` | Minimum severity level forwarded to loggers. Messages below this level are silently discarded. See [severity levels](Diagnostics/Trace.md#severity-levels). |
+| `ENABLE_TC_EVENT_LOGGER` | `BOOL` | `TRUE` | Routes trace messages to the TwinCAT Event Logger (visible in the TwinCAT EventLog view). |
+| `ENABLE_ADS_LOGGER` | `BOOL` | `FALSE` | Routes trace messages to the ADS output log (visible in the TwinCAT XAE output window). |
+| `TRACE_LOGGERS` | `UDINT` | `2` | Maximum number of logger back-ends that can be subscribed simultaneously to the `Trace` function block. Increase this if custom loggers are added beyond `TcEventLogger` and `AdsLogger`. |
+
+!!! Note
+    `TRACE_LEVEL` controls what gets logged across **all** back-ends. Setting it to `Warning` suppresses `Verbose` and `Info` messages regardless of which loggers are enabled. Set it to `Off` to silence all output.
