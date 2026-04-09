@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="PositionTrigger" Id="{e261b23c-fca2-43e5-b385-fb66bc9fcaf5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK PositionTrigger EXTENDS Objective
 
@@ -230,7 +230,7 @@ END_VAR
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 IF ( newCallTime - lastCallMuteCurrent ) > 1 AND internalCurrentMover <> 0 THEN
 	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.PositionTriggerMuteCurrent,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDint(internalCurrentMover^.IdentInGroup);
+	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDint(internalCurrentMover^.MoverIndex);
 	MsgCreate.Send(0);
 END_IF
 lastCallMuteCurrent := newCallTime;
