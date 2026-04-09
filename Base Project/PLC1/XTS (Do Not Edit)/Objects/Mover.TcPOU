@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
@@ -21,7 +21,7 @@ VAR_OUTPUT
 	ErrorOrigin		: STRING;		// error source, in case of errored internal function block
 	
 	InGroup			: BOOL;			// Mover is currently grouped for CA
-	IdentInGroup	: UDINT;		// IDX within group, for knowing which movers are adjacent
+	IdentInGroup	: IDENT_IN_GROUP_REF;		// IDX within group, for knowing which movers are adjacent
 	
 	AxisReference	: AXIS_REF;		// Motion link variable. Left as output so the link can be made directly, and accessed by external code
 	
@@ -290,7 +290,7 @@ CASE LocalVars.State OF
 		IF LocalVars.fbAddToGroup.Done AND Mediator.GroupAxesCount = Mediator.NumMovers THEN
 			// all axes added to group, move to next state
 			InGroup						:= TRUE;
-			IdentInGroup				:= AxisReference.NcToPlc.AxisId - 1;
+			IdentInGroup				:= LocalVars.fbAddToGroup.IdentInGroup	;
 			LocalVars.fbAddToGroup.Execute		:= FALSE;
 			LocalVars.State				:= MV_ENABLEGROUP;
 		ELSIF LocalVars.fbAddToGroup.Error THEN
@@ -486,7 +486,7 @@ CASE LocalVars.State OF
 		ErrorID	:= 0;
 		
 		LocalVars.fbRemoveFromGroup.Execute			:= TRUE;
-		LocalVars.fbRemoveFromGroup.IdentInGroup		:= UDINT_TO_IDENTINGROUP( IdentInGroup );
+		LocalVars.fbRemoveFromGroup.IdentInGroup		:= IdentInGroup;
 		
 		IF LocalVars.fbRemoveFromGroup.Done THEN
 			LocalVars.fbRemoveFromGroup.Execute		:= FALSE;
