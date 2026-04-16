@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
@@ -21,7 +21,7 @@ VAR_OUTPUT
 	ErrorOrigin		: STRING;		// error source, in case of errored internal function block
 	
 	InGroup			: BOOL;			// Mover is currently grouped for CA
-	IdentInGroup	: UDINT;		// IDX within group, for knowing which movers are adjacent
+	IdentInGroup	: IDENT_IN_GROUP_REF;		// IDX within group, for knowing which movers are adjacent
 	
 	AxisReference	: AXIS_REF;		// Motion link variable. Left as output so the link can be made directly, and accessed by external code
 	
@@ -275,10 +275,10 @@ CASE LocalVars.State OF
 		// wait for done and secondary check of number of movers (fb may report done before NC is done with high mover counts)
 		IF LocalVars.fbAddToGroup.Done AND Mediator.GroupAxesCount = Mediator.NumMovers THEN
 			// all axes added to group, move to next state
-			InGroup						   := TRUE;
-			IdentInGroup				   := AxisReference.NcToPlc.AxisId - 1;
-			LocalVars.fbAddToGroup.Execute := FALSE;
-			LocalVars.State				   := MV_ENABLEGROUP;
+			InGroup						:= TRUE;
+			IdentInGroup				:= LocalVars.fbAddToGroup.IdentInGroup	;
+			LocalVars.fbAddToGroup.Execute		:= FALSE;
+			LocalVars.State				:= MV_ENABLEGROUP;
 		ELSIF LocalVars.fbAddToGroup.Error THEN
 			// error with add to group fb
 			LocalVars.fbAddToGroup.Execute := FALSE;
@@ -465,18 +465,21 @@ CASE LocalVars.State OF
 			LocalVars.fbHaltCA.Execute := FALSE;
 			LocalVars.State			   := MV_REMOVEFROMGROUP;
 		ELSIF LocalVars.fbHaltCA.Error THEN
-			ErrorID			:= LocalVars.fbHaltCA.ErrorID;
-			ErrorOrigin		:= CONCAT(InstancePath, '.fbHalt');
-			LocalVars.State := MV_ERROR;
-		END_IF
-
-	MV_REMOVEFROMGROUP: // ---------------------------------------------------- remove mover from CA group
-		Ready									 := FALSE;
-		Busy									 := TRUE;
-		Error									 := FALSE;
-		ErrorID									 := 0;
-		LocalVars.fbRemoveFromGroup.Execute		 := TRUE;
-		LocalVars.fbRemoveFromGroup.IdentInGroup := UDINT_TO_IDENTINGROUP(IdentInGroup);
+			ErrorID					:= LocalVars.fbHaltCA.ErrorID;
+			ErrorOrigin				:= CONCAT( InstancePath, '.fbHalt' );
+			LocalVars.State			:= MV_ERROR;
+		END_IF	
+		
+	MV_REMOVEFROMGROUP:	// ---------------------------------------------------- remove mover from CA group
+	
+		Ready	:= FALSE;
+		Busy	:= TRUE;
+		Error	:= FALSE;
+		ErrorID	:= 0;
+		
+		LocalVars.fbRemoveFromGroup.Execute			:= TRUE;
+		LocalVars.fbRemoveFromGroup.IdentInGroup		:= IdentInGroup;
+		
 		IF LocalVars.fbRemoveFromGroup.Done THEN
 			LocalVars.fbRemoveFromGroup.Execute := FALSE;
 			InGroup								:= FALSE;

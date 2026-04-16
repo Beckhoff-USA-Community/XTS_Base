@@ -3997,14 +3997,6 @@
 				<Text><![CDATA[mcGroupStateSuspended]]></Text>
 				<Enum>8</Enum>
 			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateFollowingMCS]]></Text>
-				<Enum>9</Enum>
-			</EnumInfo>
-			<EnumInfo>
-				<Text><![CDATA[mcGroupStateFollowingACS]]></Text>
-				<Enum>10</Enum>
-			</EnumInfo>
 		</DataType>
 		<DataType>
 			<Name GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Name>
@@ -4047,9 +4039,7 @@ and will return to Group State Standby when the situation permits.
 5 = ErrorStop	(mcGroupStateErrorStop),
 6 = Homing	(mcGroupStateHoming),
 7 = NotReady	(mcGroupStateNotReady),
-8 = Suspended	(mcGroupStateSuspended),
-9 = FollowingMCS	(mcGroupStateFollowingMCS),
-10 = FollowingACS	(mcGroupStateFollowingACS)]]></Comment>
+8 = Suspended	(mcGroupStateSuspended)]]></Comment>
 				<BitSize>16</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>

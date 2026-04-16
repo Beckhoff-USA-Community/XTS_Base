@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="PositionTrigger" Id="{e261b23c-fca2-43e5-b385-fb66bc9fcaf5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK PositionTrigger EXTENDS Objective
@@ -223,9 +223,9 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// message for debugging as this function is typically called when acting on a position trigger
-newCallTime := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
-IF (newCallTime - lastCallMuteCurrent) > 1 AND internalCurrentMover <> 0 THEN
-	Trace.Verbose(THIS^.InstancePath, ConcatEx('MuteCurrent command issued. Mover Number = ', TO_STRING(internalCurrentMover^.IdentInGroup)));
+newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
+IF ( newCallTime - lastCallMuteCurrent ) > 1 AND internalCurrentMover <> 0 THEN
+	Trace.Verbose(THIS^.InstancePath, ConcatEx('MuteCurrent command issued. Mover Number = ', TO_STRING(internalCurrentMover^.MoverIndex)));
 END_IF
 
 lastCallMuteCurrent			:= newCallTime;
