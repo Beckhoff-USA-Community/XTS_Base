@@ -17,6 +17,7 @@ VAR
 	
 	Trig0MoverIndex			: UDINT;
 	Trig0MoverPosLag		: LREAL;
+	MyButton1				: Bool; //move to hold ball, pree force, post recovery. Meant to be used while the ball is being held between the grippers for loading
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -251,7 +252,9 @@ nextStation := 4;]]></ST>
 		here down to the short line break that looks like this: // ============= *)
 	
         // Station 0 Logic
-        ]]></ST>
+        IF MyButton1 AND XTS.Station[0].MoverInPosition AND XTS.Station[1].MoverInPosition THEN
+			XTS.Mover[2].MoveToStation(XTS.Station[2]);
+		END_IF]]></ST>
       </Implementation>
     </Action>
   </POU>
