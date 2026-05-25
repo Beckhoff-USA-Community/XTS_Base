@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="Param" Id="{673621fc-c806-000b-08ea-fd34161e1bd8}" ParameterList="True">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
 	// The following should be set to a value **equal to or greater than** the number of objects needed
-	MAX_MOVERS   			: USINT := 100;	// Movers
-	MAX_POSITIONTRIGGERS	: USINT := 100;	// Position triggers
-	MAX_STATIONS			: USINT := 100;	// Stations
-	MAX_ZONES				: USINT := 100;	// Zones
+	MAX_MOVERS   			: USINT := 10;	// Movers
+	MAX_POSITIONTRIGGERS	: USINT := 10;	// Position triggers
+	MAX_STATIONS			: USINT := 10;	// Stations
+	MAX_ZONES				: USINT := 10;	// Zones
 	
 	// The following should be set to a value **equal to or greater than** the number of objectives needed
 	// it's also possible to declare additional stations, zones and position triggers in MAIN
