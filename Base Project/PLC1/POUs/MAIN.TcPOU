@@ -254,6 +254,10 @@ nextStation := 4;]]></ST>
         // Station 0 Logic
         IF MyButton1 AND XTS.Station[0].MoverInPosition AND XTS.Station[1].MoverInPosition THEN
 			XTS.Mover[2].MoveToStation(XTS.Station[2]);
+		END_IF
+		
+		IF XTS.Station[2].MoverInPosition THEN 
+			XTS.Mover[2].Grip:= TRUE;
 		END_IF]]></ST>
       </Implementation>
     </Action>

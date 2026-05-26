@@ -52,6 +52,9 @@
     <Compile Include="POUs\ApplicationMover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_ExternalForce.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\MAIN_LD.TcPOU">
       <SubType>Code</SubType>
     </Compile>

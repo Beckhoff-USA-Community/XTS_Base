@@ -6020,7 +6020,7 @@ and will return to Group State Standby when the situation permits.
 				</Target>
 			</Licenses>
 			<Tasks>
-				<Task Id="3" Priority="6" CycleTime="10000" AmsPort="350" Affinity="#x00000002" AdtTasks="true">
+				<Task Id="3" Priority="6" CycleTime="20000" AmsPort="350" Affinity="#x00000002" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
 				<Task Id="7" Priority="32" Affinity="#x00000004" AdtTasks="true" JobTask="true">
@@ -15341,7 +15341,7 @@ and will return to Group State Standby when the situation permits.
 							<Parameters>
 								<Group><![CDATA[General]]></Group>
 								<Group><![CDATA[Mover Id Detection]]></Group>
-								<Group Collapsed="true"><![CDATA[Advanced]]></Group>
+								<Group><![CDATA[Advanced]]></Group>
 								<Group><![CDATA[Info]]></Group>
 								<Group><![CDATA[Structure]]></Group>
 								<Parameter Group="General">
@@ -17160,7 +17160,7 @@ and will return to Group State Standby when the situation permits.
 							<Parameters>
 								<Group><![CDATA[General]]></Group>
 								<Group><![CDATA[Mover Id Detection]]></Group>
-								<Group Collapsed="true"><![CDATA[Advanced]]></Group>
+								<Group><![CDATA[Advanced]]></Group>
 								<Group><![CDATA[Info]]></Group>
 								<Group><![CDATA[Structure]]></Group>
 								<Parameter Group="General">
@@ -19286,7 +19286,7 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>DefaultParameterSet</Name>
-									<Value>16842768</Value>
+									<Value>16843024</Value>
 								</Value>
 								<Value>
 									<Name>ParameterSetChange</Name>
@@ -19666,7 +19666,7 @@ and will return to Group State Standby when the situation permits.
 		</Motion>
 		<Plc>
 			<Project GUID="{DD3A0B29-8E7C-4E32-989D-B0222C998777}" Name="PLC1" PrjFilePath="PLC1\PLC1.plcproj" TmcFilePath="PLC1\PLC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{A9BE379B-6D97-8320-5019-69F38BC17A80}" TmcPath="PLC1\PLC1.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{B8802ABB-E9C7-1CDD-24CF-2FAABFC200A0}" TmcPath="PLC1\PLC1.tmc">
 					<Name>PLC1 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -19707,7 +19707,7 @@ and will return to Group State Standby when the situation permits.
 								<OTCID>#x02010030</OTCID>
 							</ManualConfig>
 							<Priority>6</Priority>
-							<CycleTime>1000000</CycleTime>
+							<CycleTime>2000000</CycleTime>
 						</Context>
 					</Contexts>
 					<TaskPouOids>
@@ -20204,8 +20204,8 @@ and will return to Group State Standby when the situation permits.
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{08502001-0010-0500-0020-500810001205}" Id="#x02030010" Watchdog="08000000040000000400000004000000"/>
-		<MappingInfo Identifier="{08502001-0010-0500-0020-500850000403}" Id="#x02030020" Watchdog="08000000040000000400000004000000"/>
+		<MappingInfo Identifier="{08502001-0010-0500-0020-500810001205}" Id="#x02030010" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{08502001-0010-0500-0020-500850000403}" Id="#x02030020" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1 (EtherCAT)">
 			<OwnerB Name="TIRC^TcCOM Objects^XTS ProcessingUnit 1^Part 1^Module 1">
 				<Link VarA="Term 1 (AT2001-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>
