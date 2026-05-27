@@ -22,6 +22,7 @@ VAR
 		ExternalForce : FB_ExternalForce;
 	bUseExternalForces	: BOOL;
 	Latch: BOOL;
+	OneShotForceCouple: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -275,7 +276,10 @@ nextStation := 4;]]></ST>
 		IF XTS.Station[2].MoverInPosition THEN
 			XTS.System.XPU.MoverTcIo(2).MoverController.SetDefaultParameterSet(16#01010110);
 			ExternalForce.AdditiveForce:=20.0;
-			XTS.System.XPU.MoverTcIo(2).MoverController.SetForceCouple(16#010100F0);
+			IF OneShotForceCouple THEN
+				OneShotForceCouple:=FALSE;
+				XTS.System.XPU.MoverTcIo(2).MoverController.SetForceCouple(16#010100F0);
+			END_IF
 		END_IF
 		]]></ST>
       </Implementation>
