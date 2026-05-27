@@ -17,7 +17,11 @@ VAR
 	
 	Trig0MoverIndex			: UDINT;
 	Trig0MoverPosLag		: LREAL;
-	MyButton1				: Bool; //move to hold ball, pree force, post recovery. Meant to be used while the ball is being held between the grippers for loading
+	MyButton1				: BOOL; //move to hold ball, pree force, post recovery. Meant to be used while the ball is being held between the grippers for loading
+	
+		ExternalForce : FB_ExternalForce;
+	bUseExternalForces	: BOOL;
+	Latch: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -57,6 +61,18 @@ provides or the use of such code samples for any purpose.
 *)
 
 // main state machine
+
+IF XTS.System.EnvironmentIsReady THEN 
+	IF NOT Latch THEN 
+		XTS.System.Environment.ParameterSet(2).FeedForward.SetExternalForceInterface(ExternalForce);
+		ExternalForce.AdditiveForce:=0.0;
+		Latch:= 1;
+	END_IF
+END_IF
+
+
+
+
 CASE State OF 
 
 	// off (idle) state, waiting for enable command
@@ -256,9 +272,12 @@ nextStation := 4;]]></ST>
 			XTS.Mover[2].MoveToStation(XTS.Station[2]);
 		END_IF
 		
-		IF XTS.Station[2].MoverInPosition THEN 
-			XTS.Mover[2].Grip:= TRUE;
-		END_IF]]></ST>
+		IF XTS.Station[2].MoverInPosition THEN
+			XTS.System.XPU.MoverTcIo(2).MoverController.SetDefaultParameterSet(16#01010110);
+			ExternalForce.AdditiveForce:=20.0;
+			XTS.System.XPU.MoverTcIo(2).MoverController.SetForceCouple(16#010100F0);
+		END_IF
+		]]></ST>
       </Implementation>
     </Action>
   </POU>

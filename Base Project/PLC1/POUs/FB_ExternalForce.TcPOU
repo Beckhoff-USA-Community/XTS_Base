@@ -15,15 +15,6 @@ END_VAR
     </Implementation>
     <Property Name="AdditiveForce" Id="{350d93ee-f394-0400-24aa-bfc059b2ea67}">
       <Declaration><![CDATA[PROPERTY AdditiveForce : LREAL]]></Declaration>
-      <Get Name="Get" Id="{e81d996b-0f3e-088c-0821-12c182e40a0c}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[_fAditionalForce := AdditiveForce;
-]]></ST>
-        </Implementation>
-      </Get>
       <Set Name="Set" Id="{1c89995a-b0d4-0a92-289c-6432c88138e4}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -34,8 +25,7 @@ END_VAR
       </Set>
     </Property>
     <Method Name="ExternalForceCalculation" Id="{43df9398-66f5-0893-14db-33aed98ab2b8}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD ExternalForceCalculation : Tc3_XTS_Utility.HRESULT
+      <Declaration><![CDATA[METHOD ExternalForceCalculation : Tc3_XTS_Utility.HRESULT
 VAR_INPUT
 	nMover	: Tc3_XTS_Utility.OTCID;
 	fActForce	: LREAL;

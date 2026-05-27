@@ -9,9 +9,7 @@ VAR_OUTPUT
 END_VAR
 VAR
 	_PositionLag: LREAL;
-	ExternalForce : FB_ExternalForce;
-	bUseExternalForces	: BOOL;
-	Latch: BOOL;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -39,40 +37,9 @@ _PositionLag:= THIS^.AxisReference.NcToPlc.PosDiff;
 // Latch Errors
 
 // Call Fbs Cyclically
-IF SUPER^.Mediator.Environment.P_IsInitialized THEN 
-	IF bUseExternalForces THEN
-		IF NOT Latch THEN 
-			SUPER^.Mediator.Environment.ParameterSet(2).FeedForward.SetExternalForceInterface(ExternalForce);
-			ExternalForce.AdditiveForce:=20.0;
-			Latch:= 1;
-		END_IF
-	ELSE
-		SUPER^.Mediator.Environment.ParameterSet(2).FeedForward.SetExternalForceInterface(0);
-		Latch:=0;
-	END_IF
-END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Grip" Id="{1a3622ff-49ef-04c2-2ff5-33b64ed02fed}">
-      <Declaration><![CDATA[PROPERTY Grip : BOOL]]></Declaration>
-      <Get Name="Get" Id="{f09feafd-f0cf-0256-29be-c1ca948caea6}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[Grip := bUseExternalForces;]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{973bad73-468b-015c-2995-8470c3df879b}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bUseExternalForces := Grip;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Property Name="PositionLag" Id="{2f9b4da0-9f46-0501-2862-3b56ba7816bb}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY PositionLag : LREAL]]></Declaration>
