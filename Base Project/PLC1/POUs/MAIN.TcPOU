@@ -23,6 +23,7 @@ VAR
 	bUseExternalForces	: BOOL;
 	Latch: BOOL;
 	OneShotForceCouple: BOOL;
+	MyButton2: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -191,8 +192,8 @@ XTS.CyclicLogic();
 XTS.Station[0].Position 		:= 35;
 XTS.Station[1].Position 		:= 147;
 XTS.Station[2].Position 		:= 48;
-XTS.Station[3].Position 		:= 450;
-XTS.Station[4].Position 		:= 1400;
+XTS.Station[3].Position 		:= 3200;
+XTS.Station[4].Position 		:= 750;
 
 // station names
 XTS.Station[0].Description		:= 'Mover2 Open Position';
@@ -218,7 +219,7 @@ XTS.InitialParameterSet.Acceleration	:= 400;		// mm/s2
 XTS.InitialParameterSet.Deceleration	:= 400;		// mm/s2
 XTS.InitialParameterSet.Jerk			:= 1000;		// mm/s3
 XTS.InitialParameterSet.Gap				:= 85;			// mm
-XTS.InitialParameterSet.Direction		:= Tc3_Mc3Definitions.MC_Direction.mcDirectionNonModulo;
+XTS.InitialParameterSet.Direction		:= Tc3_Mc3Definitions.MC_Direction.mcDirectionPositive;
 
 MainCommands.lowVelocity	:= 300;
 MainCommands.mediumVelocity	:= 800;
@@ -275,13 +276,23 @@ nextStation := 4;]]></ST>
 		
 		IF XTS.Station[2].MoverInPosition THEN
 			XTS.System.XPU.MoverTcIo(2).MoverController.SetDefaultParameterSet(16#01010110);
-			ExternalForce.AdditiveForce:=20.0;
+			ExternalForce.AdditiveForce:=8.0;
 			IF OneShotForceCouple THEN
 				OneShotForceCouple:=FALSE;
 				XTS.System.XPU.MoverTcIo(2).MoverController.SetForceCouple(16#010100F0);
 			END_IF
 		END_IF
-		]]></ST>
+		
+		IF MyButton2 THEN
+			xts.Mover[1].MoveToStation(xts.Station[4]);
+			myButton2:= FALSE;
+		END_IF
+		IF XTS.Station[4].MoverInPosition THEN
+			XTS.Station[4].CurrentMover.SetDirection(Tc3_Mc3Definitions.mcDirectionNegative).MoveToStation(XTS.Station[3]);
+		END_IF
+		IF XTS.Station[3].MoverInPosition THEN
+			XTS.Station[3].CurrentMover.SetDirection(Tc3_Mc3Definitions.mcDirectionPositive).MoveToStation(XTS.Station[4]);
+		END_IF]]></ST>
       </Implementation>
     </Action>
   </POU>
