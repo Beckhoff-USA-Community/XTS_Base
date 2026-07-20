@@ -138,7 +138,7 @@ PROPERTY OTCID : OTCID]]></Declaration>
       </Get>
     </Property>
     <Property Name="Payload" Id="{8debfc3a-ede6-452a-8f81-b4825ce39b3b}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Payload : MoverPayload_typ]]></Declaration>
+      <Declaration><![CDATA[PROPERTY Payload : MoverPayload]]></Declaration>
       <Get Name="Get" Id="{80534c46-bb57-4e05-bca0-e1e88d880aac}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>

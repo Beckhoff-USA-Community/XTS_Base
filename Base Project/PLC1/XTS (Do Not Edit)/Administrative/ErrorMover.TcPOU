@@ -308,7 +308,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Payload" Id="{24ebdcd3-9649-41f7-9f65-e4f7f86ef316}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Payload : MoverPayload_typ]]></Declaration>
+      <Declaration><![CDATA[PROPERTY Payload : MoverPayload]]></Declaration>
       <Get Name="Get" Id="{28f7f04b-9925-4df5-91ef-030257222faa}">
         <Declaration><![CDATA[VAR
 END_VAR

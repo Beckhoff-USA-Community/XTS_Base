@@ -6,7 +6,7 @@ VAR
 	// declare XTS with <number of movers>
 	XTS				: FB_XTS<6>;
 	// Machine
-	State			: MachineState_enum;
+	State			: MachineState;
 
 	// ========= Example Application Variables =========
 
@@ -151,19 +151,12 @@ CASE State OF
 	MS_ERROR:
 
 		// and error has occured
-
 		// the recovery from this is application dependent and can range from disabling and re-enabling the XTS
-
 		// to specific needs for each mover/station/zone and how to clear them of tooling and/or defective product
-
 		// the simplest form of error handling where the XTS is disabled and re-enabled is available as this commented code below
-
 		// 		IF NOT MainCommands.Enable THEN
-
 		// 			XTS.Enable := FALSE;
-
 		// 			State					:= MS_OFF;
-
 	// 		END_IF;
 END_CASE
 
@@ -173,18 +166,18 @@ XTS.CyclicLogic();]]></ST>
     <Action Name="Initializing" Id="{0bad743d-cb82-0efe-1988-42b77153463d}">
       <Implementation>
         <ST><![CDATA[// XTS Object Init
-XTS.Station[0].Position 		:= 5;
-XTS.Station[1].Position 		:= 750;
-XTS.Station[2].Position 		:= 1200;
-XTS.Station[3].Position 		:= 1300;
-XTS.Station[4].Position 		:= 1400;
+XTS.Station[0].Position := 5;
+XTS.Station[1].Position := 750;
+XTS.Station[2].Position := 1200;
+XTS.Station[3].Position := 1300;
+XTS.Station[4].Position := 1400;
 
 // station names
-XTS.Station[0].Description		:= 'Load Top';
-XTS.Station[1].Description		:= 'Load Bottom';
-XTS.Station[2].Description		:= 'Weld A';
-XTS.Station[3].Description		:= 'Weld B';
-XTS.Station[4].Description		:= 'Weld C';
+XTS.Station[0].Description := 'Load Top';
+XTS.Station[1].Description := 'Load Bottom';
+XTS.Station[2].Description := 'Weld A';
+XTS.Station[3].Description := 'Weld B';
+XTS.Station[4].Description := 'Weld C';
 
 // speed changes in corners
 XTS.PositionTrigger[0].Position := 1500;
@@ -195,15 +188,15 @@ XTS.PositionTrigger[2].Position := 3500;
 XTS.PositionTrigger[3].Position := XTS.Station[0].Position + 2.0;
 
 // window around station 0 for startup
-XTS.Zone[0].StartPosition		:= XTS.Station[0].Position - 1.0;
-XTS.Zone[0].EndPosition   		:= XTS.Station[0].Position + 1.0;
+XTS.Zone[0].StartPosition := XTS.Station[0].Position - 1.0;
+XTS.Zone[0].EndPosition := XTS.Station[0].Position + 1.0;
 
-XTS.InitialParameterSet.Velocity		:= 1000;		// mm/s
-XTS.InitialParameterSet.Acceleration	:= 10_000;		// mm/s2
-XTS.InitialParameterSet.Deceleration	:= 10_000;		// mm/s2
-XTS.InitialParameterSet.Jerk			:= 100_000;		// mm/s3
-XTS.InitialParameterSet.Gap				:= 85;			// mm
-XTS.InitialParameterSet.Direction		:= Tc3_Mc3Definitions.MC_Direction.mcDirectionPositive;
+XTS.InitialParameterSet.Velocity	 := 1000;		// mm/s
+XTS.InitialParameterSet.Acceleration := 10_000;		// mm/s2
+XTS.InitialParameterSet.Deceleration := 10_000;		// mm/s2
+XTS.InitialParameterSet.Jerk		 := 100_000;		// mm/s3
+XTS.InitialParameterSet.Gap			 := 85;			// mm
+XTS.InitialParameterSet.Direction	 := Tc3_Mc3Definitions.MC_Direction.mcDirectionPositive;
 
 MainCommands.lowVelocity	:= 300;
 MainCommands.mediumVelocity	:= 800;
@@ -248,80 +241,80 @@ nextStation := 4;]]></ST>
     </Action>
     <Action Name="StationLogic" Id="{1adacb9d-add1-0f3c-1a94-78c322ce5f05}">
       <Implementation>
-        <ST><![CDATA[		(*Mover routing logic should be written here to define the system's operating behavior.
-		Station implementations, Position Trigger logic, etc. In general, you can remove the example code
-		here down to the short line break that looks like this: // ============= *)
+        <ST><![CDATA[(*Mover routing logic should be written here to define the system's operating behavior.
+Station implementations, Position Trigger logic, etc. In general, you can remove the example code
+here down to the short line break that looks like this: // ============= *)
+
+// Station 0 Logic
+IF XTS.Station[0].MoverInPosition THEN
+    StationTimer[0](IN := TRUE, PT := T#1000MS);
+    IF StationTimer[0].Q THEN
+        XTS.Station[0].CurrentMover.MoveToStation(DestinationStation:= XTS.Station[1]);
+    END_IF
+ELSE
+    StationTimer[0](IN := FALSE);
+END_IF
+
+// Station 1 Logic		
+IF XTS.Station[1].MoverInPosition THEN
+    StationTimer[1](IN := TRUE, PT := T#250MS);
+    IF StationTimer[1].Q THEN
+        XTS.Station[1].CurrentMover.MoveToStation(XTS.Station[nextStation]);
+        nextStation := nextStation - 1;
+        IF nextStation = 1 THEN
+            nextStation := 4;
+        END_IF
+    END_IF
+ELSE
+    StationTimer[1](IN := FALSE);
+END_IF
+
+// Group of Stations 2, 3, and 4 Logic
+IF XTS.Station[2].MoverInPosition AND XTS.Station[3].MoverInPosition AND XTS.Station[4].MoverInPosition THEN
+    StationTimer[2](IN := TRUE, PT := T#750MS);
+    IF StationTimer[2].Q THEN
+		StationTimer[2](IN := FALSE);
+		
+		XTS.Station[2].CurrentMover.MotionParameters:= XTS.InitialParameterSet;
+		XTS.Station[3].CurrentMover.MotionParameters:= XTS.InitialParameterSet;
+		XTS.Station[4].CurrentMover.MotionParameters:= XTS.InitialParameterSet;
+
+        XTS.Station[2].CurrentMover.MoveVelocity(500);
+        XTS.Station[3].CurrentMover.MoveVelocity(500);
+        XTS.Station[4].CurrentMover.MoveVelocity(500);
+		
+    END_IF
+END_IF
+
+// Position Trigger 0 Logic
+IF XTS.PositionTrigger[0].MoverPassedPosition THEN
+    XTS.PositionTrigger[0].CurrentMover.SetVelocity(MainCommands.lowVelocity);
 	
-        // Station 0 Logic
-        IF XTS.Station[0].MoverInPosition THEN
-            StationTimer[0](IN := TRUE, PT := T#1000MS);
-            IF StationTimer[0].Q THEN
-                XTS.Station[0].CurrentMover.MoveToStation(DestinationStation:= XTS.Station[1]);
-            END_IF
-        ELSE
-            StationTimer[0](IN := FALSE);
-        END_IF
-		
-        // Station 1 Logic		
-        IF XTS.Station[1].MoverInPosition THEN
-            StationTimer[1](IN := TRUE, PT := T#250MS);
-            IF StationTimer[1].Q THEN
-                XTS.Station[1].CurrentMover.MoveToStation(XTS.Station[nextStation]);
-                nextStation := nextStation - 1;
-                IF nextStation = 1 THEN
-                    nextStation := 4;
-                END_IF
-            END_IF
-        ELSE
-            StationTimer[1](IN := FALSE);
-        END_IF
-		
-		// Group of Stations 2, 3, and 4 Logic
-        IF XTS.Station[2].MoverInPosition AND XTS.Station[3].MoverInPosition AND XTS.Station[4].MoverInPosition THEN
-            StationTimer[2](IN := TRUE, PT := T#750MS);
-            IF StationTimer[2].Q THEN
-				StationTimer[2](IN := FALSE);
+	// To Call ApplicationMover addon Method/Properties/Variables, you must call Mover[] array index directly
+	// Get MoverIndex for later use with ApplicationMover addons
+	Trig0MoverIndex		:= XTS.PositionTrigger[0].CurrentMover.MoverIndex;
+	
+	// Call ApplicationMover Method/Properties/Variables using previously latched MoverIndex
+	Trig0MoverPosLag	:= XTS.Mover[Trig0MoverIndex].PositionLag;
+	
+    XTS.PositionTrigger[0].MuteCurrent();
 				
-				XTS.Station[2].CurrentMover.MotionParameters:= XTS.InitialParameterSet;
-				XTS.Station[3].CurrentMover.MotionParameters:= XTS.InitialParameterSet;
-				XTS.Station[4].CurrentMover.MotionParameters:= XTS.InitialParameterSet;
+END_IF
 
-                XTS.Station[2].CurrentMover.MoveVelocity(500);
-                XTS.Station[3].CurrentMover.MoveVelocity(500);
-                XTS.Station[4].CurrentMover.MoveVelocity(500);
-				
-            END_IF
-        END_IF
-		
-        // Position Trigger 0 Logic
-        IF XTS.PositionTrigger[0].MoverPassedPosition THEN
-            XTS.PositionTrigger[0].CurrentMover.SetVelocity(MainCommands.lowVelocity);
-			
-			// To Call ApplicationMover addon Method/Properties/Variables, you must call Mover[] array index directly
-			// Get MoverIndex for later use with ApplicationMover addons
-			Trig0MoverIndex		:= XTS.PositionTrigger[0].CurrentMover.MoverIndex;
-			
-			// Call ApplicationMover Method/Properties/Variables using previously latched MoverIndex
-			Trig0MoverPosLag	:= XTS.Mover[Trig0MoverIndex].PositionLag;
-			
-            XTS.PositionTrigger[0].MuteCurrent();
-						
-        END_IF
-		
-        // Position Trigger 1 Logic
-        IF XTS.PositionTrigger[1].MoverPassedPosition THEN
-			XTS.PositionTrigger[1].CurrentMover.SetAcceleration(5E2);
-            XTS.PositionTrigger[1].CurrentMover.SetVelocity(MainCommands.highVelocity);
-            XTS.PositionTrigger[1].MuteCurrent();
-        END_IF
+// Position Trigger 1 Logic
+IF XTS.PositionTrigger[1].MoverPassedPosition THEN
+	XTS.PositionTrigger[1].CurrentMover.SetAcceleration(5E2);
+    XTS.PositionTrigger[1].CurrentMover.SetVelocity(MainCommands.highVelocity);
+    XTS.PositionTrigger[1].MuteCurrent();
+END_IF
 
-		// Position Trigger 2 Logic
-        IF XTS.PositionTrigger[2].MoverPassedPosition THEN
-			XTS.PositionTrigger[2].CurrentMover.SetAcceleration(1E4);
-            XTS.PositionTrigger[2].CurrentMover.SetVelocity(MainCommands.lowVelocity);
-            XTS.PositionTrigger[2].CurrentMover.MoveToStation(XTS.Station[0]);
-            XTS.PositionTrigger[2].MuteCurrent();
-        END_IF]]></ST>
+// Position Trigger 2 Logic
+IF XTS.PositionTrigger[2].MoverPassedPosition THEN
+	XTS.PositionTrigger[2].CurrentMover.SetAcceleration(1E4);
+    XTS.PositionTrigger[2].CurrentMover.SetVelocity(MainCommands.lowVelocity);
+    XTS.PositionTrigger[2].CurrentMover.MoveToStation(XTS.Station[0]);
+    XTS.PositionTrigger[2].MuteCurrent();
+END_IF]]></ST>
       </Implementation>
     </Action>
   </POU>

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
-  <DUT Name="MachineState_enum" Id="{18b48550-1ade-0961-2747-2f4a90c789e8}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="MachineState" Id="{18b48550-1ade-0961-2747-2f4a90c789e8}">
     <Declaration><![CDATA[{attribute 'strict'}
 {attribute 'to_string'}
-TYPE MachineState_enum :
+TYPE MachineState :
 (
 	MS_OFF		 		:= 0,
 	MS_RESTARTING		:= 1,

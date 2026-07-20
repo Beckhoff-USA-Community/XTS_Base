@@ -1,12 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="ApplicationMover" Id="{516536b5-5233-0a95-01e8-9585147c75fa}" SpecialFunc="None">
     <Declaration><![CDATA[// This function Block extends the Referenced Library Mover (FB), so the user can expand the capabilities of the XTS Mover Functions
 FUNCTION_BLOCK ApplicationMover EXTENDS Mover
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-END_VAR
 VAR
 	_PositionLag: LREAL;
 END_VAR
