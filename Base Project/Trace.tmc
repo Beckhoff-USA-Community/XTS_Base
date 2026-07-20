@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<TcModuleClass>
+	<DataTypes>
+		<DataType>
+			<Name GUID="{438D8008-FAB1-4B89-9548-594069CCA34F}">Trace</Name>
+			<DisplayName TxtId=""><![CDATA[Trace]]></DisplayName>
+			<EventId>
+				<Name Id="1">TraceMessage</Name>
+				<DisplayName TxtId=""><![CDATA[{0}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{17738286-D470-4C46-B717-064F9F066843}"/>
+				<Hide GUID="{9FDC2415-076F-4B0C-BFED-7FFA6676DB3C}"/>
+				<Hide GUID="{51062F67-5534-4E27-91CA-A92FE2444601}"/>
+				<Hide GUID="{55A6845F-A216-48F5-AC3A-ACD6A71AAFBF}"/>
+			</Hides>
+		</DataType>
+	</DataTypes>
+</TcModuleClass>

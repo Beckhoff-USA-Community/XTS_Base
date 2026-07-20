@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="AdsLogger" Id="{8e654ef2-eb0d-40d6-bf7a-36f2fd9aacc3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK AdsLogger IMPLEMENTS iTraceLogger
+VAR
+	MessagesThisScan : DINT;
+	CurrentCycle	 : UDINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{e5db213e-e7a9-4dea-99ff-5d6a74881566}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+
+//The return value is not evaluated. For a specific influence, you can also declare the
+
+//methods explicitly and provide additional code there with the standard initialization
+
+//code. You can evaluate the return value.
+METHOD FB_Init : BOOL
+VAR_INPUT
+	bInitRetains   : BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+	bInCopyCode	   : BOOL; // TRUE: the instance will be copied to the copy code afterward (online change)   
+	TracePublisher : iTracePublisher;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Param.ENABLE_ADS_LOGGER THEN
+	TracePublisher.Subscribe(THIS^);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogMessage" Id="{e8dbc5ca-1e61-4123-9336-755578520bc1}">
+      <Declaration><![CDATA[METHOD LogMessage
+VAR_INPUT
+	Key		  : T_MaxString;
+	Value	  : T_MaxString;
+	SourceId  : UDINT := 0;
+	TimeStamp : ULINT := 0;
+	MessageId : UDINT := 1;
+	Severity  : USINT := 1;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleCount <> CurrentCycle THEN
+	CurrentCycle	 := TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleCount;
+	MessagesThisScan := 0;
+END_IF
+
+IF MessagesThisScan < TO_DINT(TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleTime / 2000) THEN
+	CASE Severity OF
+		0, 1:
+			ADSLOGSTR(ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_HINT, Key, Concat(Value, ': %s'));
+
+		2:
+			ADSLOGSTR(ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_WARN, Key, Concat(Value, ': %s'));
+
+		3, 4:
+			ADSLOGSTR(ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_ERROR, Key, Concat(Value, ': %s'));
+	END_CASE
+
+	MessagesThisScan := MessagesThisScan + 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

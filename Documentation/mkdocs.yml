@@ -52,6 +52,7 @@ nav:
         - Diagnostics:
             - Basics:           CodeReference/Diagnostics/Basics.md
             - ErrorMovers:      CodeReference/Diagnostics/ErrorMovers.md
+            - Trace:            CodeReference/Diagnostics/Trace.md
             - Event Logger:     CodeReference/Diagnostics/EventLogger.md
             - System Data:       CodeReference/Diagnostics/SystemData.md
             - Utility Library:  CodeReference/Diagnostics/UtilityLibrary.md

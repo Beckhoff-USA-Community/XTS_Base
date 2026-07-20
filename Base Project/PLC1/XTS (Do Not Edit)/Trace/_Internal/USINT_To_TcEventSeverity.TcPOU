@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="USINT_To_TcEventSeverity" Id="{33270a1d-9d22-44b6-aadd-3394f9ba0fbe}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION USINT_To_TcEventSeverity : TcEventSeverity
+VAR_INPUT
+	Severity : USINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[USINT_To_TcEventSeverity := TcEventSeverity.Verbose;
+CASE Severity OF
+	0: 
+		USINT_To_TcEventSeverity := TcEventSeverity.Verbose;
+
+	1:
+		USINT_To_TcEventSeverity := TcEventSeverity.Info;
+
+	2:
+		USINT_To_TcEventSeverity := TcEventSeverity.Warning;
+
+	3:
+		USINT_To_TcEventSeverity := TcEventSeverity.Error;
+
+	4:
+		USINT_To_TcEventSeverity := TcEventSeverity.Critical;
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

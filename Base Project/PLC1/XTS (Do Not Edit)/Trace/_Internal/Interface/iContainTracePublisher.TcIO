@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="iContainTracePublisher" Id="{18bdaa49-96a9-4979-88e4-db28d5812809}">
+    <Declaration><![CDATA[INTERFACE iContainTracePublisher EXTENDS iBase]]></Declaration>
+    <Property Name="Publisher" Id="{5ec0901d-ee31-4496-acb4-70b44f6d96a8}">
+      <Declaration><![CDATA[PROPERTY Publisher : iTracePublisher]]></Declaration>
+      <Get Name="Get" Id="{74688138-b729-4f3c-b902-bff02adb75b1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

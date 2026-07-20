@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="iTraceInstanceLogger" Id="{56419aad-3f86-0d19-244d-3b3b97f76f31}">
+    <Declaration><![CDATA[INTERFACE iTraceInstanceLogger EXTENDS iBase]]></Declaration>
+    <Method Name="LogMessageInstance" Id="{24b8b30c-f4be-0c4d-19e9-3553dacb32c1}">
+      <Declaration><![CDATA[METHOD LogMessageInstance
+VAR_INPUT
+	SourceInfo	: iTraceSourceInfo;
+	MessageInfo : iTraceMessageInfo;
+	Arguments	: iTraceArgument := 0;
+END_VAR]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

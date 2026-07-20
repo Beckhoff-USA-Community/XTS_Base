@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <DUT Name="InternalMoverVars_typ" Id="{a861371d-e4e6-0e14-0d10-1372a7987892}">
     <Declaration><![CDATA[TYPE InternalMoverVars_typ :
 STRUCT
@@ -24,7 +24,7 @@ STRUCT
 	Gap						: LREAL;	// Gap distance to master mover during sync
 	
 	// Configurable Payload description	
-	Payload			: MoverPayload_typ;	// data related to the in-process part on the mover such as RecipeID or SerialNumber, MoverPayload_typ can be modified per application
+	Payload			: MoverPayload;	// data related to the in-process part on the mover such as RecipeID or SerialNumber, MoverPayload_typ can be modified per application
 	
 	// Track management
 	Track				: POINTER TO Track;	// Internal current track

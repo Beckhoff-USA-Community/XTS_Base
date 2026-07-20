@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="Trace" Id="{565c4648-2c90-4f64-8139-9c781bfd5b5f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Trace
+VAR_GENERIC CONSTANT
+	MaxCount : UDINT := 10;
+END_VAR IMPLEMENTS iTracePublisher, iTrace
+VAR
+	Loggers : ARRAY[0..MaxCount] OF iTraceLogger;
+	_TraceLevel : TcEventSeverityExt := TcEventSeverityExt.Warning;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Critical" Id="{5033f713-1871-4b52-9fe1-459fc8916358}">
+      <Declaration><![CDATA[METHOD Critical
+VAR_INPUT
+	Source	  : T_MaxString;
+	Message	  : T_MaxString;
+END_VAR
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO MaxCount DO
+	IF Loggers[i] <> 0 AND_THEN _TraceLevel < 5 THEN
+		Loggers[i].LogMessage(Source,
+							  Message,
+							  0,
+							  0,
+							  1,
+							  4);
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Error" Id="{37f08bb8-4302-4f21-8a9f-89f09e689d9d}">
+      <Declaration><![CDATA[METHOD Error
+VAR_INPUT
+	Source	  : T_MaxString;
+	Message	  : T_MaxString;
+END_VAR
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO MaxCount DO
+	IF Loggers[i] <> 0 AND_THEN _TraceLevel < 4 THEN
+		Loggers[i].LogMessage(Source,
+							  Message,
+							  0,
+							  0,
+							  1,
+							  3);
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Info" Id="{13ca49e4-a07f-4774-84b1-e1eb15a23bdc}">
+      <Declaration><![CDATA[METHOD Info
+VAR_INPUT
+	Source	  : T_MaxString;
+	Message	  : T_MaxString;
+END_VAR
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO MaxCount DO
+	IF Loggers[i] <> 0 AND_THEN _TraceLevel < 2 THEN
+		Loggers[i].LogMessage(Source,
+							  Message,
+							  0,
+							  0,
+							  1,
+							  1);
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogMessage" Id="{9827b115-b117-49e7-a5e7-267f4cf7b4a8}">
+      <Declaration><![CDATA[METHOD LogMessage
+VAR_INPUT
+	Key		  : T_MaxString;
+	Value	  : T_MaxString;
+	SourceId  : UDINT := 0;
+	TimeStamp : ULINT := 0;
+	MessageId : UDINT := 1;
+	Severity  : USINT := 1;
+END_VAR
+
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO MaxCount DO
+	IF Loggers[i] <> 0 THEN
+		Loggers[i].LogMessage(Key,
+							  Value,
+							  SourceId,
+							  TimeStamp,
+							  MessageId,
+							  Severity);
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Subscribe" Id="{90e68624-cfa6-442e-af8f-efcf0bd0ad8c}">
+      <Declaration><![CDATA[METHOD Subscribe
+VAR_INPUT
+	Logger : iTraceLogger;
+END_VAR
+
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO MaxCount DO
+	IF Loggers[i] = 0 THEN
+		Loggers[i] := Logger;
+		EXIT;
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="TraceLevel" Id="{6ec5d0cf-3aa6-4db6-9271-d05c6bb439de}">
+      <Declaration><![CDATA[PROPERTY TraceLevel : TcEventSeverityExt]]></Declaration>
+      <Get Name="Get" Id="{42a2f8e1-76e7-4663-8775-0848aeb55668}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TraceLevel := _TraceLevel;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c8e581e6-27b0-474a-b74c-33bfd3a56c08}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_TraceLevel := TraceLevel;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Unsubscribe" Id="{114ddc6c-9f7d-42ec-a6b7-181e2c13df75}">
+      <Declaration><![CDATA[METHOD Unsubscribe
+VAR_INPUT
+	Logger : iTraceLogger;
+END_VAR
+
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO MaxCount DO
+	IF Loggers[i] = Logger THEN
+		Loggers[i] := 0;
+		EXIT;
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Verbose" Id="{a1c418b0-03b3-40ab-87c1-0bc154f14604}">
+      <Declaration><![CDATA[METHOD Verbose
+VAR_INPUT
+	Source	  : T_MaxString;
+	Message	  : T_MaxString;
+END_VAR
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO MaxCount DO
+	IF Loggers[i] <> 0 AND_THEN _TraceLevel = 0 THEN
+		Loggers[i].LogMessage(Source,
+							  Message,
+							  0,
+							  0,
+							  1,
+							  0);
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Warning" Id="{50733f5b-e858-45ef-b578-13ff879666c4}">
+      <Declaration><![CDATA[METHOD Warning
+VAR_INPUT
+	Source	  : T_MaxString;
+	Message	  : T_MaxString;
+END_VAR
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO MaxCount DO
+	IF Loggers[i] <> 0 AND_THEN _TraceLevel < 3 THEN
+		Loggers[i].LogMessage(Source,
+							  Message,
+							  0,
+							  0,
+							  1,
+							  2);
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

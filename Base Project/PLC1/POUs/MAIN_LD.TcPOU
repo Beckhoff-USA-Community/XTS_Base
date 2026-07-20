@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MAIN_LD" Id="{45308ac2-de42-005a-317f-c689cffde7e8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN_LD
 VAR	
 	XTS				: FB_XTS<6>;
 	
 	// State Machine
-	State			: MachineState_enum;
+	State			: MachineState;
 
 	// ========= Example Application Variables =========
 
@@ -105,7 +105,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_OFF"
+                        "Expression": "MachineState.MS_OFF"
                       }
                     }
                   ]
@@ -185,7 +185,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_RESTARTING"
+                        "Expression": "MachineState.MS_RESTARTING"
                       }
                     }
                   ]
@@ -265,7 +265,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_ENABLED"
+                        "Expression": "MachineState.MS_ENABLED"
                       }
                     }
                   ]
@@ -345,7 +345,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_ONESHOT_RECOVER"
+                        "Expression": "MachineState.MS_ONESHOT_RECOVER"
                       }
                     }
                   ]
@@ -425,7 +425,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_RECOVERING"
+                        "Expression": "MachineState.MS_RECOVERING"
                       }
                     }
                   ]
@@ -505,7 +505,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_RUNNING"
+                        "Expression": "MachineState.MS_RUNNING"
                       }
                     }
                   ]
@@ -585,7 +585,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_STOPPED"
+                        "Expression": "MachineState.MS_STOPPED"
                       }
                     }
                   ]
@@ -692,7 +692,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_RESTARTING"
+                        "Expression": "MachineState.MS_RESTARTING"
                       }
                     }
                   ]
@@ -792,7 +792,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_STOPPED"
+                        "Expression": "MachineState.MS_STOPPED"
                       }
                     }
                   ]
@@ -951,7 +951,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_ENABLED"
+                        "Expression": "MachineState.MS_ENABLED"
                       }
                     }
                   ]
@@ -1040,7 +1040,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_STOPPED"
+                        "Expression": "MachineState.MS_STOPPED"
                       }
                     }
                   ]
@@ -1142,7 +1142,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_ONESHOT_RECOVER"
+                        "Expression": "MachineState.MS_ONESHOT_RECOVER"
                       }
                     }
                   ]
@@ -1261,7 +1261,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_RECOVERING"
+                        "Expression": "MachineState.MS_RECOVERING"
                       }
                     }
                   ]
@@ -1394,7 +1394,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_RUNNING"
+                        "Expression": "MachineState.MS_RUNNING"
                       }
                     }
                   ]
@@ -1485,7 +1485,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_STOPPED"
+                        "Expression": "MachineState.MS_STOPPED"
                       }
                     }
                   ]
@@ -1627,7 +1627,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_STOPPED"
+                        "Expression": "MachineState.MS_STOPPED"
                       }
                     }
                   ]
@@ -1843,7 +1843,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_STOPPED"
+                        "Expression": "MachineState.MS_STOPPED"
                       }
                     }
                   ]
@@ -1988,7 +1988,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_STOPPED"
+                        "Expression": "MachineState.MS_STOPPED"
                       }
                     }
                   ]
@@ -2174,7 +2174,7 @@ END_VAR
                               "$type": "InVariable",
                               "Operand": {
                                 "$type": "Operand",
-                                "Expression": "MachineState_enum.MS_OFF"
+                                "Expression": "MachineState.MS_OFF"
                               }
                             }
                           ]
@@ -2269,7 +2269,7 @@ END_VAR
                       "$type": "InVariable",
                       "Operand": {
                         "$type": "Operand",
-                        "Expression": "MachineState_enum.MS_ONESHOT_RECOVER"
+                        "Expression": "MachineState.MS_ONESHOT_RECOVER"
                       }
                     }
                   ]

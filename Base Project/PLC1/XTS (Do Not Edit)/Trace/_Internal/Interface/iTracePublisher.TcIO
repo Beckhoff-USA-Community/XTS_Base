@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="iTracePublisher" Id="{d510580b-a344-4b7a-a506-8b6d5e862184}">
+    <Declaration><![CDATA[INTERFACE iTracePublisher EXTENDS iBase]]></Declaration>
+    <Method Name="Subscribe" Id="{756f524e-6487-44ac-b3e2-883bf3b1f74c}">
+      <Declaration><![CDATA[METHOD Subscribe
+VAR_INPUT
+	Logger : iTraceLogger;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Unsubscribe" Id="{0a67286e-4060-4ba3-8a49-c0472d76b433}">
+      <Declaration><![CDATA[METHOD Unsubscribe
+VAR_INPUT
+	Logger : iTraceLogger;
+END_VAR]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

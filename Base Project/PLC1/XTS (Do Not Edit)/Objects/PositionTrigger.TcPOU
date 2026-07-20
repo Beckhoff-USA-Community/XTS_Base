@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="PositionTrigger" Id="{e261b23c-fca2-43e5-b385-fb66bc9fcaf5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK PositionTrigger EXTENDS Objective
 
@@ -219,24 +219,18 @@ END_VAR]]></Declaration>
     <Method Name="MuteCurrent" Id="{39742f47-b11e-053a-08ba-d3a07a9ed4a0}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD MuteCurrent : BOOL
 VAR
-	newCallTime			: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate			: FB_TcMessage;	
-END_VAR
-]]></Declaration>
+	newCallTime : LREAL;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// message for debugging as this function is typically called when acting on a position trigger
 newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
 IF ( newCallTime - lastCallMuteCurrent ) > 1 AND internalCurrentMover <> 0 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.PositionTriggerMuteCurrent,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddUDint(internalCurrentMover^.IdentInGroup);
-	MsgCreate.Send(0);
+	Trace.Verbose(THIS^.InstancePath, ConcatEx('MuteCurrent command issued. Mover Number = ', TO_STRING(internalCurrentMover^.MoverIndex)));
 END_IF
-lastCallMuteCurrent := newCallTime;
 
-internalMoverPassedPosition		:= FALSE;
-internalCurrentMover			:= 0;]]></ST>
+lastCallMuteCurrent			:= newCallTime;
+internalMoverPassedPosition := FALSE;
+internalCurrentMover		:= 0;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Position" Id="{25b3d396-dcf1-4a9a-afb5-cc0f915e5828}" FolderPath="Properties\">
@@ -265,20 +259,15 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-
-Statistics.AverageInterarrivalTime		:= T#0S;
-Statistics.AverageMoversPerMinute		:= 0;
-Statistics.AverageMoverVelocity			:= 0;
-Statistics.InterarrivalTime				:= T#0S;
-
-memset(ADR(Statistics.InterarrivalTimeHistory),0,SIZEOF(Statistics.InterarrivalTimeHistory));
-memset(ADR(Statistics.MoverVelocityHistory),0,SIZEOF(Statistics.MoverVelocityHistory));
-
-Statistics.LatestMoverVelocity			:= 0;
-Statistics.ProcessedMoverCount			:= 0;
-
-internalStatisticsReset					:= TRUE;]]></ST>
+        <ST><![CDATA[Statistics.AverageInterarrivalTime := T#0S;
+Statistics.AverageMoversPerMinute  := 0;
+Statistics.AverageMoverVelocity	   := 0;
+Statistics.InterarrivalTime		   := T#0S;
+memset(ADR(Statistics.InterarrivalTimeHistory), 0, SIZEOF(Statistics.InterarrivalTimeHistory));
+memset(ADR(Statistics.MoverVelocityHistory), 0, SIZEOF(Statistics.MoverVelocityHistory));
+Statistics.LatestMoverVelocity := 0;
+Statistics.ProcessedMoverCount := 0;
+internalStatisticsReset		   := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetTrack" Id="{5aa68d70-5aa7-0d74-0a7a-0c04d0a46453}" FolderPath="Methods\">

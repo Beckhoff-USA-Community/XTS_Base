@@ -8,7 +8,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>PLC1</Name>
-    <ProgramVersion>3.1.4026.21</ProgramVersion>
+    <ProgramVersion>3.1.4026.24</ProgramVersion>
     <Application>{4aad4b07-8544-4a4a-85a6-bcc87a471a4a}</Application>
     <TypeSystem>{2d2f50a8-8039-4540-9b70-b5591df2aca6}</TypeSystem>
     <Implicit_Task_Info>{f651b4e4-4e5e-4ff5-98bf-9ff99fb35d4a}</Implicit_Task_Info>
@@ -25,10 +25,10 @@
     <ProjectVersion>2.0.0</ProjectVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\MachineState_enum.TcDUT">
+    <Compile Include="DUTs\MachineState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\MoverPayload_typ.TcDUT">
+    <Compile Include="DUTs\MoverPayload.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
@@ -144,6 +144,57 @@
     <Compile Include="XTS %28Do Not Edit%29\Objects\Zone.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\ConcatEx.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\DUT\TcEventSeverityExt.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\GVL_Trace.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\Interface\iTrace.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\Trace.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\AdsLogger.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\Interface\iBase.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\Interface\iContainTraceArgument.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\Interface\iContainTracePublisher.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\Interface\iTraceArgument.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\Interface\iTraceInstanceLogger.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\Interface\iTraceLogger.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\Interface\iTraceMessageInfo.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\Interface\iTracePublisher.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\Interface\iTraceSourceInfo.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\TcEventLogger.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS %28Do Not Edit%29\Trace\_Internal\USINT_To_TcEventSeverity.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
@@ -154,7 +205,12 @@
     <Folder Include="XTS %28Do Not Edit%29\Administrative" />
     <Folder Include="XTS %28Do Not Edit%29\DUTs" />
     <Folder Include="XTS %28Do Not Edit%29\ITFs" />
+    <Folder Include="XTS %28Do Not Edit%29\Trace" />
     <Folder Include="XTS %28Do Not Edit%29\Objects" />
+    <Folder Include="XTS %28Do Not Edit%29\Trace\DUT" />
+    <Folder Include="XTS %28Do Not Edit%29\Trace\Interface" />
+    <Folder Include="XTS %28Do Not Edit%29\Trace\_Internal" />
+    <Folder Include="XTS %28Do Not Edit%29\Trace\_Internal\Interface" />
   </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="System_VisuElemMeter">
@@ -269,8 +325,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -2598,16 +2654,16 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="Int32">System.Int32</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-          <Type n="UInt32">System.UInt32</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="Int32">System.Int32</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+    <Type n="UInt32">System.UInt32</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

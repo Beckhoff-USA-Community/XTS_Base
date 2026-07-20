@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="iTraceMessageInfo" Id="{2a7269f3-923b-02ed-1977-5d84ce8f4512}">
+    <Declaration><![CDATA[INTERFACE iTraceMessageInfo EXTENDS iBase]]></Declaration>
+    <Property Name="Message" Id="{3829d34e-1c7b-0ec5-0fc3-9d64934b7ef6}">
+      <Declaration><![CDATA[{attribute 'monitoring':='call'}
+PROPERTY Message : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{ffe03bfb-0150-02d6-2da8-5731070c4156}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MessageId" Id="{f65c80be-7a48-075b-08d2-078901974f86}">
+      <Declaration><![CDATA[{attribute 'monitoring':='call'}
+PROPERTY MessageId : UDINT]]></Declaration>
+      <Get Name="Get" Id="{63d5877e-06eb-09da-3682-85d66e813a5f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Severity" Id="{314fdfb9-5e40-0db3-3097-8973789cd406}">
+      <Declaration><![CDATA[{attribute 'monitoring':='call'}
+PROPERTY Severity : USINT]]></Declaration>
+      <Get Name="Get" Id="{27eaf2d8-0dc4-091c-01dd-44d039eb3c65}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="Mover" Id="{461a92b9-026e-4cbb-aa50-b18297f25ecc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK Mover IMPLEMENTS iMover;
@@ -21,7 +21,7 @@ VAR_OUTPUT
 	ErrorOrigin		: STRING;		// error source, in case of errored internal function block
 	
 	InGroup			: BOOL;			// Mover is currently grouped for CA
-	IdentInGroup	: UDINT;		// IDX within group, for knowing which movers are adjacent
+	IdentInGroup	: IDENT_IN_GROUP_REF;		// IDX within group, for knowing which movers are adjacent
 	
 	AxisReference	: AXIS_REF;		// Motion link variable. Left as output so the link can be made directly, and accessed by external code
 	
@@ -46,40 +46,42 @@ END_VAR
     <Method Name="ActivateTrack" Id="{2cd7eff7-09ea-0845-346b-196f53ea2e60}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ActivateTrack : BOOL
 VAR_INPUT
-	Track	: REFERENCE TO Track;
+	Track : REFERENCE TO Track;
 END_VAR
+
 VAR
-	newCallTime			: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate			: FB_TcMessage;	
+	newCallTime : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// active the track for this mover
+
 // THIS ROUTINE IS NOT CHAINABLE wait for .IsTrackReady before issuing additional motion commands
 
 // this routine only stores data and sets flags
-// actual work of activating the track is done in .CyclicTrack()
-// to enable this to be called on every scan, a check is made here for not busy as MC_ActivateTrack does not handle multiple calls efficently
-// .CyclicTrack() monitors for a falling edge on internalActivateTrack before allowing another command
-// this functionality mimics motion library commands such as MC_MoveAbsolute
 
+// actual work of activating the track is done in .CyclicTrack()
+
+// to enable this to be called on every scan, a check is made here for not busy as MC_ActivateTrack does not handle multiple calls efficently
+
+// .CyclicTrack() monitors for a falling edge on internalActivateTrack before allowing another command
+
+// this functionality mimics motion library commands such as MC_MoveAbsolute
 // do not re-activate track if it is already selected
 IF (LocalVars.Track = 0 OR (LocalVars.Track <> 0 AND_THEN Track.Id <> LocalVars.Track^.Id)) THEN
 	LocalVars.ActivateTrackFlag := TRUE;
 	IF (LocalVars.TrackState = TrackState.WAIT_FOR_COMMAND) THEN
 		LocalVars.ActivatingTrack := ADR(Track);
-		LocalVars.TrackIsReady := FALSE;
-		
-		newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-		
-		IF ( newCallTime - LocalVars.lastCallActivateTrack ) > 1 THEN
-			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrack,0 );
-			MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(LocalVars.ActivatingTrack^.Id).AddString(THIS^.SourceInstancePath).AddString(Track.InstancePath);
-			MsgCreate.Send(0);
+		LocalVars.TrackIsReady	  := FALSE;
+		newCallTime				  := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+		IF (newCallTime - LocalVars.lastCallActivateTrack) > 1 THEN
+			Trace.Verbose(THIS^.InstancePath,
+						  ConcatEx('ActivateTrack command issued. TrackId: ',
+								   TO_STRING(LocalVars.ActivatingTrack^.Id),
+								   '. Source: ',
+								   THIS^.SourceInstancePath));
 		END_IF
-		
-		LocalVars.lastCallActivateTrack		:= newCallTime;
+
+		LocalVars.lastCallActivateTrack := newCallTime;
 	END_IF;
 END_IF;]]></ST>
       </Implementation>
@@ -158,157 +160,146 @@ END_VAR
     <Method Name="Cyclic" Id="{39769063-232f-402c-8c9b-ad47db196752}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Cyclic : iMover
 VAR_IN_OUT
-	GroupReference		: AXES_GROUP_REF;
+	GroupReference : AXES_GROUP_REF;
 END_VAR
+
 VAR
-	runCyclicTrack		: BOOL;
-END_VAR
-VAR_INST
-	MsgCreate			: FB_TcMessage;
+	runCyclicTrack : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// this method contains multiple state machines denoted by the headers below
 
 // *************************************************************************
+
 // mover state machine
+
 // *************************************************************************
-
 // cleans motion parameters, removing possible negatives. Upper bounds are capped by the axis parameters
-MotionParameters.Acceleration	:= LIMIT( 0, MotionParameters.Acceleration, 1E300 );
-MotionParameters.Deceleration	:= LIMIT( 0, MotionParameters.Deceleration, 1E300 );
-MotionParameters.Jerk			:= LIMIT( 0, MotionParameters.Jerk, 1E300 );
-MotionParameters.Velocity		:= LIMIT( 0, MotionParameters.Velocity, 1E300 );
-
+MotionParameters.Acceleration := LIMIT(0, MotionParameters.Acceleration, 1E300);
+MotionParameters.Deceleration := LIMIT(0, MotionParameters.Deceleration, 1E300);
+MotionParameters.Jerk		  := LIMIT(0, MotionParameters.Jerk, 1E300);
+MotionParameters.Velocity	  := LIMIT(0, MotionParameters.Velocity, 1E300);
 CASE LocalVars.State OF
-	MV_IDLE:	// ------------------------------------------------------- idle state
-	
-		Ready	:= FALSE;
-		Busy	:= FALSE;
-
-		LocalVars.Disable			:= FALSE;
+	MV_IDLE: // ------------------------------------------------------- idle state
+		Ready			  := FALSE;
+		Busy			  := FALSE;
+		LocalVars.Disable := FALSE;
 		IF LocalVars.Enable THEN
 			// clear enable on commands (allows commands to hold error IDs until next enable signle for debugging
-			
-			LocalVars.Reissue					:= FALSE;
-			LocalVars.fbMoveAbsCA[0].Execute			:= FALSE;
-			LocalVars.fbMoveAbsCA[1].Execute			:= FALSE;
-			LocalVars.fbMoveRelCA[0].Execute			:= FALSE;
-			LocalVars.fbMoveRelCA[1].Execute			:= FALSE;
-			LocalVars.fbGearInPosMoverCA[0].Execute	:= FALSE;
-			LocalVars.fbGearInPosMoverCA[1].Execute	:= FALSE;
+			LocalVars.Reissue						:= FALSE;
+			LocalVars.fbMoveAbsCA[0].Execute		:= FALSE;
+			LocalVars.fbMoveAbsCA[1].Execute		:= FALSE;
+			LocalVars.fbMoveRelCA[0].Execute		:= FALSE;
+			LocalVars.fbMoveRelCA[1].Execute		:= FALSE;
+			LocalVars.fbGearInPosMoverCA[0].Execute := FALSE;
+			LocalVars.fbGearInPosMoverCA[1].Execute := FALSE;
 			LocalVars.fbGearInPosAxisCA[0].Execute	:= FALSE;
 			LocalVars.fbGearInPosAxisCA[1].Execute	:= FALSE;
 			LocalVars.fbHaltCA.Execute				:= FALSE;
 			LocalVars.fbAddToGroup.Execute			:= FALSE;
 			LocalVars.fbRemoveFromGroup.Execute		:= FALSE;
-			LocalVars.fbReset.Execute					:= FALSE;
+			LocalVars.fbReset.Execute				:= FALSE;
 			LocalVars.fbActivateTrack.Execute		:= FALSE;
-		
-			LocalVars.Enable		:= FALSE;
-			LocalVars.State		:= MV_RESET;
+			LocalVars.Enable						:= FALSE;
+			LocalVars.State							:= MV_RESET;
 		END_IF
-		
+
 	MV_RESET: // ------------------------------------------------------- axis is resetting
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		LocalVars.fbReset.Execute			:= TRUE;
-		
+		Ready					  := FALSE;
+		Busy					  := TRUE;
+		Error					  := FALSE;
+		ErrorID					  := 0;
+		LocalVars.fbReset.Execute := TRUE;
 		IF LocalVars.fbReset.Done THEN
-			LocalVars.fbReset.Execute		:= FALSE;
+			LocalVars.fbReset.Execute := FALSE;
 			Mediator.DetectMover1();
-			LocalVars.State		:= MV_M1_DELAY;
+			LocalVars.State := MV_M1_DELAY;
 		ELSIF LocalVars.fbReset.Error THEN
-			ErrorID				:= LocalVars.fbReset.ErrorID;
-			ErrorOrigin			:= CONCAT( InstancePath, '.fbReset' );
-			LocalVars.State		:= MV_ERROR;		
+			ErrorID			:= LocalVars.fbReset.ErrorID;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbReset');
+			LocalVars.State := MV_ERROR;
 		END_IF
-		
-	MV_M1_DELAY:	// ------------------------------------------------------ delay to allow M1 Detect Completion
-	
+
+	MV_M1_DELAY: // ------------------------------------------------------ delay to allow M1 Detect Completion
 		Ready	:= FALSE;
 		Busy	:= TRUE;
 		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		LocalVars.fbDelayM1Timer( IN := Mediator.EnvironmentIsReady AND_THEN (Mediator.Mover1DetectionComplete OR Mediator.XPU.GetMoverIdDetectionMode() = MoverIdDetectionMode.Standard), PT := T#500MS );
-		
+		ErrorID := 0;
+		LocalVars.fbDelayM1Timer(IN := Mediator.EnvironmentIsReady AND_THEN (Mediator.Mover1DetectionComplete OR Mediator.XPU.GetMoverIdDetectionMode() = MoverIdDetectionMode.Standard), PT := T#500MS);
 		IF LocalVars.fbDelayM1Timer.Q THEN
-			LocalVars.fbDelayM1Timer( IN := FALSE );
-			LocalVars.State	:= MV_ENABLING;
+			LocalVars.fbDelayM1Timer(IN := FALSE);
+			LocalVars.State := MV_ENABLING;
 		END_IF
-		
+
 		// on mover 1 detection error disable the mover and report the error
 		IF (Mediator.Mover1DetectionError) THEN
 			// make sure the timer is reset
-			LocalVars.fbDelayM1Timer( IN := FALSE );
+			LocalVars.fbDelayM1Timer(IN := FALSE);
+
 			// log the error and transition to the error state
-			ErrorOrigin				:= CONCAT( Mediator.InstancePath, '.Mover1DetectionError' );
+			ErrorOrigin		:= CONCAT(Mediator.InstancePath, '.Mover1DetectionError');
 			LocalVars.State := MV_ERROR;
 		END_IF
-			
+
 	MV_ENABLING: // ------------------------------------------------------- axis is enabling
-	
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		LocalVars.fbPower.Enable					:= TRUE;
-		LocalVars.fbPower.Enable_Positive			:= TRUE;
-		LocalVars.fbPower.Enable_Negative			:= TRUE;
-		LocalVars.fbPower.BufferMode				:= MC_Aborting;
-		LocalVars.fbPower.Override				:= 100;
-		
+		Ready							  := FALSE;
+		Busy							  := TRUE;
+		Error							  := FALSE;
+		ErrorID							  := 0;
+		LocalVars.fbPower.Enable		  := TRUE;
+		LocalVars.fbPower.Enable_Positive := TRUE;
+		LocalVars.fbPower.Enable_Negative := TRUE;
+		LocalVars.fbPower.BufferMode	  := MC_Aborting;
+		LocalVars.fbPower.Override		  := 100;
 		IF LocalVars.fbPower.Status THEN
-			LocalVars.State				:= MV_ADDTOGROUP;
+			LocalVars.State := MV_ADDTOGROUP;
 		ELSIF LocalVars.fbPower.Error THEN
-			ErrorID						:= LocalVars.fbPower.ErrorID;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbPower' );
-			LocalVars.State				:= MV_ERROR;
+			ErrorID			:= LocalVars.fbPower.ErrorID;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbPower');
+			LocalVars.State := MV_ERROR;
 		ELSIF AxisReference.Status.Error THEN
-			ErrorID					:= AxisReference.Status.ErrorID;
-			ErrorOrigin				:= Concat(InstancePath, ': General NC Error during Enabling');
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= AxisReference.Status.ErrorID;
+			ErrorOrigin		:= Concat(InstancePath, ': General NC Error during Enabling');
+			LocalVars.State := MV_ERROR;
 		END_IF
-		
+
 	MV_ADDTOGROUP: // ------------------------------------------------------- axis is adding to a group
-	
 		Ready	:= FALSE;
 		Busy	:= TRUE;
 		Error	:= FALSE;
-		ErrorID	:= 0;
-		
+		ErrorID := 0;
+
 		// add to group is done in batches controlled by the mediator
-		LocalVars.fbAddToGroup.Execute			:= LocalVars.MoverIndex <= Mediator.GroupAddLimit;
-		LocalVars.fbAddToGroup.IdentInGroup		:= UDINT_TO_IDENTINGROUP( AxisReference.NcToPlc.AxisId - 1 );
-		
+		LocalVars.fbAddToGroup.Execute		:= LocalVars.MoverIndex <= Mediator.GroupAddLimit;
+		LocalVars.fbAddToGroup.IdentInGroup := UDINT_TO_IDENTINGROUP(AxisReference.NcToPlc.AxisId - 1);
 		// wait for done and secondary check of number of movers (fb may report done before NC is done with high mover counts)
 		IF LocalVars.fbAddToGroup.Done AND Mediator.GroupAxesCount = Mediator.NumMovers THEN
 			// all axes added to group, move to next state
 			InGroup						:= TRUE;
-			IdentInGroup				:= AxisReference.NcToPlc.AxisId - 1;
+			IdentInGroup				:= LocalVars.fbAddToGroup.IdentInGroup	;
 			LocalVars.fbAddToGroup.Execute		:= FALSE;
 			LocalVars.State				:= MV_ENABLEGROUP;
 		ELSIF LocalVars.fbAddToGroup.Error THEN
 			// error with add to group fb
-			LocalVars.fbAddToGroup.Execute		:= FALSE;
-			ErrorID						:= LocalVars.fbAddToGroup.ErrorId;
-			ErrorOrigin					:= CONCAT( InstancePath, '.fbAddToGroup' );
-			LocalVars.State				:= MV_ERROR;
+			LocalVars.fbAddToGroup.Execute := FALSE;
+			ErrorID						   := LocalVars.fbAddToGroup.ErrorId;
+			ErrorOrigin					   := CONCAT(InstancePath, '.fbAddToGroup');
+			LocalVars.State				   := MV_ERROR;
 		ELSIF AxisReference.Status.Error THEN
 			// error reported by the axis
+
 			// it has been discovered that in high mover count systems this error bit can turn on for 1 scan during the reset process
+
 			// this code has been removed to avoid triggering an error on the system when the mover does ultimately finish
+
 			// enabling and being added to the group
+
 			// this empty elsif block remains as a debugging visual aid but it not expected to be triggered for more than 1 scan
-			// a true axis error, in the rare case one exists after a reset, will still be caught on the first scan in run mode
+
+		// a true axis error, in the rare case one exists after a reset, will still be caught on the first scan in run mode
 		END_IF
-		
-	MV_ENABLEGROUP:	// ----------------------------------------------- have mediator enable group
+
+	MV_ENABLEGROUP: // ----------------------------------------------- have mediator enable group
 		Mediator.EnableGroup();
 		IF Mediator.GroupEnabled AND Mediator.AllMotorModulesEnabled THEN
 			LocalVars.State := MV_RUN;
@@ -316,162 +307,163 @@ CASE LocalVars.State OF
 			Error			:= TRUE;
 			ErrorID			:= Mediator.ErrorID;
 			ErrorOrigin		:= Concat(InstancePath, ': Mediator.EnableGroup');
-			LocalVars.State	:= MV_ERROR;;
+			LocalVars.State := MV_ERROR;
+			;
 		END_IF
-			
+
 	MV_RUN: // ------------------------------------------------------- mover enabled, ready
-	
-		Ready	:= TRUE;
-		IF NOT LocalVars.fbMoveAbsCA[0].busy AND NOT LocalVars.fbMoveAbsCA[1].Busy AND NOT LocalVars.fbMoveRelCA[0].Busy AND NOT LocalVars.fbMoveRelCA[1].Busy THEN 
-			Busy	:= FALSE;
+		Ready := TRUE;
+		IF NOT LocalVars.fbMoveAbsCA[0].busy AND NOT LocalVars.fbMoveAbsCA[1].Busy AND NOT LocalVars.fbMoveRelCA[0].Busy AND NOT LocalVars.fbMoveRelCA[1].Busy THEN
+			Busy := FALSE;
 		ELSE
-			Busy 	:= TRUE;
+			Busy := TRUE;
 		END_IF
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		LocalVars.Enable			:= FALSE;		
+
+		Error			 := FALSE;
+		ErrorID			 := 0;
+		LocalVars.Enable := FALSE;
 		IF LocalVars.Disable THEN
-			LocalVars.Disable		:= FALSE;
-			LocalVars.State		:= MV_BEGIN_HALTING;
-			
+			LocalVars.Disable := FALSE;
+			LocalVars.State	  := MV_BEGIN_HALTING;
+
 		// Reset all commands issued by method calls
 		ELSIF LocalVars.fbMoveAbsCA[0].Busy OR LocalVars.fbMoveAbsCA[0].CommandAborted THEN // OR fbMoveAbs.CommandAborted THEN
-			LocalVars.fbMoveAbsCA[0].Execute		:= FALSE;
+			LocalVars.fbMoveAbsCA[0].Execute := FALSE;
 		ELSIF LocalVars.fbMoveAbsCA[1].Busy OR LocalVars.fbMoveAbsCA[1].CommandAborted THEN
-			LocalVars.fbMoveAbsCA[1].Execute		:= FALSE;			
+			LocalVars.fbMoveAbsCA[1].Execute := FALSE;
 		ELSIF LocalVars.fbAddToGroup.Done THEN
-			LocalVars.fbAddToGroup.Execute		:= FALSE;
+			LocalVars.fbAddToGroup.Execute := FALSE;
 		ELSIF LocalVars.fbMoveRelCA[0].Busy OR LocalVars.fbMoveRelCA[0].CommandAborted THEN
-			LocalVars.fbMoveRelCA[0].Execute		:= FALSE;
+			LocalVars.fbMoveRelCA[0].Execute := FALSE;
 		ELSIF LocalVars.fbMoveRelCA[1].Busy OR LocalVars.fbMoveRelCA[1].CommandAborted THEN
-			LocalVars.fbMoveRelCA[1].Execute		:= FALSE;
+			LocalVars.fbMoveRelCA[1].Execute := FALSE;
 		ELSIF LocalVars.fbGearInPosMoverCA[0].Busy OR LocalVars.fbGearInPosMoverCA[0].CommandAborted THEN
-			LocalVars.fbGearInPosMoverCA[0].Execute	:= FALSE;
+			LocalVars.fbGearInPosMoverCA[0].Execute := FALSE;
 		ELSIF LocalVars.fbGearInPosMoverCA[1].Busy OR LocalVars.fbGearInPosMoverCA[1].CommandAborted THEN
-			LocalVars.fbGearInPosMoverCA[1].Execute	:= FALSE;
+			LocalVars.fbGearInPosMoverCA[1].Execute := FALSE;
 		ELSIF LocalVars.fbGearInPosAxisCA[0].Busy OR LocalVars.fbGearInPosAxisCA[0].CommandAborted THEN
-			LocalVars.fbGearInPosAxisCA[0].Execute	:= FALSE;
+			LocalVars.fbGearInPosAxisCA[0].Execute := FALSE;
 		ELSIF LocalVars.fbGearInPosAxisCA[1].Busy OR LocalVars.fbGearInPosAxisCA[1].CommandAborted THEN
-			LocalVars.fbGearInPosAxisCA[1].Execute	:= FALSE;
+			LocalVars.fbGearInPosAxisCA[1].Execute := FALSE;
 		ELSIF LocalVars.fbHaltCA.Busy OR LocalVars.fbHaltCA.CommandAborted OR LocalVars.fbHaltCA.Done THEN
-			LocalVars.fbHaltCA.Execute			:= FALSE;
+			LocalVars.fbHaltCA.Execute := FALSE;
 		END_IF;
-		
-		runCyclicTrack := TRUE;
-		
-		IF (LocalVars.Reissue) THEN
-			THIS^.SourceInstancePath	:= 'ReissueCommand';
 
+		runCyclicTrack := TRUE;
+		IF (LocalVars.Reissue) THEN
+			THIS^.SourceInstancePath := 'ReissueCommand';
 			CASE LocalVars.CurrentMoveType OF
 				MOVETYPE_NONE:
-					// No current command to reissue	
+				// No current command to reissue	
 				MOVETYPE_POSITION:
-					THIS^.MoveToPosition( LocalVars.CurrentDestPosition );
+					THIS^.MoveToPosition(LocalVars.CurrentDestPosition);
+
 				MOVETYPE_STATION:
-					THIS^.MoveToStation( LocalVars.CurrentDestStation );
+					THIS^.MoveToStation(LocalVars.CurrentDestStation);
+
 				MOVETYPE_VELOCITY:
-					THIS^.MoveVelocity( MotionParameters.Velocity );
+					THIS^.MoveVelocity(MotionParameters.Velocity);
+
 				MOVETYPE_SYNC_MOVER:
-					THIS^.SyncToMover( LocalVars.MasterMover, LocalVars.Gap );
+					THIS^.SyncToMover(LocalVars.MasterMover, LocalVars.Gap);
+
 				MOVETYPE_SYNC_AXIS:
-					// This command should perhaps not be compatible with Reissue command
+
+				// This command should perhaps not be compatible with Reissue command
 			END_CASE
+
 			LocalVars.Reissue := FALSE;
 		END_IF
 
 		// And catch all internal function block errors
 		IF LocalVars.fbMoveAbsCA[0].Error THEN
-			ErrorID					:= LocalVars.fbMoveAbsCA[0].ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbMoveAbs[0]' );
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= LocalVars.fbMoveAbsCA[0].ErrorID;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbMoveAbs[0]');
+			LocalVars.State := MV_ERROR;
 		ELSIF LocalVars.fbMoveAbsCA[1].Error THEN
-			ErrorID					:= LocalVars.fbMoveAbsCA[1].ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbMoveAbs[1]' );
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= LocalVars.fbMoveAbsCA[1].ErrorId;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbMoveAbs[1]');
+			LocalVars.State := MV_ERROR;
 		ELSIF LocalVars.fbAddToGroup.Error THEN
-			ErrorID					:= LocalVars.fbAddToGroup.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbAddToGroup' );
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= LocalVars.fbAddToGroup.ErrorID;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbAddToGroup');
+			LocalVars.State := MV_ERROR;
 		ELSIF LocalVars.fbMoveRelCA[0].Error THEN
-			ErrorID					:= LocalVars.fbMoveRelCA[0].ErrorID;
-			ErrorOrigin 			:= CONCAT ( InstancePath, '.fbMoveRelCA[0]');
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= LocalVars.fbMoveRelCA[0].ErrorID;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbMoveRelCA[0]');
+			LocalVars.State := MV_ERROR;
 		ELSIF LocalVars.fbMoveRelCA[1].Error THEN
-			ErrorID					:= LocalVars.fbMoveRelCA[1].ErrorID;
-			ErrorOrigin 			:= CONCAT ( InstancePath, '.fbMoveRelCA[1]');
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= LocalVars.fbMoveRelCA[1].ErrorID;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbMoveRelCA[1]');
+			LocalVars.State := MV_ERROR;
 		ELSIF LocalVars.fbGearInPosMoverCA[0].Error THEN
-			ErrorID					:= LocalVars.fbGearInPosMoverCA[0].ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosMoverCA[0]');
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= LocalVars.fbGearInPosMoverCA[0].ErrorId;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbGearInPosMoverCA[0]');
+			LocalVars.State := MV_ERROR;
 		ELSIF LocalVars.fbGearInPosMoverCA[1].Error THEN
-			ErrorID					:= LocalVars.fbGearInPosMoverCA[1].ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosMoverCA[1]');
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= LocalVars.fbGearInPosMoverCA[1].ErrorId;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbGearInPosMoverCA[1]');
+			LocalVars.State := MV_ERROR;
 		ELSIF LocalVars.fbGearInPosAxisCA[0].Error THEN
-			ErrorID					:= LocalVars.fbGearInPosAxisCA[0].ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosAxisCA[0]');
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= LocalVars.fbGearInPosAxisCA[0].ErrorId;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbGearInPosAxisCA[0]');
+			LocalVars.State := MV_ERROR;
 		ELSIF LocalVars.fbGearInPosAxisCA[1].Error THEN
-			ErrorID					:= LocalVars.fbGearInPosAxisCA[1].ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbGearInPosAxisCA[1]');
-			LocalVars.State			:= MV_ERROR;			
+			ErrorID			:= LocalVars.fbGearInPosAxisCA[1].ErrorId;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbGearInPosAxisCA[1]');
+			LocalVars.State := MV_ERROR;
 		ELSIF LocalVars.fbActivateTrack.Error THEN
-			ErrorID					:= LocalVars.fbActivateTrack.ErrorId;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbActivateTrack');
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= LocalVars.fbActivateTrack.ErrorId;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbActivateTrack');
+			LocalVars.State := MV_ERROR;
 		ELSIF AxisReference.Status.Error THEN
-			ErrorID					:= AxisReference.Status.ErrorID;
-			ErrorOrigin				:= Concat(InstancePath, ': General NC Error during run');
-			LocalVars.State			:= MV_ERROR;
+			ErrorID			:= AxisReference.Status.ErrorID;
+			ErrorOrigin		:= Concat(InstancePath, ': General NC Error during run');
+			LocalVars.State := MV_ERROR;
 		END_IF
-		
-	MV_BEGIN_HALTING:	// --------------------------------------------------- begin stopping process
-	
+
+	MV_BEGIN_HALTING: // --------------------------------------------------- begin stopping process
 		Ready	:= FALSE;
 		Busy	:= TRUE;
 		Error	:= FALSE;
-		ErrorID	:= 0;
-		
+		ErrorID := 0;
+
 		// Kill any active motion commands
-		LocalVars.fbMoveAbsCA[0].Execute			:= FALSE;
-		LocalVars.fbMoveAbsCA[1].Execute			:= FALSE;
-		LocalVars.fbMoveRelCA[0].Execute			:= FALSE;
-		LocalVars.fbMoveRelCA[1].Execute			:= FALSE;
-		LocalVars.fbGearInPosMoverCA[0].Execute	:= FALSE;
-		LocalVars.fbGearInPosMoverCA[1].Execute	:= FALSE;
+		LocalVars.fbMoveAbsCA[0].Execute		:= FALSE;
+		LocalVars.fbMoveAbsCA[1].Execute		:= FALSE;
+		LocalVars.fbMoveRelCA[0].Execute		:= FALSE;
+		LocalVars.fbMoveRelCA[1].Execute		:= FALSE;
+		LocalVars.fbGearInPosMoverCA[0].Execute := FALSE;
+		LocalVars.fbGearInPosMoverCA[1].Execute := FALSE;
 		LocalVars.fbGearInPosAxisCA[0].Execute	:= FALSE;
 		LocalVars.fbGearInPosAxisCA[1].Execute	:= FALSE;
-
-		
 		IF Mediator.Error = FALSE THEN
-			LocalVars.fbHaltCA.Execute		:= TRUE;
+			LocalVars.fbHaltCA.Execute := TRUE;
+
 			//fbHaltCA.Deceleration	:= MotionParameters.Deceleration;
-			//fbHaltCA.Jerk			:= MotionParameters.Jerk;
+
+		//fbHaltCA.Jerk			:= MotionParameters.Jerk;
 		ELSE
-			LocalVars.State			:= MV_REMOVEFROMGROUP;
+			LocalVars.State := MV_REMOVEFROMGROUP;
 		END_IF;
-		
+
 		IF LocalVars.fbHaltCA.Active OR LocalVars.fbHaltCA.Done THEN
-			LocalVars.State			:= MV_HALTING;
+			LocalVars.State := MV_HALTING;
 		ELSIF LocalVars.fbHaltCA.Error THEN
-			ErrorID					:= LocalVars.fbHaltCA.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbHalt' );
-			LocalVars.State			:= MV_ERROR;				
-		END_IF	
-		
-	MV_HALTING:	// ------------------------------------------------------- mover disabling
-	
+			ErrorID			:= LocalVars.fbHaltCA.ErrorID;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbHalt');
+			LocalVars.State := MV_ERROR;
+		END_IF
+
+	MV_HALTING: // ------------------------------------------------------- mover disabling
 		Ready	:= FALSE;
 		Busy	:= TRUE;
 		Error	:= FALSE;
-		ErrorID	:= 0;
-
+		ErrorID := 0;
 		// Wait for the stopping action to complete
 		IF LocalVars.fbHaltCA.Done THEN
-			LocalVars.fbHaltCA.Execute		:= FALSE;
-			LocalVars.State			:= MV_REMOVEFROMGROUP;
+			LocalVars.fbHaltCA.Execute := FALSE;
+			LocalVars.State			   := MV_REMOVEFROMGROUP;
 		ELSIF LocalVars.fbHaltCA.Error THEN
 			ErrorID					:= LocalVars.fbHaltCA.ErrorID;
 			ErrorOrigin				:= CONCAT( InstancePath, '.fbHalt' );
@@ -486,92 +478,88 @@ CASE LocalVars.State OF
 		ErrorID	:= 0;
 		
 		LocalVars.fbRemoveFromGroup.Execute			:= TRUE;
-		LocalVars.fbRemoveFromGroup.IdentInGroup		:= UDINT_TO_IDENTINGROUP( IdentInGroup );
+		LocalVars.fbRemoveFromGroup.IdentInGroup		:= IdentInGroup;
 		
 		IF LocalVars.fbRemoveFromGroup.Done THEN
-			LocalVars.fbRemoveFromGroup.Execute		:= FALSE;
-			InGroup							:= FALSE;
-			LocalVars.State					:= MV_DISABLING;
+			LocalVars.fbRemoveFromGroup.Execute := FALSE;
+			InGroup								:= FALSE;
+			LocalVars.State						:= MV_DISABLING;
 		END_IF
-		
 
-
-	MV_DISABLING:	// ----------------------------------------------------- start the disabling process
-
-		Ready	:= FALSE;
-		Busy	:= TRUE;
-		Error	:= FALSE;
-		ErrorID	:= 0;
-		
-		LocalVars.fbPower.Enable				:= FALSE;
-		LocalVars.fbPower.Enable_Positive		:= FALSE;
-		LocalVars.fbPower.Enable_Negative		:= FALSE;
-		LocalVars.fbPower.BufferMode			:= MC_Aborting;
-		LocalVars.fbPower.Override			:= 100;
-			
+	MV_DISABLING: // ----------------------------------------------------- start the disabling process
+		Ready							  := FALSE;
+		Busy							  := TRUE;
+		Error							  := FALSE;
+		ErrorID							  := 0;
+		LocalVars.fbPower.Enable		  := FALSE;
+		LocalVars.fbPower.Enable_Positive := FALSE;
+		LocalVars.fbPower.Enable_Negative := FALSE;
+		LocalVars.fbPower.BufferMode	  := MC_Aborting;
+		LocalVars.fbPower.Override		  := 100;
 		IF LocalVars.fbPower.Status = FALSE THEN
-			LocalVars.State			:= MV_IDLE;
+			LocalVars.State := MV_IDLE;
 		ELSIF LocalVars.fbPower.Error THEN
-			ErrorID					:= LocalVars.fbPower.ErrorID;
-			ErrorOrigin				:= CONCAT( InstancePath, '.fbPower' );
-			LocalVars.State			:= MV_ERROR;
-		END_IF		
-	
-	MV_ERROR: // ------------------------------------------------------- mover in error state
-	
-		Ready	:= FALSE;
-		Busy	:= FALSE;
-		Error	:= TRUE;
-		
-		LocalVars.CurrentMoveType:= MOVETYPE_NONE;
-		
-		LocalVars.Enable			:= FALSE;		
-		IF LocalVars.Disable THEN
-			LocalVars.Disable		:= FALSE;
-			LocalVars.State		:= MV_REMOVEFROMGROUP;
-			ErrorOrigin			:= '';
+			ErrorID			:= LocalVars.fbPower.ErrorID;
+			ErrorOrigin		:= CONCAT(InstancePath, '.fbPower');
+			LocalVars.State := MV_ERROR;
 		END_IF
-		
+
+	MV_ERROR: // ------------------------------------------------------- mover in error state
+		Ready					  := FALSE;
+		Busy					  := FALSE;
+		Error					  := TRUE;
+		LocalVars.CurrentMoveType := MOVETYPE_NONE;
+		LocalVars.Enable		  := FALSE;
+		IF LocalVars.Disable THEN
+			LocalVars.Disable := FALSE;
+			LocalVars.State	  := MV_REMOVEFROMGROUP;
+			ErrorOrigin		  := '';
+		END_IF
 END_CASE
 
-LocalVars.fbPower( Axis := AxisReference );
-LocalVars.fbReset( Axis := AxisReference );
+LocalVars.fbPower(Axis := AxisReference);
+LocalVars.fbReset(Axis := AxisReference);
+LocalVars.fbHaltCA(Axis := AxisReference);
 
-LocalVars.fbHaltCA( Axis := AxisReference );
 //fbDisable( Axis := AxisRef );
+
 //fbExternEnable( Axis := AxisRef );
-
-LocalVars.fbAddToGroup( AxesGroup := GroupReference, Axis := AxisReference );
-LocalVars.fbRemoveFromGroup( AxesGroup := GroupReference );
-
-LocalVars.fbMoveAbsCA[0]( Axis := AxisReference );
-LocalVars.fbMoveAbsCA[1]( Axis := AxisReference );
-LocalVars.fbMoveRelCA[0] ( Axis := AxisReference );
-LocalVars.fbMoveRelCA[1] ( Axis := AxisReference );
-
-LocalVars.fbGearInPosMoverCA[0]( Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference );
-LocalVars.fbGearInPosMoverCA[1]( Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference );
-
-LocalVars.fbGearInPosAxisCA[0]( Master := LocalVars.MasterAxis, Slave := THIS^.AxisReference );
-LocalVars.fbGearInPosAxisCA[1]( Master := LocalVars.MasterAxis, Slave := THIS^.AxisReference );
+LocalVars.fbAddToGroup(AxesGroup := GroupReference, Axis := AxisReference);
+LocalVars.fbRemoveFromGroup(AxesGroup := GroupReference);
+LocalVars.fbMoveAbsCA[0](Axis := AxisReference);
+LocalVars.fbMoveAbsCA[1](Axis := AxisReference);
+LocalVars.fbMoveRelCA[0](Axis := AxisReference);
+LocalVars.fbMoveRelCA[1](Axis := AxisReference);
+LocalVars.fbGearInPosMoverCA[0](Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference);
+LocalVars.fbGearInPosMoverCA[1](Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference);
+LocalVars.fbGearInPosAxisCA[0](Master := LocalVars.MasterAxis, Slave := THIS^.AxisReference);
+LocalVars.fbGearInPosAxisCA[1](Master := LocalVars.MasterAxis, Slave := THIS^.AxisReference);
 
 // track management
 LocalVars.fbActivateTrack(Axis := AxisReference);
 LocalVars.fbReadTrackPositions(Axis := AxisReference);
-
 // *************************************************************************
+
 // track management state machine
+
 // *************************************************************************
 
 // called by .Cyclic() to handle the MC_ActivateTrack call's required state machine
+
 // this is only called while the mover is in the RUN state within .Cyclic() by design
+
 // calling the track management functions on disabled or errored movers that are not
+
 // assigned to a group just causes the track management functions to throw more errors
 
 // .internalTrack and thus the property .CurrentTrack are not updated until the track transition is complete
+
 // this is deliberate. The timing of a track change reuqires at least 2 PLC scans. If .internalTrack were
+
 // to be set to an invalid track number during these transitions checking for mover presence at
+
 // stations and zones would cause movers to "disappear" during the transition which may cause
+
 // upstream movers to be released erroniously because the station/zone momentarily appears clear
 
 // in user code .IsTrackReady and .CurrentTrack should be queried together before issuing commands to a mover
@@ -584,23 +572,23 @@ IF (runCyclicTrack) THEN
 				IF (LocalVars.Track <> 0) THEN
 					LocalVars.Track^.UnregisterMover(THIS^);
 				END_IF;
-	
+
 				// set flags
 				LocalVars.TrackIsReady := FALSE;
-	
+
 				// advance state
 				LocalVars.TrackState := TrackState.SETUP_FUNCTION;
 			END_IF
-			
+
 		// setup and call the function
 		TrackState.SETUP_FUNCTION:
 			LocalVars.fbActivateTrack.TrackId := LocalVars.ActivatingTrack^.OTCID;
 			LocalVars.fbActivateTrack.Execute := TRUE;
 			IF (LocalVars.fbActivateTrack.Busy) THEN
 				LocalVars.fbActivateTrack.Execute := FALSE;
-				LocalVars.TrackState := TrackState.MONITOR_RESPONSE;
+				LocalVars.TrackState			  := TrackState.MONITOR_RESPONSE;
 			END_IF
-		
+
 		// monitor response	
 		TrackState.MONITOR_RESPONSE:
 			IF (LocalVars.fbActivateTrack.Error) THEN
@@ -608,44 +596,51 @@ IF (runCyclicTrack) THEN
 			ELSIF (LocalVars.fbActivateTrack.Done) THEN
 				LocalVars.TrackState := TrackState.REQUIRED_DELAY;
 			END_IF;
-		
-		// required delay
+
+			// required delay
+
 		// the FB has returned .Done but the change has not yet propigated to the NC
 		TrackState.REQUIRED_DELAY:
 			LocalVars.TrackStateDelay.IN := TRUE;
 			IF (LocalVars.TrackStateDelay.Q) THEN
 				LocalVars.TrackStateDelay.IN := FALSE;
-				LocalVars.TrackState := TrackState.CLEAN_UP;
+				LocalVars.TrackState		 := TrackState.CLEAN_UP;
 			END_IF;
-		
+
 		// clean up flags
 		TrackState.CLEAN_UP:
-			LocalVars.Track := LocalVars.ActivatingTrack;
+			LocalVars.Track		   := LocalVars.ActivatingTrack;
 			LocalVars.TrackIsReady := TRUE;
-			MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverActivateTrackComplete, 0);
-			MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddInt(THIS^.CurrentTrack^.Id);
-			MsgCreate.Send(0);
+			Trace.Verbose(THIS^.InstancePath,
+						  ConcatEx('ActivateTrack command complete. TrackId: ',
+								   TO_STRING(THIS^.CurrentTrack^.Id),
+								   '. Source: ',
+								   THIS^.SourceInstancePath));
+
 			// register mover
 			LocalVars.Track^.RegisterMover(THIS^);
 			LocalVars.TrackState := TrackState.WAIT_END;
-			
+
 		TrackState.ERROR:
 			// reset execute
 			LocalVars.fbActivateTrack.Execute := FALSE;
+
 			// GVL.ERROR_TRACK is intentionally left in place
+
 			// internalTrackIsReady is left at false
+
 			// error is recorded in Cyclic()
 			LocalVars.TrackState := TrackState.WAIT_END;
-			
-		TrackState.WAIT_END: 
+
+		TrackState.WAIT_END:
 			// falling edge detection for internalActivateTrackFlag
 			IF (NOT LocalVars.ActivateTrackFlag) THEN
-				LocalVars.TrackState := TrackState.WAIT_FOR_COMMAND;	
+				LocalVars.TrackState := TrackState.WAIT_FOR_COMMAND;
 			END_IF
+
 			LocalVars.ActivateTrackFlag := FALSE;
-	
 	END_CASE
-	
+
 	// read back track information
 	IF (LocalVars.TrackIsReady AND LocalVars.Track <> 0) THEN
 		// track info should be stable, call the block
@@ -654,30 +649,29 @@ IF (runCyclicTrack) THEN
 		IF (LocalVars.fbReadTrackPositions.Valid) THEN
 			IF (LocalVars.Track^.Id <> 0) THEN
 				TrackInfo.TrackPosition := LocalVars.fbReadTrackPositions.TrackPosition;
-				TrackInfo.PartPosition := LocalVars.fbReadTrackPositions.PartPosition;
-				TrackInfo.TrackId := LocalVars.fbReadTrackPositions.TrackId;
-				TrackInfo.PartId := LocalVars.fbReadTrackPositions.PartId;
+				TrackInfo.PartPosition	:= LocalVars.fbReadTrackPositions.PartPosition;
+				TrackInfo.TrackId		:= LocalVars.fbReadTrackPositions.TrackId;
+				TrackInfo.PartId		:= LocalVars.fbReadTrackPositions.PartId;
 			ELSE
 				TrackInfo.TrackPosition := AxisReference.NcToPlc.ModuloActPos;
-				TrackInfo.PartPosition := AxisReference.NcToPlc.ModuloActPos;
-				TrackInfo.TrackId := 0;
-				TrackInfo.PartId := 0;
+				TrackInfo.PartPosition	:= AxisReference.NcToPlc.ModuloActPos;
+				TrackInfo.TrackId		:= 0;
+				TrackInfo.PartId		:= 0;
 			END_IF
 		END_IF
 	ELSE
 		// don't call function block to allow it to reset
 		LocalVars.fbReadTrackPositions.Enable := FALSE;
 	END_IF
-	
-	
+
 	// a delay is required after MC_ActivateTrack returns .Done
 	LocalVars.TrackStateDelay(PT := T#10MS);
 END_IF;
 
 // clear cyclic track run command and wait for it to be re-enabled by the first state machine
 runCyclicTrack := FALSE;
-
 // read the mover's OTCID into memory one time when the XTS environment becomes available
+
 // mover index <> 0 is required for a possible startup race condition
 IF (LocalVars.OTCID = 0) AND (Mediator.EnvironmentIsReady) AND (LocalVars.MoverIndex > 0) THEN
 	LocalVars.OTCID := Mediator.XPU.P_MoverOids[LocalVars.MoverIndex];
@@ -685,59 +679,30 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="Disable" Id="{2aa14795-54cd-46b8-a131-b1a8801c005f}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD Disable : iMover
-VAR_INPUT
-END_VAR
-VAR
-END_VAR
-VAR_INST
-	MsgCreate	: FB_TcMessage;	
-END_VAR]]></Declaration>
+      <Declaration><![CDATA[METHOD Disable : iMover]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-IF LocalVars.State = MV_RUN OR LocalVars.State = MV_ERROR THEN
-
+        <ST><![CDATA[IF LocalVars.State = MV_RUN OR LocalVars.State = MV_ERROR THEN
 	// Sets an internal flag to advance the state machine
-	LocalVars.Disable		:= TRUE;
-	
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverDisable,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
-	MsgCreate.Send(0);	
+	LocalVars.Disable := TRUE;
+	Trace.Verbose(THIS^.InstancePath, ConcatEx('Disable command issued. Source: ', THIS^.SourceInstancePath));
 END_IF
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-Disable		:= THIS^;
-]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+Disable					 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Enable" Id="{77bc5ebc-ace3-48eb-8e85-e45bc80ac98b}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Enable : iMover
-VAR_INPUT
-END_VAR
-VAR
-END_VAR
-VAR_INST
-	MsgCreate	: FB_TcMessage;	
-END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-IF LocalVars.State = MV_IDLE THEN
-
+        <ST><![CDATA[IF LocalVars.State = MV_IDLE THEN
 	// Sets an internal flag to advance the state machine
-	LocalVars.Enable		:= TRUE;
-	
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverEnable,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
-	MsgCreate.Send(0);
-
+	LocalVars.Enable := TRUE;
+	Trace.Verbose(THIS^.InstancePath, ConcatEx('Enable command issued. Source: ', THIS^.SourceInstancePath));
 END_IF;
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-Enable := THIS^;
-]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+Enable					 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="GroupStop" Id="{19a65925-9b39-4de9-ab16-7733d66c5fd4}" FolderPath="Methods\">
@@ -747,98 +712,70 @@ END_VAR
 VAR
 	newCallTime	: LREAL;
 END_VAR
-VAR_INST
-	MsgCreate	: FB_TcMessage;	
-END_VAR]]></Declaration>
+]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-
-IF NOT( Ready ) THEN	// if the mover is not ready & able to accept a GroupHalt Command
-
-	LocalVars.State	:= MV_ERROR;
+        <ST><![CDATA[IF NOT (Ready) THEN // if the mover is not ready & able to accept a GroupHalt Command
+	LocalVars.State := MV_ERROR;
 	ErrorID			:= 19201;
-
-ELSE	// otherwise execute the command
-	
+ELSE // otherwise execute the command
 	// grab a timestamp of the command
-	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-	
-//	fbGroupStop.Execute			:= TRUE;
-//	fbGroupStop.Deceleration	:= MotionParameters.Deceleration;
-//	fbGroupStop.Jerk			:= MotionParameters.Jerk;
-	
-	memset( ADR( LocalVars.CurrentDestObjective ), 0, SIZEOF( LocalVars.CurrentDestObjective ));
-	LocalVars.CurrentMoveType		:= MoverCommandType_enum.MOVETYPE_NONE;
-	
+	newCallTime := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+
+	//	fbGroupStop.Execute			:= TRUE;
+
+	//	fbGroupStop.Deceleration	:= MotionParameters.Deceleration;
+
+	//	fbGroupStop.Jerk			:= MotionParameters.Jerk;
+	memset(ADR(LocalVars.CurrentDestObjective), 0, SIZEOF(LocalVars.CurrentDestObjective));
+	LocalVars.CurrentMoveType := MoverCommandType_enum.MOVETYPE_NONE;
 END_IF
 
-IF ( newCallTime - LocalVars.lastCallGroupStop ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverGroupStop,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
-	MsgCreate.Send(0);
+IF (newCallTime - LocalVars.lastCallGroupStop) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath, ConcatEx('GroupStop command issued. Source: ', THIS^.SourceInstancePath));
 END_IF
 
 THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallGroupStop	:= newCallTime;
-
-GroupStop		:= THIS^;]]></ST>
+LocalVars.lastCallGroupStop := newCallTime;
+GroupStop					:= THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Halt" Id="{1f55ad78-11ad-492d-9f7a-e48ae6feda84}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Halt : iMover
-VAR_INPUT
-END_VAR
 VAR
-	newCallTime: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate: FB_TcMessage;	
+	newCallTime : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-IF NOT( Ready ) THEN
-	
-	LocalVars.State	:= MV_ERROR;
+        <ST><![CDATA[IF NOT (Ready) THEN
+	LocalVars.State := MV_ERROR;
 	ErrorID			:= 19201;
-	
-ELSIF LocalVars.fbHaltCA.Busy THEN	
-
-	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-	
+ELSIF LocalVars.fbHaltCA.Busy THEN
+	newCallTime := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
 	// oddly, MC_HaltCA does not include an option for BufferMode
-	// so do nothing
-	
+
+// so do nothing
 ELSE
-	
-	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-	
+	newCallTime						:= ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
 	LocalVars.fbHaltCA.Execute		:= TRUE;
-	LocalVars.fbHaltCA.Deceleration	:= MotionParameters.Deceleration;
+	LocalVars.fbHaltCA.Deceleration := MotionParameters.Deceleration;
 	LocalVars.fbHaltCA.Jerk			:= MotionParameters.Jerk;
-	
-	LocalVars.fbHaltCA( Axis := AxisReference );
-	
+	LocalVars.fbHaltCA(Axis := AxisReference);
 END_IF
 
-LocalVars.CurrentMoveType		:= MOVETYPE_NONE;
-LocalVars.CurrentDestPosition	:= 1E300;
-
-memset( ADR( LocalVars.CurrentDestObjective), 0, SIZEOF( LocalVars.CurrentDestObjective ));
-LocalVars.CurrentDestStation	REF= 0;
-
-IF ( newCallTime - LocalVars.lastCallHalt ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverHalt,0);
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(MotionParameters.Deceleration);
-	MsgCreate.Send(0);
+LocalVars.CurrentMoveType	  := MOVETYPE_NONE;
+LocalVars.CurrentDestPosition := 1E300;
+memset(ADR(LocalVars.CurrentDestObjective), 0, SIZEOF(LocalVars.CurrentDestObjective));
+LocalVars.CurrentDestStation REF= 0;
+IF (newCallTime - LocalVars.lastCallHalt) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('Halt command issued. Commanded Deceleration = ',
+						   TO_STRING(MotionParameters.Deceleration),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallHalt		:= newCallTIme;
-
-Halt	:= THIS^;
-]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+LocalVars.lastCallHalt	 := newCallTIme;
+Halt					 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Property Name="IsCollisionAvoidanceActive" Id="{44271435-f54e-01be-23aa-f70858e56360}" FolderPath="Properties\">
@@ -905,32 +842,9 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="LogUserEvent" Id="{2ade5417-e15a-4da8-a731-8eb7341e5999}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD LogUserEvent : iMover
-VAR_INPUT
-	String1	: STRING;	// First content section of user-event message
-	String2 : STRING;	// Second content section of user-event message
-	String3 : STRING;	// Third content section of user-event message
-END_VAR
-VAR
-END_VAR
-VAR_INST
-	MsgCreate: FB_TcMessage;	
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
-
-
-MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.UserEvent, 0 );
-MsgCreate.ipArguments.Clear().AddString(String1).AddString(String2).AddString(String3);
-MsgCreate.Send(0);
-
-LogUserEvent	:= THIS^;]]></ST>
-      </Implementation>
-    </Method>
     <Property Name="MasterMover" Id="{809c0b0b-ecf0-4af1-b9a6-f6c1668f1e51}" FolderPath="Properties\">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY MasterMover : Reference To Mover]]></Declaration>
+PROPERTY MasterMover : REFERENCE TO Mover]]></Declaration>
       <Get Name="Get" Id="{cf9c37de-0f5d-4ab8-bb6c-0c7a9a276e2e}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -976,101 +890,78 @@ VAR_INPUT
 END_VAR
 VAR
 	newCallTime		: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate		: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-IF NOT( Ready ) THEN	// if the mover is not ready & able to accept a moveabs command...
-	
-	LocalVars.State	:= MV_ERROR;
+        <ST><![CDATA[IF NOT (Ready) THEN // if the mover is not ready & able to accept a moveabs command...
+	LocalVars.State := MV_ERROR;
 	ErrorID			:= 19201;
-
 ELSIF (NOT THIS^.ValidateTrack()) THEN
-	;	// validate track posts error
-	
-ELSE	// otherwise let 'er rip
-	
-	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-	LocalVars.Reissue := FALSE;	// reissue no longer necessary
-	
+	; // validate track posts error
+ELSE  // otherwise let 'er rip
+	newCallTime		  := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+	LocalVars.Reissue := FALSE; // reissue no longer necessary
 	IF LocalVars.fbMoveAbsCA[0].Busy = FALSE THEN
-		
-		LocalVars.fbMoveAbsCA[0].Jerk			:= MotionParameters.Jerk;
-		LocalVars.fbMoveAbsCA[0].Acceleration	:= MotionParameters.Acceleration;
-		LocalVars.fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
-		LocalVars.fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
-		LocalVars.fbMoveAbsCA[0].Direction		:= MotionParameters.Direction;
-		LocalVars.fbMoveAbsCA[0].Gap			:= MotionParameters.Gap;
-		LocalVars.fbMoveAbsCA[0].Options.DynamicsReferenceSystem	:= CurrentTrack^.OTCID;
-		LocalVars.fbMoveAbsCA[0].Options.PositionReferenceSystem	:= CurrentTrack^.OTCID;
-		LocalVars.fbMoveAbsCA[0].Options.GapControlMode			:= MotionParameters.GapMode;
-		
-		LocalVars.fbMoveAbsCA[0].Position		:= DestinationPosition;
-		
-		LocalVars.fbMoveAbsCA[0].BufferMode	:= mcAborting;
-		LocalVars.fbMoveAbsCA[0].Execute		:= TRUE;
-		 
-		LocalVars.fbMoveAbsCA[0].Execute		:= TRUE;		// execute this block, and...
-		LocalVars.fbMoveAbsCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
-		
-		LocalVars.fbMoveAbsCA[0]( Axis := AxisReference );
-				
+		LocalVars.fbMoveAbsCA[0].Jerk							 := MotionParameters.Jerk;
+		LocalVars.fbMoveAbsCA[0].Acceleration					 := MotionParameters.Acceleration;
+		LocalVars.fbMoveAbsCA[0].Deceleration					 := MotionParameters.Deceleration;
+		LocalVars.fbMoveAbsCA[0].Velocity						 := MotionParameters.Velocity;
+		LocalVars.fbMoveAbsCA[0].Direction						 := MotionParameters.Direction;
+		LocalVars.fbMoveAbsCA[0].Gap							 := MotionParameters.Gap;
+		LocalVars.fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		LocalVars.fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+		LocalVars.fbMoveAbsCA[0].Options.GapControlMode			 := MotionParameters.GapMode;
+		LocalVars.fbMoveAbsCA[0].Position						 := DestinationPosition;
+		LocalVars.fbMoveAbsCA[0].BufferMode						 := mcAborting;
+		LocalVars.fbMoveAbsCA[0].Execute						 := TRUE;
+		LocalVars.fbMoveAbsCA[0].Execute						 := TRUE;  // execute this block, and...
+		LocalVars.fbMoveAbsCA[1].Execute						 := FALSE; // if necessary, interrupt this one
+		LocalVars.fbMoveAbsCA[0](Axis := AxisReference);
+
 		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
 		LocalVars.Reissue := FALSE;
-		
 	ELSIF LocalVars.fbMoveAbsCA[1].Busy = FALSE THEN
-		
-		LocalVars.fbMoveAbsCA[1].Jerk			:= MotionParameters.Jerk;
-		LocalVars.fbMoveAbsCA[1].Acceleration	:= MotionParameters.Acceleration;
-		LocalVars.fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
-		LocalVars.fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
-		LocalVars.fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
-		LocalVars.fbMoveAbsCA[1].Gap			:= MotionParameters.Gap;
+		LocalVars.fbMoveAbsCA[1].Jerk							 := MotionParameters.Jerk;
+		LocalVars.fbMoveAbsCA[1].Acceleration					 := MotionParameters.Acceleration;
+		LocalVars.fbMoveAbsCA[1].Deceleration					 := MotionParameters.Deceleration;
+		LocalVars.fbMoveAbsCA[1].Velocity						 := MotionParameters.Velocity;
+		LocalVars.fbMoveAbsCA[1].Direction						 := MotionParameters.Direction;
+		LocalVars.fbMoveAbsCA[1].Gap							 := MotionParameters.Gap;
 		LocalVars.fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		LocalVars.fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
-		LocalVars.fbMoveAbsCA[1].Options.GapControlMode			:= MotionParameters.GapMode;
+		LocalVars.fbMoveAbsCA[1].Options.GapControlMode			 := MotionParameters.GapMode;
+		LocalVars.fbMoveAbsCA[1].Position						 := DestinationPosition;
+		LocalVars.fbMoveAbsCA[1].BufferMode						 := mcAborting;
+		LocalVars.fbMoveAbsCA[1].Execute						 := TRUE;
+		LocalVars.fbMoveAbsCA[1].Execute						 := TRUE;  // execute this block, and...
+		LocalVars.fbMoveAbsCA[0].Execute						 := FALSE; // if necessary, interrupt this one
+		LocalVars.fbMoveAbsCA[1](Axis := AxisReference);
 
-		
-		LocalVars.fbMoveAbsCA[1].Position		:= DestinationPosition;
-		
-		LocalVars.fbMoveAbsCA[1].BufferMode	:= mcAborting;
-		LocalVars.fbMoveAbsCA[1].Execute		:= TRUE;
-		
-		LocalVars.fbMoveAbsCA[1].Execute		:= TRUE;		// execute this block, and...
-		LocalVars.fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
-		
-		LocalVars.fbMoveAbsCA[1]( Axis := AxisReference );
-				
 		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
 		LocalVars.Reissue := FALSE;
-		 
 	ELSE
-		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveToPositionOverload,0 );
-		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(DestinationPosition);
-		MsgCreate.Send(0);
+		Trace.Verbose(THIS^.InstancePath,
+					  ConcatEx('MoveToPosition command overloaded buffer. Commanded Position = ',
+							   TO_STRING(DestinationPosition),
+							   '. Source: ',
+							   THIS^.SourceInstancePath));
 	END_IF
-	
 END_IF
 
-LocalVars.CurrentMoveType		:= MOVETYPE_POSITION;
+LocalVars.CurrentMoveType	  := MOVETYPE_POSITION;
 LocalVars.CurrentDestPosition := DestinationPosition;
-
-memset( ADR( LocalVars.CurrentDestObjective ), 0, SIZEOF( LocalVars.CurrentDestObjective ));
-LocalVars.CurrentDestStation	REF= 0;
-
-IF ( newCallTime - LocalVars.lastCallMovePos ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveToPosition,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(DestinationPosition);
-	MsgCreate.Send(0);
+memset(ADR(LocalVars.CurrentDestObjective), 0, SIZEOF(LocalVars.CurrentDestObjective));
+LocalVars.CurrentDestStation REF= 0;
+IF (newCallTime - LocalVars.lastCallMovePos) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('MoveToPosition command issued. Commanded Position = ',
+						   TO_STRING(DestinationPosition),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF;
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallMovePos		:= newCallTime;
-
-MoveToPosition		:= THIS^;]]></ST>
+THIS^.SourceInstancePath  := 'Direct access';
+LocalVars.lastCallMovePos := newCallTime;
+MoveToPosition			  := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveToStation" Id="{73370b80-491c-4017-a420-f08c462d830e}" FolderPath="Methods\">
@@ -1081,104 +972,83 @@ END_VAR
 VAR
 	newCallTime			: LREAL;
 END_VAR
-VAR_INST
-	MsgCreate			: FB_TcMessage;	
-END_VAR]]></Declaration>
+]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT( Ready ) AND NOT(__ISVALIDREF( DestinationStation )) THEN	// if the mover is not ready & able to accept a moveabs command...
-	
-	LocalVars.State	:= MV_ERROR;
+        <ST><![CDATA[IF NOT (Ready) AND NOT (__ISVALIDREF(DestinationStation)) THEN // if the mover is not ready & able to accept a moveabs command...
+	LocalVars.State := MV_ERROR;
 	ErrorID			:= 19201;
-
 ELSIF (NOT THIS^.ValidateTrack()) THEN
-	;	// validate track posts error
-
-ELSE	// otherwise let 'er rip
-	
-	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-	LocalVars.Reissue := FALSE;	// reissue no longer necessary
-	
+	; // validate track posts error
+ELSE  // otherwise let 'er rip
+	newCallTime		  := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+	LocalVars.Reissue := FALSE; // reissue no longer necessary
 	IF LocalVars.fbMoveAbsCA[0].Busy = FALSE THEN
-		
-		LocalVars.fbMoveAbsCA[0].Jerk			:= MotionParameters.Jerk;
-		LocalVars.fbMoveAbsCA[0].Acceleration	:= MotionParameters.Acceleration;
-		LocalVars.fbMoveAbsCA[0].Deceleration	:= MotionParameters.Deceleration;
-		LocalVars.fbMoveAbsCA[0].Velocity		:= MotionParameters.Velocity;
-		LocalVars.fbMoveAbsCA[0].Direction	:= MotionParameters.Direction;
-		LocalVars.fbMoveAbsCA[0].Gap			:= MotionParameters.Gap;
+		LocalVars.fbMoveAbsCA[0].Jerk							 := MotionParameters.Jerk;
+		LocalVars.fbMoveAbsCA[0].Acceleration					 := MotionParameters.Acceleration;
+		LocalVars.fbMoveAbsCA[0].Deceleration					 := MotionParameters.Deceleration;
+		LocalVars.fbMoveAbsCA[0].Velocity						 := MotionParameters.Velocity;
+		LocalVars.fbMoveAbsCA[0].Direction						 := MotionParameters.Direction;
+		LocalVars.fbMoveAbsCA[0].Gap							 := MotionParameters.Gap;
 		LocalVars.fbMoveAbsCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		LocalVars.fbMoveAbsCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
-		LocalVars.fbMoveAbsCA[0].Options.GapControlMode			:= MotionParameters.GapMode;
-		
-		LocalVars.fbMoveAbsCA[0].Position		:= DestinationStation.internalPosition;
-		
-		LocalVars.fbMoveAbsCA[0].BufferMode	:= mcAborting;
-		LocalVars.fbMoveAbsCA[0].Execute		:= TRUE;
-		 
-		LocalVars.fbMoveAbsCA[0].Execute		:= TRUE;		// execute this block, and...
-		LocalVars.fbMoveAbsCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
-		
-		LocalVars.fbMoveAbsCA[0]( Axis := AxisReference );
-		
+		LocalVars.fbMoveAbsCA[0].Options.GapControlMode			 := MotionParameters.GapMode;
+		LocalVars.fbMoveAbsCA[0].Position						 := DestinationStation.internalPosition;
+		LocalVars.fbMoveAbsCA[0].BufferMode						 := mcAborting;
+		LocalVars.fbMoveAbsCA[0].Execute						 := TRUE;
+		LocalVars.fbMoveAbsCA[0].Execute						 := TRUE;  // execute this block, and...
+		LocalVars.fbMoveAbsCA[1].Execute						 := FALSE; // if necessary, interrupt this one
+		LocalVars.fbMoveAbsCA[0](Axis := AxisReference);
+
 		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
 		LocalVars.Reissue := FALSE;
-		
 	ELSIF LocalVars.fbMoveAbsCA[1].Busy = FALSE THEN
-		
-		LocalVars.fbMoveAbsCA[1].Jerk			:= MotionParameters.Jerk;
-		LocalVars.fbMoveAbsCA[1].Acceleration	:= MotionParameters.Acceleration;
-		LocalVars.fbMoveAbsCA[1].Deceleration	:= MotionParameters.Deceleration;
-		LocalVars.fbMoveAbsCA[1].Velocity		:= MotionParameters.Velocity;
-		LocalVars.fbMoveAbsCA[1].Direction	:= MotionParameters.Direction;
-		LocalVars.fbMoveAbsCA[1].Gap			:= MotionParameters.Gap;
+		LocalVars.fbMoveAbsCA[1].Jerk							 := MotionParameters.Jerk;
+		LocalVars.fbMoveAbsCA[1].Acceleration					 := MotionParameters.Acceleration;
+		LocalVars.fbMoveAbsCA[1].Deceleration					 := MotionParameters.Deceleration;
+		LocalVars.fbMoveAbsCA[1].Velocity						 := MotionParameters.Velocity;
+		LocalVars.fbMoveAbsCA[1].Direction						 := MotionParameters.Direction;
+		LocalVars.fbMoveAbsCA[1].Gap							 := MotionParameters.Gap;
 		LocalVars.fbMoveAbsCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		LocalVars.fbMoveAbsCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
-		LocalVars.fbMoveAbsCA[1].Options.GapControlMode			:= MotionParameters.GapMode;
-		
-		LocalVars.fbMoveAbsCA[1].Position		:= DestinationStation.internalPosition;
-		
-		LocalVars.fbMoveAbsCA[1].BufferMode	:= mcAborting;
-		LocalVars.fbMoveAbsCA[1].Execute		:= TRUE;
-		
-		LocalVars.fbMoveAbsCA[1].Execute		:= TRUE;		// execute this block, and...
-		LocalVars.fbMoveAbsCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
+		LocalVars.fbMoveAbsCA[1].Options.GapControlMode			 := MotionParameters.GapMode;
+		LocalVars.fbMoveAbsCA[1].Position						 := DestinationStation.internalPosition;
+		LocalVars.fbMoveAbsCA[1].BufferMode						 := mcAborting;
+		LocalVars.fbMoveAbsCA[1].Execute						 := TRUE;
+		LocalVars.fbMoveAbsCA[1].Execute						 := TRUE;  // execute this block, and...
+		LocalVars.fbMoveAbsCA[0].Execute						 := FALSE; // if necessary, interrupt this one
+		LocalVars.fbMoveAbsCA[1](Axis := AxisReference);
 
-		LocalVars.fbMoveAbsCA[1]( Axis := AxisReference );
-		
 		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
 		LocalVars.Reissue := FALSE;
-
 	ELSE
-		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveToStationOverload,0 );
-		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(DestinationStation.InstancePath);
-		MsgCreate.Send(0);
-		
+		Trace.Verbose(THIS^.InstancePath,
+					  ConcatEx('MoveToStation command overloaded buffer. Commanded Station = ',
+							   DestinationStation.InstancePath,
+							   '. Source: ',
+							   THIS^.SourceInstancePath));
 	END_IF
-	
+
 	// Set the current destination object to the instance path of the objective, or 0 if unassigned
-	LocalVars.CurrentDestPosition		:= DestinationStation.Position;
-	LocalVars.CurrentDestObjective	:= SEL( __ISVALIDREF( DestinationStation ), '', DestinationStation.InstancePath );
-	LocalVars.CurrentDestStation		REF= DestinationStation;
-	LocalVars.CurrentMoveType			:= MOVETYPE_STATION;
-	
+	LocalVars.CurrentDestPosition  := DestinationStation.Position;
+	LocalVars.CurrentDestObjective := SEL(__ISVALIDREF(DestinationStation), '', DestinationStation.InstancePath);
+	LocalVars.CurrentDestStation   REF= DestinationStation;
+	LocalVars.CurrentMoveType	   := MOVETYPE_STATION;
+
 	// Register this mover with the station, so the station knows this mover is incoming
-	DestinationStation.RegisterMover( THIS^ );
-	
+	DestinationStation.RegisterMover(THIS^);
 END_IF
 
-IF ( newCallTime - LocalVars.lastCallMoveSta ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveToStation,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(DestinationStation.InstancePath);
-	MsgCreate.Send(0);
+IF (newCallTime - LocalVars.lastCallMoveSta) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('MoveToStation command issued. Commanded Station = ',
+						   DestinationStation.InstancePath,
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallMoveSta		:= newCallTime;
-
-MoveToStation		:= THIS^;
-
-]]></ST>
+THIS^.SourceInstancePath  := 'Direct access';
+LocalVars.lastCallMoveSta := newCallTime;
+MoveToStation			  := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="MoveVelocity" Id="{b843a8f8-3644-434c-aaf5-7e88053f31b1}" FolderPath="Methods\">
@@ -1190,107 +1060,80 @@ VAR
 	negativeCommand	: BOOL;
 	newCallTime		: LREAL;
 END_VAR
-VAR_INST
-	MsgCreate		: FB_TcMessage;	
-END_VAR
 VAR CONSTANT
 	RelDistance: LREAL := 1e10;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT ( ready ) THEN
-	
-	LocalVars.State	:= MV_ERROR;
+        <ST><![CDATA[IF NOT (ready) THEN
+	LocalVars.State := MV_ERROR;
 	ErrorID			:= 19201;
-
 ELSIF (NOT THIS^.ValidateTrack()) THEN
-	;	// validate track posts error
-
+	; // validate track posts error
 ELSE
-	
-	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-	LocalVars.Reissue := FALSE;	// reissue no longer necessary
-	
-	negativeCommand					:= SEL( DesiredVelocity < 0, FALSE, TRUE );
-	MotionParameters.Velocity		:= ABS( DesiredVelocity );
-	
+	newCallTime				  := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+	LocalVars.Reissue		  := FALSE; // reissue no longer necessary
+	negativeCommand			  := SEL(DesiredVelocity < 0, FALSE, TRUE);
+	MotionParameters.Velocity := ABS(DesiredVelocity);
 	IF LocalVars.fbMoveRelCA[0].Busy = FALSE THEN
-		
-		LocalVars.fbMoveRelCA[0].Jerk			:= MotionParameters.Jerk;
-		
-		LocalVars.fbMoveRelCA[0].Acceleration	:= MotionParameters.Acceleration;
-		LocalVars.fbMoveRelCA[0].Deceleration	:= MotionParameters.Deceleration;
-		LocalVars.fbMoveRelCA[0].Velocity		:= MotionParameters.Velocity;
-		LocalVars.fbMoveRelCA[0].Options.DynamicsReferenceSystem	:= CurrentTrack^.OTCID;
-		LocalVars.fbMoveRelCA[0].Options.PositionReferenceSystem	:= CurrentTrack^.OTCID;
-		LocalVars.fbMoveRelCA[0].Options.GapControlMode			:= MotionParameters.GapMode;
-		
-		LocalVars.fbMoveRelCA[0].Distance		:= SEL( negativeCommand, RelDistance, -RelDistance );
-		LocalVars.fbMoveRelCA[0].Gap			:= MotionParameters.Gap;
-		      
-		LocalVars.fbMoveRelCA[0].BufferMode	:= mcAborting;
-		      
-		LocalVars.fbMoveRelCA[0].Execute		:= TRUE;		// execute this block, and...
-		LocalVars.fbMoveRelCA[1].Execute		:= FALSE;		// if necessary, interrupt this one
-		
-		LocalVars.fbMoveRelCA[0]( Axis := AxisReference );
-				
+		LocalVars.fbMoveRelCA[0].Jerk							 := MotionParameters.Jerk;
+		LocalVars.fbMoveRelCA[0].Acceleration					 := MotionParameters.Acceleration;
+		LocalVars.fbMoveRelCA[0].Deceleration					 := MotionParameters.Deceleration;
+		LocalVars.fbMoveRelCA[0].Velocity						 := MotionParameters.Velocity;
+		LocalVars.fbMoveRelCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		LocalVars.fbMoveRelCA[0].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
+		LocalVars.fbMoveRelCA[0].Options.GapControlMode			 := MotionParameters.GapMode;
+		LocalVars.fbMoveRelCA[0].Distance						 := SEL(negativeCommand, RelDistance, -RelDistance);
+		LocalVars.fbMoveRelCA[0].Gap							 := MotionParameters.Gap;
+		LocalVars.fbMoveRelCA[0].BufferMode						 := mcAborting;
+		LocalVars.fbMoveRelCA[0].Execute						 := TRUE;  // execute this block, and...
+		LocalVars.fbMoveRelCA[1].Execute						 := FALSE; // if necessary, interrupt this one
+		LocalVars.fbMoveRelCA[0](Axis := AxisReference);
+
 		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
 		LocalVars.Reissue := FALSE;
-		
 	ELSIF LocalVars.fbMoveRelCA[1].Busy = FALSE THEN
-		
-		LocalVars.fbMoveRelCA[1].Jerk			:= MotionParameters.Jerk;
-		
-		LocalVars.fbMoveRelCA[1].Acceleration	:= MotionParameters.Acceleration;
-		LocalVars.fbMoveRelCA[1].Deceleration	:= MotionParameters.Deceleration;
-		LocalVars.fbMoveRelCA[1].Velocity		:= MotionParameters.Velocity;
+		LocalVars.fbMoveRelCA[1].Jerk							 := MotionParameters.Jerk;
+		LocalVars.fbMoveRelCA[1].Acceleration					 := MotionParameters.Acceleration;
+		LocalVars.fbMoveRelCA[1].Deceleration					 := MotionParameters.Deceleration;
+		LocalVars.fbMoveRelCA[1].Velocity						 := MotionParameters.Velocity;
 		LocalVars.fbMoveRelCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
 		LocalVars.fbMoveRelCA[1].Options.PositionReferenceSystem := CurrentTrack^.OTCID;
-		LocalVars.fbMoveRelCA[1].Options.GapControlMode			:= MotionParameters.GapMode;
-		LocalVars.fbMoveRelCA[1].Gap			:= MotionParameters.Gap;
-		LocalVars.fbMoveRelCA[1].Distance		:= SEL( negativeCommand, RelDistance, -RelDistance );
-		      
-		LocalVars.fbMoveRelCA[1].BufferMode	:= mcAborting;
-		      
-		LocalVars.fbMoveRelCA[1].Execute		:= TRUE;		// execute this block, and...
-		LocalVars.fbMoveRelCA[0].Execute		:= FALSE;		// if necessary, interrupt this one
+		LocalVars.fbMoveRelCA[1].Options.GapControlMode			 := MotionParameters.GapMode;
+		LocalVars.fbMoveRelCA[1].Gap							 := MotionParameters.Gap;
+		LocalVars.fbMoveRelCA[1].Distance						 := SEL(negativeCommand, RelDistance, -RelDistance);
+		LocalVars.fbMoveRelCA[1].BufferMode						 := mcAborting;
+		LocalVars.fbMoveRelCA[1].Execute						 := TRUE;  // execute this block, and...
+		LocalVars.fbMoveRelCA[0].Execute						 := FALSE; // if necessary, interrupt this one
+		LocalVars.fbMoveRelCA[1](Axis := AxisReference);
 
-		LocalVars.fbMoveRelCA[1]( Axis := AxisReference );
-				
 		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
 		LocalVars.Reissue := FALSE;
-
 	ELSE
-		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveVelocityOverload,0 );
-		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(DesiredVelocity);
-		MsgCreate.Send(0);
+		Trace.Verbose(THIS^.InstancePath,
+					  ConcatEx('MoveVelocity command overloaded buffer. Commanded Velocity = ',
+							   TO_STRING(DesiredVelocity),
+							   '. Source: ',
+							   THIS^.SourceInstancePath));
 	END_IF
-
 END_IF
 
-LocalVars.fbMoveRelCA[0] ( Axis := AxisReference );
-LocalVars.fbMoveRelCA[1] ( Axis := AxisReference );
-
-
-LocalVars.CurrentMoveType		:= MOVETYPE_VELOCITY;
+LocalVars.fbMoveRelCA[0](Axis := AxisReference);
+LocalVars.fbMoveRelCA[1](Axis := AxisReference);
+LocalVars.CurrentMoveType	  := MOVETYPE_VELOCITY;
 LocalVars.CurrentDestPosition := 1E300;
-
-memset( ADR( LocalVars.CurrentDestObjective ), 0, SIZEOF( LocalVars.CurrentDestObjective ));
-LocalVars.CurrentDestStation	REF= 0;
-
-IF ( newCallTime - LocalVars.lastCallMoveVel ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverMoveVelocity,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(DesiredVelocity);
-	MsgCreate.Send(0);
+memset(ADR(LocalVars.CurrentDestObjective), 0, SIZEOF(LocalVars.CurrentDestObjective));
+LocalVars.CurrentDestStation REF= 0;
+IF (newCallTime - LocalVars.lastCallMoveVel) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('MoveVelocity command issued. Commanded Velocity = ',
+						   TO_STRING(DesiredVelocity),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF;
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallMoveVel		:= newCallTime;
-
-MoveVelocity		:= THIS^;
-
-]]></ST>
+THIS^.SourceInstancePath  := 'Direct access';
+LocalVars.lastCallMoveVel := newCallTime;
+MoveVelocity			  := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Property Name="NextMover" Id="{852f964d-8625-0223-189c-c4fa1a4b313d}" FolderPath="Properties\">
@@ -1338,7 +1181,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Payload" Id="{5caf95a6-ad6c-448d-8947-8c8c07ab0a26}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Payload : MoverPayload_typ]]></Declaration>
+      <Declaration><![CDATA[PROPERTY Payload : MoverPayload]]></Declaration>
       <Get Name="Get" Id="{8a73f5fd-2b02-4094-9725-10c35f9f9334}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -1435,33 +1278,27 @@ END_IF]]></ST>
     <Method Name="SetAcceleration" Id="{6c3e67ff-faff-4c11-8768-1de83c7995e4}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetAcceleration : iMover
 VAR_INPUT
-	Acceleration	: LREAL;
+	Acceleration : LREAL;
 END_VAR
+
 VAR
-	newCallTime		: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate		: FB_TcMessage;	
+	newCallTime : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-
-MotionParameters.Acceleration		:= LIMIT( 0, Acceleration, 1E300 );	// upper limit is capped by the axis object parameters
-
+        <ST><![CDATA[newCallTime					  := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+MotionParameters.Acceleration := LIMIT(0, Acceleration, 1E300); // upper limit is capped by the axis object parameters
 THIS^.ReissueCommand();
-
-IF ( newCallTime - LocalVars.lastCallSetAcc ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetAcceleration,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Acceleration);
-	MsgCreate.Send(0);
+IF (newCallTime - LocalVars.lastCallSetAcc) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('SetAcceleration command issued. Commanded Acceleration = ',
+						   TO_STRING(Acceleration),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF;
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallSetAcc		:= newCallTime;
-
-SetAcceleration		:= THIS^;]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+LocalVars.lastCallSetAcc := newCallTime;
+SetAcceleration			 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetDeceleration" Id="{05a8542e-78cf-4f19-864b-98da64430703}" FolderPath="Methods\">
@@ -1471,201 +1308,169 @@ VAR_INPUT
 END_VAR
 VAR
 	newCallTime		: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate		: FB_TcMessage;	
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-
-MotionParameters.Deceleration	:= LIMIT( 0, Deceleration, 1E300 ); // upper limit is capped by the axis parameters
-
+        <ST><![CDATA[newCallTime					  := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+MotionParameters.Deceleration := LIMIT(0, Deceleration, 1E300); // upper limit is capped by the axis parameters
 THIS^.ReissueCommand();
-
-IF ( newCallTime - LocalVars.lastCallSetDec ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetDeceleration,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Deceleration);
-	MsgCreate.Send(0);
+IF (newCallTime - LocalVars.lastCallSetDec) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('SetDeceleration command issued. Commanded Decelaration = ',
+						   TO_STRING(Deceleration),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallSetDec		:= newCallTime;
-
-SetDeceleration		:= THIS^;]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+LocalVars.lastCallSetDec := newCallTime;
+SetDeceleration			 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetDirection" Id="{e0c3c5b2-5259-4ab4-9ff7-1ecaf9015b31}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetDirection : iMover
 VAR_INPUT
-	Direction		: Tc3_Mc3Definitions.MC_Direction;
+	Direction : Tc3_Mc3Definitions.MC_Direction;
 END_VAR
+
 VAR
-	newCallTime		: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate		: FB_TcMessage;	
+	newCallTime : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-
-MotionParameters.Direction		:= Direction;
-
+        <ST><![CDATA[newCallTime				   := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+MotionParameters.Direction := Direction;
 THIS^.ReissueCommand();
-
-IF ( newCallTime - LocalVars.lastCallSetDir ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetDirection,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddInt(TO_INT(Direction));
-	MsgCreate.Send(0);
+IF (newCallTime - LocalVars.lastCallSetDir) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('SetDirection command issued. Commanded Direction = ',
+						   TO_STRING(Direction),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallSetDir		:= newCallTime;
-
-SetDirection		:= THIS^;]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+LocalVars.lastCallSetDir := newCallTime;
+SetDirection			 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetGap" Id="{b046818d-e6b7-0786-00d1-dec2154637f1}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetGap : iMover
 VAR_INPUT
-	Gap	: LREAL;
+	Gap : LREAL;
 END_VAR
+
 VAR
-	newCallTime		: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate		: FB_TcMessage;	
+	newCallTime : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-
-MotionParameters.Gap		:= LIMIT( 0, Gap, 1E300 );	// upper limit is capped by the axis object parameters
-
+        <ST><![CDATA[newCallTime			 := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+MotionParameters.Gap := LIMIT(0, Gap, 1E300); // upper limit is capped by the axis object parameters
 THIS^.ReissueCommand();
-
-IF ( newCallTime - LocalVars.lastCallSetGap ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetGap,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Gap);
-	MsgCreate.Send(0);
+IF (newCallTime - LocalVars.lastCallSetGap) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('SetGap command issued. Commanded Gap = ',
+						   TO_STRING(Gap),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF;
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallSetGap		:= newCallTime;
-
-SetGap		:= THIS^;]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+LocalVars.lastCallSetGap := newCallTime;
+SetGap					 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetGapMode" Id="{a4e6725e-191a-0c31-2393-58563c314975}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetGapMode : iMover
 VAR_INPUT
-	Mode	: MC_GAP_CONTROL_MODE;
+	Mode : MC_GAP_CONTROL_MODE;
 END_VAR
+
 VAR
-	newCallTime		: LREAL;
-	ModeString		: STRING;
-END_VAR
-VAR_INST
-	MsgCreate		: FB_TcMessage;	
+	newCallTime : LREAL;
+	ModeString	: STRING;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-
-MotionParameters.GapMode		:= Mode;	// update gap mode
-
+        <ST><![CDATA[newCallTime				 := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+MotionParameters.GapMode := Mode; // update gap mode
 THIS^.ReissueCommand();
-
-IF ( newCallTime - LocalVars.lastCallSetGap ) > 1 THEN
+IF (newCallTime - LocalVars.lastCallSetGap) > 1 THEN
 	// user-friendly string for mode
 	CASE Mode OF
 		MC_GAP_CONTROL_MODE.mcGapControlModeGroupDefault:
 			ModeString := 'Group Default';
+
 		MC_GAP_CONTROL_MODE.mcGapControlModeStandard:
 			ModeString := 'Standard';
+
 		MC_GAP_CONTROL_MODE.mcGapControlModeFast:
 			ModeString := 'Fast';
+
 		MC_GAP_CONTROL_MODE.mcGapControlModeNone:
 			ModeString := 'None';
 	END_CASE;
-	
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetGapMode,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(ModeString);
-	MsgCreate.Send(0);
+
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('SetGapMode command issued. Commanded Mode = ',
+						   ModeString,
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF;
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallSetGap		:= newCallTime;
-
-SetGapMode		:= THIS^;]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+LocalVars.lastCallSetGap := newCallTime;
+SetGapMode				 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetJerk" Id="{de57e13f-25de-42a4-aec6-c6dc8b78d964}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetJerk : iMover
 VAR_INPUT
-	Jerk		: LREAL;
+	Jerk : LREAL;
 END_VAR
+
 VAR
-	newCallTime	: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate	: FB_TcMessage;	
+	newCallTime : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-
-MotionParameters.Jerk		:= LIMIT( 0, Jerk, 1E300 ); // upper limit is capped by the axis parameters
-
+        <ST><![CDATA[newCallTime			  := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+MotionParameters.Jerk := LIMIT(0, Jerk, 1E300); // upper limit is capped by the axis parameters
 THIS^.ReissueCommand();
-
-IF ( newCallTime - LocalVars.lastCallSetJerk ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetJerk,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Jerk);
-	MsgCreate.Send(0);
+IF (newCallTime - LocalVars.lastCallSetJerk) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('SetJerk command issued. Commanded Jerk = ',
+						   TO_STRING(Jerk),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallSetJerk		:= newCallTIme;
-
-SetJerk		:= THIS^;]]></ST>
+THIS^.SourceInstancePath  := 'Direct access';
+LocalVars.lastCallSetJerk := newCallTIme;
+SetJerk					  := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetVelocity" Id="{530483ab-165f-437b-baf5-2db027b7f044}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD SetVelocity : iMover
 VAR_INPUT
-	Velocity		: LREAL;		// Updates Mover's internal velocity parameter. Takes effect immediately. [mm/s]
+	Velocity : LREAL; // Updates Mover's internal velocity parameter. Takes effect immediately. [mm/s]
 END_VAR
+
 VAR
-	LogEvent		: INT;
-	newCallTime		: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate		: FB_TcMessage;	
+	LogEvent	: INT;
+	newCallTime : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-
-MotionParameters.Velocity	:= LIMIT( 0, Velocity, 1E300 ); // upper limit is capped by the axis parameters 
-
+        <ST><![CDATA[newCallTime				  := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+MotionParameters.Velocity := LIMIT(0, Velocity, 1E300); // upper limit is capped by the axis parameters 
 THIS^.ReissueCommand();
-
-IF ( newCallTime - LocalVars.lastCallSetVel ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSetVelocity,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddLReal(Velocity);
-	MsgCreate.Send(0);
+IF (newCallTime - LocalVars.lastCallSetVel) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('SetVelocity command issued. Commanded Velocity = ',
+						   TO_STRING(Velocity),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallSetVel	:= newCallTime;
-
-SetVelocity		:= THIS^;]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+LocalVars.lastCallSetVel := newCallTime;
+SetVelocity				 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SyncToAxis" Id="{6776bdec-2c5f-03ab-27c8-402842cfde2e}" FolderPath="Methods\">
@@ -1681,120 +1486,97 @@ END_VAR
 VAR
 	newCallTime		: LREAL;
 END_VAR
-VAR_INST
-	MsgCreate		: FB_TcMessage;
-END_VAR
+
 
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-
-IF NOT( Ready ) THEN
-	
-	LocalVars.State		:= MV_ERROR;
-	ErrorID				:= 19201;
-	
+        <ST><![CDATA[IF NOT (Ready) THEN
+	LocalVars.State := MV_ERROR;
+	ErrorID			:= 19201;
 ELSE
-	
-	newCallTime			:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-	LocalVars.Reissue := FALSE;	// reissue no longer necessary
-	
-	LocalVars.MasterAxis		REF= MasterAxis;
-	
+	newCallTime			 := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+	LocalVars.Reissue	 := FALSE; // reissue no longer necessary
+	LocalVars.MasterAxis REF= MasterAxis;
 	IF LocalVars.fbGearInPosAxisCA[0].Busy = FALSE THEN
-		
-		LocalVars.fbGearInPosAxisCA[0].Execute			:= TRUE;
-		
-		LocalVars.fbGearInPosAxisCA[0].MasterSyncPosition	:= MasterSyncPos;	// This needs to be nonmodulo
-		LocalVars.fbGearInPosAxisCA[0].SlaveSyncPosition	:= SlaveSyncPos;
-		
-		LocalVars.fbGearInPosAxisCA[0].SyncStrategy		:= SyncStrategy;
-		
-		LocalVars.fbGearInPosAxisCA[0].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		LocalVars.fbGearInPosAxisCA[0].Execute									:= TRUE;
+		LocalVars.fbGearInPosAxisCA[0].MasterSyncPosition						:= MasterSyncPos; // This needs to be nonmodulo
+		LocalVars.fbGearInPosAxisCA[0].SlaveSyncPosition						:= SlaveSyncPos;
+		LocalVars.fbGearInPosAxisCA[0].SyncStrategy								:= SyncStrategy;
+		LocalVars.fbGearInPosAxisCA[0].Options.DynamicsReferenceSystem			:= CurrentTrack^.OTCID;
 		LocalVars.fbGearInPosAxisCA[0].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
-		LocalVars.fbGearInPosAxisCA[0].Options.GapControlMode := MotionParameters.GapMode;
-		LocalVars.fbGearInPosAxisCA[0].Gap := MotionParameters.Gap;
-
+		LocalVars.fbGearInPosAxisCA[0].Options.GapControlMode					:= MotionParameters.GapMode;
+		LocalVars.fbGearInPosAxisCA[0].Gap										:= MotionParameters.Gap;
 		IF MotionParameters.Direction = mcDirectionPositive THEN
-			LocalVars.fbGearInPosAxisCA[0].SyncMode		:= mcSyncModePositive;
+			LocalVars.fbGearInPosAxisCA[0].SyncMode := mcSyncModePositive;
 		ELSIF MotionParameters.Direction = mcDirectionNegative THEN
-			LocalVars.fbGearInPosAxisCA[0].SyncMode		:= mcSyncModeNegative;
+			LocalVars.fbGearInPosAxisCA[0].SyncMode := mcSyncModeNegative;
 		ELSE // mcDirectionNonModulo or mcDirectionShortestWay
-			LocalVars.fbGearInPosAxisCA[0].SyncMode		:= mcSyncModeNonModulo;
+			LocalVars.fbGearInPosAxisCA[0].SyncMode := mcSyncModeNonModulo;
 		END_IF
-		
-		LocalVars.fbGearInPosAxisCA[0].Velocity			:= MotionParameters.Velocity;
-		LocalVars.fbGearInPosAxisCA[0].Acceleration		:= MotionParameters.Acceleration;
-		LocalVars.fbGearInPosAxisCA[0].Deceleration		:= MotionParameters.Deceleration;
-		LocalVars.fbGearInPosAxisCA[0].Jerk				:= MotionParameters.Jerk;
-		
-		LocalVars.fbGearInPosAxisCA[0].BufferMode			:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
-		
-		LocalVars.fbGearInPosAxisCA[0]( Master := MasterAxis, Slave := THIS^.AxisReference );		
-				
+
+		LocalVars.fbGearInPosAxisCA[0].Velocity		:= MotionParameters.Velocity;
+		LocalVars.fbGearInPosAxisCA[0].Acceleration := MotionParameters.Acceleration;
+		LocalVars.fbGearInPosAxisCA[0].Deceleration := MotionParameters.Deceleration;
+		LocalVars.fbGearInPosAxisCA[0].Jerk			:= MotionParameters.Jerk;
+		LocalVars.fbGearInPosAxisCA[0].BufferMode	:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
+		LocalVars.fbGearInPosAxisCA[0](Master := MasterAxis, Slave := THIS^.AxisReference);
+
 		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
 		LocalVars.Reissue := FALSE;
-		
 	ELSIF LocalVars.fbGearInPosAxisCA[1].Busy = FALSE THEN
-		
-		LocalVars.fbGearInPosAxisCA[1].Execute			:= TRUE;
-		
-		LocalVars.fbGearInPosAxisCA[1].MasterSyncPosition	:= MasterSyncPos;	// This needs to be nonmodulo
-		LocalVars.fbGearInPosAxisCA[1].SlaveSyncPosition	:= SlaveSyncPos;
-		
-		LocalVars.fbGearInPosAxisCA[1].SyncStrategy		:= SyncStrategy;
-		
-		LocalVars.fbGearInPosAxisCA[1].Options.DynamicsReferenceSystem := CurrentTrack^.OTCID;
+		LocalVars.fbGearInPosAxisCA[1].Execute									:= TRUE;
+		LocalVars.fbGearInPosAxisCA[1].MasterSyncPosition						:= MasterSyncPos; // This needs to be nonmodulo
+		LocalVars.fbGearInPosAxisCA[1].SlaveSyncPosition						:= SlaveSyncPos;
+		LocalVars.fbGearInPosAxisCA[1].SyncStrategy								:= SyncStrategy;
+		LocalVars.fbGearInPosAxisCA[1].Options.DynamicsReferenceSystem			:= CurrentTrack^.OTCID;
 		LocalVars.fbGearInPosAxisCA[1].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
-		LocalVars.fbGearInPosAxisCA[1].Options.GapControlMode := MotionParameters.GapMode;
-		LocalVars.fbGearInPosAxisCA[1].Gap := MotionParameters.Gap;
-		
+		LocalVars.fbGearInPosAxisCA[1].Options.GapControlMode					:= MotionParameters.GapMode;
+		LocalVars.fbGearInPosAxisCA[1].Gap										:= MotionParameters.Gap;
 		IF MotionParameters.Direction = mcDirectionPositive THEN
-			LocalVars.fbGearInPosAxisCA[1].SyncMode		:= mcSyncModePositive;
+			LocalVars.fbGearInPosAxisCA[1].SyncMode := mcSyncModePositive;
 		ELSIF MotionParameters.Direction = mcDirectionNegative THEN
-			LocalVars.fbGearInPosAxisCA[1].SyncMode		:= mcSyncModeNegative;				
+			LocalVars.fbGearInPosAxisCA[1].SyncMode := mcSyncModeNegative;
 		ELSE // mcDirectionNonModulo or mcDirectionShortestWay
-			LocalVars.fbGearInPosAxisCA[1].SyncMode		:= mcSyncModeNonModulo;
+			LocalVars.fbGearInPosAxisCA[1].SyncMode := mcSyncModeNonModulo;
 		END_IF
-		
-		LocalVars.fbGearInPosAxisCA[1].Velocity			:= MotionParameters.Velocity;
-		LocalVars.fbGearInPosAxisCA[1].Acceleration		:= MotionParameters.Acceleration;
-		LocalVars.fbGearInPosAxisCA[1].Deceleration		:= MotionParameters.Deceleration;
-		LocalVars.fbGearInPosAxisCA[1].Jerk				:= MotionParameters.Jerk;
-		
-		LocalVars.fbGearInPosAxisCA[1].BufferMode			:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
-		
-		LocalVars.fbGearInPosAxisCA[1]( Master := MasterAxis, Slave := THIS^.AxisReference );
-				
+
+		LocalVars.fbGearInPosAxisCA[1].Velocity		:= MotionParameters.Velocity;
+		LocalVars.fbGearInPosAxisCA[1].Acceleration := MotionParameters.Acceleration;
+		LocalVars.fbGearInPosAxisCA[1].Deceleration := MotionParameters.Deceleration;
+		LocalVars.fbGearInPosAxisCA[1].Jerk			:= MotionParameters.Jerk;
+		LocalVars.fbGearInPosAxisCA[1].BufferMode	:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
+		LocalVars.fbGearInPosAxisCA[1](Master := MasterAxis, Slave := THIS^.AxisReference);
+
 		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
 		LocalVars.Reissue := FALSE;
-
 	ELSE
-		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSyncToAxisOverload, 0 );
-		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
-		MsgCreate.Send(0);
+		Trace.Verbose(THIS^.InstancePath,
+					  ConcatEx('SyncToAxis command overloaded buffer. ',
+							   TO_STRING(MasterMover.InstancePath),
+							   'MasterAxis = ',
+							   TO_STRING(MasterAxis.NcToPlc.AxisId),
+							   '. Source: ',
+							   THIS^.SourceInstancePath));
 	END_IF
-	
 END_IF
 
-LocalVars.CurrentMoveType			:= MOVETYPE_SYNC_AXIS;
-LocalVars.CurrentDestPosition		:= 1E300;
-
-memset( ADR( LocalVars.CurrentDestObjective ), 0, SIZEOF( LocalVars.CurrentDestObjective ));
-LocalVars.CurrentDestStation		REF= 0;
-
-IF ( newCallTime - LocalVars.lastCallSync ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSyncToAxis, 0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AdduDINT(MasterAxis.NcToPlc.AxisId);
-	MsgCreate.Send(0);
+LocalVars.CurrentMoveType	  := MOVETYPE_SYNC_AXIS;
+LocalVars.CurrentDestPosition := 1E300;
+memset(ADR(LocalVars.CurrentDestObjective), 0, SIZEOF(LocalVars.CurrentDestObjective));
+LocalVars.CurrentDestStation REF= 0;
+IF (newCallTime - LocalVars.lastCallSync) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('SyncToAxis command issued. MasterAxis = ',
+						   TO_STRING(MasterMover.InstancePath),
+						   'MasterAxis = ',
+						   TO_STRING(MasterAxis.NcToPlc.AxisId),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF
 
-THIS^.SourceInstancePath		:= 'Direct access';
-
-LocalVars.lastCallSync	:= newCallTime;
-
-SyncToAxis		:= THIS^;
-]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+LocalVars.lastCallSync	 := newCallTime;
+SyncToAxis				 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SyncToMover" Id="{c1dddc96-f9c0-4f4e-b1ac-4bb8d23d72f1}" FolderPath="Methods\">
@@ -1806,140 +1588,114 @@ END_VAR
 VAR
 	newCallTime			: LREAL;
 END_VAR
-VAR_INST
-	MsgCreate			: FB_TcMessage;	
-END_VAR]]></Declaration>
+]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT( Ready ) THEN
-
-	LocalVars.State	:= MV_ERROR;
+        <ST><![CDATA[IF NOT (Ready) THEN
+	LocalVars.State := MV_ERROR;
 	ErrorID			:= 19201;
-	
-ELSE	// let 'er rip
-	
-	newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-	LocalVars.Reissue := FALSE;	// reissue no longer necessary
-
-	LocalVars.MasterMover		REF= MasterMover;
-	LocalVars.Gap				:= Gap;
-		
+ELSE // let 'er rip
+	newCallTime			  := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+	LocalVars.Reissue	  := FALSE; // reissue no longer necessary
+	LocalVars.MasterMover REF= MasterMover;
+	LocalVars.Gap		  := Gap;
 	IF LocalVars.fbGearInPosMoverCA[0].Busy = FALSE THEN
-		
-		LocalVars.fbGearInPosMoverCA[0].Execute				:= TRUE;
-		LocalVars.fbGearInPosMoverCA[1].Execute				:= FALSE;
-		
-		LocalVars.fbGearInPosMoverCA[0].MasterSyncPosition				:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos;
-		
+		LocalVars.fbGearInPosMoverCA[0].Execute			   := TRUE;
+		LocalVars.fbGearInPosMoverCA[1].Execute			   := FALSE;
+		LocalVars.fbGearInPosMoverCA[0].MasterSyncPosition := LocalVars.MasterMover.AxisReference.NcToPlc.SetPos;
 		// If the slave setpos is less than the master...
 		IF THIS^.AxisReference.NcToPlc.SetPos <= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos THEN
-			IF Gap > 0 THEN		// ... And the Gap is Positive
-				LocalVars.fbGearInPosMoverCA[0].SlaveSyncPosition		:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - Gap;		
-			ELSE				// ... And the Gap is Negative
-				LocalVars.fbGearInPosMoverCA[0].SlaveSyncPosition		:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - LocalVars.Track^.Length - Gap;
+			IF Gap > 0 THEN // ... And the Gap is Positive
+				LocalVars.fbGearInPosMoverCA[0].SlaveSyncPosition := LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - Gap;
+			ELSE // ... And the Gap is Negative
+				LocalVars.fbGearInPosMoverCA[0].SlaveSyncPosition := LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - LocalVars.Track^.Length - Gap;
 			END_IF
-		
-		// If the slave setpos is greater than the master...
-		ELSE (* THIS.AxisReference.NcToPlc.SetPos > LocalVars.MasterMover.AxisReference.NcToPlc.SetPos  *)
-			IF Gap > 0 THEN		// ... And the Gap is Positive
-				LocalVars.fbGearInPosMoverCA[0].SlaveSyncPosition		:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos + LocalVars.Track^.Length - Gap;
-			ELSE			// ... And the Gap is Negative
-				LocalVars.fbGearInPosMoverCA[0].SlaveSyncPosition		:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - Gap;				
-			END_IF
-		
-		END_IF
-		
-		LocalVars.fbGearInPosMoverCA[0].SyncStrategy					:= mcSyncStrategyEarly;
-		
-		LocalVars.fbGearInPosMoverCA[0].Options.DynamicsReferenceSystem				:= CurrentTrack^.OTCID;
-		LocalVars.fbGearInPosMoverCA[0].Options.SlaveSyncPositionReferenceSystem	:= CurrentTrack^.OTCID;
-		LocalVars.fbGearInPosMoverCA[0].Options.GapControlMode						:= MotionParameters.GapMode;
-		LocalVars.fbGearInPosMoverCA[0].Gap											:= MotionParameters.Gap;
-				
-		LocalVars.fbGearInPosMoverCA[0].Velocity				:= MotionParameters.Velocity;
-		LocalVars.fbGearInPosMoverCA[0].Acceleration			:= MotionParameters.Acceleration;
-		LocalVars.fbGearInPosMoverCA[0].Deceleration			:= MotionParameters.Deceleration;
-		LocalVars.fbGearInPosMoverCA[0].Jerk					:= MotionParameters.Jerk;
-		
-		LocalVars.fbGearInPosMoverCA[0].BufferMode				:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
-		
-		LocalVars.fbGearInPosMoverCA[0]( Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference );
-				
-		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
-		LocalVars.Reissue := FALSE;
-		
-	ELSIF LocalVars.fbGearInPosMoverCA[1].Busy = FALSE THEN
-		
-		LocalVars.fbGearInPosMoverCA[1].Execute				:= TRUE;
-		LocalVars.fbGearInPosMoverCA[0].Execute				:= FALSE;
-		
-		LocalVars.fbGearInPosMoverCA[1].MasterSyncPosition				:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos;
-		
-		// If the slave setpos is less than the master...
-		IF THIS^.AxisReference.NcToPlc.SetPos <= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos THEN
-			IF Gap > 0 THEN		// ... And the Gap is Positive
-				LocalVars.fbGearInPosMoverCA[1].SlaveSyncPosition		:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - Gap;		
-			ELSE				// ... And the Gap is Negative
-				LocalVars.fbGearInPosMoverCA[1].SlaveSyncPosition		:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - LocalVars.Track^.Length - Gap;
-			END_IF
-		
-		// If the slave setpos is greater than the master...
-		ELSE (* THIS.AxisReference.NcToPlc.SetPos > LocalVars.MasterMover.AxisReference.NcToPlc.SetPos  *)
-			IF Gap > 0 THEN		// ... And the Gap is Positive
-				LocalVars.fbGearInPosMoverCA[1].SlaveSyncPosition		:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos + LocalVars.Track^.Length - Gap;
-			ELSE			// ... And the Gap is Negative
-				LocalVars.fbGearInPosMoverCA[1].SlaveSyncPosition		:= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - Gap;				
-			END_IF
-		
-		END_IF
-		
-		LocalVars.fbGearInPosMoverCA[1].SyncStrategy					:= mcSyncStrategyEarly;		
-				
-		LocalVars.fbGearInPosMoverCA[1].Options.DynamicsReferenceSystem				:= CurrentTrack^.OTCID;
-		LocalVars.fbGearInPosMoverCA[1].Options.SlaveSyncPositionReferenceSystem	:= CurrentTrack^.OTCID;
-		LocalVars.fbGearInPosMoverCA[1].Options.GapControlMode						:= MotionParameters.GapMode;
-		LocalVars.fbGearInPosMoverCA[1].Gap											:= MotionParameters.Gap;
-				
-		LocalVars.fbGearInPosMoverCA[1].Velocity				:= MotionParameters.Velocity;
-		LocalVars.fbGearInPosMoverCA[1].Acceleration			:= MotionParameters.Acceleration;
-		LocalVars.fbGearInPosMoverCA[1].Deceleration			:= MotionParameters.Deceleration;
-		LocalVars.fbGearInPosMoverCA[1].Jerk					:= MotionParameters.Jerk;
-		
-		LocalVars.fbGearInPosMoverCA[1].BufferMode				:= Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
-		
-		LocalVars.fbGearInPosMoverCA[1]( Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference );
-				
-		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
-		LocalVars.Reissue := FALSE;
-		
-	ELSE
-		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSyncToMoverOverload,0 );
-		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(SourceInstancePath).AddLReal(Gap);
-		MsgCreate.Send(0);
-		
-	END_IF
 
+		// If the slave setpos is greater than the master...
+		ELSE				(* THIS.AxisReference.NcToPlc.SetPos > LocalVars.MasterMover.AxisReference.NcToPlc.SetPos  *)
+			IF Gap > 0 THEN // ... And the Gap is Positive
+				LocalVars.fbGearInPosMoverCA[0].SlaveSyncPosition := LocalVars.MasterMover.AxisReference.NcToPlc.SetPos + LocalVars.Track^.Length - Gap;
+			ELSE // ... And the Gap is Negative
+				LocalVars.fbGearInPosMoverCA[0].SlaveSyncPosition := LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - Gap;
+			END_IF
+		END_IF
+
+		LocalVars.fbGearInPosMoverCA[0].SyncStrategy							 := mcSyncStrategyEarly;
+		LocalVars.fbGearInPosMoverCA[0].Options.DynamicsReferenceSystem			 := CurrentTrack^.OTCID;
+		LocalVars.fbGearInPosMoverCA[0].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
+		LocalVars.fbGearInPosMoverCA[0].Options.GapControlMode					 := MotionParameters.GapMode;
+		LocalVars.fbGearInPosMoverCA[0].Gap										 := MotionParameters.Gap;
+		LocalVars.fbGearInPosMoverCA[0].Velocity								 := MotionParameters.Velocity;
+		LocalVars.fbGearInPosMoverCA[0].Acceleration							 := MotionParameters.Acceleration;
+		LocalVars.fbGearInPosMoverCA[0].Deceleration							 := MotionParameters.Deceleration;
+		LocalVars.fbGearInPosMoverCA[0].Jerk									 := MotionParameters.Jerk;
+		LocalVars.fbGearInPosMoverCA[0].BufferMode								 := Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
+		LocalVars.fbGearInPosMoverCA[0](Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference);
+
+		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
+		LocalVars.Reissue := FALSE;
+	ELSIF LocalVars.fbGearInPosMoverCA[1].Busy = FALSE THEN
+		LocalVars.fbGearInPosMoverCA[1].Execute			   := TRUE;
+		LocalVars.fbGearInPosMoverCA[0].Execute			   := FALSE;
+		LocalVars.fbGearInPosMoverCA[1].MasterSyncPosition := LocalVars.MasterMover.AxisReference.NcToPlc.SetPos;
+		// If the slave setpos is less than the master...
+		IF THIS^.AxisReference.NcToPlc.SetPos <= LocalVars.MasterMover.AxisReference.NcToPlc.SetPos THEN
+			IF Gap > 0 THEN // ... And the Gap is Positive
+				LocalVars.fbGearInPosMoverCA[1].SlaveSyncPosition := LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - Gap;
+			ELSE // ... And the Gap is Negative
+				LocalVars.fbGearInPosMoverCA[1].SlaveSyncPosition := LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - LocalVars.Track^.Length - Gap;
+			END_IF
+
+		// If the slave setpos is greater than the master...
+		ELSE				(* THIS.AxisReference.NcToPlc.SetPos > LocalVars.MasterMover.AxisReference.NcToPlc.SetPos  *)
+			IF Gap > 0 THEN // ... And the Gap is Positive
+				LocalVars.fbGearInPosMoverCA[1].SlaveSyncPosition := LocalVars.MasterMover.AxisReference.NcToPlc.SetPos + LocalVars.Track^.Length - Gap;
+			ELSE // ... And the Gap is Negative
+				LocalVars.fbGearInPosMoverCA[1].SlaveSyncPosition := LocalVars.MasterMover.AxisReference.NcToPlc.SetPos - Gap;
+			END_IF
+		END_IF
+
+		LocalVars.fbGearInPosMoverCA[1].SyncStrategy							 := mcSyncStrategyEarly;
+		LocalVars.fbGearInPosMoverCA[1].Options.DynamicsReferenceSystem			 := CurrentTrack^.OTCID;
+		LocalVars.fbGearInPosMoverCA[1].Options.SlaveSyncPositionReferenceSystem := CurrentTrack^.OTCID;
+		LocalVars.fbGearInPosMoverCA[1].Options.GapControlMode					 := MotionParameters.GapMode;
+		LocalVars.fbGearInPosMoverCA[1].Gap										 := MotionParameters.Gap;
+		LocalVars.fbGearInPosMoverCA[1].Velocity								 := MotionParameters.Velocity;
+		LocalVars.fbGearInPosMoverCA[1].Acceleration							 := MotionParameters.Acceleration;
+		LocalVars.fbGearInPosMoverCA[1].Deceleration							 := MotionParameters.Deceleration;
+		LocalVars.fbGearInPosMoverCA[1].Jerk									 := MotionParameters.Jerk;
+		LocalVars.fbGearInPosMoverCA[1].BufferMode								 := Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting;
+		LocalVars.fbGearInPosMoverCA[1](Master := LocalVars.MasterMover.AxisReference, Slave := THIS^.AxisReference);
+
+		// clear the reissue flag, if a reissue was necessary this command has already applied any motion profile changes
+		LocalVars.Reissue := FALSE;
+	ELSE
+		Trace.Verbose(THIS^.InstancePath,
+					  ConcatEx('SyncToMover command overloaded buffer. MasterMover = ',
+							   TO_STRING(MasterMover.InstancePath),
+							   'GapDistance = ',
+							   TO_STRING(Gap),
+							   '. Source: ',
+							   THIS^.SourceInstancePath));
+	END_IF
 END_IF;
 
-LocalVars.CurrentMoveType			:= MOVETYPE_SYNC_MOVER;
-LocalVars.CurrentDestPosition		:= 1E300;
-
-memset( ADR( LocalVars.CurrentDestObjective ), 0, SIZEOF( LocalVars.CurrentDestObjective ));
-LocalVars.CurrentDestStation	REF= 0;
-
-IF ( newCallTime - LocalVars.lastCallSync ) > 1 THEN
-	MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.MoverSyncToMover,0 );
-	MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath).AddString(SourceInstancePath).AddLReal(Gap);
-	MsgCreate.Send(0);
+LocalVars.CurrentMoveType	  := MOVETYPE_SYNC_MOVER;
+LocalVars.CurrentDestPosition := 1E300;
+memset(ADR(LocalVars.CurrentDestObjective), 0, SIZEOF(LocalVars.CurrentDestObjective));
+LocalVars.CurrentDestStation REF= 0;
+IF (newCallTime - LocalVars.lastCallSync) > 1 THEN
+	Trace.Verbose(THIS^.InstancePath,
+				  ConcatEx('SyncToMover command issued. MasterMover = ',
+						   TO_STRING(MasterMover.InstancePath),
+						   'GapDistance = ',
+						   TO_STRING(Gap),
+						   '. Source: ',
+						   THIS^.SourceInstancePath));
 END_IF
 
-THIS^.SourceInstancePath	:= 'Direct access';
-
-LocalVars.lastCallSync		:= newCallTime;
-
-
-SyncToMover		:= THIS^;
-
-]]></ST>
+THIS^.SourceInstancePath := 'Direct access';
+LocalVars.lastCallSync	 := newCallTime;
+SyncToMover				 := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="UnregisterFromAll" Id="{f143e1ea-77ff-0f0f-21c3-e86b5d1cb377}" FolderPath="Methods\">
@@ -1975,13 +1731,8 @@ END_FOR]]></ST>
     </Method>
     <Method Name="ValidateTrack" Id="{230f15af-f744-0e9b-0384-784f5f4f41dd}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD ValidateTrack : BOOL
-VAR_INPUT
-END_VAR
 VAR
-	newCallTime: LREAL;
-END_VAR
-VAR_INST
-	MsgCreate			: FB_TcMessage;	
+	newCallTime : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// confirms that a valid track is selected and return true
@@ -1990,16 +1741,13 @@ IF LocalVars.TrackIsReady THEN
 	ValidateTrack := TRUE;
 ELSE
 	ValidateTrack := FALSE;
-		newCallTime		:= ULINT_TO_LREAL(F_GetSystemTime())/1E7;
-		
-	IF ( newCallTime - LocalVars.lastCallValidateTrack ) > 1 THEN
-		MsgCreate.CreateEx( TC_EVENTS.XtsBaseEventClass.ValidateTrackError,0 );
-		MsgCreate.ipArguments.Clear().AddString(THIS^.InstancePath).AddString(THIS^.SourceInstancePath);
-		MsgCreate.Send(0);
-	END_IF	
+	newCallTime	  := ULINT_TO_LREAL(F_GetSystemTime()) / 1E7;
+	IF (newCallTime - LocalVars.lastCallValidateTrack) > 1 THEN
+		Trace.Error(THIS^.InstancePath, ConcatEx('Motion command called on mover with invalid track. Source: ', THIS^.SourceInstancePath));
+	END_IF
 END_IF
 
-LocalVars.lastCallValidateTrack		:= newCallTime;]]></ST>
+LocalVars.lastCallValidateTrack := newCallTime;]]></ST>
       </Implementation>
     </Method>
   </POU>

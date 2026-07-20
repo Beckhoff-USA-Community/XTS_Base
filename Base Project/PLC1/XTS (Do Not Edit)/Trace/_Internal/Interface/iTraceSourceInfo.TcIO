@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="iTraceSourceInfo" Id="{88aae583-53c4-086d-17ad-e3f03a973024}">
+    <Declaration><![CDATA[INTERFACE iTraceSourceInfo EXTENDS iBase]]></Declaration>
+    <Property Name="SourceId" Id="{f63793bb-f5e5-09f5-30e8-57e18b6bba04}">
+      <Declaration><![CDATA[{attribute 'monitoring':='call'}
+PROPERTY SourceId : UDINT]]></Declaration>
+      <Get Name="Get" Id="{4e0c3652-ce73-01bd-153d-bf5fdfc22e92}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="SourceName" Id="{502eeb65-2317-0609-2ba6-57ba9b293fb2}">
+      <Declaration><![CDATA[{attribute 'monitoring':='call'}
+PROPERTY SourceName : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{a77f477b-ecc3-0391-16c6-dc678118aa4b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="TimeStamp" Id="{2adcebfe-6e29-0498-0ede-1e0e37c5f0a7}">
+      <Declaration><![CDATA[{attribute 'monitoring':='call'}
+PROPERTY TimeStamp : ULINT]]></Declaration>
+      <Get Name="Get" Id="{3612711f-962a-0d9e-3258-1dd00344b42f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

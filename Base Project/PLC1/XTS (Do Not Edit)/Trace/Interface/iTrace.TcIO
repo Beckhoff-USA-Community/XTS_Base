@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="iTrace" Id="{aa4dce86-2718-4485-96d9-33a29ceb0de2}">
+    <Declaration><![CDATA[INTERFACE iTrace
+]]></Declaration>
+    <Method Name="Critical" Id="{5cea81a7-afc0-4ea7-965c-6164c1884d09}">
+      <Declaration><![CDATA[METHOD Critical
+VAR_INPUT
+	Source	  : T_MaxString;
+	Message	  : T_MaxString;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Error" Id="{62f2bda9-1b83-4b97-8c28-2983447cf42d}">
+      <Declaration><![CDATA[METHOD Error
+VAR_INPUT
+	Source	  : T_MaxString;
+	Message	  : T_MaxString;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Info" Id="{9da6c452-ea29-4639-aca1-a0f18fc3bac1}">
+      <Declaration><![CDATA[METHOD Info
+VAR_INPUT
+	Source	  : T_MaxString;
+	Message	  : T_MaxString;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Verbose" Id="{a886027e-fcf4-454f-8891-cca0d450b0f9}">
+      <Declaration><![CDATA[METHOD Verbose
+VAR_INPUT
+	Source	  : T_MaxString;
+	Message	  : T_MaxString;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Warning" Id="{04ca9415-6df6-44cb-b7eb-255639d9a855}">
+      <Declaration><![CDATA[METHOD Warning
+VAR_INPUT
+	Source	  : T_MaxString;
+	Message	  : T_MaxString;
+END_VAR]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>
