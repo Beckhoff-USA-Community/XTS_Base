@@ -106,7 +106,7 @@ IF __ISVALIDREF( Mover ) THEN
 	END_FOR
 	
 	// if no empty index is available set a message and return
-	IF emptyIDX = -1 THEN
+	IF duplicateFound = FALSE AND emptyIDX = -1 THEN
 		ADSLOGSTR( ADSLOG_MSGTYPE_WARN, 'AddMover System Array is full. %s not added. Check Params.MAX_MOVERS' , Mover.InstancePath);
 		RETURN;
 	END_IF;
@@ -174,7 +174,7 @@ IF __ISVALIDREF( MoverList ) THEN
 	END_FOR
 	
 	// if no empty index is available set a message and return
-	IF emptyIDX = -1 THEN
+	IF duplicateFound = FALSE AND emptyIDX = -1 THEN
 		ADSLOGSTR( ADSLOG_MSGTYPE_WARN, 'MoverList System Array is full. %s not added. Check Params.MAX_MOVERLISTS' , MoverList.InstancePath);
 		RETURN;
 	END_IF;
@@ -226,7 +226,7 @@ IF __ISVALIDREF( PositionTrigger ) THEN
 	END_FOR
 	
 	// if no empty index is available set a message and return
-	IF emptyIDX = -1 THEN
+	IF duplicateFound = FALSE AND emptyIDX = -1 THEN
 		ADSLOGSTR( ADSLOG_MSGTYPE_WARN, 'AddPositionTrigger System Array is full. %s not added. Check Params.MAX_POSITIONTRIGGERS' , PositionTrigger.InstancePath);
 		RETURN;
 	END_IF;
@@ -283,7 +283,7 @@ IF __ISVALIDREF( Station ) THEN
 	END_FOR
 	
 	// if no empty index is available set a message and return
-	IF emptyIDX = -1 THEN
+	IF duplicateFound = FALSE AND emptyIDX = -1 THEN
 		ADSLOGSTR( ADSLOG_MSGTYPE_WARN, 'AddStation System Array is full. %s not added. Check Params.MAX_STATIONS' , Station.InstancePath);
 		RETURN;
 	END_IF;
@@ -377,7 +377,7 @@ IF __ISVALIDREF( Zone ) THEN
 	END_FOR
 	
 	// if no empty index is available set a message and return
-	IF emptyIDX = -1 THEN
+	IF duplicateFound = FALSE AND emptyIDX = -1 THEN
 		ADSLOGSTR( ADSLOG_MSGTYPE_WARN, 'AddZone System Array is full. %s not added. Check Params.MAX_ZONES' , Zone.InstancePath);
 		RETURN;
 	END_IF;
